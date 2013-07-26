@@ -17,10 +17,10 @@
 development:
   adapter: postgresql
   encoding: unicode
-  database: rosvibory_development
+  database: rosvibory
   pool: 5
   username: rosvibory
-  password:
+  password: rosvibory
 
   # Connect on a TCP socket. Omitted by default since the client uses a
   # domain socket that doesn't need configuration. Windows does not have
@@ -49,12 +49,12 @@ test:
   database: rosvibory_test
   pool: 5
   username: rosvibory
-  password:
+  password: rosvibory
 
 production:
   adapter: postgresql
   encoding: unicode
-  database: rosvibory_production
+  database: rosvibory
   pool: 5
   username: rosvibory
-  password:
+  password: rosvibory
