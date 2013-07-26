@@ -1,0 +1,41 @@
+.boolean.input.required.control-group
+  .controls
+    = label_tag 'process_info', class: 'checkbox' do
+      = check_box_tag 'process_info'
+      Соглашаюсь на обработку персональных данных
+
+= semantic_form_for @user_app do |f|
+  -#список - административный округ
+  -#район - текстовое поле с саджестом и валидейтом на полное совпадение
+
+  = f.inputs "Кем готовы стать?", :id => "can_be" do
+    -UserApp::FUTURE_STATUSES.each do |status_value, status_name|
+      = f.input 'can_be_'+status_name, :as => :boolean
+
+  = f.inputs "Личные данные", :id => "personal_info" do
+    = f.input :last_name, :label => "Фамилия", :required => true
+    = f.input :first_name, :label => "Имя", :required => true
+    = f.input :patronymic, :label => "Отчество"
+    = f.input :phone, :label => "Телефон", :hint => "Пример: 903 1112233", :required => true
+    = f.input :email
+
+  = f.inputs "Подробнее", :id => "details" do
+    = f.input :uic, :label => "Желаемый УИК"
+    = f.input :current_status, :label => "Текущий статус в системе избирательных комиссий:", :as => :radio, collection: current_status_options, :required => true
+    = f.input :has_car, :label => "Есть автомобиль?", :as => :radio, collection: {"Да" => true, "Нет" => false}, :required => true
+    = f.input :legal_status, :label => "Есть юридическое образование:", :as => :radio, collection: {"Да" => 1, "Нет" => 0, "Есть статус адвоката" => 3}, :required => true
+
+  = f.inputs "Прежний опыт", :id => "experience" do
+    -UserApp::PAST_STATUSES.each do |status_value, status_name|
+      = f.input 'was_'+status_name, :as => :boolean
+    = f.input :experience_count, :label => "Сколько раз:"
+
+  = f.inputs :name => "Аккаунты в соц. сетях", :id => "social_accounts" do
+    -UserApp::SOCIAL_ACCOUNTS.each do |provider_key, provider_name|
+      = f.input 'social_'+provider_key.to_s, :label => provider_name
+  = f.inputs "Дополнителные сведения", :id => "extra" do
+    = f.input :extra, :label => false, :input_html => {:rows => 10}
+
+  = f.actions do
+    = f.action :submit, :label => "Зарегистрироваться", button_html: { class: 'btn btn-primary' }
+    -#= link_to t('.cancel', :default => t("helpers.links.cancel")), user_apps_path, :class => 'btn'

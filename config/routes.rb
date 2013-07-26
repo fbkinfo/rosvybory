@@ -1,4 +1,7 @@
 Rosvibory::Application.routes.draw do
+  resources :user_apps, only: [:new, :create]
+
+  root 'user_apps#new'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
