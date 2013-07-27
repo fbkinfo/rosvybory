@@ -2,11 +2,13 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 jQuery ->
-  $("#data_processing_allowed").change (e)->
-    processing_allowed = $(this).prop('checked')
+  updateSubmitState = ->
+    submit_enabled = $("#data_processing_allowed").prop('checked')
     $btn = $(".form-actions input[type=submit]")
-    $btn.prop('disabled', !processing_allowed).toggleClass('btn-primary', processing_allowed)
+    $btn.prop('disabled', !submit_enabled).toggleClass('btn-primary', submit_enabled)
 
+  $("#data_processing_allowed").change (e)->
+    updateSubmitState()
 
   $('#user_app_region_id').select2
     placeholder: "Начните вводить название"
@@ -17,3 +19,6 @@ jQuery ->
 
   $('#user_app_can_be_observer').change (e)->
     updateUicState()
+
+  updateUicState()
+  updateSubmitState()

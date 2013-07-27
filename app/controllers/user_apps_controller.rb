@@ -24,7 +24,7 @@ class UserAppsController < ApplicationController
     @user_app = UserApp.new(user_app_params)
 
     if @user_app.save
-      redirect_to @user_app, notice: 'User app was successfully created.'
+      redirect_to new_user_app_path, notice: 'User app was successfully created.'
     else
       render action: 'new'
     end
@@ -53,6 +53,13 @@ class UserAppsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def user_app_params
-      params[:user_app]
+      params.require(:data_processing_allowed)
+      params.require(:user_app).permit([:region_id,
+                                       :last_name, :first_name, :patronymic, :phone, :email, :current_status, :has_car, :legal_status,
+                                       :experience_count,
+                                       :extra] +
+                                           UserApp.future_statuses_methods +
+                                           UserApp.previous_statuses_methods +
+                                           UserApp.social_methods)
     end
 end

@@ -3,8 +3,8 @@
   -#район - текстовое поле с саджестом и валидейтом на полное совпадение
   = f.input :region, :label => "Район", :as => :select, :collection => option_groups_from_collection_for_select(Region.cities.where(name: "Москва").first.regions, :regions, :name, :id, :name), :required => true, :input_html => {:style => "width: 280px;"}
   = f.inputs "Кем готовы стать?", :id => "can_be" do
-    -UserApp::FUTURE_STATUSES.each do |status_value, status_name|
-      = f.input 'can_be_'+status_name, :as => :boolean
+    -UserApp.future_statuses_methods.each do | method_name|
+      = f.input method_name, :as => :boolean
 
   = f.inputs "Личные данные", :id => "personal_info" do
     = f.input :last_name, :label => "Фамилия", :required => true
@@ -20,8 +20,8 @@
     = f.input :legal_status, :label => "Есть юридическое образование:", :as => :radio, collection: {"Да" => 1, "Нет" => 0, "Есть статус адвоката" => 3}, :required => true
 
   = f.inputs "Прежний опыт", :id => "experience" do
-    -UserApp::PAST_STATUSES.each do |status_value, status_name|
-      = f.input 'was_'+status_name, :as => :boolean
+    -UserApp.previous_statuses_methods.each do |method_name|
+      = f.input method_name, :as => :boolean
     = f.input :experience_count, :label => "Сколько раз:"
 
   = f.inputs :name => "Аккаунты в соц. сетях", :id => "social_accounts" do

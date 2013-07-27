@@ -36,7 +36,7 @@ class UserApp < ActiveRecord::Base
   #                    STATUS_TIC_PRG => "tic_prg"
   #}
 
-  PAST_STATUSES = {
+  PREVIOUS_STATUSES = {
       STATUS_OBSERVER => "observer",
       STATUS_PRG => "prg",
       STATUS_PSG => "psg",
@@ -48,10 +48,30 @@ class UserApp < ActiveRecord::Base
       STATUS_COORD => "coord"
   }
 
+  def self.social_methods
+    SOCIAL_ACCOUNTS.keys.collect{|v| "social_"+v.to_s}
+  end
+
+  def self.future_statuses_methods
+    FUTURE_STATUSES.values.collect{|v| "can_be_"+v}
+  end
+
+  def self.previous_statuses_methods
+    PREVIOUS_STATUSES.values.collect{|v| "was_"+v}
+  end
+
+  def can_be(status_value)
+    desired_statuses & status_value > 0
+  end
+
+  def was(status_value)
+    previous_statuses & status_value > 0
+  end
+
 
   FUTURE_STATUSES.each do |status_value, status_name|
     method_n = 'can_be_'+status_name
-    define_method(method_n) { desired_statuses & status_value > 0 }
+    define_method(method_n) { can_be status_value }
     define_method(method_n+'=') do |val|
       if val
         self.desired_statuses |= status_value
@@ -61,9 +81,9 @@ class UserApp < ActiveRecord::Base
     end
   end
 
-  PAST_STATUSES.each do |status_value, status_name|
+  PREVIOUS_STATUSES.each do |status_value, status_name|
     method_n = 'was_'+status_name
-    define_method(method_n) { previous_statuses & status_value > 0 }
+    define_method(method_n) { was status_value }
     define_method(method_n+'=') do |val|
       if val
         self.previous_statuses |= status_value
