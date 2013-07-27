@@ -29,6 +29,10 @@ gem 'therubyracer', platforms: :ruby
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 
+gem 'activeadmin',         github: 'gregbell/active_admin', branch: 'rails4'
+gem 'ransack',             github: 'ernie/ransack',         branch: 'rails-4'
+gem 'inherited_resources', github: 'josevalim/inherited_resources'
+
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 # gem 'turbolinks'
 
