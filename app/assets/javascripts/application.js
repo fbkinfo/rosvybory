@@ -12,5 +12,6 @@
 //
 //= require jquery
 //= require twitter/bootstrap
+//= require select2
 //= require jquery_ujs
 //= require_tree .

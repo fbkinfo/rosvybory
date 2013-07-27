@@ -1,5 +1,6 @@
 /*
  *= require formtastic-bootstrap
+ *= require select2
  *= require_self
  *= require_tree .
  */

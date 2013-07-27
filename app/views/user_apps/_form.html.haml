@@ -1,7 +1,7 @@
 = semantic_form_for @user_app do |f|
   -#список - административный округ
   -#район - текстовое поле с саджестом и валидейтом на полное совпадение
-
+  = f.input :region, :label => "Район", :as => :select, :collection => option_groups_from_collection_for_select(Region.cities.where(name: "Москва").first.regions, :regions, :name, :id, :name), :required => true, :input_html => {:style => "width: 280px;"}
   = f.inputs "Кем готовы стать?", :id => "can_be" do
     -UserApp::FUTURE_STATUSES.each do |status_value, status_name|
       = f.input 'can_be_'+status_name, :as => :boolean
@@ -14,7 +14,7 @@
     = f.input :email
 
   = f.inputs "Подробнее", :id => "details" do
-    = f.input :uic, :label => "Желаемый УИК"
+    = f.input :uic, :label => "Желаемый УИК", :input_html => {:disabled => true}
     = f.input :current_status, :label => "Текущий статус в системе избирательных комиссий:", :as => :radio, collection: current_status_options, :required => true
     = f.input :has_car, :label => "Есть автомобиль?", :as => :radio, collection: {"Да" => true, "Нет" => false}, :required => true
     = f.input :legal_status, :label => "Есть юридическое образование:", :as => :radio, collection: {"Да" => 1, "Нет" => 0, "Есть статус адвоката" => 3}, :required => true

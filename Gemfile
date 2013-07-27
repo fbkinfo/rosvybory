@@ -14,6 +14,8 @@ gem 'haml-rails'
 gem 'twitter-bootstrap-rails'
 gem 'formtastic', '2.3.0.rc2'
 gem 'formtastic-bootstrap'#, github: 'mjbellantoni/formtastic-bootstrap'
+gem "select2-rails"
+
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'

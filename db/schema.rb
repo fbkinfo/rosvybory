@@ -11,7 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130726114822) do
+ActiveRecord::Schema.define(version: 20130726223510) do
+
+  create_table "regions", force: true do |t|
+    t.integer  "kind"
+    t.integer  "parent_id"
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "regions", ["parent_id"], name: "index_regions_on_parent_id", using: :btree
 
   create_table "user_apps", force: true do |t|
     t.string   "last_name"
@@ -32,6 +42,9 @@ ActiveRecord::Schema.define(version: 20130726114822) do
     t.integer  "app_status"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "region_id"
   end
+
+  add_index "user_apps", ["region_id"], name: "index_user_apps_on_region_id", using: :btree
 
 end

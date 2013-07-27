@@ -1,5 +1,7 @@
 class UserApp < ActiveRecord::Base
   serialize :social_accounts, HashWithIndifferentAccess
+  belongs_to :region
+
 
   SOCIAL_ACCOUNTS = {vk: "ВКонтакте", fb: "Facebook", twitter: "Twitter", lj: "LiveJournal" , ok: "Одноклассники"}
   SOCIAL_ACCOUNTS.each do |provider_key, provider_name|
