@@ -6,6 +6,6 @@ class Region < ActiveRecord::Base
 
   scope :cities, -> { where(kind: CITY) }
 
-  has_many :regions, foreign_key: "parent_id", :order => 'name ASC'
+  has_many :regions, -> { order :name }, foreign_key: "parent_id"
 
 end
