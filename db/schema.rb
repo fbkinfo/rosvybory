@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130726223510) do
+ActiveRecord::Schema.define(version: 20130727131036) do
 
   create_table "regions", force: true do |t|
     t.integer  "kind"
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(version: 20130726223510) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "region_id"
+    t.string   "ip"
   end
 
   add_index "user_apps", ["region_id"], name: "index_user_apps_on_region_id", using: :btree

@@ -22,7 +22,7 @@ class UserAppsController < ApplicationController
   # POST /user_apps
   def create
     @user_app = UserApp.new(user_app_params)
-
+    @user_app.ip = request.ip
     if @user_app.save
       redirect_to new_user_app_path, notice: 'User app was successfully created.'
     else
