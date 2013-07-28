@@ -25,7 +25,7 @@
   = f.inputs "Прежний опыт", :id => "experience" do
     -UserApp.previous_statuses_methods.each do |method_name|
       = f.input method_name, :as => :boolean
-    = f.input :experience_count, :label => "Сколько раз:"
+    = f.input :experience_count, :label => "Сколько раз:", :min => 0, :input_html => {:disabled => true}
 
   = f.inputs :name => "Аккаунты в соц. сетях", :id => "social_accounts" do
     -UserApp::SOCIAL_ACCOUNTS.each do |provider_key, provider_name|

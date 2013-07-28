@@ -24,9 +24,14 @@ class UserApp < ActiveRecord::Base
   validates :current_status, :presence => true
   validates :has_car, :inclusion =>  { :in => [true, false], :message => "требуется указать" }
   validates :legal_status, :inclusion =>  { :in => [LEGAL_STATUS_NO, LEGAL_STATUS_YES, LEGAL_STATUS_LAWYER] }
+  validates :experience_count, :presence => true
   validates :experience_count,
-            :presence => true,
-            :numericality  => {:only_integer => true, :greater_than_or_equal_to => 0}
+            :numericality  => {:only_integer => true, :equal_to => 0, :message => "Если у Вас был опыт, поставьте соответствующие отметки"},
+            if: Proc.new { |a| a.previous_statuses == NO_STATUS }
+  validates :experience_count,
+            :numericality  => {:only_integer => true, :greater_than => 0, :message => "Если у Вас был опыт, то количество раз - как минимум 1"},
+            unless: Proc.new { |a| a.previous_statuses == NO_STATUS }
+
 
   validates :ip, :presence => true
 
