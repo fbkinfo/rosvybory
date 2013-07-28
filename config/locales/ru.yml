@@ -277,6 +277,9 @@ ru:
     errors:
       <<: *errors
     models:
+      region:
+        one: "Округ/район"
+        other: "Округа/районы"
       user_app:
         one: "Заявка"
         other: "Заявки"
@@ -297,12 +300,22 @@ ru:
         was_delegate: "Доверенное лицо кандидата"
         was_journalist: "Журналист, освещающий выборы"
         was_coord: "Координатор"
+        current_status: "Текущий статус"
+        desired_statuses: "Готов стать"
+        previous_statuses: "Есть опыт"
+        full_name: "ФИО"
         last_name: "Фамилия"
         first_name: "Имя"
         patronymic: "Отчество"
         phone: "Телефон"
         phone_formatted: "Телефон (форм.)"
         region: "Район"
+        uic: "№ УИК"
+        has_car: "Автомобиль"
+        legal_status: "Юр. образование"
+        experience_count: "Опыт: кол-во"
+        extra: "Доп. сведения"
+        ip: "ip"
   user_app:
     status:
       observer: "Наблюдатель"

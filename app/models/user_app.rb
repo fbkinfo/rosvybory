@@ -11,6 +11,8 @@ class UserApp < ActiveRecord::Base
   #Член ПСГ УИК, кандидат, доверенное лицо кандидата, журналист освещающий выборы, координатор
   STATUS_PSG, STATUS_CANDIDATE, STATUS_DELEGATE, STATUS_JOURNALIST, STATUS_COORD = 512, 1024, 2048, 4096, 8192
 
+  LEGAL_STATUS_NO, LEGAL_STATUS_YES, LEGAL_STATUS_LAWYER = 0, 1, 3
+
   validates :data_processing_allowed, acceptance: { :message => "Требуется подтвердить" }
 
   validates :first_name, :presence => true
@@ -21,12 +23,16 @@ class UserApp < ActiveRecord::Base
   validates :desired_statuses, :presence => true, :exclusion => { :in => [NO_STATUS], :message => "Требуется выбрать хотя бы один вариант" }
   validates :current_status, :presence => true
   validates :has_car, :inclusion =>  { :in => [true, false], :message => "требуется указать" }
-  validates :legal_status, :presence => true
+  validates :legal_status, :inclusion =>  { :in => [LEGAL_STATUS_NO, LEGAL_STATUS_YES, LEGAL_STATUS_LAWYER] }
   validates :experience_count,
             :presence => true,
             :numericality  => {:only_integer => true, :greater_than_or_equal_to => 0}
 
   validates :ip, :presence => true
+
+  def full_name
+    [last_name, first_name, patronymic].join ' '
+  end
 
   def phone_formatted
     phonenumber = phone.gsub(/\D/, '')
@@ -35,8 +41,11 @@ class UserApp < ActiveRecord::Base
     elsif phonenumber.size == 10
       phonenumber = '7' + phonenumber
     end
-    phonenumber = "+#{phonenumber[0]} #{phonenumber[1..3]} #{phonenumber[4..6]}-#{phonenumber[7..8]}-#{phonenumber[9..10]}" if phonenumber.size == 11
-    phonenumber
+    if phonenumber.size == 11
+      phonenumber = "+#{phonenumber[0]} #{phonenumber[1..3]} #{phonenumber[4..6]}-#{phonenumber[7..8]}-#{phonenumber[9..10]}"
+    else
+      phone
+    end
   end
 
   SOCIAL_ACCOUNTS = {vk: "ВКонтакте", fb: "Facebook", twitter: "Twitter", lj: "LiveJournal" , ok: "Одноклассники"}
