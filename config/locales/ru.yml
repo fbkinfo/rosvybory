@@ -20,26 +20,6 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 ru:
-  activerecord:
-    attributes:
-      user_app:
-        can_be_observer: "Наблюдатель"
-        can_be_mobile: "Участник мобильной группы"
-        can_be_coord_region: "Территориальный координатор"
-        can_be_coord_mobile: "Координатор мобильной группы"
-        can_be_caller: "Оператор горячей линии"
-        can_be_prg_reserve: "ПРГ в резерве"
-        was_observer: "Наблюдатель"
-        was_prg: "Член ПРГ УИК"
-        was_psg: "Член ПСГ УИК"
-        was_tic_prg: "Член ПРГ ТИК"
-        was_tic_psg: "Член ПСГ ТИК"
-        was_candidate: "Кандидат"
-        was_delegate: "Доверенное лицо кандидата"
-        was_journalist: "Журналист, освещающий выборы"
-        was_coord: "Координатор"
-
-
   date:
     abbr_day_names:
     - Вс
@@ -162,7 +142,7 @@ ru:
     format: ! '%{attribute} %{message}'
     messages:
       accepted: нужно подтвердить
-      blank: не может быть пустым
+      blank: требуется указать
       confirmation: не совпадает с подтверждением
       empty: не может быть пустым
       equal_to: может иметь лишь значение, равное %{count}
@@ -171,7 +151,7 @@ ru:
       greater_than: может иметь значение большее %{count}
       greater_than_or_equal_to: может иметь значение большее или равное %{count}
       inclusion: имеет непредусмотренное значение
-      invalid: имеет неверное значение
+      invalid: имеет неверный формат
       less_than: может иметь значение меньшее чем %{count}
       less_than_or_equal_to: может иметь значение меньшее или равное %{count}
       not_a_number: не является числом
@@ -296,3 +276,47 @@ ru:
   activerecord:
     errors:
       <<: *errors
+    models:
+      user_app:
+        one: "Заявка"
+        other: "Заявки"
+    attributes:
+      user_app:
+        can_be_observer: "Наблюдатель"
+        can_be_mobile: "Участник мобильной группы"
+        can_be_coord_region: "Территориальный координатор"
+        can_be_coord_mobile: "Координатор мобильной группы"
+        can_be_caller: "Оператор горячей линии"
+        can_be_prg_reserve: "ПРГ в резерве"
+        was_observer: "Наблюдатель"
+        was_prg: "Член ПРГ УИК"
+        was_psg: "Член ПСГ УИК"
+        was_tic_prg: "Член ПРГ ТИК"
+        was_tic_psg: "Член ПСГ ТИК"
+        was_candidate: "Кандидат"
+        was_delegate: "Доверенное лицо кандидата"
+        was_journalist: "Журналист, освещающий выборы"
+        was_coord: "Координатор"
+        last_name: "Фамилия"
+        first_name: "Имя"
+        patronymic: "Отчество"
+        phone: "Телефон"
+        phone_formatted: "Телефон (форм.)"
+        region: "Район"
+  user_app:
+    status:
+      observer: "Наблюдатель"
+      mobile: "Участник моб. группы"
+      coord_region: "Терр. координатор"
+      coord_mobile: "Координатор моб. группы"
+      caller: "Оператор горячей линии"
+      prg: "ПРГ УИК"
+      psg: "ПСГ УИК"
+      tic_prg: "ПРГ ТИК"
+      tic_psg: "ПСГ ТИК"
+      candidate: "Кандидат"
+      delegate: "Доверенное лицо кандидата"
+      journalist: "Журналист"
+      coord: "Координатор"
+      prg_reserve: "ПРГ в резерве"
+      no_status: ""

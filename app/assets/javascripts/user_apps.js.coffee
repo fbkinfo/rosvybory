@@ -3,11 +3,11 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 jQuery ->
   updateSubmitState = ->
-    submit_enabled = $("#data_processing_allowed").prop('checked')
+    submit_enabled = $("#user_app_data_processing_allowed").prop('checked')
     $btn = $(".form-actions input[type=submit]")
     $btn.prop('disabled', !submit_enabled).toggleClass('btn-primary', submit_enabled)
 
-  $("#data_processing_allowed").change (e)->
+  $("#user_app_data_processing_allowed").change (e)->
     updateSubmitState()
 
   $('#user_app_region_id').select2

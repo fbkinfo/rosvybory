@@ -2,6 +2,42 @@ class UserApp < ActiveRecord::Base
   serialize :social_accounts, HashWithIndifferentAccess
   belongs_to :region
 
+  #наблюдатель, участник мобильной группы, территориальный координатор, координатор мобильной группы, оператор горячей линии
+  NO_STATUS, STATUS_OBSERVER, STATUS_MOBILE, STATUS_COORD_REGION, STATUS_COORD_MOBILE, STATUS_CALLER = 0, 1, 2, 4, 8, 16
+
+  #Член ПРГ в резерве, Член ПРГ УИК, Член ПСГ ТИК, Член ПРГ ТИК
+  STATUS_PRG_RESERVE, STATUS_PRG, STATUS_TIC_PSG, STATUS_TIC_PRG = 32, 64, 128, 256
+
+  #Член ПСГ УИК, кандидат, доверенное лицо кандидата, журналист освещающий выборы, координатор
+  STATUS_PSG, STATUS_CANDIDATE, STATUS_DELEGATE, STATUS_JOURNALIST, STATUS_COORD = 512, 1024, 2048, 4096, 8192
+
+  validates :data_processing_allowed, acceptance: { :message => "Требуется подтвердить" }
+
+  validates :first_name, :presence => true
+  validates :last_name,  :presence => true
+  validates :email, :presence => true, :format => { :with => /.+@.+\..+/i }
+  validates :phone, :presence => true
+  #validates :region, :presence => true
+  validates :desired_statuses, :presence => true, :exclusion => { :in => [NO_STATUS], :message => "Требуется выбрать хотя бы один вариант" }
+  validates :current_status, :presence => true
+  validates :has_car, :inclusion =>  { :in => [true, false], :message => "требуется указать" }
+  validates :legal_status, :presence => true
+  validates :experience_count,
+            :presence => true,
+            :numericality  => {:only_integer => true, :greater_than_or_equal_to => 0}
+
+  validates :ip, :presence => true
+
+  def phone_formatted
+    phonenumber = phone.gsub(/\D/, '')
+    if phonenumber.size == 11
+      phonenumber[0] = '7' if phonenumber[0] == '8'
+    elsif phonenumber.size == 10
+      phonenumber = '7' + phonenumber
+    end
+    phonenumber = "+#{phonenumber[0]} #{phonenumber[1..3]} #{phonenumber[4..6]}-#{phonenumber[7..8]}-#{phonenumber[9..10]}" if phonenumber.size == 11
+    phonenumber
+  end
 
   SOCIAL_ACCOUNTS = {vk: "ВКонтакте", fb: "Facebook", twitter: "Twitter", lj: "LiveJournal" , ok: "Одноклассники"}
   SOCIAL_ACCOUNTS.each do |provider_key, provider_name|
@@ -12,52 +48,55 @@ class UserApp < ActiveRecord::Base
     end
   end
 
-  #наблюдатель, участник мобильной группы, территориальный координатор, координатор мобильной группы, оператор горячей линии
-  NO_STATUS, STATUS_OBSERVER, STATUS_MOBILE, STATUS_COORD_REGION, STATUS_COORD_MOBILE, STATUS_CALLER = 0, 1, 2, 4, 8, 16
 
-  #Член ПРГ в резерве, Член ПРГ УИК, Член ПСГ ТИК, Член ПРГ ТИК
-  STATUS_PRG_RESERVE, STATUS_PRG, STATUS_TIC_PSG, STATUS_TIC_PRG = 32, 64, 128, 256
+  def self.all_future_statuses
+    {
+        STATUS_OBSERVER => "observer",
+        STATUS_MOBILE => "mobile",
+        STATUS_COORD_REGION => "coord_region",
+        STATUS_COORD_MOBILE => "coord_mobile",
+        STATUS_CALLER => "caller"
+        #STATUS_PRG_RESERVE => "prg_reserve"
+    }
+  end
 
-  #Член ПСГ УИК, кандидат, доверенное лицо кандидата, журналист освещающий выборы, координатор
-  STATUS_PSG, STATUS_CANDIDATE, STATUS_DELEGATE, STATUS_JOURNALIST, STATUS_COORD = 512, 1024, 2048, 4096, 8192
+  def self.future_statuses_methods
+    self.all_future_statuses.values.collect{|v| "can_be_"+v}
+  end
 
-  FUTURE_STATUSES = {
-      STATUS_OBSERVER => "observer",
-      STATUS_MOBILE => "mobile",
-      STATUS_COORD_REGION => "coord_region",
-      STATUS_COORD_MOBILE => "coord_mobile",
-      STATUS_CALLER => "caller"
-      #STATUS_PRG_RESERVE => "prg_reserve"
-  }
+  def self.all_previous_statuses
+    {
+        STATUS_OBSERVER => "observer",
+        STATUS_PRG => "prg",
+        STATUS_PSG => "psg",
+        STATUS_TIC_PRG => "tic_prg",
+        STATUS_TIC_PSG => "tic_psg",
+        STATUS_CANDIDATE => "candidate",
+        STATUS_DELEGATE => "delegate",
+        STATUS_JOURNALIST => "journalist",
+        STATUS_COORD => "coord"
+    }
+  end
 
-  #CURRENT_STATUSES = {STATUS_PRG_RESERVE => "prg_reserve",
-  #                    STATUS_PRG => "prg",
-  #                    STATUS_TIC_PSG => "tic_psg",
-  #                    STATUS_TIC_PRG => "tic_prg"
-  #}
+  def self.previous_statuses_methods
+    self.all_previous_statuses.values.collect{|v| "was_"+v}
+  end
 
-  PREVIOUS_STATUSES = {
-      STATUS_OBSERVER => "observer",
-      STATUS_PRG => "prg",
-      STATUS_PSG => "psg",
-      STATUS_TIC_PRG => "tic_prg",
-      STATUS_TIC_PSG => "tic_psg",
-      STATUS_CANDIDATE => "candidate",
-      STATUS_DELEGATE => "delegate",
-      STATUS_JOURNALIST => "journalist",
-      STATUS_COORD => "coord"
-  }
+  def self.all_current_statuses
+    {
+        STATUS_PRG_RESERVE => "prg_reserve",
+        STATUS_PRG => "prg",
+        STATUS_TIC_PSG => "tic_psg",
+        STATUS_TIC_PRG => "tic_prg"
+    }
+  end
 
   def self.social_methods
     SOCIAL_ACCOUNTS.keys.collect{|v| "social_"+v.to_s}
   end
 
-  def self.future_statuses_methods
-    FUTURE_STATUSES.values.collect{|v| "can_be_"+v}
-  end
-
-  def self.previous_statuses_methods
-    PREVIOUS_STATUSES.values.collect{|v| "was_"+v}
+  def self.all_statuses
+    all_future_statuses.merge(all_previous_statuses).merge(all_current_statuses).merge(NO_STATUS => "no_status")
   end
 
   def can_be(status_value)
@@ -69,11 +108,11 @@ class UserApp < ActiveRecord::Base
   end
 
 
-  FUTURE_STATUSES.each do |status_value, status_name|
+  self.all_future_statuses.each do |status_value, status_name|
     method_n = 'can_be_'+status_name
     define_method(method_n) { can_be status_value }
     define_method(method_n+'=') do |val|
-      if val
+      if val == "1" || val == true
         self.desired_statuses |= status_value
       else
         self.desired_statuses &= ~status_value
@@ -81,11 +120,11 @@ class UserApp < ActiveRecord::Base
     end
   end
 
-  PREVIOUS_STATUSES.each do |status_value, status_name|
+  self.all_previous_statuses.each do |status_value, status_name|
     method_n = 'was_'+status_name
     define_method(method_n) { was status_value }
     define_method(method_n+'=') do |val|
-      if val
+      if val == "1" || val == true
         self.previous_statuses |= status_value
       else
         self.previous_statuses &= ~status_value

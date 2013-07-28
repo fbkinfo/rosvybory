@@ -1,23 +1,26 @@
 = semantic_form_for @user_app do |f|
-  -#список - административный округ
-  -#район - текстовое поле с саджестом и валидейтом на полное совпадение
-  = f.input :region, :label => "Район", :as => :select, :collection => option_groups_from_collection_for_select(Region.cities.where(name: "Москва").first.regions, :regions, :name, :id, :name), :required => true, :input_html => {:style => "width: 280px;"}
-  = f.inputs "Кем готовы стать?", :id => "can_be" do
+
+  = f.inputs "Кем готовы стать?", :id => "user_app_desired_statuses", :class => ("text-error" if @user_app.errors[:desired_statuses].any?) do
+    -@user_app.errors[:desired_statuses].each do |err|
+      %span.text-error=err
+      %br
     -UserApp.future_statuses_methods.each do | method_name|
       = f.input method_name, :as => :boolean
+  %br
+  = f.input :region, :label => "Район", :as => :select, :collection => option_groups_from_collection_for_select(Region.cities.where(name: "Москва").first.regions, :regions, :name, :id, :name), :input_html => {:style => "width: 280px;"}
 
   = f.inputs "Личные данные", :id => "personal_info" do
-    = f.input :last_name, :label => "Фамилия", :required => true
-    = f.input :first_name, :label => "Имя", :required => true
-    = f.input :patronymic, :label => "Отчество"
-    = f.input :phone, :label => "Контактный телефон", :hint => "Пример: 903 1112233", :required => true
+    = f.input :last_name
+    = f.input :first_name
+    = f.input :patronymic
+    = f.input :phone, :label => "Контактный телефон", :placeholder => "Пример: 903 111 22 33"
     = f.input :email
 
   = f.inputs "Подробнее", :id => "details" do
     = f.input :uic, :label => "Желаемый УИК", :input_html => {:disabled => true}
-    = f.input :current_status, :label => "Текущий статус в системе избирательных комиссий:", :as => :radio, collection: current_status_options, :required => true
-    = f.input :has_car, :label => "Есть автомобиль?", :as => :radio, collection: {"Да" => true, "Нет" => false}, :required => true
-    = f.input :legal_status, :label => "Есть юридическое образование:", :as => :radio, collection: {"Да" => 1, "Нет" => 0, "Есть статус адвоката" => 3}, :required => true
+    = f.input :current_status, :label => "Текущий статус в системе избирательных комиссий:", :as => :radio, collection: current_status_options
+    = f.input :has_car, :label => "Есть автомобиль?", :as => :radio, collection: {"Да" => true, "Нет" => false}
+    = f.input :legal_status, :label => "Есть юридическое образование?", :as => :radio, collection: {"Да" => 1, "Нет" => 0, "Есть статус адвоката" => 3}
 
   = f.inputs "Прежний опыт", :id => "experience" do
     -UserApp.previous_statuses_methods.each do |method_name|
@@ -31,12 +34,6 @@
     = f.input :extra, :label => false, :input_html => {:rows => 10}
 
   = f.actions do
-
-    .boolean.input.required.control-group
-      .controls
-        = label_tag 'data_processing_allowed', class: 'checkbox' do
-          = check_box_tag 'data_processing_allowed'
-          Соглашаюсь на обработку персональных данных
-
+    = f.input :data_processing_allowed, :as => :boolean, :label => "Соглашаюсь на обработку персональных данных"
     = f.action :submit, :label => "Зарегистрироваться", button_html: { class: 'btn', :disabled => true }
     -#= link_to t('.cancel', :default => t("helpers.links.cancel")), user_apps_path, :class => 'btn'
