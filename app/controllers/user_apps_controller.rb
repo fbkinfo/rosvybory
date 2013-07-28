@@ -24,10 +24,15 @@ class UserAppsController < ApplicationController
     @user_app = UserApp.new(user_app_params)
     @user_app.ip = request.ip
     if @user_app.save
-      redirect_to new_user_app_path, notice: 'User app was successfully created.'
+      render action: 'done'
+      #redirect_to new_user_app_path, notice: 'User app was successfully created.'
     else
       render action: 'new'
     end
+  end
+
+  def done
+
   end
 
   # PATCH/PUT /user_apps/1

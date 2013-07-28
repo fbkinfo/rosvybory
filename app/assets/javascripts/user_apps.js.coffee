@@ -22,3 +22,4 @@ jQuery ->
 
   updateUicState()
   updateSubmitState()
+
