@@ -1,6 +1,9 @@
 class UserApp < ActiveRecord::Base
   serialize :social_accounts, HashWithIndifferentAccess
   belongs_to :region
+  belongs_to :adm_region, class_name: "Region"
+
+  before_save :set_adm_region
 
   #наблюдатель, участник мобильной группы, территориальный координатор, координатор мобильной группы, оператор горячей линии
   NO_STATUS, STATUS_OBSERVER, STATUS_MOBILE, STATUS_COORD_REGION, STATUS_COORD_MOBILE, STATUS_CALLER = 0, 1, 2, 4, 8, 16
@@ -55,6 +58,10 @@ class UserApp < ActiveRecord::Base
     else
       phone
     end
+  end
+
+  def set_adm_region
+    self.adm_region = region.try(:parent)
   end
 
   SOCIAL_ACCOUNTS = {vk: "ВКонтакте", fb: "Facebook", twitter: "Twitter", lj: "LiveJournal" , ok: "Одноклассники"}

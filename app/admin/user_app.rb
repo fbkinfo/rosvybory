@@ -16,10 +16,11 @@ ActiveAdmin.register UserApp do
     selectable_column
     column   :id
     column   :created_at
-    column("Адм. Округ") do  |user_app|
-      region = user_app.region.try(:parent)
-      link_to region.name, admin_region_path(region) if region
-    end
+    #column("Адм. Округ") do  |user_app|
+    #  region = user_app.region.try(:parent)
+    #  link_to region.name, admin_region_path(region) if region
+    #end
+    column   :adm_region
     column   :region #, sortable: 'regions.name'
     column   :full_name
     #column   :last_name
@@ -64,9 +65,10 @@ ActiveAdmin.register UserApp do
   csv do
     column   :id
     column   :created_at
-    column("Адм. Округ") do  |user_app|
-      user_app.region.try(:parent).try(:name)
-    end
+    column   :adm_region
+    #column("Адм. Округ") do  |user_app|
+    #  user_app.region.try(:parent).try(:name)
+    #end
     column   :region #, sortable: 'regions.name'
     #column   :full_name
     column   :last_name
@@ -110,11 +112,8 @@ ActiveAdmin.register UserApp do
 
   end
 
-  #t.string   "social_accounts"
   #t.string   "app_code"
   #t.integer  "app_status"
-  #t.datetime "created_at"
-  #t.datetime "updated_at"
 
   ## Creat e sections on the index screen
   #scope :all, :default => true

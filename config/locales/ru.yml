@@ -311,6 +311,7 @@ ru:
         patronymic: "Отчество"
         phone: "Телефон"
         phone_formatted: "Телефон (форм.)"
+        adm_region: "Адм. округ"
         region: "Район"
         uic: "№ УИК"
         has_car: "Автомобиль"
