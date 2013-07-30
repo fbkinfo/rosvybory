@@ -315,6 +315,8 @@ ru:
         legal_status: "Юр. образование"
         experience_count: "Опыт: кол-во"
         extra: "Доп. сведения"
+        year_born: "Год рождения"
+        sex_male: "Пол"
         ip: "ip"
   user_app:
     status:

@@ -8,6 +8,7 @@
       = f.input method_name, :as => :boolean
   %br
   = f.input :region, :label => "Район", :as => :select, :collection => option_groups_from_collection_for_select(Region.cities.where(name: "Москва").first.regions, :regions, :name, :id, :name), :input_html => {:style => "width: 280px;"}
+  = f.input :uic, :label => "Желаемый УИК", :input_html => {:disabled => true}
 
   = f.inputs "Личные данные", :id => "personal_info" do
     = f.input :last_name
@@ -15,9 +16,10 @@
     = f.input :patronymic
     = f.input :phone, :label => "Контактный телефон", :placeholder => "Пример: 903 111 22 33"
     = f.input :email
+    = f.input :year_born
+    = f.input :sex_male, :as => :radio, collection: {"Мужской" => true, "Женский" => false}
 
   = f.inputs "Подробнее", :id => "details" do
-    = f.input :uic, :label => "Желаемый УИК", :input_html => {:disabled => true}
     = f.input :current_status, :label => "Текущий статус в системе избирательных комиссий:", :as => :radio, collection: current_status_options
     = f.input :has_car, :label => "Есть автомобиль?", :as => :radio, collection: {"Да" => true, "Нет" => false}
     = f.input :legal_status, :label => "Есть юридическое образование?", :as => :radio, collection: {"Да" => UserApp::LEGAL_STATUS_YES, "Нет" => UserApp::LEGAL_STATUS_NO, "Есть статус адвоката" => UserApp::LEGAL_STATUS_LAWYER}

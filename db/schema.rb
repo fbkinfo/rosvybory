@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130727132537) do
+ActiveRecord::Schema.define(version: 20130730173403) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -77,6 +77,8 @@ ActiveRecord::Schema.define(version: 20130727132537) do
     t.datetime "updated_at"
     t.integer  "region_id"
     t.string   "ip"
+    t.integer  "year_born"
+    t.boolean  "sex_male"
   end
 
   add_index "user_apps", ["region_id"], name: "index_user_apps_on_region_id", using: :btree

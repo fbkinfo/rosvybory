@@ -32,6 +32,10 @@ class UserApp < ActiveRecord::Base
             :numericality  => {:only_integer => true, :greater_than => 0, :message => "Если у Вас был опыт, то количество раз - как минимум 1"},
             unless: Proc.new { |a| a.previous_statuses == NO_STATUS }
 
+  validates :sex_male, :inclusion =>  { :in => [true, false], :message => "требуется указать" }
+  validates :year_born,
+            :presence => true,
+            :numericality  => {:only_integer => true, :greater_than => 1900, :less_than => 2000,  :message => "Неверный формат"}
 
   validates :ip, :presence => true
 
