@@ -35,8 +35,11 @@ ActiveAdmin.register UserApp do
     column(:desired_statuses) {|user_app| status_human_readable user_app.desired_statuses}
     column(:previous_statuses) {|user_app| status_human_readable user_app.previous_statuses}
     column   :experience_count
+    column   :year_born
+    column(:sex_male) {|user_app| user_app.sex_male ? "М":"Ж"}
     column   :extra
     column   :ip
+    column   :useragent
     #UserApp.future_statuses_methods.each do | method_name|
     #  column("Готов стать: "+t('activerecord.attributes.user_app.'+method_name), method_name) {|user_app| user_app.send(method_name) ? "Да" : "Нет" }
     #end
