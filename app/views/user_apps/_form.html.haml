@@ -9,7 +9,7 @@
 
 = semantic_form_for @user_app do |f|
 
-  = f.inputs "Кем готовы стать?", :id => "user_app_desired_statuses", :class => ("text-error" if @user_app.errors[:desired_statuses].any?) do
+  = f.inputs "В каком качестве вы готовы участвовать в общественном контроле за выборами?", :id => "user_app_desired_statuses", :class => ("text-error" if @user_app.errors[:desired_statuses].any?) do
     -@user_app.errors[:desired_statuses].each do |err|
       %span.text-error=err
       %br
