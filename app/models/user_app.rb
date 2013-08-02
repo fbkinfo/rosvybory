@@ -20,6 +20,7 @@ class UserApp < ActiveRecord::Base
 
   validates :first_name, :presence => true
   validates :last_name,  :presence => true
+  validates :patronymic,  :presence => true
   validates :email, :presence => true, :format => { :with => /.+@.+\..+/i }
   validates :phone, :presence => true
   #validates :region, :presence => true
