@@ -4,7 +4,7 @@ ActiveAdmin.register UserApp do
   config.sort_order = "id_asc"
   controller do
     def scoped_collection
-      resource_class.includes(:region) # prevents N+1 queries to your database
+      resource_class.includes(:region).includes(:adm_region) # prevents N+1 queries to your database
     end
 
     def permitted_params
@@ -83,7 +83,7 @@ ActiveAdmin.register UserApp do
     column   :experience_count
     column(:previous_statuses) {|user_app| status_human_readable user_app.previous_statuses}
 
-    #column("Согласен войти в резерв УИКов") {|user_app| user_app.can_be_prg_reserve ? "Да":"Нет"}
+    column("Согласен войти в резерв УИКов") {|user_app| nil}
     column(:can_be_coord_region) {|user_app| user_app.can_be_coord_region ? "Да":"Нет"}
 
     column(:has_car) {|user_app| user_app.has_car ? "Есть":"Нет"}
@@ -91,9 +91,9 @@ ActiveAdmin.register UserApp do
     column   :social_accounts
     column   :extra
 
-    column(:legal_status) {|user_app| legal_status_human_readable user_app.legal_status}
-    #column(:legal_status) {|user_app| user_app.legal_status & UserApp::LEGAL_STATUS_YES ? "Да":"Нет"}
-    #column("Адвокатский статус") {|user_app| user_app.legal_status == UserApp::LEGAL_STATUS_LAWYER ? "Да":"Нет"}
+    #column(:legal_status) {|user_app| legal_status_human_readable user_app.legal_status}
+    column("Юр.образование") {|user_app| user_app.legal_status & UserApp::LEGAL_STATUS_YES ? "Да":"Нет"}
+    column("Адвокатский статус") {|user_app| user_app.legal_status == UserApp::LEGAL_STATUS_LAWYER ? "Да":"Нет"}
 
     column(:desired_statuses) {|user_app| status_human_readable user_app.desired_statuses}
 
