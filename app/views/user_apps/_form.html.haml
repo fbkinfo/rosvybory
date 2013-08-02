@@ -1,6 +1,12 @@
 :javascript
   var regions=#{regions_hash.to_json};
 
+-unless @user_app.errors.blank?
+  %h4.text-error
+    В форме присутствуют ошибки, пожалуйста, исправьте их.
+  .text-error
+    Поля с ошибками подсвечены красным цветом.
+
 = semantic_form_for @user_app do |f|
 
   = f.inputs "Кем готовы стать?", :id => "user_app_desired_statuses", :class => ("text-error" if @user_app.errors[:desired_statuses].any?) do
