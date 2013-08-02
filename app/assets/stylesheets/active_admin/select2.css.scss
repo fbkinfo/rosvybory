@@ -1,0 +1,40 @@
+body.active_admin {
+  fieldset.inputs {
+    margin-bottom: 10px;
+    padding-top: 5px;
+
+    li.input {
+      padding: 5px 10px;
+      padding-left: 10px;
+
+      select {
+        width: 70%;
+      }
+
+      &.phone, &.email, &.string, &.number, &.text, &.password, &.datepicker {
+        input, textarea {
+          width: 70%;
+          -webkit-box-sizing: border-box;
+          -moz-box-sizing: border-box;
+          box-sizing: border-box;
+        }
+      }
+
+      &.boolean {
+        padding-bottom: 10px;
+      }
+
+      &.hidden {
+        padding: 0px;
+      }
+    }
+
+    div.has_many {
+      padding-bottom: 10px;
+
+      fieldset.has_many_fields {
+        margin-bottom: 10px;
+      }
+    }
+  }
+}

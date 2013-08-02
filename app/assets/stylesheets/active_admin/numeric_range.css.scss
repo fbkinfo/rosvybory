@@ -1,0 +1,14 @@
+body.active_admin {
+  #sidebar {
+    .filter_numeric_range {
+      input {
+        width: 88px;
+      }
+      .seperator {
+        display: inline-block;
+        text-align: center;
+        width: 12px;
+      }
+    }
+  }
+}
