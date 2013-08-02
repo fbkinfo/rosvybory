@@ -44,4 +44,14 @@ module UserAppsHelper
     social_block.join(", <br>")
   end
 
+  def social_account_placeholders(provider)
+    {
+        vk: "http://vk.com/<...>",
+        fb: "https://www.facebook.com/<...> или /profile.php?id=<...>",
+        twitter: "https://twitter.com/<...>",
+        lj: "http://<...>.livejournal.com" ,
+        ok: "http://www.odnoklassniki.ru/profile/<...>"
+    }[provider]
+  end
+
 end
