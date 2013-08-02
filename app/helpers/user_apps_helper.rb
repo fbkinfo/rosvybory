@@ -54,4 +54,15 @@ module UserAppsHelper
     }[provider]
   end
 
+  def regions_hash
+    regions = {}
+    Region.adm_regions.each do |adm_region|
+      regions[adm_region.id] = []
+      adm_region.regions.each do |mun_region|
+        regions[adm_region.id] << {id: mun_region.id, name: mun_region.name}
+      end
+    end
+    regions
+  end
+
 end

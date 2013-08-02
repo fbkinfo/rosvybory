@@ -22,9 +22,21 @@ jQuery ->
     uic_enabled = $('#user_app_can_be_observer').prop('checked')
     $('#user_app_uic').prop('disabled', !uic_enabled)
 
+  $('#user_app_adm_region_id').select2
+    placeholder: "Начните вводить название"
 
   $('#user_app_region_id').select2
-    placeholder: "Начните вводить название"
+    placeholder: "Не важен/любой из округа"
+    allowClear: true
+
+  $("#user_app_adm_region_id").on "change", (e) ->
+    chosen_val = $(@).val()
+    $el = $("#user_app_region_id");
+    $el.empty(); # remove old options
+    $el.append $("<option></option>").attr("value", "")
+    $.each regions[chosen_val], (index, region) ->
+      $el.append $("<option></option>").attr("value", region.id).text(region.name)
+    $el.select2("val", "")
 
   $('#user_app_can_be_observer').change (e)->
     updateUicState()

@@ -3,8 +3,6 @@ class UserApp < ActiveRecord::Base
   belongs_to :region
   belongs_to :adm_region, class_name: "Region"
 
-  before_save :set_adm_region
-
   #наблюдатель, участник мобильной группы, территориальный координатор, координатор мобильной группы, оператор горячей линии
   NO_STATUS, STATUS_OBSERVER, STATUS_MOBILE, STATUS_COORD_REGION, STATUS_COORD_MOBILE, STATUS_CALLER = 0, 1, 2, 4, 8, 16
 
@@ -23,6 +21,7 @@ class UserApp < ActiveRecord::Base
   validates :patronymic,  :presence => true
   validates :email, :presence => true, :format => { :with => /.+@.+\..+/i }
   validates :phone, :presence => true
+  validates :adm_region, :presence => true
   #validates :region, :presence => true
   validates :desired_statuses, :presence => true, :exclusion => { :in => [NO_STATUS], :message => "Требуется выбрать хотя бы один вариант" }
   validates :current_status, :presence => true
@@ -43,6 +42,12 @@ class UserApp < ActiveRecord::Base
 
   validates :ip, :presence => true
 
+  validate :check_regions
+
+  def check_regions
+    errors.add(:region, "Район должен принадлежать выбранному округу") if region && region.parent != adm_region
+  end
+
   def full_name
     [last_name, first_name, patronymic].join ' '
   end
@@ -59,10 +64,6 @@ class UserApp < ActiveRecord::Base
     else
       phone
     end
-  end
-
-  def set_adm_region
-    self.adm_region = region.try(:parent)
   end
 
   SOCIAL_ACCOUNTS = {vk: "ВКонтакте", fb: "Facebook", twitter: "Twitter", lj: "LiveJournal" , ok: "Одноклассники"}

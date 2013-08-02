@@ -1,3 +1,6 @@
+:javascript
+  var regions=#{regions_hash.to_json};
+
 = semantic_form_for @user_app do |f|
 
   = f.inputs "Кем готовы стать?", :id => "user_app_desired_statuses", :class => ("text-error" if @user_app.errors[:desired_statuses].any?) do
@@ -7,7 +10,9 @@
     -UserApp.future_statuses_methods.each do | method_name|
       = f.input method_name, :as => :boolean
   %br
-  = f.input :region, :label => "Район", :as => :select, :collection => option_groups_from_collection_for_select(Region.cities.where(name: "Москва").first.regions, :regions, :name, :id, :name), :input_html => {:style => "width: 280px;"}
+  = f.input :adm_region, :as => :select, :collection => Region.adm_regions.all, :input_html => {:style => "width: 280px;"}
+  = f.input :region, :as => :select, :collection => (@user_app.adm_region ? @user_app.adm_region.regions : []), :input_html => {:style => "width: 280px;"}, hint: "Можно оставить пустым или выбрать конкретный район" #ширина прописана inline, чтобы select2 её правильно подхватил, через css он не понимает
+  -#= f.input :region, :as => :select, :collection => option_groups_from_collection_for_select(Region.cities.where(name: "Москва").first.regions, :regions, :name, :id, :name), :input_html => {:style => "width: 280px;", :class => "selectify"}
   = f.input :uic, :label => "Желаемый УИК", :input_html => {:disabled => true}
 
   = f.inputs "Личные данные", :id => "personal_info" do
