@@ -292,6 +292,7 @@ ru:
         can_be_caller: "Оператор горячей линии"
         can_be_prg_reserve: "ПРГ в резерве"
         was_observer: "Наблюдатель"
+        was_mobile: "Участник мобильной группы"
         was_prg: "Член ПРГ УИК"
         was_psg: "Член ПСГ УИК"
         was_tic_prg: "Член ПРГ ТИК"

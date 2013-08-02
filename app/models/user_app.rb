@@ -93,6 +93,7 @@ class UserApp < ActiveRecord::Base
   def self.all_previous_statuses
     {
         STATUS_OBSERVER => "observer",
+        STATUS_MOBILE => "mobile",
         STATUS_PRG => "prg",
         STATUS_PSG => "psg",
         STATUS_TIC_PRG => "tic_prg",
