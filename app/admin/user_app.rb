@@ -1,6 +1,59 @@
 ActiveAdmin.register UserApp do
 
-  menu :label => "Заявки"
+
+  #scope :all, :default => true
+  #scope :trash
+  #scope :accepted
+  #scope :unchecked
+  #
+  ## Filterable attributes on the index screen
+
+  filter :created_at
+  filter :adm_region , :as => :select, :collection => proc { Region.adm_regions.all }, :input_html => {:style => "width: 220px;"}
+  filter :region, :as => :select, :collection => proc { Region.mun_regions.all }, :input_html => {:style => "width: 220px;"}
+  #так красиво разбивается по округам, но при фильтрации не устанавливает значение в текущее после перезагрузки страницы, это может сбить с толку
+  #filter :region, :as => :select, :collection => proc { option_groups_from_collection_for_select(Region.adm_regions, :regions, :name, :id, :name) }
+
+
+  filter   :last_name
+  filter   :first_name
+  filter   :patronymic
+  filter   :phone
+  filter   :email
+  filter   :uic, :as => :numeric_range
+
+  #filter   :current_status, :as => :bitwise_and, :collection =>  proc { UserApp.all_current_statuses.keys }, :input_html => {:style => "width: 220px;"}
+
+  filter   :experience_count
+  #column(:previous_statuses) {|user_app| status_human_readable user_app.previous_statuses}
+
+  #column("Согласен войти в резерв УИКов") {|user_app| user_app.can_be_prg_reserve ? "Да":"Нет"}
+  #column(:can_be_coord_region) {|user_app| user_app.can_be_coord_region ? "Да":"Нет"}
+  #
+  filter   :has_car
+  #
+  #column(:social_accounts) {|user_app| raw social_accounts_readable(user_app.social_accounts) }
+  filter   :extra
+  #column(:legal_status) {|user_app| legal_status_human_readable user_app.legal_status}
+
+  #column(:legal_status) {|user_app| user_app.legal_status & UserApp::LEGAL_STATUS_YES ? "Да":"Нет"}
+  #column("Адвокатский статус") {|user_app| user_app.legal_status == UserApp::LEGAL_STATUS_LAWYER ? "Да":"Нет"}
+  #column(:desired_statuses) {|user_app| status_human_readable user_app.desired_statuses}
+  #
+  filter   :year_born, :as => :numeric_range
+  #column(:sex_male) {|user_app| user_app.sex_male ? "М":"Ж"}
+  filter   :ip
+  filter   :useragent
+
+  #preserve_default_filters!
+
+  #scope :all, :default => true
+  #Region.adm_regions.all.each do |adm_region|
+  #  scope adm_region.name do |items|
+  #    items.where(:adm_region => adm_region)
+  #  end
+  #end
+
   config.sort_order = "id_asc"
   controller do
     def scoped_collection
@@ -44,7 +97,7 @@ ActiveAdmin.register UserApp do
     column   :extra
     column(:legal_status) {|user_app| legal_status_human_readable user_app.legal_status}
 
-    #column(:legal_status) {|user_app| user_app.legal_status & UserApp::LEGAL_STATUS_YES ? "Да":"Нет"}
+    #column("Юр.образование") {|user_app| user_app.legal_status & UserApp::LEGAL_STATUS_YES ? "Да":"Нет"}
     #column("Адвокатский статус") {|user_app| user_app.legal_status == UserApp::LEGAL_STATUS_LAWYER ? "Да":"Нет"}
     column(:desired_statuses) {|user_app| status_human_readable user_app.desired_statuses}
 
@@ -66,10 +119,7 @@ ActiveAdmin.register UserApp do
     column   :id
     column   :created_at
     column   :adm_region
-    #column("Адм. Округ") do  |user_app|
-    #  user_app.region.try(:parent).try(:name)
-    #end
-    column   :region #, sortable: 'regions.name'
+    column   :region
     #column   :full_name
     column   :last_name
     column   :first_name
@@ -111,28 +161,4 @@ ActiveAdmin.register UserApp do
 
 
   end
-
-  #t.string   "app_code"
-  #t.integer  "app_status"
-
-  ## Creat e sections on the index screen
-  #scope :all, :default => true
-  #scope :available
-  #scope :drafts
-  #
-  ## Filterable attributes on the index screen
-  #filter :title
-  #filter :author, :as => :select, :collection => lambda{ Product.authors }
-  #filter :price
-  #filter :created_at
-  #
-  ## Customize columns displayed on the index screen in the table
-  #index do
-  #  column :title
-  #  column "Price", :sortable => :price do |product|
-  #    number_to_currency product.price
-  #  end
-  #  default_actions
-  #end
-
 end
