@@ -128,11 +128,11 @@ class UserApp < ActiveRecord::Base
   end
 
   def can_be(status_value)
-    desired_statuses & status_value > 0
+    desired_statuses & status_value == status_value
   end
 
   def was(status_value)
-    previous_statuses & status_value > 0
+    previous_statuses & status_value == status_value
   end
 
 
