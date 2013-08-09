@@ -56,5 +56,5 @@ production:
   encoding: unicode
   database: rosvibory_production
   pool: 5
-  username: postgres
-  password:
+  username: dev
+  password: 8wR2gH9hlI
