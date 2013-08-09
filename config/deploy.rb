@@ -1,6 +1,8 @@
 # encoding: utf-8
 
 require "bundler/capistrano"
+require "rvm/capistrano"
+
 set :application, "rosvybory"
 set :repository,  "git@github.com:fbkinfo/rosvybory.git"
 set :deploy_to, "/home/dev/production/rosvybory"
@@ -8,6 +10,7 @@ set :user, "dev"
 set :use_sudo, false
 set :deploy_via, :remote_cache
 default_run_options[:pty] = true
+set :rvm_ruby_string, "2.0.0-p247@rosvybory"#:local
 
 # set :scm, :git # You can set :scm explicitly or Capistrano will make an intelligent guess based on known version control directory names
 # Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`

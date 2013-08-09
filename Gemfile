@@ -18,6 +18,7 @@ gem "select2-rails"
 gem 'honeybadger'
 gem 'therubyracer', platforms: :ruby
 gem 'rvm-capistrano'
+gem 'unicorn'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
