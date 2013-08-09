@@ -16,7 +16,7 @@ gem 'formtastic', '2.3.0.rc2'
 gem 'formtastic-bootstrap'#, github: 'mjbellantoni/formtastic-bootstrap'
 gem "select2-rails"
 gem 'honeybadger'
-
+gem 'therubyracer', platforms: :ruby
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
