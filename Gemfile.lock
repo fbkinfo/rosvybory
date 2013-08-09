@@ -110,6 +110,8 @@ GEM
       activesupport (>= 3.2, < 5)
     highline (1.6.19)
     hike (1.2.3)
+    honeybadger (1.7.0)
+      json
     i18n (0.6.4)
     jquery-rails (3.0.4)
       railties (>= 3.0, < 5.0)
@@ -117,6 +119,7 @@ GEM
     jquery-ui-rails (4.0.4)
       jquery-rails
       railties (>= 3.1.0)
+    json (1.8.0)
     kaminari (0.14.1)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
@@ -214,6 +217,7 @@ DEPENDENCIES
   formtastic (= 2.3.0.rc2)
   formtastic-bootstrap
   haml-rails
+  honeybadger
   inherited_resources!
   jquery-rails
   less-rails
