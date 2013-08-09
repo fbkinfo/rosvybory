@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/ernie/ransack.git
-  revision: 3299f3aeaf5ce0a264f194daa0bec86919dfad82
+  revision: 8db7a3c1f4242305488a541267dd87c5397f5707
   branch: rails-4
   specs:
     ransack (0.7.3)
@@ -10,7 +10,7 @@ GIT
 
 GIT
   remote: git://github.com/gregbell/active_admin.git
-  revision: 54fb71c5415f7b1a7aa0cdde680ee882fa3b2d6f
+  revision: a9949c1524205928b18597f840e83478ba97c2ef
   branch: rails4
   specs:
     activeadmin (0.6.0)
@@ -29,7 +29,7 @@ GIT
 
 GIT
   remote: git://github.com/josevalim/inherited_resources.git
-  revision: 6d451d4bb2026b6c1920ba15838adb4d4b2aa3a4
+  revision: ae1516a3f1a01f98beac3334f76831a1c793c521
   specs:
     inherited_resources (1.4.1)
       has_scope (~> 0.6.0.rc)
@@ -65,12 +65,19 @@ GEM
     arbre (1.0.1)
       activesupport (>= 3.0.0)
     arel (4.0.0)
-    atomic (1.1.10)
+    atomic (1.1.12)
     bcrypt-ruby (3.1.1)
     bourbon (3.1.8)
       sass (>= 3.2.0)
       thor
     builder (3.1.4)
+    capistrano (2.15.5)
+      highline
+      net-scp (>= 1.0.0)
+      net-sftp (>= 2.0.0)
+      net-ssh (>= 2.0.14)
+      net-ssh-gateway (>= 1.1.0)
+    capistrano_colors (0.5.5)
     coffee-rails (4.0.0)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0.beta, < 5.0)
@@ -79,7 +86,7 @@ GEM
       execjs
     coffee-script-source (1.6.3)
     commonjs (0.2.6)
-    devise (3.0.0)
+    devise (3.0.2)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.1)
       railties (>= 3.2.6, < 5)
@@ -101,6 +108,7 @@ GEM
     has_scope (0.6.0.rc)
       actionpack (>= 3.2, < 5)
       activesupport (>= 3.2, < 5)
+    highline (1.6.19)
     hike (1.2.3)
     i18n (0.6.4)
     jquery-rails (3.0.4)
@@ -123,7 +131,14 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.23)
     minitest (4.7.5)
-    multi_json (1.7.7)
+    multi_json (1.7.8)
+    net-scp (1.1.2)
+      net-ssh (>= 2.6.5)
+    net-sftp (2.1.2)
+      net-ssh (>= 2.6.5)
+    net-ssh (2.6.8)
+    net-ssh-gateway (1.2.0)
+      net-ssh (>= 2.6.5)
     orm_adapter (0.4.0)
     pg (0.16.0)
     polyamorous (0.6.3)
@@ -149,7 +164,7 @@ GEM
     ref (1.0.5)
     responders (1.0.0.rc)
       railties (>= 3.2, < 5)
-    sass (3.2.9)
+    sass (3.2.10)
     sass-rails (4.0.0)
       railties (>= 4.0.0.beta, < 5.0)
       sass (>= 3.1.10)
@@ -193,6 +208,8 @@ PLATFORMS
 
 DEPENDENCIES
   activeadmin!
+  capistrano
+  capistrano_colors
   coffee-rails (~> 4.0.0)
   formtastic (= 2.3.0.rc2)
   formtastic-bootstrap
