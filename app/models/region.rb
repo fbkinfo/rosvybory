@@ -1,6 +1,7 @@
 class Region < ActiveRecord::Base
 
   belongs_to :parent, class_name: 'Region'
+  validates_uniqueness_of :name
 
   CITY, ADM_REGION, MUN_REGION = 1, 2, 3
 
