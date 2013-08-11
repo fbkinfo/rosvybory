@@ -41,6 +41,7 @@ group :development do
   gem 'capistrano'
   gem 'capistrano_colors'
   gem 'pry-rails'
+  gem 'quiet_assets'
 end
 
 group :test do
