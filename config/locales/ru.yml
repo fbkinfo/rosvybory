@@ -311,6 +311,7 @@ ru:
         first_name: "Имя"
         patronymic: "Отчество"
         phone: "Телефон"
+        phone_verified: "Телефон проверен"
         phone_formatted: "Телефон (форм.)"
         adm_region: "Округ"
         region: "Район"
