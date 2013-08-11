@@ -158,8 +158,24 @@ regions = {"Центральный АО" => ["Арбат",
  regions.each do |adm_region_name, mun_region_names|
    adm_region = Region.create(name: adm_region_name, kind: Region::ADM_REGION, parent: moscow)
    mun_region_names.each do |mun_region_name|
-     Region.create(name: mun_region_name, kind: Region::MUN_REGION, parent: adm_region)
+     Region.create!(name: mun_region_name, kind: Region::MUN_REGION, parent: adm_region)
    end
- end
+ end if Region.count.zero?
 
+roles = [
+  %w(admin администратор АДМ),
+  %w(volunteer волонтёр волонтёр),
+  ["observer", "наблюдатель на участке", "наблюдатель"],
+  ["mobile", "участником мобильной группы", "участником мобильной группы"],
+  ["callcenter", "оператором колл-центра", "оператором колл-центра"],
+  ["federal_repr", "федеральный представитель наблюдательного объединения", "ФП"],
+  ["dc", "координатор округа", "ОК"],
+  ["rc", "координатор района", "РК"],
+  ["mc", "координатор мобильной группы", "МК"],
+  ["cc", "координатор колл-центра", "КК"],
+  ["other", "прочее заинтересованное лицо", "заинтересованное лицо"]
+]
 
+roles.each do |slug, name, short_name|
+  Role.create! slug: slug, name: name, short_name: short_name
+end if Role.count.zero?

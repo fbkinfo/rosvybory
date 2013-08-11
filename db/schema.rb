@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130730203354) do
+ActiveRecord::Schema.define(version: 20130811160415) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -57,7 +57,20 @@ ActiveRecord::Schema.define(version: 20130730203354) do
     t.datetime "updated_at"
   end
 
+  add_index "regions", ["name"], name: "index_regions_on_name", unique: true, using: :btree
   add_index "regions", ["parent_id"], name: "index_regions_on_parent_id", using: :btree
+
+  create_table "roles", force: true do |t|
+    t.string   "name",       null: false
+    t.string   "slug",       null: false
+    t.string   "short_name", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "roles", ["name"], name: "index_roles_on_name", unique: true, using: :btree
+  add_index "roles", ["short_name"], name: "index_roles_on_short_name", unique: true, using: :btree
+  add_index "roles", ["slug"], name: "index_roles_on_slug", unique: true, using: :btree
 
   create_table "user_apps", force: true do |t|
     t.string   "last_name"
