@@ -40,8 +40,13 @@ gem 'inherited_resources', github: 'josevalim/inherited_resources'
 group :development do
   gem 'capistrano'
   gem 'capistrano_colors'
-  gem 'factory_girl'
+  gem 'pry-rails'
+end
+
+group :test do
+  gem 'factory_girl_rails'
   gem 'rspec-rails'
+  gem 'database_cleaner'
 end
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
