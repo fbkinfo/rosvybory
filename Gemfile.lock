@@ -95,6 +95,10 @@ GEM
       railties (>= 3.2.6, < 5)
       warden (~> 1.2.3)
     diff-lcs (1.2.4)
+    draper (1.2.1)
+      actionpack (>= 3.0)
+      activesupport (>= 3.0)
+      request_store (~> 1.0.3)
     erubis (2.7.0)
     execjs (1.4.0)
       multi_json (~> 1.0)
@@ -185,6 +189,7 @@ GEM
     raindrops (0.11.0)
     rake (10.1.0)
     ref (1.0.5)
+    request_store (1.0.5)
     responders (1.0.0.rc)
       railties (>= 3.2, < 5)
     rspec-core (2.14.4)
@@ -255,6 +260,7 @@ DEPENDENCIES
   capistrano_colors
   coffee-rails (~> 4.0.0)
   database_cleaner
+  draper
   factory_girl_rails
   formtastic (= 2.3.0.rc2)
   formtastic-bootstrap
