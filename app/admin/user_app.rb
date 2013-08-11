@@ -126,6 +126,7 @@ ActiveAdmin.register UserApp do
 
   form do |f|
     f.inputs "Роль" do
+      # TODO
       f.input :desired_statuses
       f.input :adm_region
       f.input :region
@@ -137,24 +138,28 @@ ActiveAdmin.register UserApp do
       f.input :first_name
       f.input :patronymic
       f.input :phone
+      f.input :phone_verified
       f.input :email
       f.input :year_born
       f.input :sex_male, label: "Мужчина"
     end
 
     f.inputs "Подробнее" do
+      # TODO
       f.input :current_status
       f.input :has_car
       f.input :legal_status
     end
 
     f.inputs "Прежний опыт" do
+      # TODO
       f.input :previous_statuses
       f.input :experience_count
     end
 
     f.inputs "Аккаунты в соцсетях" do
-      f.input :social_accounts
+      # TODO
+      #f.input :social_accounts
     end
 
     f.inputs "Дополнительные сведения" do
