@@ -165,6 +165,7 @@ ActiveAdmin.register UserApp do
     column :first_name
     column :patronymic
     column :phone_formatted
+    column :phone_verified
     column :email
 
     column :uic

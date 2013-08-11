@@ -21,6 +21,7 @@ class UserApp < ActiveRecord::Base
   validates :patronymic,  :presence => true
   validates :email, :presence => true, :format => { :with => /.+@.+\..+/i }
   validates :phone, :presence => true
+  #validates_format_of :phone, with: /\A\d{10}\z/
   validates :adm_region, :presence => true
   #validates :region, :presence => true
   validates :desired_statuses, :presence => true, :exclusion => { :in => [NO_STATUS], :message => "Требуется выбрать хотя бы один вариант" }
@@ -48,27 +49,7 @@ class UserApp < ActiveRecord::Base
     event(:reject) {transition all => :rejected}
   end
 
-  def check_regions
-    errors.add(:region, "Район должен принадлежать выбранному округу") if region && region.parent != adm_region
-  end
 
-  def full_name
-    [last_name, first_name, patronymic].join ' '
-  end
-
-  def phone_formatted
-    phonenumber = phone.gsub(/\D/, '')
-    if phonenumber.size == 11
-      phonenumber[0] = '7' if phonenumber[0] == '8'
-    elsif phonenumber.size == 10
-      phonenumber = '7' + phonenumber
-    end
-    if phonenumber.size == 11
-      phonenumber = "+#{phonenumber[0]} #{phonenumber[1..3]} #{phonenumber[4..6]}-#{phonenumber[7..8]}-#{phonenumber[9..10]}"
-    else
-      phone
-    end
-  end
 
   SOCIAL_ACCOUNTS = {vk: "ВКонтакте", fb: "Facebook", twitter: "Twitter", lj: "LiveJournal" , ok: "Одноклассники"}
   SOCIAL_ACCOUNTS.each do |provider_key, provider_name|
@@ -165,4 +146,8 @@ class UserApp < ActiveRecord::Base
   end
 
 
+  private
+    def check_regions
+      errors.add(:region, "Район должен принадлежать выбранному округу") if region && region.parent != adm_region
+    end
 end
