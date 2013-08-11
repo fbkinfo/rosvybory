@@ -1,4 +1,13 @@
 ActiveAdmin.register UserApp do
+  member_action :reject, method: :post do
+    user_app = resource
+    user_app.reject!
+    redirect_to control_user_app_path(user_app)
+  end
+
+  action_item only: [:edit, :show] do
+    link_to('Отклонить', reject_control_user_app_path(user_app), method: :post) unless user_app.rejected?
+  end
 
 
   #scope :all, :default => true
@@ -113,6 +122,46 @@ ActiveAdmin.register UserApp do
     #end
 
     default_actions
+  end
+
+  form do |f|
+    f.inputs "Роль" do
+      f.input :desired_statuses
+      f.input :adm_region
+      f.input :region
+      f.input :uic
+    end
+
+    f.inputs "Личные данные" do
+      f.input :last_name
+      f.input :first_name
+      f.input :patronymic
+      f.input :phone
+      f.input :email
+      f.input :year_born
+      f.input :sex_male, label: "Мужчина"
+    end
+
+    f.inputs "Подробнее" do
+      f.input :current_status
+      f.input :has_car
+      f.input :legal_status
+    end
+
+    f.inputs "Прежний опыт" do
+      f.input :previous_statuses
+      f.input :experience_count
+    end
+
+    f.inputs "Аккаунты в соцсетях" do
+      f.input :social_accounts
+    end
+
+    f.inputs "Дополнительные сведения" do
+      f.input :extra
+    end
+
+    f.actions
   end
 
   csv do

@@ -44,6 +44,10 @@ class UserApp < ActiveRecord::Base
 
   validate :check_regions
 
+  state_machine initial: :pending do
+    event(:reject) {transition all => :rejected}
+  end
+
   def check_regions
     errors.add(:region, "Район должен принадлежать выбранному округу") if region && region.parent != adm_region
   end

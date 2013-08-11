@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130811171141) do
+ActiveRecord::Schema.define(version: 20130811220924) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -79,6 +79,7 @@ ActiveRecord::Schema.define(version: 20130811171141) do
     t.boolean  "sex_male"
     t.string   "useragent"
     t.integer  "adm_region_id"
+    t.string   "state",             default: "pending", null: false
   end
 
   add_index "user_apps", ["adm_region_id"], name: "index_user_apps_on_adm_region_id", using: :btree

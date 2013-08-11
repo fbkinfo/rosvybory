@@ -20,6 +20,7 @@ gem 'therubyracer', platforms: :ruby
 gem 'rvm-capistrano'
 gem 'unicorn'
 gem 'cancan'
+gem 'state_machine'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
