@@ -10,11 +10,21 @@ ActiveAdmin.register User do
   filter :email
 
   form do |f|
-    f.inputs "User Details" do
+    f.inputs "Пользовательские данные" do
+      f.input :roles
       f.input :email
-      f.input :password
-      f.input :password_confirmation
     end
+    #f.inputs "Смена пароля" do
+      #f.input :password
+      #f.input :password_confirmation
+    #end
     f.actions
+  end
+
+  controller do
+    def permitted_params
+      params.permit!
+      params
+    end
   end
 end
