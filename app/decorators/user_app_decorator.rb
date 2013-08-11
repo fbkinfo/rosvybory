@@ -36,4 +36,22 @@ class UserAppDecorator < Draper::Decorator
   def phone_verified
     object.phone_verified ? "Да":"Нет"
   end
+
+  def phone_formatted
+    phonenumber = phone.gsub(/\D/, '')
+    if phonenumber.size == 11
+      phonenumber[0] = '7' if phonenumber[0] == '8'
+    elsif phonenumber.size == 10
+      phonenumber = '7' + phonenumber
+    end
+    if phonenumber.size == 11
+      phonenumber = "+#{phonenumber[0]} #{phonenumber[1..3]} #{phonenumber[4..6]}-#{phonenumber[7..8]}-#{phonenumber[9..10]}"
+    else
+      phone
+    end
+  end
+
+  def full_name
+    [last_name, first_name, patronymic].join ' '
+  end
 end
