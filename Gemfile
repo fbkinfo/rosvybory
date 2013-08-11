@@ -21,6 +21,7 @@ gem 'rvm-capistrano'
 gem 'unicorn'
 gem 'cancan'
 gem 'state_machine'
+gem 'draper'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
@@ -45,7 +46,7 @@ group :development do
   gem 'quiet_assets'
 end
 
-group :test do
+group :test, :development do
   gem 'factory_girl_rails'
   gem 'rspec-rails'
   gem 'database_cleaner'

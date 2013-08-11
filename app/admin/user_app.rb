@@ -1,4 +1,6 @@
 ActiveAdmin.register UserApp do
+  decorate_with UserAppDecorator
+
   member_action :reject, method: :post do
     user_app = resource
     user_app.reject!
@@ -76,50 +78,35 @@ ActiveAdmin.register UserApp do
 
   index do
     selectable_column
-    column   :id
-    column   :created_at
-    #column("Адм. Округ") do  |user_app|
-    #  region = user_app.region.try(:parent)
-    #  link_to region.name, admin_region_path(region) if region
-    #end
-    column   :adm_region
-    column   :region #, sortable: 'regions.name'
-    column   :full_name
-    #column   :last_name
-    #column   :first_name
-    #column   :patronymic
-    #column   :phone
-    column   :phone_formatted
-    column   :email
+    column :id
+    column :created_at
 
-    column   :uic
-    column(:current_status) {|user_app| status_human_readable user_app.current_status}
-    column   :experience_count
-    column(:previous_statuses) {|user_app| status_human_readable user_app.previous_statuses}
+    column :desired_statuses
+    column :adm_region
+    column :region
+    column :uic
 
-    #column("Согласен войти в резерв УИКов") {|user_app| user_app.can_be_prg_reserve ? "Да":"Нет"}
-    column(:can_be_coord_region) {|user_app| user_app.can_be_coord_region ? "Да":"Нет"}
+    column :full_name
+    column :phone_formatted
+    column :phone_verified
+    column :email
+    column :year_born
+    column :sex_male
 
-    column(:has_car) {|user_app| user_app.has_car ? "Есть":"Нет"}
+    column :current_status
+    column :has_car
+    column :legal_status
 
-    column(:social_accounts) {|user_app| raw social_accounts_readable(user_app.social_accounts) }
-    column   :extra
-    column(:legal_status) {|user_app| legal_status_human_readable user_app.legal_status}
+    column :previous_statuses
+    column :experience_count
 
-    #column("Юр.образование") {|user_app| user_app.legal_status & UserApp::LEGAL_STATUS_YES ? "Да":"Нет"}
-    #column("Адвокатский статус") {|user_app| user_app.legal_status == UserApp::LEGAL_STATUS_LAWYER ? "Да":"Нет"}
-    column(:desired_statuses) {|user_app| status_human_readable user_app.desired_statuses}
+    column :can_be_coord_region
 
-    column   :year_born
-    column(:sex_male) {|user_app| user_app.sex_male ? "М":"Ж"}
-    column   :ip
-    column   :useragent
-    #UserApp.future_statuses_methods.each do | method_name|
-    #  column("Готов стать: "+t('activerecord.attributes.user_app.'+method_name), method_name) {|user_app| user_app.send(method_name) ? "Да" : "Нет" }
-    #end
-    #UserApp.previous_statuses_methods.each do | method_name|
-    #  column("Есть опыт: "+t('activerecord.attributes.user_app.'+method_name), method_name) {|user_app| user_app.send(method_name) ? "Да" : "Нет" }
-    #end
+    column :social_accounts
+    column :extra
+
+    column :ip
+    column :useragent
 
     default_actions
   end
@@ -170,41 +157,38 @@ ActiveAdmin.register UserApp do
   end
 
   csv do
-    column   :id
-    column   :created_at
-    column   :adm_region
-    column   :region
-    #column   :full_name
-    column   :last_name
-    column   :first_name
-    column   :patronymic
-     #column   :phone
-    column   :phone_formatted
-    column   :email
+    column :id
+    column :created_at
+    column :adm_region
+    column :region
+    column :last_name
+    column :first_name
+    column :patronymic
+    column :phone_formatted
+    column :email
 
-    column   :uic
-    column(:current_status) {|user_app| status_human_readable user_app.current_status}
-    column   :experience_count
-    column(:previous_statuses) {|user_app| status_human_readable user_app.previous_statuses}
+    column :uic
+    column :current_status
+    column :experience_count
+    column :previous_statuses
 
     column("Согласен войти в резерв УИКов") {|user_app| nil}
-    column(:can_be_coord_region) {|user_app| user_app.can_be_coord_region ? "Да":"Нет"}
+    column :can_be_coord_region
 
-    column(:has_car) {|user_app| user_app.has_car ? "Есть":"Нет"}
+    column :has_car
 
-    column   :social_accounts
-    column   :extra
+    column :social_accounts
+    column :extra
 
-    #column(:legal_status) {|user_app| legal_status_human_readable user_app.legal_status}
-    column("Юр.образование") {|user_app| user_app.legal_status & UserApp::LEGAL_STATUS_YES ? "Да":"Нет"}
-    column("Адвокатский статус") {|user_app| user_app.legal_status == UserApp::LEGAL_STATUS_LAWYER ? "Да":"Нет"}
+    column("Юр.образование") {|user_app| user_app.object.legal_status & UserApp::LEGAL_STATUS_YES ? "Да":"Нет"}
+    column("Адвокатский статус") {|user_app| user_app.object.legal_status == UserApp::LEGAL_STATUS_LAWYER ? "Да":"Нет"}
 
-    column(:desired_statuses) {|user_app| status_human_readable user_app.desired_statuses}
+    column :desired_statuses
 
-    column   :year_born
-    column(:sex_male) {|user_app| user_app.sex_male ? "М":"Ж"}
-    column   :ip
-    column   :useragent
+    column :year_born
+    column :sex_male
+    column :ip
+    column :useragent
 
     UserApp.future_statuses_methods.each do | method_name|
       column(method_name) {|user_app| user_app.send(method_name) ? "Да" : "Нет" }
@@ -212,7 +196,5 @@ ActiveAdmin.register UserApp do
     UserApp.previous_statuses_methods.each do | method_name|
       column(method_name) {|user_app| user_app.send(method_name) ? "Да" : "Нет" }
     end
-
-
   end
 end
