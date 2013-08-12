@@ -36,8 +36,8 @@ gem 'therubyracer', platforms: :ruby
 gem 'jquery-rails'
 
 gem 'activeadmin',         github: 'gregbell/active_admin', branch: 'rails4'
-gem 'ransack',             github: 'ernie/ransack',         branch: 'rails-4'
-gem 'inherited_resources', github: 'josevalim/inherited_resources'
+gem 'ransack', "~> 1.0.0"
+gem 'inherited_resources', "~> 1.4.1"
 
 group :development do
   gem 'capistrano'
