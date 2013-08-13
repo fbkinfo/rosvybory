@@ -10,7 +10,9 @@ class Ability
     can :read, Organisation
     can :read, ActiveAdmin::Page, :name => "Dashboard"
 
-    can :manage, User #debug
+    if Rails.env == "development"
+      can :manage, User #debug
+    end
 
     if has_role?(user, :federal_repr)
       #ФП видит заявки своего наблюдательного объединения
