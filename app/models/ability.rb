@@ -6,10 +6,16 @@ class Ability
       can :manage, :all
     end
 
-    if has_role?(user, :dc) #координатор округа
-    #ОК видит заявки своего адм. округа.
+    can :read, Region
+
+    if has_role?(user, :rc)
+      #РК видит заявки своего района
+      can :manage, UserApp, :region_id => user.region.id
+    end
+
+    if has_role?(user, :dc)
+      #ОК видит заявки своего адм. округа.
       can :manage, UserApp, :adm_region_id => user.region.id
-      can :read, Region
     end
 
     # Define abilities for the passed in user here. For example:
