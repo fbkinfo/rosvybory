@@ -7,6 +7,8 @@ class User < ActiveRecord::Base
   has_many :user_roles, dependent: :destroy
   has_many :roles, through: :user_roles
 
+  belongs_to :region
+
   def has_role?(role_name)
     !!roles.exists?(slug: role_name)
   end
