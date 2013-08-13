@@ -31,7 +31,7 @@ jQuery ->
 
   $("#user_app_adm_region_id").on "change", (e) ->
     chosen_val = $(@).val()
-    $el = $("#user_app_region_id");
+    $el = $("#user_app_region_id")
     $el.empty(); # remove old options
     $el.append $("<option></option>").attr("value", "")
     $.each regions[chosen_val], (index, region) ->

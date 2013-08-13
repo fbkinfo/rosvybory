@@ -42,6 +42,7 @@ class UserApp < ActiveRecord::Base
             :numericality  => {:only_integer => true, :greater_than => 1900, :less_than => 2000,  :message => "Неверный формат"}
 
   validates :ip, :presence => true
+  validates :uic, format: {with: /\A([0-9]+)(,\s*[0-9]+)*\z/}, allow_blank: true
 
   validate :check_regions
 
