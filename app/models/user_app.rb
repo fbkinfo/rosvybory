@@ -4,7 +4,7 @@ class UserApp < ActiveRecord::Base
   belongs_to :adm_region, class_name: "Region"
 
   #наблюдатель, участник мобильной группы, территориальный координатор, координатор мобильной группы, оператор горячей линии
-  NO_STATUS, STATUS_OBSERVER, STATUS_MOBILE, STATUS_COORD_REGION, STATUS_COORD_MOBILE, STATUS_CALLER = 0, 1, 2, 4, 8, 16
+  NO_STATUS, STATUS_OBSERVER, STATUS_MOBILE, STATUS_COORD_REGION, STATUS_COORD_MOBILE, STATUS_CALLER, STATUS_COORD_CALLER = 0, 1, 2, 4, 8, 16, 16384
 
   #Член ПРГ в резерве, Член ПРГ УИК, Член ПСГ ТИК, Член ПРГ ТИК
   STATUS_PRG_RESERVE, STATUS_PRG, STATUS_TIC_PSG, STATUS_TIC_PRG = 32, 64, 128, 256
@@ -65,9 +65,10 @@ class UserApp < ActiveRecord::Base
     {
         STATUS_OBSERVER => "observer",
         STATUS_MOBILE => "mobile",
+        STATUS_CALLER => "caller",
         STATUS_COORD_REGION => "coord_region",
         STATUS_COORD_MOBILE => "coord_mobile",
-        STATUS_CALLER => "caller"
+        STATUS_COORD_CALLER => "coord_caller"
         #STATUS_PRG_RESERVE => "prg_reserve"
     }
   end
