@@ -1,4 +1,12 @@
 ActiveAdmin.register User do
+
+  scope :all, :default => true
+  Role.all.each do |role|
+    scope role.short_name do |items|
+      items.where(:user_roles => {:role => role})
+    end
+  end
+
   index do
     column :email
     column :current_sign_in_at
