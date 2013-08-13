@@ -10,7 +10,7 @@ class UserApp < ActiveRecord::Base
   STATUS_PRG_RESERVE, STATUS_PRG, STATUS_TIC_PSG, STATUS_TIC_PRG = 32, 64, 128, 256
 
   #Член ПСГ УИК, кандидат, доверенное лицо кандидата, журналист освещающий выборы, координатор
-  STATUS_PSG, STATUS_CANDIDATE, STATUS_DELEGATE, STATUS_JOURNALIST, STATUS_COORD = 512, 1024, 2048, 4096, 8192
+  STATUS_PSG, STATUS_CANDIDATE, STATUS_DELEGATE, STATUS_JOURNALIST, STATUS_COORD, STATUS_LAWYER = 512, 1024, 2048, 4096, 8192, 32768
 
   LEGAL_STATUS_NO, LEGAL_STATUS_YES, LEGAL_STATUS_LAWYER = 0, 1, 3
 
@@ -86,6 +86,7 @@ class UserApp < ActiveRecord::Base
         STATUS_PSG => "psg",
         STATUS_TIC_PRG => "tic_prg",
         STATUS_TIC_PSG => "tic_psg",
+        STATUS_LAWYER => "lawyer",
         STATUS_CANDIDATE => "candidate",
         STATUS_DELEGATE => "delegate",
         STATUS_JOURNALIST => "journalist",
