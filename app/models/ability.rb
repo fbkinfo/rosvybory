@@ -7,6 +7,7 @@ class Ability
     end
 
     can :read, Region
+    can :read, Organisation
     can :manage, User #debug
 
     if has_role?(user, :federal_repr) #федеральный представитель наблюдательного объединения

@@ -13,6 +13,7 @@ ActiveAdmin.register User do
     column :last_sign_in_at
     column :sign_in_count
     column :region
+    f.input :organisation
     default_actions
   end
 
@@ -23,6 +24,7 @@ ActiveAdmin.register User do
       f.input :roles
       f.input :email
       f.input :region
+      f.input :organisation
     end
     #f.inputs "Смена пароля" do
       #f.input :password
@@ -34,7 +36,6 @@ ActiveAdmin.register User do
   controller do
     def permitted_params
       params.permit!
-      params
     end
 
     def scoped_collection
