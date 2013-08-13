@@ -54,6 +54,7 @@ ActiveAdmin.register UserApp do
   #
   filter   :year_born, :as => :numeric_range
   #column(:sex_male) {|user_app| user_app.sex_male ? "М":"Ж"}
+  filter   :organisation
   filter   :ip
   filter   :useragent
 
@@ -154,6 +155,7 @@ ActiveAdmin.register UserApp do
 
     f.inputs "Дополнительные сведения" do
       f.input :extra
+      f.input :organisation
     end
 
     f.actions
