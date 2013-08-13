@@ -93,7 +93,7 @@ ActiveAdmin.register UserApp do
     column :year_born
     column :sex_male
 
-    column :current_status
+    column :current_statuses
     column :has_car
     column :legal_status
 
@@ -133,7 +133,7 @@ ActiveAdmin.register UserApp do
 
     f.inputs "Подробнее" do
       # TODO
-      f.input :current_status
+      f.input :current_statuses
       f.input :has_car
       f.input :legal_status
     end
@@ -169,7 +169,7 @@ ActiveAdmin.register UserApp do
     column :email
 
     column :uic
-    column :current_status
+    column :current_statuses
     column :experience_count
     column :previous_statuses
 
