@@ -42,6 +42,7 @@ ActiveAdmin.register UserApp do
   #column(:can_be_coord_region) {|user_app| user_app.can_be_coord_region ? "Да":"Нет"}
   #
   filter   :has_car
+  filter   :has_video
   #
   #column(:social_accounts) {|user_app| raw social_accounts_readable(user_app.social_accounts) }
   filter   :extra
@@ -96,6 +97,7 @@ ActiveAdmin.register UserApp do
     column :current_statuses
     column :has_car
     column :legal_status
+    column :has_video
 
     column :previous_statuses
     column :experience_count
@@ -136,6 +138,7 @@ ActiveAdmin.register UserApp do
       f.input :current_statuses
       f.input :has_car
       f.input :legal_status
+      f.input :has_video
     end
 
     f.inputs "Прежний опыт" do
@@ -177,6 +180,7 @@ ActiveAdmin.register UserApp do
     column :can_be_coord_region
 
     column :has_car
+    column :has_video
 
     column :social_accounts
     column :extra
