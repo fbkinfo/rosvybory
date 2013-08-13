@@ -13,7 +13,7 @@ ActiveAdmin.register User do
     column :last_sign_in_at
     column :sign_in_count
     column :region
-    f.input :organisation
+    column :organisation
     default_actions
   end
 

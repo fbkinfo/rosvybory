@@ -8,11 +8,13 @@ class Ability
 
     can :read, Region
     can :read, Organisation
+    can :read, ActiveAdmin::Page, :name => "Dashboard"
+
     can :manage, User #debug
 
-    if has_role?(user, :federal_repr) #федеральный представитель наблюдательного объединения
-    #ФП видит заявки своего наблюдательного объединения
-      can :manage, :UserApp
+    if has_role?(user, :federal_repr)
+      #ФП видит заявки своего наблюдательного объединения
+      can :manage, UserApp, :organisation_id => user.organisation_id
     end
 
     if has_role?(user, :dc)
