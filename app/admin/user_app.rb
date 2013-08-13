@@ -70,7 +70,7 @@ ActiveAdmin.register UserApp do
   config.sort_order = "id_asc"
   controller do
     def scoped_collection
-      resource_class.includes(:region).includes(:adm_region) # prevents N+1 queries to your database
+      resource_class.includes(:region).includes(:adm_region).includes(:organisation) # prevents N+1 queries to your database
     end
 
     def permitted_params
@@ -194,6 +194,7 @@ ActiveAdmin.register UserApp do
 
     column :year_born
     column :sex_male
+    column :organisation
     column :ip
     column :useragent
 
