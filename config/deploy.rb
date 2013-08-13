@@ -19,7 +19,11 @@ role :web, "staff4.navalny.ru"                          # Your HTTP server, Apac
 role :app, "staff4.navalny.ru"                          # This may be the same as your `Web` server
 role :db,  "staff4.navalny.ru", :primary => true # This is where Rails migrations will run
 
-after "deploy:update_code", "deploy:migrate"
+task :build_symlinks, :roles => :app do
+  run "ln -s #{shared_path}/config/database.yml #{release_path}/config/database.yml"
+end
+
+after "deploy:update_code", "build_symlinks", "deploy:migrate"
 #role :db,  "your slave db-server here"
 
 # if you want to clean up old releases on each deploy uncomment this:
@@ -55,5 +59,5 @@ task :dump_and_load_database, :roles => :app do
   system "bundle exec rake db:drop db:create db:migrate RAILS_ENV=test"
 end
 
-        require './config/boot'
-        require 'honeybadger/capistrano'
+require './config/boot'
+require 'honeybadger/capistrano'
