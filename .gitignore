@@ -15,3 +15,10 @@
 /log/*.log
 /tmp
 .DS_Store
+
+# Ignore config
+config/database.yml
+
+# Ignore IDE configs
+.idea
+
