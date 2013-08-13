@@ -4,6 +4,7 @@ ActiveAdmin.register User do
     column :current_sign_in_at
     column :last_sign_in_at
     column :sign_in_count
+    column :region
     default_actions
   end
 
@@ -13,6 +14,7 @@ ActiveAdmin.register User do
     f.inputs "Пользовательские данные" do
       f.input :roles
       f.input :email
+      f.input :region
     end
     #f.inputs "Смена пароля" do
       #f.input :password
@@ -26,5 +28,10 @@ ActiveAdmin.register User do
       params.permit!
       params
     end
+
+    def scoped_collection
+      resource_class.includes(:region).includes(:roles) # prevent N+1 queries
+    end
+
   end
 end
