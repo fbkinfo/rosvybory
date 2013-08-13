@@ -324,6 +324,7 @@ ru:
         region: "Район"
         uic: "№ УИК"
         has_car: "Автомобиль"
+        has_video: "Видеосъемка"
         legal_status: "Юр. образование"
         experience_count: "Опыт: кол-во"
         extra: "Доп. сведения"

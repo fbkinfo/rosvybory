@@ -25,6 +25,10 @@ class UserAppDecorator < Draper::Decorator
     object.has_car ? "Есть":"Нет"
   end
 
+  def has_video
+    object.has_video ? "Да":"Нет"
+  end
+
   def social_accounts
     h.raw h.social_accounts_readable(object.social_accounts)
   end

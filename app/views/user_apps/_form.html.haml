@@ -37,6 +37,7 @@
   = f.inputs "Подробнее", :id => "details" do
     = f.input :has_car, :label => "Есть автомобиль?", :as => :radio, collection: {"Да" => true, "Нет" => false}
     = f.input :legal_status, :label => "Есть юридическое образование?", :as => :radio, collection: {"Да" => UserApp::LEGAL_STATUS_YES, "Нет" => UserApp::LEGAL_STATUS_NO, "Есть статус адвоката" => UserApp::LEGAL_STATUS_LAWYER}
+    = f.input :has_video, :label => "Есть возможность вести видеосъёмку?", :as => :radio, collection: {"Да" => true, "Нет" => false}
 
   = f.inputs "Прежний опыт", :id => "experience" do
     -UserApp.previous_statuses_methods.each do |method_name|
