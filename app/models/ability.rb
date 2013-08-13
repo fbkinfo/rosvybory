@@ -7,16 +7,32 @@ class Ability
     end
 
     can :read, Region
+    can :manage, User #debug
 
-    if has_role?(user, :rc)
-      #РК видит заявки своего района
-      can :manage, UserApp, :region_id => user.region.id
+    if has_role?(user, :federal_repr) #федеральный представитель наблюдательного объединения
+    #ФП видит заявки своего наблюдательного объединения
+      can :manage, :UserApp
     end
 
     if has_role?(user, :dc)
       #ОК видит заявки своего адм. округа.
       can :manage, UserApp, :adm_region_id => user.region.id
     end
+
+    #if has_role?(user, :rc)
+    #  #РК видит пользователей своего района
+    #  can :read, User, :region_id => user.region.id
+    #end
+    #
+    #
+    #if has_role?(user, :mc)
+    #  can :read, :User
+    #end
+    #
+    #if has_role?(user, :cc)
+    #    can :read, :User
+    #end
+
 
     # Define abilities for the passed in user here. For example:
     #
