@@ -30,8 +30,11 @@
     = f.input :year_born
     = f.input :sex_male, :as => :radio, collection: {"Мужской" => true, "Женский" => false}
 
+
+  = f.inputs "Текущий статус в системе избирательных комиссий", :id => "user_app_current_statuses" do
+    -UserApp.current_statuses_methods.each do |method_name|
+      = f.input method_name, :as => :boolean
   = f.inputs "Подробнее", :id => "details" do
-    = f.input :current_status, :label => "Текущий статус в системе избирательных комиссий:", :as => :radio, collection: current_status_options
     = f.input :has_car, :label => "Есть автомобиль?", :as => :radio, collection: {"Да" => true, "Нет" => false}
     = f.input :legal_status, :label => "Есть юридическое образование?", :as => :radio, collection: {"Да" => UserApp::LEGAL_STATUS_YES, "Нет" => UserApp::LEGAL_STATUS_NO, "Есть статус адвоката" => UserApp::LEGAL_STATUS_LAWYER}
 

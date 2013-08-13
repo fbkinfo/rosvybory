@@ -1,8 +1,8 @@
 class UserAppDecorator < Draper::Decorator
   delegate_all
 
-  def current_status
-    h.status_human_readable object.current_status
+  def current_statuses
+    h.status_human_readable object.current_statuses
   end
 
   def desired_statuses

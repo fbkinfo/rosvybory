@@ -60,10 +60,11 @@ class UserAppsController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def user_app_params
       params.require(:user_app).permit([:data_processing_allowed, :region_id, :adm_region_id, :uic,
-                                       :last_name, :first_name, :patronymic, :phone, :email, :current_status, :has_car, :legal_status,
+                                       :last_name, :first_name, :patronymic, :phone, :email, :has_car, :legal_status,
                                        :experience_count, :sex_male, :year_born, :extra] +
                                            UserApp.future_statuses_methods +
                                            UserApp.previous_statuses_methods +
+                                           UserApp.current_statuses_methods +
                                            UserApp.social_methods)
     end
 end

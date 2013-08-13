@@ -7,7 +7,7 @@ class UserApp < ActiveRecord::Base
   NO_STATUS, STATUS_OBSERVER, STATUS_MOBILE, STATUS_COORD_REGION, STATUS_COORD_MOBILE, STATUS_CALLER, STATUS_COORD_CALLER = 0, 1, 2, 4, 8, 16, 16384
 
   #Член ПРГ в резерве, Член ПРГ УИК, Член ПСГ ТИК, Член ПРГ ТИК
-  STATUS_PRG_RESERVE, STATUS_PRG, STATUS_TIC_PSG, STATUS_TIC_PRG = 32, 64, 128, 256
+  STATUS_PRG_RESERVE, STATUS_PRG, STATUS_TIC_PSG, STATUS_TIC_PRG, STATUS_PSG = 32, 64, 128, 256, 65536
 
   #Член ПСГ УИК, кандидат, доверенное лицо кандидата, журналист освещающий выборы, координатор
   STATUS_PSG, STATUS_CANDIDATE, STATUS_DELEGATE, STATUS_JOURNALIST, STATUS_COORD, STATUS_LAWYER = 512, 1024, 2048, 4096, 8192, 32768
@@ -25,7 +25,7 @@ class UserApp < ActiveRecord::Base
   validates :adm_region, :presence => true
   #validates :region, :presence => true
   validates :desired_statuses, :presence => true, :exclusion => { :in => [NO_STATUS], :message => "Требуется выбрать хотя бы один вариант" }
-  validates :current_status, :presence => true
+  validates :current_statuses, :presence => true
   validates :has_car, :inclusion =>  { :in => [true, false], :message => "требуется указать" }
   validates :legal_status, :inclusion =>  { :in => [LEGAL_STATUS_NO, LEGAL_STATUS_YES, LEGAL_STATUS_LAWYER] }
   validates :experience_count, :presence => true
@@ -101,10 +101,15 @@ class UserApp < ActiveRecord::Base
   def self.all_current_statuses
     {
         STATUS_PRG_RESERVE => "prg_reserve",
+        STATUS_PSG => "psg",
         STATUS_PRG => "prg",
         STATUS_TIC_PSG => "tic_psg",
         STATUS_TIC_PRG => "tic_prg"
     }
+  end
+
+  def self.current_statuses_methods
+    self.all_current_statuses.values.collect{|v| "is_"+v}
   end
 
   def self.social_methods
@@ -121,6 +126,10 @@ class UserApp < ActiveRecord::Base
 
   def was(status_value)
     previous_statuses & status_value == status_value
+  end
+
+  def is(status_value)
+    current_statuses & status_value == status_value
   end
 
 
@@ -144,6 +153,18 @@ class UserApp < ActiveRecord::Base
         self.previous_statuses |= status_value
       else
         self.previous_statuses &= ~status_value
+      end
+    end
+  end
+
+  self.all_current_statuses.each do |status_value, status_name|
+    method_n = 'is_'+status_name
+    define_method(method_n) { is status_value }
+    define_method(method_n+'=') do |val|
+      if val == "1" || val == true
+        self.current_statuses |= status_value
+      else
+        self.current_statuses &= ~status_value
       end
     end
   end
