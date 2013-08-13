@@ -19,7 +19,7 @@
   = f.input :adm_region, :as => :select, :collection => Region.adm_regions.all, :input_html => {:style => "width: 280px;"}
   = f.input :region, :as => :select, :collection => (@user_app.adm_region ? @user_app.adm_region.regions : []), :input_html => {:style => "width: 280px;"}, hint: "Можно оставить пустым или выбрать конкретный район" #ширина прописана inline, чтобы select2 её правильно подхватил, через css он не понимает
   -#= f.input :region, :as => :select, :collection => option_groups_from_collection_for_select(Region.cities.where(name: "Москва").first.regions, :regions, :name, :id, :name), :input_html => {:style => "width: 280px;", :class => "selectify"}
-  = f.input :uic, :label => "Желаемый УИК", :input_html => {:disabled => true}
+  = f.input :uic, :label => "Номера желаемых УИК, через запятую", :input_html => {:disabled => true}, :placeholder => "Пример: 12345, 23456"
 
   = f.inputs "Личные данные", :id => "personal_info" do
     = f.input :last_name
