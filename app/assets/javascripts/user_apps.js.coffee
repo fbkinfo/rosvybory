@@ -58,6 +58,37 @@ jQuery ->
     else
       $("##{textFieldId}").attr("disabled", true)
 
+  $('#start_verification_button').on 'click', (e)->
+    e.preventDefault()
+    phone_number = $('#user_app_phone').val()
+    $.ajax
+      url: '/verifications'
+      data: $.param(phone_number: phone_number)
+      method: 'POST'
+      success: (data)->
+        if data.success
+          $('#user_app_phone').attr('readonly', 'readonly')
+          $('#start_verification_button').hide()
+          $('#verification_code_controls').removeClass('hidden')
+          $('#phone_verification_error').addClass('hidden')
+        if data.error
+          $('#phone_verification_error').removeClass('hidden').html(data.error)
+
+  $('#confirm_verification_button').on 'click', (e)->
+    e.preventDefault()
+    $.ajax
+      url: '/verifications/confirm'
+      data: $.param(verification_code: $('#verification_code').val())
+      method: 'POST'
+      success: (data)->
+        if data.success
+          $('#verification_code_controls').hide()
+          $('#phone_verification_error').hide()
+          console.log('confirmed!')
+          alert('Телефон успешно подтвержден')
+        else
+          $('#phone_verification_error').removeClass('hidden').html('Неправильный код подтверждения')
+
   updateUicState()
   updateExpCounterState()
   updateSubmitState()

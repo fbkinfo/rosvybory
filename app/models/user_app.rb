@@ -146,10 +146,10 @@ class UserApp < ActiveRecord::Base
   private
 
   def check_regions
-    errors.add(:region, "Район должен принадлежать выбранному округу") if region && region.parent != adm_region
+    errors.add(:region, 'Район должен принадлежать выбранному округу') if region && region.parent != adm_region
   end
 
   def check_phone_verified
-    errors.add(:phone, "Телефон не подтвержден") unless verification.present? && verification.confirmed? && verification.phone_number == self.phone
+    errors.add(:phone, 'Телефон не подтвержден') unless verification.present? && verification.confirmed? && verification.phone_number == self.phone
   end
 end

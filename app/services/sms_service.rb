@@ -17,7 +17,7 @@ class SmsService
 
   def self.send_message(number, text)
     result = provider.send to: number, from: AppConfig['smsru_from'], text: text
-    raise "SMS.ru error: [#{result}] #{ERRORS[result]}" unless result.to_s == '100'
+    raise "Ошибка отправки сообщения: #{ERRORS[result]} [#{result}]" unless result.to_s == '100'
     true
   end
 
