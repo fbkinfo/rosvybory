@@ -7,3 +7,18 @@ role :db,  "staff4.navalny.ru", :primary => true
 
 set :rails_env, 'production'
 
+namespace :deploy do
+  task :start do
+    run "sudo /etc/init.d/unicorn_init start rosvybory_production"
+  end
+
+  task :stop do
+    run "sudo /etc/init.d/unicorn_init stop rosvybory_production"
+  end
+
+  task :restart do
+    run "sudo /etc/init.d/unicorn_init stop rosvybory_production"
+    run "sudo /etc/init.d/unicorn_init start rosvybory_production"
+  end
+end
+

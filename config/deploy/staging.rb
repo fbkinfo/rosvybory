@@ -7,3 +7,18 @@ role :db,  "54.213.151.246", :primary => true
 
 set :rails_env, 'staging'
 set :branch, 'develop'
+
+namespace :deploy do
+  task :start do
+    run "sudo /etc/init.d/unicorn_init start rosvybory_staging"
+  end
+
+  task :stop do
+    run "sudo /etc/init.d/unicorn_init stop rosvybory_staging"
+  end
+
+  task :restart do
+    run "sudo /etc/init.d/unicorn_init stop rosvybory_staging"
+    run "sudo /etc/init.d/unicorn_init start rosvybory_staging"
+  end
+end
