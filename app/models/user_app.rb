@@ -25,7 +25,6 @@ class UserApp < ActiveRecord::Base
   validates :adm_region, :presence => true
   #validates :region, :presence => true
   validates :desired_statuses, :presence => true, :exclusion => { :in => [NO_STATUS], :message => "Требуется выбрать хотя бы один вариант" }
-  validates :current_statuses, :presence => true
   validates :has_car, :inclusion =>  { :in => [true, false], :message => "требуется указать" }
   validates :has_video, :inclusion =>  { :in => [true, false], :message => "требуется указать" }
   validates :legal_status, :inclusion =>  { :in => [LEGAL_STATUS_NO, LEGAL_STATUS_YES, LEGAL_STATUS_LAWYER] }
