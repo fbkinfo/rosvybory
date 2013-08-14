@@ -5,19 +5,17 @@ require "rvm/capistrano"
 
 set :application, "rosvybory"
 set :repository,  "git@github.com:fbkinfo/rosvybory.git"
-set :deploy_to, "/home/dev/production/rosvybory"
-set :user, "dev"
 set :use_sudo, false
 set :deploy_via, :remote_cache
 default_run_options[:pty] = true
 set :rvm_ruby_string, "2.0.0-p247@rosvybory"#:local
 
+set :stages, %w(production staging)
+set :default_stage, "staging"
+require 'capistrano/ext/multistage'
+
 # set :scm, :git # You can set :scm explicitly or Capistrano will make an intelligent guess based on known version control directory names
 # Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
-
-role :web, "staff4.navalny.ru"                          # Your HTTP server, Apache/etc
-role :app, "staff4.navalny.ru"                          # This may be the same as your `Web` server
-role :db,  "staff4.navalny.ru", :primary => true # This is where Rails migrations will run
 
 task :build_symlinks, :roles => :app do
   run "ln -s #{shared_path}/config/database.yml #{release_path}/config/database.yml"
