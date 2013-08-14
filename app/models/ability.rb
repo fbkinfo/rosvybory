@@ -5,6 +5,40 @@ class Ability
     if has_role?(user, :admin)
       can :manage, :all
     end
+
+    can :read, Region
+    can :read, Organisation
+    can :read, ActiveAdmin::Page, :name => "Dashboard"
+
+    if Rails.env == "development"
+      can :manage, User #debug
+    end
+
+    if has_role?(user, :federal_repr)
+      #ФП видит заявки своего наблюдательного объединения
+      can :manage, UserApp, :organisation_id => user.organisation_id
+    end
+
+    if has_role?(user, :dc)
+      #ОК видит заявки своего адм. округа.
+      can :manage, UserApp, :adm_region_id => user.region.id
+    end
+
+    #if has_role?(user, :rc)
+    #  #РК видит пользователей своего района
+    #  can :read, User, :region_id => user.region.id
+    #end
+    #
+    #
+    #if has_role?(user, :mc)
+    #  can :read, :User
+    #end
+    #
+    #if has_role?(user, :cc)
+    #    can :read, :User
+    #end
+
+
     # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)
