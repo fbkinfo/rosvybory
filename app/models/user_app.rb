@@ -2,6 +2,7 @@ class UserApp < ActiveRecord::Base
   serialize :social_accounts, HashWithIndifferentAccess
   belongs_to :region
   belongs_to :adm_region, class_name: "Region"
+  belongs_to :organisation
 
   #наблюдатель, участник мобильной группы, территориальный координатор, координатор мобильной группы, оператор горячей линии
   NO_STATUS, STATUS_OBSERVER, STATUS_MOBILE, STATUS_COORD_REGION, STATUS_COORD_MOBILE, STATUS_CALLER, STATUS_COORD_CALLER = 0, 1, 2, 4, 8, 16, 16384
