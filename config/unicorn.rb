@@ -1,4 +1,3 @@
-shared = File.expand_path(File.join(File.dirname(__FILE__), '../../../shared'))
 
 env = ENV["RAILS_ENV"]
 
@@ -11,6 +10,7 @@ else
 end
 
 working_directory RAILS_ROOT
+shared = File.expand_path("#{RAILS_ROOT}/../shared")
 
 if ENV['MY_RUBY_HOME'] && ENV['MY_RUBY_HOME'].include?('rvm')
   begin
@@ -39,8 +39,6 @@ GC.respond_to?(:copy_on_write_friendly=) and
 pid File.join(shared, 'pids/unicorn.pid')
 
 listen File.join(shared, 'sockets/unicorn.sock'), :backlog => 1024
-
-working_directory File.expand_path(File.join(shared, '../current'))
 
 stderr_path File.join(shared, 'log/unicorn.error.log')
 stdout_path File.join(shared, 'log/unicorn.access.log')
