@@ -86,6 +86,7 @@ ActiveRecord::Schema.define(version: 20130813200539) do
     t.boolean  "phone_verified",    default: false,     null: false
     t.boolean  "has_video"
     t.integer  "organisation_id"
+    t.string   "forwarded_for"
   end
 
   add_index "user_apps", ["adm_region_id"], name: "index_user_apps_on_adm_region_id", using: :btree
