@@ -31,12 +31,13 @@ class UserAppsController < ApplicationController
     @user_app.ip            = request.env['HTTP_X_REAL_IP'] || request.ip
     @user_app.useragent     = request.env['HTTP_USER_AGENT']
     @user_app.forwarded_for = request.env['HTTP_X_FORWARDED_FOR']
+    @user_app.verification = Verification.find_by_id session[:verification_id]
 
     @user_app.organisation = Organisation.where(name: "РосВыборы").first_or_create
     user_app_current_roles = @user_app.user_app_current_roles.to_a
     @user_app.user_app_current_roles = @user_app.user_app_current_roles.select {|a| a.keep}
-    if @user_app.valid?
-      @user_app.save!
+
+    if @user_app.save
       render action: 'done'
       #redirect_to new_user_app_path, notice: 'User app was successfully created.'
     else

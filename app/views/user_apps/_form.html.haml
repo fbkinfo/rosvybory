@@ -26,6 +26,11 @@
     = f.input :first_name
     = f.input :patronymic
     = f.input :phone, :label => "Контактный телефон", :placeholder => "Пример: 903 111 22 33"
+    = button_tag 'Подтвердить', class: 'btn btn-info', id: 'start_verification_button'
+    #verification_code_controls.hidden
+      = text_field_tag :verification_code
+      = button_tag 'Отправить', class: 'btn btn-info', id: 'confirm_verification_button'
+    #phone_verification_error.hidden
     = f.input :email
     = f.input :year_born
     = f.input :sex_male, :as => :radio, collection: {"Мужской" => true, "Женский" => false}
