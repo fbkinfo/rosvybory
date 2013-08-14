@@ -22,8 +22,15 @@ class UserAppsController < ApplicationController
   # POST /user_apps
   def create
     @user_app = UserApp.new(user_app_params)
-    @user_app.ip = request.ip
-    @user_app.useragent = request.env['HTTP_USER_AGENT']
+
+    # supposing that nginx is configured like this
+    # proxy_set_header   X-Real-IP        $remote_addr;
+    # proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+
+    @user_app.ip            = request.env['HTTP_X_REAL_IP'] || request.ip
+    @user_app.useragent     = request.env['HTTP_USER_AGENT']
+    @user_app.forwarded_for = request.env['HTTP_X_FORWARDED_FOR']
+
     if @user_app.save
       render action: 'done'
       #redirect_to new_user_app_path, notice: 'User app was successfully created.'
