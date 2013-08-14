@@ -168,6 +168,7 @@ GEM
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
     orm_adapter (0.4.0)
+    parseconfig (1.0.2)
     pg (0.16.0)
     polyamorous (0.6.3)
       activerecord (>= 3.0)
@@ -239,6 +240,8 @@ GEM
     shoulda-matchers (2.2.0)
       activesupport (>= 3.0.0)
     slop (3.4.6)
+    sms_ru (0.5.0)
+      parseconfig (~> 1.0.2)
     sprockets (2.10.0)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -309,6 +312,7 @@ DEPENDENCIES
   sass-rails (~> 4.0.0)
   select2-rails
   shoulda-matchers
+  sms_ru
   state_machine
   therubyracer
   twitter-bootstrap-rails
