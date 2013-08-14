@@ -283,7 +283,21 @@ ru:
       user_app:
         one: "Заявка"
         other: "Заявки"
+      user:
+        one: "Пользователь"
+        other: "Пользователи"
+      organisation:
+        one: "Организация"
+        other: "Организации"
     attributes:
+      organisation:
+        name: "Название"
+      user:
+        region: "Район/Округ"
+        created_at: "Создано"
+        updated_at: "Изменено"
+        roles: "Роли"
+        organisation: "Орг."
       user_app:
         can_be_observer: "Член избирательной комисии / наблюдатель на участке"
         can_be_mobile: "Участник мобильных групп"
@@ -311,8 +325,8 @@ ru:
         current_statuses: "Текущий статус"
         desired_statuses: "Готов стать"
         previous_statuses: "Есть опыт"
-        created_at: "Время создания"
-        updated_at: "Время последнего изменения"
+        created_at: "Создано"
+        updated_at: "Изменено"
         full_name: "ФИО"
         last_name: "Фамилия"
         first_name: "Имя"
@@ -332,6 +346,7 @@ ru:
         year_born: "Год рождения"
         sex_male: "Пол"
         ip: "ip"
+        organisation: "Орг."
   user_app:
     status:
       observer: "Член избирательной комисии / наблюдатель на участке"
