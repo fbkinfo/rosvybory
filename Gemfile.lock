@@ -95,6 +95,7 @@ GEM
     factory_girl_rails (4.2.1)
       factory_girl (~> 4.2.0)
       railties (>= 3.0.0)
+    ffaker (1.18.0)
     ffi (1.9.0)
     formatador (0.2.4)
     formtastic (2.3.0.rc2)
@@ -293,6 +294,7 @@ DEPENDENCIES
   database_cleaner
   draper
   factory_girl_rails
+  ffaker
   formtastic (= 2.3.0.rc2)
   formtastic-bootstrap
   guard

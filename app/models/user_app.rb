@@ -27,7 +27,6 @@ class UserApp < ActiveRecord::Base
   validates :phone, :presence => true
   #validates_format_of :phone, with: /\A\d{10}\z/
   validates :adm_region, :presence => true
-  #validates :region, :presence => true
   validates :desired_statuses, :presence => true, :exclusion => { :in => [NO_STATUS], :message => "Требуется выбрать хотя бы один вариант" }
   validates :has_car, :inclusion =>  { :in => [true, false], :message => "требуется указать" }
   validates :has_video, :inclusion =>  { :in => [true, false], :message => "требуется указать" }
@@ -50,10 +49,12 @@ class UserApp < ActiveRecord::Base
 
   validate :check_regions
 
+  attr_accessor :verification
+  validate :check_phone_verified
+
   state_machine initial: :pending do
     event(:reject) {transition all => :rejected}
   end
-
 
   SOCIAL_ACCOUNTS = {vk: "ВКонтакте", fb: "Facebook", twitter: "Twitter", lj: "LiveJournal" , ok: "Одноклассники"}
   SOCIAL_ACCOUNTS.each do |provider_key, provider_name|
@@ -143,7 +144,12 @@ class UserApp < ActiveRecord::Base
   end
 
   private
-    def check_regions
-      errors.add(:region, "Район должен принадлежать выбранному округу") if region && region.parent != adm_region
-    end
+
+  def check_regions
+    errors.add(:region, "Район должен принадлежать выбранному округу") if region && region.parent != adm_region
+  end
+
+  def check_phone_verified
+    errors.add(:phone, "Телефон не подтвержден") unless verification.present? && verification.confirmed? && verification.phone_number == self.phone
+  end
 end
