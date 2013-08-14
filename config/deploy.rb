@@ -23,7 +23,9 @@ task :build_symlinks, :roles => :app do
   run "ln -s #{shared_path}/config/database.yml #{release_path}/config/database.yml"
 end
 
-after "deploy:update_code", "build_symlinks", "deploy:migrate"
+after "deploy:update_code", "build_symlinks"
+load 'deploy/assets'
+after "deploy:update_code", "deploy:migrate"
 #role :db,  "your slave db-server here"
 
 # if you want to clean up old releases on each deploy uncomment this:
