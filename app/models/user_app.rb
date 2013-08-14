@@ -61,7 +61,7 @@ class UserApp < ActiveRecord::Base
     method_n = 'social_'+provider_key.to_s
     define_method(method_n) { social_accounts[provider_key] }
     define_method(method_n+'=') do |val|
-      self.social_accounts[provider_key]=val
+      self.social_accounts[provider_key] = val
     end
   end
 
@@ -79,7 +79,7 @@ class UserApp < ActiveRecord::Base
   end
 
   def self.future_statuses_methods
-    self.all_future_statuses.values.collect{|v| "can_be_"+v}
+    self.all_future_statuses.values.collect{ |v| "can_be_#{v}" }
   end
 
   def self.all_previous_statuses
@@ -99,11 +99,11 @@ class UserApp < ActiveRecord::Base
   end
 
   def self.previous_statuses_methods
-    self.all_previous_statuses.values.collect{|v| "was_"+v}
+    self.all_previous_statuses.values.collect{ |v| "was_#{v}" }
   end
 
   def self.social_methods
-    SOCIAL_ACCOUNTS.keys.collect{|v| "social_"+v.to_s}
+    SOCIAL_ACCOUNTS.keys.collect{ |v| "social_#{v}" }
   end
 
   def self.all_statuses
@@ -120,9 +120,9 @@ class UserApp < ActiveRecord::Base
 
 
   self.all_future_statuses.each do |status_value, status_name|
-    method_n = 'can_be_'+status_name
+    method_n = "can_be_#{status_name}"
     define_method(method_n) { can_be status_value }
-    define_method(method_n+'=') do |val|
+    define_method("#{method_n}=") do |val|
       if val == "1" || val == true
         self.desired_statuses |= status_value
       else
@@ -132,10 +132,10 @@ class UserApp < ActiveRecord::Base
   end
 
   self.all_previous_statuses.each do |status_value, status_name|
-    method_n = 'was_'+status_name
+    method_n = "was_#{status_name}"
     define_method(method_n) { was status_value }
-    define_method(method_n+'=') do |val|
-      if val == "1" || val == true
+    define_method("#{method_n}=") do |val|
+      if val == '1' || val == true
         self.previous_statuses |= status_value
       else
         self.previous_statuses &= ~status_value
