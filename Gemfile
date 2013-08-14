@@ -50,4 +50,5 @@ group :test do
   gem 'shoulda-matchers'
   gem 'guard'
   gem 'guard-rspec'
+  gem 'ffaker'
 end
