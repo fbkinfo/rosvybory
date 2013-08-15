@@ -1,3 +1,29 @@
+class SmsDevProvider
+  def send(params)
+    path = Rails.root.join 'tmp', "sms_#{Time.now.to_i}.html"
+    File.open(path, 'w') do |f|
+      f.write message(params)
+      f.close
+    end
+    Launchy.open "file:///#{path}"
+  end
+
+  def message(params)
+    params.symbolize_keys!
+    html = ''
+    html << "<b>FROM:</b> #{params[:from]}<br/>\n"
+    html << "<b>TO:</b> #{params[:to]}<br/>\n"
+    html << "<b>MESSAGE:</b> #{params[:text]}<br/>\n"
+    html
+  end
+end
+
+class SmsTestProvider
+  def send(params)
+    '100'
+  end
+end
+
 class SmsService
   ERRORS = {
     '200' => 'неправильный API ID',
@@ -22,6 +48,8 @@ class SmsService
   end
 
   def self.provider
+    return SmsDevProvider.new if Rails.env.development?
+    return SmsTestProvider.new if Rails.env.test?
     SmsRu::SMS.new api_id: AppConfig['smsru_api_id']
   end
 end
