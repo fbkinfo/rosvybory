@@ -180,3 +180,8 @@ roles = [
 roles.each do |slug, name, short_name|
   Role.create! slug: slug, name: name, short_name: short_name
 end if Role.count.zero?
+
+organisations = ["РосВыборы", "Гражданин Наблюдатель", "Сонар", "Голос"]
+organisations.each do |name|
+  Organisation.create! name: name
+end if Organisation.count.zero?
