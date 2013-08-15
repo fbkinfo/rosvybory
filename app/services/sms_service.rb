@@ -6,6 +6,7 @@ class SmsDevProvider
       f.close
     end
     Launchy.open "file:///#{path}"
+    '100'
   end
 
   def message(params)
