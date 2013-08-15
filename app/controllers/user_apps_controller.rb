@@ -30,7 +30,7 @@ class UserAppsController < ApplicationController
     @user_app.ip            = request.env['HTTP_X_REAL_IP'] || request.ip
     @user_app.useragent     = request.env['HTTP_USER_AGENT']
     @user_app.forwarded_for = request.env['HTTP_X_FORWARDED_FOR']
-
+    @user_app.organisation = Organisation.where(name: "РосВыборы").first_or_create
     if @user_app.save
       render action: 'done'
       #redirect_to new_user_app_path, notice: 'User app was successfully created.'
