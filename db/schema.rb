@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20130813200539) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
     t.text     "body"
@@ -85,8 +88,8 @@ ActiveRecord::Schema.define(version: 20130813200539) do
     t.string   "state",             default: "pending", null: false
     t.boolean  "phone_verified",    default: false,     null: false
     t.boolean  "has_video"
-    t.integer  "organisation_id"
     t.string   "forwarded_for"
+    t.integer  "organisation_id"
   end
 
   add_index "user_apps", ["adm_region_id"], name: "index_user_apps_on_adm_region_id", using: :btree
