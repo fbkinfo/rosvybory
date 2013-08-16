@@ -5,6 +5,7 @@ class UserApp < ActiveRecord::Base
   belongs_to :organisation
   has_many :user_app_current_roles, dependent: :destroy
   has_many :current_roles, through: :user_app_current_roles
+  accepts_nested_attributes_for :user_app_current_roles
 
   #наблюдатель, участник мобильной группы, территориальный координатор, координатор мобильной группы, оператор горячей линии
   NO_STATUS, STATUS_OBSERVER, STATUS_MOBILE, STATUS_COORD_REGION, STATUS_COORD_MOBILE, STATUS_CALLER, STATUS_COORD_CALLER = 0, 1, 2, 4, 8, 16, 16384
