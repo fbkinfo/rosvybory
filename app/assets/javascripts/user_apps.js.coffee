@@ -22,6 +22,9 @@ jQuery ->
     uic_enabled = $('#user_app_can_be_observer').prop('checked')
     $('#user_app_uic').prop('disabled', !uic_enabled)
 
+  updateCurrentRoles = ->
+    $(".js-current-role-checked").trigger("change")
+
   $('#user_app_adm_region_id').select2
     placeholder: "Начните вводить название"
 
@@ -47,7 +50,16 @@ jQuery ->
   $("#user_app_data_processing_allowed").change (e)->
     updateSubmitState()
 
+  $(".js-current-role-checked").change (e) ->
+    $el = $(this)
+    textFieldId = $el.attr("id").replace(/keep$/, "value")
+    if ($el.is(":checked"))
+      $("##{textFieldId}").attr("disabled", false)
+    else
+      $("##{textFieldId}").attr("disabled", true)
+
   updateUicState()
   updateExpCounterState()
   updateSubmitState()
+  updateCurrentRoles()
 

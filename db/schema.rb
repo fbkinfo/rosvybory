@@ -11,7 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130815202632) do
+ActiveRecord::Schema.define(version: 20130815211619) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -27,6 +30,14 @@ ActiveRecord::Schema.define(version: 20130815202632) do
   add_index "active_admin_comments", ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id", using: :btree
   add_index "active_admin_comments", ["namespace"], name: "index_active_admin_comments_on_namespace", using: :btree
   add_index "active_admin_comments", ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id", using: :btree
+
+  create_table "current_roles", force: true do |t|
+    t.string   "name",                   null: false
+    t.string   "slug",                   null: false
+    t.integer  "position",   default: 0, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "organisations", force: true do |t|
     t.string   "name"
@@ -57,6 +68,17 @@ ActiveRecord::Schema.define(version: 20130815202632) do
   add_index "roles", ["short_name"], name: "index_roles_on_short_name", unique: true, using: :btree
   add_index "roles", ["slug"], name: "index_roles_on_slug", unique: true, using: :btree
 
+  create_table "user_app_current_roles", force: true do |t|
+    t.integer  "user_app_id",     null: false
+    t.integer  "current_role_id", null: false
+    t.string   "value"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_app_current_roles", ["current_role_id"], name: "index_user_app_current_roles_on_current_role_id", using: :btree
+  add_index "user_app_current_roles", ["user_app_id", "current_role_id"], name: "index_user_app_current_roles_on_user_app_id_and_current_role_id", unique: true, using: :btree
+
   create_table "user_apps", force: true do |t|
     t.string   "last_name"
     t.string   "first_name"
@@ -85,8 +107,8 @@ ActiveRecord::Schema.define(version: 20130815202632) do
     t.string   "state",             default: "pending", null: false
     t.boolean  "phone_verified",    default: false,     null: false
     t.boolean  "has_video"
-    t.integer  "organisation_id"
     t.string   "forwarded_for"
+    t.integer  "organisation_id"
   end
 
   add_index "user_apps", ["adm_region_id"], name: "index_user_apps_on_adm_region_id", using: :btree

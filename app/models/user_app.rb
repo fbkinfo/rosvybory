@@ -3,6 +3,9 @@ class UserApp < ActiveRecord::Base
   belongs_to :region
   belongs_to :adm_region, class_name: "Region"
   belongs_to :organisation
+  has_many :user_app_current_roles, dependent: :destroy
+  has_many :current_roles, through: :user_app_current_roles
+  accepts_nested_attributes_for :user_app_current_roles
 
   #наблюдатель, участник мобильной группы, территориальный координатор, координатор мобильной группы, оператор горячей линии
   NO_STATUS, STATUS_OBSERVER, STATUS_MOBILE, STATUS_COORD_REGION, STATUS_COORD_MOBILE, STATUS_CALLER, STATUS_COORD_CALLER = 0, 1, 2, 4, 8, 16, 16384
@@ -52,7 +55,6 @@ class UserApp < ActiveRecord::Base
   end
 
 
-
   SOCIAL_ACCOUNTS = {vk: "ВКонтакте", fb: "Facebook", twitter: "Twitter", lj: "LiveJournal" , ok: "Одноклассники"}
   SOCIAL_ACCOUNTS.each do |provider_key, provider_name|
     method_n = 'social_'+provider_key.to_s
@@ -99,26 +101,12 @@ class UserApp < ActiveRecord::Base
     self.all_previous_statuses.values.collect{|v| "was_"+v}
   end
 
-  def self.all_current_statuses
-    {
-        STATUS_PRG_RESERVE => "prg_reserve",
-        STATUS_PSG => "psg",
-        STATUS_PRG => "prg",
-        STATUS_TIC_PSG => "tic_psg",
-        STATUS_TIC_PRG => "tic_prg"
-    }
-  end
-
-  def self.current_statuses_methods
-    self.all_current_statuses.values.collect{|v| "is_"+v}
-  end
-
   def self.social_methods
     SOCIAL_ACCOUNTS.keys.collect{|v| "social_"+v.to_s}
   end
 
   def self.all_statuses
-    all_future_statuses.merge(all_previous_statuses).merge(all_current_statuses).merge(NO_STATUS => "no_status")
+    all_future_statuses.merge(all_previous_statuses).merge(NO_STATUS => "no_status")
   end
 
   def can_be(status_value)
@@ -127,10 +115,6 @@ class UserApp < ActiveRecord::Base
 
   def was(status_value)
     previous_statuses & status_value == status_value
-  end
-
-  def is(status_value)
-    current_statuses & status_value == status_value
   end
 
 
@@ -157,19 +141,6 @@ class UserApp < ActiveRecord::Base
       end
     end
   end
-
-  self.all_current_statuses.each do |status_value, status_name|
-    method_n = 'is_'+status_name
-    define_method(method_n) { is status_value }
-    define_method(method_n+'=') do |val|
-      if val == "1" || val == true
-        self.current_statuses |= status_value
-      else
-        self.current_statuses &= ~status_value
-      end
-    end
-  end
-
 
   private
     def check_regions
