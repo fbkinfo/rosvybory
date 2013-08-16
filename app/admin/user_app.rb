@@ -82,7 +82,7 @@ ActiveAdmin.register UserApp do
     column :id
     column :created_at
 
-    column :desired_statuses
+    column :desired_statuses, :sortable => false
     column :adm_region
     column :region
     column :uic
@@ -94,17 +94,17 @@ ActiveAdmin.register UserApp do
     column :year_born
     column :sex_male
 
-    column :current_roles
+    column :current_roles, :sortable => false
     column :has_car
     column :legal_status
     column :has_video
 
-    column :previous_statuses
+    column :previous_statuses, :sortable => false
     column :experience_count
 
     column :can_be_coord_region, :sortable => false
 
-    column :social_accounts
+    column :social_accounts, :sortable => false
     column :extra
 
     column :ip
