@@ -9,4 +9,5 @@ Rosvibory::Application.routes.draw do
   end
 
   root 'user_apps#new'
+  get 'confirm_email' => 'user_apps#confirm_email'
 end

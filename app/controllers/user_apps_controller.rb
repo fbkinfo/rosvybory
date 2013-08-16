@@ -46,7 +46,20 @@ class UserAppsController < ApplicationController
       render action: 'new'
     end
   end
-
+  
+  def confirm_email
+    respond_to do |format|
+      format.html {
+        if @user = UserApp.find_by_confirmation_token(params[:key])
+          @user.confirm!
+          render 'confirmed'
+        else
+          render 'wrong_token'
+        end
+      }
+    end
+  end
+  
   def done
 
   end
