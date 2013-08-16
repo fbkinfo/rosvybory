@@ -70,7 +70,10 @@ describe User do
 
     context "пользователь с ролью адимна" do
       let(:user)  { create :user}
-      before      { user.add_role :admin }
+      before do
+        create :role, slug: "admin"
+        user.add_role :admin
+      end
 
       it { should be_able_to(:manage, :all) }
     end
@@ -80,7 +83,10 @@ describe User do
       let(:first_organisation)  { create :organisation }
       let(:second_organisation) { create :organisation }
 
-      before  { user.add_role :federal_repr }
+      before do
+        create :role, slug: "federal_repr"
+        user.add_role :federal_repr
+      end
 
       it {
         should_not be_able_to(:manage, :all)
@@ -100,7 +106,10 @@ describe User do
       let(:first_adm_region)  { Region.where(name: "Южный АО").first }
       let(:second_adm_region) { Region.where(name: "Северный АО").first }
 
-      before { user.add_role :dc }
+      before do
+        create :role, slug: "dc"
+        user.add_role :dc
+      end
 
       it {
         should_not be_able_to(:manage, :all)
