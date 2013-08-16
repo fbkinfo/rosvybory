@@ -207,4 +207,6 @@ ActiveAdmin.setup do |config|
   #
   # config.filters = true
 
+  config.favicon = '/assets/favicon.ico'
+
 end
