@@ -143,6 +143,10 @@ class UserApp < ActiveRecord::Base
     end
   end
 
+  def verified?
+    verification.present? && verification.confirmed? && verification.phone_number == self.phone
+  end
+
   private
 
   def check_regions
@@ -150,6 +154,6 @@ class UserApp < ActiveRecord::Base
   end
 
   def check_phone_verified
-    errors.add(:phone, 'Телефон не подтвержден') unless verification.present? && verification.confirmed? && verification.phone_number == self.phone
+    errors.add(:phone, 'Телефон не подтвержден') unless verified?
   end
 end

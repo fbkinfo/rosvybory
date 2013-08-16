@@ -1,14 +1,14 @@
 class PhoneVerification
   constructor: ->
-    unless @confirmed()
+    if @confirmed()
+      @success_message()
+      $("#user_app_phone").attr('readonly', 'readonly')
+    else
       @init_form()
       @init_controls()
 
   confirmed: =>
-    confirmed = $("#user_app_phone").data('confirmed')
-    @success_message()
-    $("#user_app_phone").attr('readonly', 'readonly')
-    confirmed
+    $("#user_app_phone").data('confirmed')
 
   init_form: =>
     $('#user_app_phone_input .controls').append('

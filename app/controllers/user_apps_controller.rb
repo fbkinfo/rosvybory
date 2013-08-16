@@ -38,6 +38,7 @@ class UserAppsController < ApplicationController
     @user_app.user_app_current_roles = @user_app.user_app_current_roles.select {|a| a.keep}
 
     if @user_app.save
+      session.delete(:verification_id)
       render action: 'done'
       #redirect_to new_user_app_path, notice: 'User app was successfully created.'
     else
