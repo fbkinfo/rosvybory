@@ -43,6 +43,13 @@ module UserAppsHelper
     }[provider]
   end
 
+  def current_roles_placeholders(role)
+    {
+        :psg_tic => "Пример: Басманный" ,
+        :prg_tic => "Пример: Басманный"
+    }[role.slug.to_sym] || "Пример: 12345"
+  end
+
   def regions_hash
     regions = {}
     Region.adm_regions.each do |adm_region|
