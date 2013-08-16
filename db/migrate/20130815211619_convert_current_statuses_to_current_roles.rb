@@ -13,7 +13,8 @@ class ConvertCurrentStatusesToCurrentRoles < ActiveRecord::Migration
       keys.select do |key|
         key & status > 0
       end.each do |st|
-        user_app.current_roles << CurrentRole.where(slug: map[st]).first
+        role_id = CurrentRole.where(slug: map[st]).first.id
+        user_app.user_app_current_roles.create! current_role_id: role_id, keep: "1"
       end
     end
   end
