@@ -43,11 +43,24 @@ module UserAppsHelper
     }[provider]
   end
 
-  def current_roles_placeholders(role)
-    {
-        :psg_tic => "Пример: Басманный" ,
-        :prg_tic => "Пример: Басманный"
-    }[role.slug.to_sym] || "Пример: 12345"
+  def current_roles_placeholders(user_app_current_role)
+    unless [:psg_tic, :prg_tic].include? user_app_current_role.current_role.slug.to_sym
+      "Пример: 12345"
+    end
+  end
+
+  def current_roles_collection(user_app_current_role)
+    if [:psg_tic, :prg_tic].include? user_app_current_role.current_role.slug.to_sym
+      option_groups_from_collection_for_select(Region.adm_regions, :subregions_with_tics, :name, :name, :name, user_app_current_role.value)
+    end
+  end
+
+  def current_roles_input_type(user_app_current_role)
+    if [:psg_tic, :prg_tic].include? user_app_current_role.current_role.slug.to_sym
+      :select
+    else
+      :string
+    end
   end
 
   def regions_hash

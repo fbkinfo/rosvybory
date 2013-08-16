@@ -16,10 +16,10 @@
     -UserApp.future_statuses_methods.each do | method_name|
       = f.input method_name, :as => :boolean
   %br
-  = f.input :adm_region, :as => :select, :collection => Region.adm_regions.all, :input_html => {:style => "width: 280px;"}
+  = f.input :adm_region, :as => :select, :collection => Region.adm_regions.all, :input_html => {:style => "width: 280px;", :class => "selectify"}
   = f.input :region, :as => :select, :collection => (@user_app.adm_region ? @user_app.adm_region.regions : []), :input_html => {:style => "width: 280px;"}, hint: "Можно оставить пустым или выбрать конкретный район" #ширина прописана inline, чтобы select2 её правильно подхватил, через css он не понимает
   -#= f.input :region, :as => :select, :collection => option_groups_from_collection_for_select(Region.cities.where(name: "Москва").first.regions, :regions, :name, :id, :name), :input_html => {:style => "width: 280px;", :class => "selectify"}
-  = f.input :uic, :label => raw("Номера желаемых УИК, через запятую (<a href='http://www.wikiuiki.org/' target=\"_blank\">найти номера в базе УИК</a>)"), :input_html => {:disabled => true}, :placeholder => "Пример: 12345, 23456"
+  = f.input :uic, :label => raw("Номера желаемых УИК, через запятую (<a href='http://www.wikiuiki.org/' target=\"_blank\">найти номера в базе УИК</a>).<br>Если подойдёт любой, оставьте пустым."), :input_html => {:disabled => true}, :placeholder => "Пример: 12345, 23456"
 
   = f.inputs "Личные данные", :id => "personal_info" do
     = f.input :last_name
@@ -35,7 +35,7 @@
       = user_app_current_role.input :keep, as: :boolean, label: user_app_current_role.object.current_role.name,
         input_html: {class: "js-current-role-checked"}
       = user_app_current_role.input :current_role_id, as: :hidden
-      = user_app_current_role.input :value, label: false, placeholder: current_roles_placeholders(user_app_current_role.object.current_role)
+      = user_app_current_role.input :value, label: false, :as => current_roles_input_type(user_app_current_role.object), :collection => current_roles_collection(user_app_current_role.object), :input_html => {:style => "width: 280px;", :class => "selectify"}, :placeholder => current_roles_placeholders(user_app_current_role.object)
 
   = f.inputs "Подробнее", :id => "details" do
     = f.input :has_car, :label => "Есть автомобиль?", :as => :radio, collection: {"Да" => true, "Нет" => false}

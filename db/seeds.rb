@@ -162,6 +162,15 @@ if Region.count.zero?
        Region.create!(name: mun_region_name, kind: Region::MUN_REGION, parent: adm_region)
      end
    end
+
+  #TODO всё это вынести в yaml и грузить из внешнего файла
+  adm_regions_with_single_tic = []
+  adm_regions_with_single_tic << Region.where("name LIKE ?", "%Новомосковский%").first.id
+  adm_regions_with_single_tic << Region.where("name LIKE ?", "%Троицкий%").first.id
+
+  Region.mun_regions.where("parent_id NOT IN (?)", adm_regions_with_single_tic).update_all 'has_tic = TRUE'
+  Region.adm_regions.where("id IN (?)", adm_regions_with_single_tic).update_all 'has_tic = TRUE'
+
 end
 
 roles = [
