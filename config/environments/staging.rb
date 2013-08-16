@@ -79,7 +79,7 @@ Rosvibory::Application.configure do
   config.log_formatter = ::Logger::Formatter.new
 
   config.action_mailer.default_url_options = {
-    :host => "lhttp://staging.rosvybory.org/"
+    :host => "http://staging.rosvybory.org"
   }
 
   config.action_mailer.smtp_settings = {
