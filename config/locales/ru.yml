@@ -20,6 +20,8 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 ru:
+  formtastic:
+    required: "обязательное поле"
   date:
     abbr_day_names:
     - Вс
