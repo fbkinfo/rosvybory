@@ -10,6 +10,10 @@ gem 'jquery-rails'
 # Use postgresql as the database for Active Record
 gem 'pg'
 
+gem "resque"#, "~> 2.0.0.pre.1", github: "resque/resque"
+gem 'resque_mailer'
+gem 'redis'
+
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
 gem "less-rails"
