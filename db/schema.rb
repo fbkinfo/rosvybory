@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130815211619) do
+ActiveRecord::Schema.define(version: 20130816160517) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -86,14 +86,14 @@ ActiveRecord::Schema.define(version: 20130815211619) do
     t.string   "phone"
     t.string   "email"
     t.string   "uic"
-    t.integer  "current_statuses",  default: 0
-    t.integer  "experience_count",  default: 0
-    t.integer  "previous_statuses", default: 0
+    t.integer  "current_statuses",   default: 0
+    t.integer  "experience_count",   default: 0
+    t.integer  "previous_statuses",  default: 0
     t.boolean  "has_car"
     t.string   "social_accounts"
     t.text     "extra"
     t.integer  "legal_status"
-    t.integer  "desired_statuses",  default: 0
+    t.integer  "desired_statuses",   default: 0
     t.string   "app_code"
     t.integer  "app_status"
     t.datetime "created_at"
@@ -104,11 +104,13 @@ ActiveRecord::Schema.define(version: 20130815211619) do
     t.boolean  "sex_male"
     t.string   "useragent"
     t.integer  "adm_region_id"
-    t.string   "state",             default: "pending", null: false
-    t.boolean  "phone_verified",    default: false,     null: false
+    t.string   "state",              default: "pending", null: false
+    t.boolean  "phone_verified",     default: false,     null: false
     t.boolean  "has_video"
     t.string   "forwarded_for"
     t.integer  "organisation_id"
+    t.string   "confirmation_token"
+    t.datetime "confirmed_at"
   end
 
   add_index "user_apps", ["adm_region_id"], name: "index_user_apps_on_adm_region_id", using: :btree
