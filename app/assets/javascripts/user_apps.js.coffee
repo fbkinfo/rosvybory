@@ -25,7 +25,7 @@ jQuery ->
   updateCurrentRoles = ->
     $(".js-current-role-checked").trigger("change")
 
-  $('#user_app_adm_region_id').select2
+  $('select.selectify').select2
     placeholder: "Начните вводить название"
 
   $('#user_app_region_id').select2
