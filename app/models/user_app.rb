@@ -167,6 +167,7 @@ class UserApp < ActiveRecord::Base
 
   def set_phone_verified_status
     self.phone_verified = verified?
+    true
   end
 
   def check_regions
