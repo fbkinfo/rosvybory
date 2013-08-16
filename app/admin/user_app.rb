@@ -33,7 +33,6 @@ ActiveAdmin.register UserApp do
   filter   :email
   filter   :uic, :as => :numeric_range
 
-  #filter   :current_status, :as => :bitwise_and, :collection =>  proc { UserApp.all_current_roles.keys }, :input_html => {:style => "width: 220px;"}
 
   filter   :experience_count
   #column(:previous_statuses) {|user_app| status_human_readable user_app.previous_statuses}
