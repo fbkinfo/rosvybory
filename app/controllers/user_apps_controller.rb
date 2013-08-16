@@ -13,6 +13,7 @@ class UserAppsController < ApplicationController
   # GET /user_apps/new
   def new
     @user_app = UserApp.new
+    CurrentRole.all.each {|cr| @user_app.user_app_current_roles.build current_role_id: cr.id}
   end
 
   ## GET /user_apps/1/edit
@@ -22,6 +23,7 @@ class UserAppsController < ApplicationController
   # POST /user_apps
   def create
     @user_app = UserApp.new(user_app_params)
+    @user_app.user_app_current_roles = @user_app.user_app_current_roles.select {|a| a.keep}
 
     # supposing that nginx is configured like this
     # proxy_set_header   X-Real-IP        $remote_addr;
@@ -68,10 +70,10 @@ class UserAppsController < ApplicationController
     def user_app_params
       params.require(:user_app).permit([:data_processing_allowed, :region_id, :adm_region_id, :uic,
                                        :last_name, :first_name, :patronymic, :phone, :email, :has_car, :has_video, :legal_status,
+                                       {:user_app_current_roles_attributes => [:value, :keep, :current_role_id]},
                                        :experience_count, :sex_male, :year_born, :extra] +
                                            UserApp.future_statuses_methods +
                                            UserApp.previous_statuses_methods +
-                                           UserApp.current_statuses_methods +
                                            UserApp.social_methods)
     end
 end
