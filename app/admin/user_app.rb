@@ -33,7 +33,6 @@ ActiveAdmin.register UserApp do
   filter   :email
   filter   :uic, :as => :numeric_range
 
-  #filter   :current_status, :as => :bitwise_and, :collection =>  proc { UserApp.all_current_statuses.keys }, :input_html => {:style => "width: 220px;"}
 
   filter   :experience_count
   #column(:previous_statuses) {|user_app| status_human_readable user_app.previous_statuses}
@@ -95,7 +94,7 @@ ActiveAdmin.register UserApp do
     column :year_born
     column :sex_male
 
-    column :current_statuses
+    column :current_roles
     column :has_car
     column :legal_status
     column :has_video
@@ -136,7 +135,7 @@ ActiveAdmin.register UserApp do
 
     f.inputs "Подробнее" do
       # TODO
-      f.input :current_statuses
+      #f.input :current_roles
       f.input :has_car
       f.input :legal_status
       f.input :has_video
@@ -174,7 +173,7 @@ ActiveAdmin.register UserApp do
     column :email
 
     column :uic
-    column :current_statuses
+    column :current_roles
     column :experience_count
     column :previous_statuses
 

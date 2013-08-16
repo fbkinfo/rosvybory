@@ -1,8 +1,8 @@
 class UserAppDecorator < Draper::Decorator
   delegate_all
 
-  def current_statuses
-    h.status_human_readable object.current_statuses
+  def current_roles
+    object.current_roles.pluck(:name, :value).map {|r| r.join(": ")}.join("; ")
   end
 
   def desired_statuses

@@ -43,8 +43,8 @@ after "deploy:update_code", "deploy:migrate"
 
 desc "Копирование продакшн бд в development и test окружения"
 task :dump_and_load_database, :roles => :app do
-  dump_file = File.new "/tmp/passport.dump", "w+"
-  run "PGPASSWORD=volunteeria pg_dump -h localhost -U rosvybory rosvybory_production --no-owner --no-privileges" do |channel, stream, data|
+  dump_file = File.new "/tmp/rosvybory.dump", "w+"
+  run "PGPASSWORD=8wR2gH9hlI pg_dump -h localhost -U dev rosvibory_production --no-owner --no-privileges" do |channel, stream, data|
     trap("INT") { puts 'Interupted'; exit 0; }
     dump_file.write data
     if stream == :err
@@ -54,7 +54,7 @@ task :dump_and_load_database, :roles => :app do
   end
   dump_file.close
   system "bundle exec rake db:drop db:create"
-  system "psql -d volunteeria_development -U postgres -h localhost < /tmp/passport.dump"
+  system "psql -d rosvibory_development -U postgres -h localhost < /tmp/rosvybory.dump"
   system "bundle exec rake db:migrate"
   system "bundle exec rake db:drop db:create db:migrate RAILS_ENV=test"
 end

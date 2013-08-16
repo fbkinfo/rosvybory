@@ -5,7 +5,7 @@ ActiveAdmin.register User do
     scope role.short_name do |items|
       items.where(:user_roles => {:role => role})
     end
-  end
+  end if Role.table_exists?
 
   index do
     column :email
