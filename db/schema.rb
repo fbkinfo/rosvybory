@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130816191659) do
+ActiveRecord::Schema.define(version: 20130816220301) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -105,8 +105,8 @@ ActiveRecord::Schema.define(version: 20130816191659) do
     t.string   "state",             default: "pending", null: false
     t.boolean  "phone_verified",    default: false,     null: false
     t.boolean  "has_video"
-    t.string   "forwarded_for"
     t.integer  "organisation_id"
+    t.string   "forwarded_for"
   end
 
   add_index "user_apps", ["adm_region_id"], name: "index_user_apps_on_adm_region_id", using: :btree
