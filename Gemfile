@@ -10,6 +10,10 @@ gem 'jquery-rails'
 # Use postgresql as the database for Active Record
 gem 'pg'
 
+gem "resque"#, "~> 2.0.0.pre.1", github: "resque/resque"
+gem 'resque_mailer'
+gem 'redis'
+
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
 gem "less-rails"
@@ -25,6 +29,7 @@ gem 'unicorn'
 gem 'cancan'
 gem 'state_machine'
 gem 'draper'
+gem 'foreman', require: false
 
 gem 'activeadmin',         github: 'gregbell/active_admin', branch: 'rails4'
 gem 'ransack', "~> 1.0.0"
