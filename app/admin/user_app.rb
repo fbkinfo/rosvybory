@@ -87,8 +87,8 @@ ActiveAdmin.register UserApp do
     column :region
     column :uic
 
-    column :full_name
-    column :phone_formatted
+    column :full_name, :sortable => false
+    column :phone_formatted, :sortable => false
     column :phone_verified
     column :email
     column :year_born
@@ -102,7 +102,7 @@ ActiveAdmin.register UserApp do
     column :previous_statuses
     column :experience_count
 
-    column :can_be_coord_region
+    column :can_be_coord_region, :sortable => false
 
     column :social_accounts
     column :extra
