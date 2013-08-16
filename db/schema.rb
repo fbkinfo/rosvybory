@@ -11,10 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130815211619) do
-
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+ActiveRecord::Schema.define(version: 20130816191659) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -51,6 +48,7 @@ ActiveRecord::Schema.define(version: 20130815211619) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "has_tic",    default: false
   end
 
   add_index "regions", ["name"], name: "index_regions_on_name", unique: true, using: :btree
