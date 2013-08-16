@@ -13,7 +13,7 @@ class UserAppsController < ApplicationController
   # GET /user_apps/new
   def new
     @user_app = UserApp.new
-    CurrentRole.all.each {|cr| @user_app.user_app_current_roles.build current_role_id: cr.id}
+    CurrentRole.order(:position).each {|cr| @user_app.user_app_current_roles.build current_role_id: cr.id}
   end
 
   ## GET /user_apps/1/edit
@@ -23,7 +23,6 @@ class UserAppsController < ApplicationController
   # POST /user_apps
   def create
     @user_app = UserApp.new(user_app_params)
-    @user_app.user_app_current_roles = @user_app.user_app_current_roles.select {|a| a.keep}
 
     # supposing that nginx is configured like this
     # proxy_set_header   X-Real-IP        $remote_addr;
@@ -33,7 +32,9 @@ class UserAppsController < ApplicationController
     @user_app.useragent     = request.env['HTTP_USER_AGENT']
     @user_app.forwarded_for = request.env['HTTP_X_FORWARDED_FOR']
 
-    if @user_app.save
+    if @user_app.valid?
+      @user_app.user_app_current_roles = @user_app.user_app_current_roles.select {|a| a.keep}
+      @user_app.save!
       render action: 'done'
       #redirect_to new_user_app_path, notice: 'User app was successfully created.'
     else

@@ -32,7 +32,8 @@
 
   = f.inputs "Текущий статус в системе избирательных комиссий" do
     = f.semantic_fields_for :user_app_current_roles do |user_app_current_role|
-      = user_app_current_role.input :keep, as: :boolean, label: user_app_current_role.object.current_role.name
+      = user_app_current_role.input :keep, as: :boolean, label: user_app_current_role.object.current_role.name,
+        input_html: {class: "js-current-role-checked"}
       = user_app_current_role.input :current_role_id, as: :hidden
       = user_app_current_role.input :value, label: false, placeholder: "Пример: 12345, 23456"
 
