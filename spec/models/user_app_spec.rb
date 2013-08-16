@@ -14,7 +14,7 @@ describe UserApp do
       before  { @user_app = build :user_app }
       specify do
         @user_app.should_not be_valid
-        @user_app.errors[:phone].should include 'Телефон не подтвержден'
+        @user_app.errors[:phone].should include 'не подтвержден'
       end
     end
 
@@ -30,10 +30,11 @@ describe UserApp do
     context 'с подтвежденным номером' do
       before do
         verification = Verification.new phone_number: '11111', confirmed: true
-        @user_app = build :user_app, verification: verification, phone: '11111'
+        @user_app = create :user_app, verification: verification, phone: '11111'
       end
 
       specify { @user_app.should be_valid }
+      specify { @user_app.phone_verified.should be_true }
     end
   end
 end

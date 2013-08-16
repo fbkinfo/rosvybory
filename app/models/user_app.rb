@@ -51,6 +51,7 @@ class UserApp < ActiveRecord::Base
 
   attr_accessor :verification
   validate :check_phone_verified
+  before_create :set_phone_verified_status
 
   state_machine initial: :pending do
     event(:reject) {transition all => :rejected}
@@ -149,11 +150,15 @@ class UserApp < ActiveRecord::Base
 
   private
 
+  def set_phone_verified_status
+    self.phone_verified = verified?
+  end
+
   def check_regions
     errors.add(:region, 'Район должен принадлежать выбранному округу') if region && region.parent != adm_region
   end
 
   def check_phone_verified
-    errors.add(:phone, 'Телефон не подтвержден') unless verified?
+    errors.add(:phone, 'не подтвержден') unless verified?
   end
 end
