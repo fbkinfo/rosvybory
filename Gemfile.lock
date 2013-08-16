@@ -44,6 +44,7 @@ GEM
       multi_json (~> 1.3)
       thread_safe (~> 0.1)
       tzinfo (~> 0.3.37)
+    addressable (2.3.5)
     arbre (1.0.1)
       activesupport (>= 3.0.0)
     arel (4.0.0)
@@ -95,10 +96,22 @@ GEM
     factory_girl_rails (4.2.1)
       factory_girl (~> 4.2.0)
       railties (>= 3.0.0)
+    ffaker (1.18.0)
+    ffi (1.9.0)
+    formatador (0.2.4)
     formtastic (2.3.0.rc2)
       actionpack (>= 3.0)
     formtastic-bootstrap (2.1.3)
       formtastic (~> 2.2)
+    guard (1.8.2)
+      formatador (>= 0.2.4)
+      listen (>= 1.0.0)
+      lumberjack (>= 1.0.2)
+      pry (>= 0.9.10)
+      thor (>= 0.14.6)
+    guard-rspec (3.0.2)
+      guard (>= 1.8)
+      rspec (~> 2.13)
     haml (4.0.3)
       tilt
     haml-rails (0.4)
@@ -128,12 +141,19 @@ GEM
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
     kgio (2.8.0)
+    launchy (2.3.0)
+      addressable (~> 2.3)
     less (2.3.2)
       commonjs (~> 0.2.6)
     less-rails (2.3.3)
       actionpack (>= 3.1)
       less (~> 2.3.1)
     libv8 (3.11.8.17)
+    listen (1.2.3)
+      rb-fsevent (>= 0.9.3)
+      rb-inotify (>= 0.9)
+      rb-kqueue (>= 0.2)
+    lumberjack (1.0.4)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -152,6 +172,7 @@ GEM
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
     orm_adapter (0.4.0)
+    parseconfig (1.0.2)
     pg (0.16.0)
     polyamorous (0.6.3)
       activerecord (>= 3.0)
@@ -186,10 +207,19 @@ GEM
       actionpack (>= 3.0)
       activerecord (>= 3.0)
       polyamorous (~> 0.6.0)
+    rb-fsevent (0.9.3)
+    rb-inotify (0.9.1)
+      ffi (>= 0.5.0)
+    rb-kqueue (0.2.0)
+      ffi (>= 0.5.0)
     ref (1.0.5)
     request_store (1.0.5)
     responders (1.0.0.rc)
       railties (>= 3.2, < 5)
+    rspec (2.14.1)
+      rspec-core (~> 2.14.0)
+      rspec-expectations (~> 2.14.0)
+      rspec-mocks (~> 2.14.0)
     rspec-core (2.14.4)
     rspec-expectations (2.14.1)
       diff-lcs (>= 1.1.3, < 2.0)
@@ -211,7 +241,11 @@ GEM
     select2-rails (3.4.3)
       sass-rails
       thor (~> 0.14)
+    shoulda-matchers (2.2.0)
+      activesupport (>= 3.0.0)
     slop (3.4.6)
+    sms_ru (0.5.0)
+      parseconfig (~> 1.0.2)
     sprockets (2.10.0)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -263,12 +297,16 @@ DEPENDENCIES
   database_cleaner
   draper
   factory_girl_rails
+  ffaker
   formtastic (= 2.3.0.rc2)
   formtastic-bootstrap
+  guard
+  guard-rspec
   haml-rails
   honeybadger
   inherited_resources (~> 1.4.1)
   jquery-rails
+  launchy
   less-rails
   pg
   pry-rails
@@ -279,6 +317,8 @@ DEPENDENCIES
   rvm-capistrano
   sass-rails (~> 4.0.0)
   select2-rails
+  shoulda-matchers
+  sms_ru
   state_machine
   therubyracer
   twitter-bootstrap-rails

@@ -148,4 +148,12 @@ ActiveRecord::Schema.define(version: 20130815211619) do
   add_index "users", ["region_id"], name: "index_users_on_region_id", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
+  create_table "verifications", force: true do |t|
+    t.string   "phone_number"
+    t.string   "code"
+    t.boolean  "confirmed"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
 end
