@@ -11,14 +11,17 @@ set :branch, 'develop'
 namespace :deploy do
   task :start do
     run "sudo /etc/init.d/unicorn_init start rosvybory_staging"
+    run "sudo start rosvybory"
   end
 
   task :stop do
     run "sudo /etc/init.d/unicorn_init stop rosvybory_staging"
+    run "sudo stop rosvybory"
   end
 
   task :restart do
     run "sudo /etc/init.d/unicorn_init stop rosvybory_staging"
     run "sudo /etc/init.d/unicorn_init start rosvybory_staging"
+    run "sudo restart rosvybory"
   end
 end
