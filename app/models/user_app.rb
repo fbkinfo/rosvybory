@@ -52,6 +52,7 @@ class UserApp < ActiveRecord::Base
   attr_accessor :verification
   validate :check_phone_verified
   before_create :set_phone_verified_status
+  after_create :send_email_confirmation
 
   state_machine initial: :pending do
     event(:reject) {transition all => :rejected}
@@ -110,7 +111,15 @@ class UserApp < ActiveRecord::Base
   def self.all_statuses
     all_future_statuses.merge(all_previous_statuses).merge(NO_STATUS => "no_status")
   end
+  
+  def confirm!
+    update_attributes confirmed_at: Time.now
+  end
 
+  def confirmed?
+    confirmed_at ? true : false
+  end
+  
   def can_be(status_value)
     desired_statuses & status_value == status_value
   end
@@ -146,6 +155,12 @@ class UserApp < ActiveRecord::Base
 
   def verified?
     verification.present? && verification.confirmed? && verification.phone_number == self.phone
+  end
+
+  def send_email_confirmation
+    self.confirmation_token = SecureRandom.hex(16)
+    save
+    ConfirmationMailer.email_confirmation(self).deliver
   end
 
   private
