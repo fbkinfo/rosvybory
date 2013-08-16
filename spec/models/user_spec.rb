@@ -48,75 +48,72 @@ describe User do
   end
 
   describe "abilities" do
-    subject { ability }
-    let(:ability){ Ability.new(user) }
-    let(:user){ nil }
+    subject       { ability }
+    let(:ability) { Ability.new(user) }
+    let(:user)    { nil }
 
-    before {Rails.application.load_seed}
+    before { Rails.application.load_seed }
 
     context "пользователь без ролей" do
-      let(:user){ create :user }
+      let(:user)  { create :user }
 
-      it{ should_not be_able_to(:manage, :all) }
-      it{ should be_able_to(:read, Region.new) }
-      it{ should_not be_able_to(:manage, Region.new) }
-      it{ should be_able_to(:read, Organisation.new) }
-      it{ should_not be_able_to(:manage, Organisation.new) }
-      it{ should_not be_able_to(:read, User.new) }
-      it{ should_not be_able_to(:read, UserApp.new) }
-
+      it {
+        should_not be_able_to(:manage, :all)
+        should be_able_to(:read, Region.new)
+        should_not be_able_to(:manage, Region.new)
+        should be_able_to(:read, Organisation.new)
+        should_not be_able_to(:manage, Organisation.new)
+        should_not be_able_to(:read, User.new)
+        should_not be_able_to(:read, UserApp.new)
+      }
     end
 
     context "пользователь с ролью адимна" do
-      let(:user){ create :user}
-      before  { user.add_role :admin }
+      let(:user)  { create :user}
+      before      { user.add_role :admin }
 
-      it{ should be_able_to(:manage, :all) }
+      it { should be_able_to(:manage, :all) }
     end
 
     context "пользователь с ролью федерального представителя" do
-      let(:user){ create :user, organisation: first_organisation}
-      #let(:region){ Region.where(name: "") }
-      let(:first_organisation){ create :organisation }
-      let(:second_organisation){ create :organisation }
+      let(:user)                { create :user, organisation: first_organisation}
+      let(:first_organisation)  { create :organisation }
+      let(:second_organisation) { create :organisation }
 
       before  { user.add_role :federal_repr }
 
-      it{ should_not be_able_to(:manage, :all) }
-      it{ should be_able_to(:read, Region.new) }
-      it{ should_not be_able_to(:manage, Region.new) }
-      it{ should be_able_to(:read, Organisation.new) }
-      it{ should_not be_able_to(:manage, Organisation.new) }
-      it{ should_not be_able_to(:read, User.new) }
-      it{ should_not be_able_to(:read, UserApp.new) }
-      it{ should_not be_able_to(:read, UserApp.new(organisation: second_organisation)) }
-      it{ should be_able_to(:manage, UserApp.new(organisation: first_organisation)) }
-
+      it {
+        should_not be_able_to(:manage, :all)
+        should be_able_to(:read, Region.new)
+        should_not be_able_to(:manage, Region.new)
+        should be_able_to(:read, Organisation.new)
+        should_not be_able_to(:manage, Organisation.new)
+        should_not be_able_to(:read, User.new)
+        should_not be_able_to(:read, UserApp.new)
+        should_not be_able_to(:read, UserApp.new(organisation: second_organisation))
+        should be_able_to(:manage, UserApp.new(organisation: first_organisation))
+      }
     end
 
     context "пользователь с ролью координатора округа" do
-      let(:user){ create :user, region: first_adm_region}
-      #let(:region){ Region.where(name: "") }
-      let(:first_adm_region){ Region.where(name: "Южный АО").first }
-      let(:second_adm_region){ Region.where(name: "Северный АО").first }
+      let(:user)              { create :user, region: first_adm_region}
+      let(:first_adm_region)  { Region.where(name: "Южный АО").first }
+      let(:second_adm_region) { Region.where(name: "Северный АО").first }
 
-      before  { user.add_role :dc }
+      before { user.add_role :dc }
 
-      it{ should_not be_able_to(:manage, :all) }
-      it{ should be_able_to(:read, Region.new) }
-      it{ should_not be_able_to(:manage, Region.new) }
-      it{ should be_able_to(:read, Organisation.new) }
-      it{ should_not be_able_to(:manage, Organisation.new) }
-      it{ should_not be_able_to(:read, User.new) }
-      it{ should_not be_able_to(:read, UserApp.new) }
-      it{ should_not be_able_to(:read, UserApp.new(adm_region: second_adm_region)) }
-      it{ should be_able_to(:manage, UserApp.new(adm_region: first_adm_region)) }
-
+      it {
+        should_not be_able_to(:manage, :all)
+        should be_able_to(:read, Region.new)
+        should_not be_able_to(:manage, Region.new)
+        should be_able_to(:read, Organisation.new)
+        should_not be_able_to(:manage, Organisation.new)
+        should_not be_able_to(:read, User.new)
+        should_not be_able_to(:read, UserApp.new)
+        should_not be_able_to(:read, UserApp.new(adm_region: second_adm_region))
+        should be_able_to(:manage, UserApp.new(adm_region: first_adm_region))
+      }
     end
-
   end
-
-
-
 end
 

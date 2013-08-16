@@ -27,7 +27,7 @@ RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
 
   config.before(:suite) do
-    DatabaseCleaner.strategy = :deletion
+    DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with(:truncation)
     DatabaseCleaner.start
   end
