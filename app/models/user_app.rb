@@ -27,7 +27,6 @@ class UserApp < ActiveRecord::Base
   validates :phone, :presence => true
   #validates_format_of :phone, with: /\A\d{10}\z/
   validates :adm_region, :presence => true
-  #validates :region, :presence => true
   validates :desired_statuses, :presence => true, :exclusion => { :in => [NO_STATUS], :message => "Требуется выбрать хотя бы один вариант" }
   validates :has_car, :inclusion =>  { :in => [true, false], :message => "требуется указать" }
   validates :has_video, :inclusion =>  { :in => [true, false], :message => "требуется указать" }
@@ -50,17 +49,19 @@ class UserApp < ActiveRecord::Base
 
   validate :check_regions
 
+  attr_accessor :verification
+  validate :check_phone_verified
+
   state_machine initial: :pending do
     event(:reject) {transition all => :rejected}
   end
-
 
   SOCIAL_ACCOUNTS = {vk: "ВКонтакте", fb: "Facebook", twitter: "Twitter", lj: "LiveJournal" , ok: "Одноклассники"}
   SOCIAL_ACCOUNTS.each do |provider_key, provider_name|
     method_n = 'social_'+provider_key.to_s
     define_method(method_n) { social_accounts[provider_key] }
     define_method(method_n+'=') do |val|
-      self.social_accounts[provider_key]=val
+      self.social_accounts[provider_key] = val
     end
   end
 
@@ -78,7 +79,7 @@ class UserApp < ActiveRecord::Base
   end
 
   def self.future_statuses_methods
-    self.all_future_statuses.values.collect{|v| "can_be_"+v}
+    self.all_future_statuses.values.collect{ |v| "can_be_#{v}" }
   end
 
   def self.all_previous_statuses
@@ -98,11 +99,11 @@ class UserApp < ActiveRecord::Base
   end
 
   def self.previous_statuses_methods
-    self.all_previous_statuses.values.collect{|v| "was_"+v}
+    self.all_previous_statuses.values.collect{ |v| "was_#{v}" }
   end
 
   def self.social_methods
-    SOCIAL_ACCOUNTS.keys.collect{|v| "social_"+v.to_s}
+    SOCIAL_ACCOUNTS.keys.collect{ |v| "social_#{v}" }
   end
 
   def self.all_statuses
@@ -119,9 +120,9 @@ class UserApp < ActiveRecord::Base
 
 
   self.all_future_statuses.each do |status_value, status_name|
-    method_n = 'can_be_'+status_name
+    method_n = "can_be_#{status_name}"
     define_method(method_n) { can_be status_value }
-    define_method(method_n+'=') do |val|
+    define_method("#{method_n}=") do |val|
       if val == "1" || val == true
         self.desired_statuses |= status_value
       else
@@ -131,10 +132,10 @@ class UserApp < ActiveRecord::Base
   end
 
   self.all_previous_statuses.each do |status_value, status_name|
-    method_n = 'was_'+status_name
+    method_n = "was_#{status_name}"
     define_method(method_n) { was status_value }
-    define_method(method_n+'=') do |val|
-      if val == "1" || val == true
+    define_method("#{method_n}=") do |val|
+      if val == '1' || val == true
         self.previous_statuses |= status_value
       else
         self.previous_statuses &= ~status_value
@@ -142,8 +143,17 @@ class UserApp < ActiveRecord::Base
     end
   end
 
+  def verified?
+    verification.present? && verification.confirmed? && verification.phone_number == self.phone
+  end
+
   private
-    def check_regions
-      errors.add(:region, "Район должен принадлежать выбранному округу") if region && region.parent != adm_region
-    end
+
+  def check_regions
+    errors.add(:region, 'Район должен принадлежать выбранному округу') if region && region.parent != adm_region
+  end
+
+  def check_phone_verified
+    errors.add(:phone, 'Телефон не подтвержден') unless verified?
+  end
 end
