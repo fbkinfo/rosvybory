@@ -35,7 +35,7 @@
       = user_app_current_role.input :keep, as: :boolean, label: user_app_current_role.object.current_role.name,
         input_html: {class: "js-current-role-checked"}
       = user_app_current_role.input :current_role_id, as: :hidden
-      = user_app_current_role.input :value, label: false, placeholder: "Пример: 12345, 23456"
+      = user_app_current_role.input :value, label: false, placeholder: current_roles_placeholders(user_app_current_role.object.current_role)
 
   = f.inputs "Подробнее", :id => "details" do
     = f.input :has_car, :label => "Есть автомобиль?", :as => :radio, collection: {"Да" => true, "Нет" => false}
