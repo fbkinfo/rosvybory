@@ -36,7 +36,6 @@ class UserAppsController < ApplicationController
     @user_app.organisation = Organisation.where(name: "РосВыборы").first_or_create
     user_app_current_roles = @user_app.user_app_current_roles.to_a
     @user_app.user_app_current_roles = @user_app.user_app_current_roles.select {|a| a.keep}
-
     if @user_app.save
       session.delete(:verification_id)
       render action: 'done'
