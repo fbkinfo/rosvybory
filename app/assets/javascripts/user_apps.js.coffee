@@ -62,4 +62,4 @@ jQuery ->
   updateExpCounterState()
   updateSubmitState()
   updateCurrentRoles()
-
+  verification = new PhoneVerification

@@ -9,3 +9,17 @@
 #social_accounts input {
   width: 60%;
 }
+
+#verification_start_button, #verification_confirm_button {
+  vertical-align: top;
+}
+
+#verification_controls {
+  display: none;
+}
+
+#user_app_phone_input .help-inline {
+  vertical-align: top;
+  margin-top: 7px;
+  margin-left: 5px;
+}

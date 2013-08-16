@@ -29,6 +29,7 @@ gem 'draper'
 gem 'activeadmin',         github: 'gregbell/active_admin', branch: 'rails4'
 gem 'ransack', "~> 1.0.0"
 gem 'inherited_resources', "~> 1.4.1"
+gem 'sms_ru'
 
 group :development do
   gem 'capistrano'
@@ -36,6 +37,7 @@ group :development do
   gem 'pry-rails'
   gem 'quiet_assets'
   gem 'rvm-capistrano'
+  gem 'launchy'
 end
 
 group :test, :development do
@@ -46,4 +48,8 @@ group :test do
   gem 'factory_girl_rails'
   gem 'database_cleaner'
   gem 'capybara'
+  gem 'shoulda-matchers'
+  gem 'guard'
+  gem 'guard-rspec'
+  gem 'ffaker'
 end
