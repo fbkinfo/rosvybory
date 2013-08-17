@@ -102,6 +102,8 @@ GEM
     foreman (0.63.0)
       dotenv (>= 0.7)
       thor (>= 0.13.6)
+    foreman-export-initscript (0.0.1)
+      foreman
     formatador (0.2.4)
     formtastic (2.3.0.rc2)
       actionpack (>= 3.0)
@@ -323,6 +325,7 @@ DEPENDENCIES
   factory_girl_rails
   ffaker
   foreman
+  foreman-export-initscript
   formtastic (= 2.3.0.rc2)
   formtastic-bootstrap
   guard
