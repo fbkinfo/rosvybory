@@ -14,17 +14,23 @@
     -#= favicon_link_tag 'apple-touch-icon-114x114-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '114x114'
     -#= favicon_link_tag 'apple-touch-icon-72x72-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '72x72'
     -#= favicon_link_tag 'apple-touch-icon-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png'
-    = favicon_link_tag '/assets/favicon.ico', :rel => 'shortcut icon'
+    = favicon_link_tag '/favicon.ico', :rel => 'shortcut icon'
 
   %body
-    .navbar.navbar-fluid-top
-      .navbar-inner
-        .container-fluid
-          %a.btn.btn-navbar(data-target=".nav-collapse" data-toggle="collapse")
-            %span.icon-bar
-            %span.icon-bar
-            %span.icon-bar
-          %a.brand(href="#") РосВыборы
+    .container-fluid
+      .row-fluid
+        .span3
+        .span6
+          =image_tag "logo.png"
+        .span3
+    -#.navbar.navbar-fluid-top
+    -#  .navbar-inner
+    -#    .container-fluid
+          -#%a.btn.btn-navbar(data-target=".nav-collapse" data-toggle="collapse")
+          -#  %span.icon-bar
+          -#  %span.icon-bar
+          -#  %span.icon-bar
+          -#%a.brand(href="#") РосВыборы
           -#.container.nav-collapse
           -#  %ul.nav
           -#    %li= link_to "Админка", "/control"
