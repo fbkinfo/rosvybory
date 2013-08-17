@@ -32,6 +32,38 @@ jQuery ->
     placeholder: "Не важен/любой из округа"
     allowClear: true
 
+  $("#user_app_uic").select2
+    tags:[]
+    selectOnBlur: true
+    formatNoMatches: ->
+      "Введите номер УИК"
+
+  $('#current_roles input.selectify').select2
+    maximumSelectionSize: 1
+    tags:[]
+    selectOnBlur: true
+    formatNoMatches: ->
+      "Введите номер УИК"
+
+  check_uic = (uic_str) ->
+    rx = new RegExp(/^\d+$/)
+    return 1 unless rx.test(uic_str)
+    uic_num = parseInt( uic_str, 10 );
+    return 2 unless 1 <= uic_num <= 3411 or 3601 <= uic_num <= 3792 or 4001 <= uic_num <= 4008
+    return 0
+
+  $("#user_app_uic, #current_roles input.selectify").on "select2-selecting", (e) ->
+    chk = check_uic e.val
+    if chk == 1
+      alert "Неверный формат номера УИК!"
+    else if chk == 2
+      alert "Такого номера УИК в Москве не существует!"
+
+    e.preventDefault() unless chk == 0
+
+
+
+
   $("#user_app_adm_region_id").on "change", (e) ->
     chosen_val = $(@).val()
     $el = $("#user_app_region_id")

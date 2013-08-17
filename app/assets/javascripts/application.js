@@ -13,6 +13,7 @@
 //= require jquery
 //= require twitter/bootstrap
 //= require select2
+//= require select2_locale_ru
 //= require jquery_ujs
 //= require phone_verification
 //= require user_apps
