@@ -13,7 +13,7 @@ class VerificationsController < ApplicationController
       end
     else
       flash.delete(:recaptcha_error)
-      render json: {error: "Неверно введена капча"}
+      render json: {error: "Неверно введены слова с картинки"}
     end
   end
 
