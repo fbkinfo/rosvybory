@@ -45,7 +45,7 @@ module UserAppsHelper
 
   def current_roles_placeholders(user_app_current_role)
     unless [:psg_tic, :prg_tic].include? user_app_current_role.current_role.slug.to_sym
-      "Пример: 12345"
+      "Пример: 1234"
     end
   end
 

@@ -50,7 +50,7 @@ class UserApp < ActiveRecord::Base
   validate :check_regions
 
   attr_accessor :verification
-  #validate :check_phone_verified
+  validate :check_phone_verified
   before_create :set_phone_verified_status
   after_create :send_email_confirmation
 
@@ -175,9 +175,6 @@ class UserApp < ActiveRecord::Base
   end
 
   def check_phone_verified
-    # HACK убрать, когда подымется sms.ru
-    return if Rails.env.staging?
-
     errors.add(:phone, 'не подтвержден') unless verified?
   end
 end

@@ -21,7 +21,7 @@
   = f.input :adm_region, :as => :select, :collection => Region.adm_regions.all, :input_html => {:style => "width: 280px;", :class => "selectify"}
   = f.input :region, :as => :select, :collection => (@user_app.adm_region ? @user_app.adm_region.regions : []), :input_html => {:style => "width: 280px;"}, hint: "Можно оставить пустым или выбрать конкретный район" #ширина прописана inline, чтобы select2 её правильно подхватил, через css он не понимает
   -#= f.input :region, :as => :select, :collection => option_groups_from_collection_for_select(Region.cities.where(name: "Москва").first.regions, :regions, :name, :id, :name), :input_html => {:style => "width: 280px;", :class => "selectify"}
-  = f.input :uic, :label => raw("Номера желаемых УИК, через запятую (<a href='http://www.wikiuiki.org/' target=\"_blank\">найти номера в базе УИК</a>).<br>Если подойдёт любой, оставьте пустым."), :input_html => {:disabled => true}, :placeholder => "Пример: 12345, 23456"
+  = f.input :uic, :label => raw("Номера желаемых УИК (<a href='http://www.wikiuiki.org/' target=\"_blank\">найти номера в базе УИК</a>).<br>Если подойдёт любой, оставьте пустым."), :input_html => {:disabled => true, :style => "width: 280px;"}
 
   = f.inputs "Личные данные", :id => "personal_info" do
     = f.input :last_name
@@ -32,7 +32,7 @@
     = f.input :year_born
     = f.input :sex_male, :as => :radio, collection: {"Мужской" => true, "Женский" => false}
 
-  = f.inputs "Текущий статус в системе избирательных комиссий" do
+  = f.inputs "Текущий статус в системе избирательных комиссий", :id => "current_roles" do
     = f.semantic_fields_for :user_app_current_roles do |user_app_current_role|
       = user_app_current_role.input :keep, as: :boolean, label: user_app_current_role.object.current_role.name,
         input_html: {class: "js-current-role-checked"}
