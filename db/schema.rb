@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130816220301) do
+ActiveRecord::Schema.define(version: 20130817174402) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -105,8 +105,8 @@ ActiveRecord::Schema.define(version: 20130816220301) do
     t.string   "state",              default: "pending", null: false
     t.boolean  "phone_verified",     default: false,     null: false
     t.boolean  "has_video"
-    t.integer  "organisation_id"
     t.string   "forwarded_for"
+    t.integer  "organisation_id"
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
   end
@@ -141,6 +141,7 @@ ActiveRecord::Schema.define(version: 20130816220301) do
     t.datetime "updated_at"
     t.integer  "region_id"
     t.integer  "organisation_id"
+    t.string   "phone"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
