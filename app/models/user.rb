@@ -8,6 +8,7 @@ class User < ActiveRecord::Base
 
   validates_presence_of :phone
   validates_uniqueness_of :phone
+  validates_format_of :phone, with: /\A\d{10}\z/
 
   has_many :user_roles, dependent: :destroy
   has_many :roles, through: :user_roles
