@@ -297,6 +297,8 @@ ru:
         created_at: Создано
         updated_at: Обновлено
       user:
+        password: Пароль
+        phone: Телефон
         region: "Район/Округ"
         created_at: Создано
         updated_at: Изменено
