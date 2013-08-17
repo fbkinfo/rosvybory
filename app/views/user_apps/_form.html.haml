@@ -27,7 +27,7 @@
     = f.input :last_name
     = f.input :first_name
     = f.input :patronymic
-    .well
+    %div{class: AppConfig["captcha_enabled"] ? "well" : ""}
       = f.input :phone, :label => "Контактный телефон", :placeholder => "Пример: 903 111 22 33", input_html: {data: { confirmed: f.object.verified? } }
     = f.input :email
     = f.input :year_born
