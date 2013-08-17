@@ -11,7 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130817174402) do
+ActiveRecord::Schema.define(version: 20130817175839) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -144,6 +147,7 @@ ActiveRecord::Schema.define(version: 20130817174402) do
     t.string   "phone"
   end
 
+  add_index "users", ["adm_region_id"], name: "index_users_on_adm_region_id", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["organisation_id"], name: "index_users_on_organisation_id", using: :btree
   add_index "users", ["region_id"], name: "index_users_on_region_id", using: :btree
