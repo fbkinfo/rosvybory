@@ -1,7 +1,7 @@
 class VerificationsController < ApplicationController
 
   def create
-    if verify_recaptcha
+    if verify_recaptcha || !AppConfig["captcha_enabled"]
       verification = Verification.new phone_number: params[:phone_number]
 
       begin
