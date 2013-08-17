@@ -37,6 +37,17 @@ jQuery ->
     selectOnBlur: true
     formatNoMatches: ->
       "Введите номер УИК"
+  $("#user_app_uic").on "select2-selecting", (e) ->
+    rx = new RegExp(/^\d+$/)
+    unless rx.test(e.val)
+      alert "Неверный формат номера УИК!"
+      e.preventDefault()
+    else
+      uic_num = parseInt( e.val, 10 );
+      unless  1 <= uic_num <= 3411 or 3601 <= uic_num <= 3792 or 4001 <= uic_num <= 4008
+        alert "Такого номера УИК в Москве не существует!"
+        e.preventDefault()
+
   $("#user_app_adm_region_id").on "change", (e) ->
     chosen_val = $(@).val()
     $el = $("#user_app_region_id")
