@@ -78,6 +78,7 @@ ActiveRecord::Schema.define(version: 20130817204644) do
     t.datetime "updated_at"
   end
 
+  add_index "uics", ["number"], name: "index_uics_on_number", unique: true, using: :btree
   add_index "uics", ["region_id"], name: "index_uics_on_region_id", using: :btree
 
   create_table "user_app_current_roles", force: true do |t|
