@@ -175,9 +175,6 @@ class UserApp < ActiveRecord::Base
   end
 
   def check_phone_verified
-    # HACK убрать, когда подымется sms.ru
-    return if Rails.env.staging?
-
     errors.add(:phone, 'не подтвержден') unless verified?
   end
 end
