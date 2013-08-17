@@ -8,5 +8,6 @@ class CreateUics < ActiveRecord::Migration
 
       t.timestamps
     end
+    add_index :uics, :number, unique: true
   end
 end
