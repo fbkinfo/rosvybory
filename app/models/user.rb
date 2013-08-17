@@ -17,13 +17,16 @@ class User < ActiveRecord::Base
   belongs_to :adm_region, class_name: "Region"
   belongs_to :organisation
 
+  validates :phone, presence: true
+
   class << self
     def new_from_app(app)
       new do |user|
         user.email = app.email
         user.region_id = app.region_id
         user.adm_region_id = app.adm_region_id
-        #user.phone = app.phone.gsub(/[-\s]/, "")
+        user.phone = app.phone.gsub(/[-\s]/, "")
+        user.organisation_id = app.organisation_id
       end
     end
   end
