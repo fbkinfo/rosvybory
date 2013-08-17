@@ -30,6 +30,7 @@ gem 'cancan'
 gem 'state_machine'
 gem 'draper'
 gem 'foreman', require: false
+gem 'foreman-export-initscript', require: false
 
 gem 'activeadmin',         github: 'gregbell/active_admin', branch: 'rails4'
 gem 'ransack', "~> 1.0.0"
