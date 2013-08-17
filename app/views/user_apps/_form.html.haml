@@ -18,7 +18,7 @@
     -UserApp.future_statuses_methods.each do | method_name|
       = f.input method_name, :as => :boolean
   %br
-  = f.input :adm_region, :as => :select, :collection => Region.adm_regions.all, :input_html => {:style => "width: 280px;", :class => "selectify"}
+  = f.input :adm_region, :as => :select, :collection => Region.adm_regions.to_a, :input_html => {:style => "width: 280px;", :class => "selectify"}
   = f.input :region, :as => :select, :collection => (@user_app.adm_region ? @user_app.adm_region.regions : []), :input_html => {:style => "width: 280px;"}, hint: "Можно оставить пустым или выбрать конкретный район" #ширина прописана inline, чтобы select2 её правильно подхватил, через css он не понимает
   -#= f.input :region, :as => :select, :collection => option_groups_from_collection_for_select(Region.cities.where(name: "Москва").first.regions, :regions, :name, :id, :name), :input_html => {:style => "width: 280px;", :class => "selectify"}
   = f.input :uic, :label => raw("Номера желаемых УИК (<a href='http://www.wikiuiki.org/' target=\"_blank\">найти номера в базе УИК</a>).<br>Если подойдёт любой, оставьте пустым."), :input_html => {:disabled => true, :style => "width: 280px;"}
@@ -27,7 +27,8 @@
     = f.input :last_name
     = f.input :first_name
     = f.input :patronymic
-    = f.input :phone, :label => "Контактный телефон", :placeholder => "Пример: 903 111 22 33", input_html: {data: { confirmed: f.object.verified? } }
+    .well
+      = f.input :phone, :label => "Контактный телефон", :placeholder => "Пример: 903 111 22 33", input_html: {data: { confirmed: f.object.verified? } }
     = f.input :email
     = f.input :year_born
     = f.input :sex_male, :as => :radio, collection: {"Мужской" => true, "Женский" => false}
@@ -52,7 +53,7 @@
   = f.inputs :name => "Аккаунты в соц. сетях", :id => "social_accounts" do
     -UserApp::SOCIAL_ACCOUNTS.each do |provider_key, provider_name|
       = f.input 'social_'+provider_key.to_s, :label => (link_to provider_name, social_account_links(provider_key), target: "_blank"), placeholder: social_account_placeholders(provider_key)
-  = f.inputs "Дополнителные сведения", :id => "extra" do
+  = f.inputs "Дополнительные сведения", :id => "extra" do
     = f.input :extra, :label => false, :input_html => {:rows => 10}
 
   = f.actions do

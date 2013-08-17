@@ -7,7 +7,7 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 if Region.count.zero?
-  moscow = Region.create(name: 'Москва', kind: Region::CITY)
+  moscow = Region.create(name: 'Москва', kind: :city)
 
   regions = {"Центральный АО" => ["Арбат",
                                   "Басманный",
@@ -157,9 +157,9 @@ if Region.count.zero?
                                'Щаповское']}
 
    regions.each do |adm_region_name, mun_region_names|
-     adm_region = Region.create(name: adm_region_name, kind: Region::ADM_REGION, parent: moscow)
+     adm_region = Region.create(name: adm_region_name, kind: :adm_region, parent: moscow)
      mun_region_names.each do |mun_region_name|
-       Region.create!(name: mun_region_name, kind: Region::MUN_REGION, parent: adm_region)
+       Region.create!(name: mun_region_name, kind: :mun_region, parent: adm_region)
      end
    end
 
