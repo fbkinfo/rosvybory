@@ -32,6 +32,11 @@ jQuery ->
     placeholder: "Не важен/любой из округа"
     allowClear: true
 
+  $("#user_app_uic").select2
+    tags:[]
+    selectOnBlur: true
+    formatNoMatches: ->
+      "Введите номер УИК"
   $("#user_app_adm_region_id").on "change", (e) ->
     chosen_val = $(@).val()
     $el = $("#user_app_region_id")
