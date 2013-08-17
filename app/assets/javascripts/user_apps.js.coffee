@@ -38,6 +38,13 @@ jQuery ->
     formatNoMatches: ->
       "Введите номер УИК"
 
+  $('#current_roles input.selectify').select2
+    maximumSelectionSize: 1
+    tags:[]
+    selectOnBlur: true
+    formatNoMatches: ->
+      "Введите номер УИК"
+
   check_uic = (uic_str) ->
     rx = new RegExp(/^\d+$/)
     return 1 unless rx.test(uic_str)
@@ -45,7 +52,7 @@ jQuery ->
     return 2 unless 1 <= uic_num <= 3411 or 3601 <= uic_num <= 3792 or 4001 <= uic_num <= 4008
     return 0
 
-  $("#user_app_uic").on "select2-selecting", (e) ->
+  $("#user_app_uic, #current_roles input.selectify").on "select2-selecting", (e) ->
     chk = check_uic e.val
     if chk == 1
       alert "Неверный формат номера УИК!"
