@@ -1,0 +1,14 @@
+= semantic_form_for [:control, @user] do |f|
+  = f.input :roles
+  = f.input :email
+  = f.input :phone
+  = f.input :adm_region
+  = f.input :region
+  = f.input :organisation
+  = f.input :user_app_id, as: :hidden
+
+  - f.semantic_fields_for :user_current_roles do |fc|
+    =# render 'user_current_role_fields', :f => fc
+    = link_to_add_association 'add user_current_role', f, :user_current_roles
+
+  = f.actions

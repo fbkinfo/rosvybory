@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130817204644) do
+ActiveRecord::Schema.define(version: 20130817223022) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -120,8 +120,8 @@ ActiveRecord::Schema.define(version: 20130817204644) do
     t.string   "state",              default: "pending", null: false
     t.boolean  "phone_verified",     default: false,     null: false
     t.boolean  "has_video"
-    t.string   "forwarded_for"
     t.integer  "organisation_id"
+    t.string   "forwarded_for"
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
   end
@@ -129,6 +129,20 @@ ActiveRecord::Schema.define(version: 20130817204644) do
   add_index "user_apps", ["adm_region_id"], name: "index_user_apps_on_adm_region_id", using: :btree
   add_index "user_apps", ["organisation_id"], name: "index_user_apps_on_organisation_id", using: :btree
   add_index "user_apps", ["region_id"], name: "index_user_apps_on_region_id", using: :btree
+
+  create_table "user_current_roles", force: true do |t|
+    t.integer  "user_id",         null: false
+    t.integer  "current_role_id", null: false
+    t.integer  "uic_id",          null: false
+    t.integer  "region_id",       null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_current_roles", ["current_role_id"], name: "index_user_current_roles_on_current_role_id", using: :btree
+  add_index "user_current_roles", ["region_id"], name: "index_user_current_roles_on_region_id", using: :btree
+  add_index "user_current_roles", ["uic_id"], name: "index_user_current_roles_on_uic_id", using: :btree
+  add_index "user_current_roles", ["user_id"], name: "index_user_current_roles_on_user_id", using: :btree
 
   create_table "user_roles", force: true do |t|
     t.integer  "user_id"
@@ -158,6 +172,7 @@ ActiveRecord::Schema.define(version: 20130817204644) do
     t.integer  "organisation_id"
     t.string   "phone"
     t.integer  "adm_region_id"
+    t.integer  "user_app_id"
   end
 
   add_index "users", ["adm_region_id"], name: "index_users_on_adm_region_id", using: :btree

@@ -38,7 +38,7 @@ describe UserApp do
     end
   end
 
-  describe "#approve" do
+  describe "#approve", pending: true do
     let(:verification) { Verification.new phone_number: '1234567', confirmed: true }
     subject { create(:user_app, verification: verification, phone: '1234567') }
 

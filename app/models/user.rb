@@ -13,6 +13,9 @@ class User < ActiveRecord::Base
   has_many :user_roles, dependent: :destroy
   has_many :roles, through: :user_roles
 
+  has_many :user_current_roles, dependent: :destroy
+  has_many :current_roles, through: :user_current_roles
+
   belongs_to :region
   belongs_to :adm_region, class_name: "Region"
   belongs_to :organisation
@@ -27,6 +30,7 @@ class User < ActiveRecord::Base
         user.adm_region_id = app.adm_region_id
         user.phone = app.phone.gsub(/[-\s]/, "")
         user.organisation_id = app.organisation_id
+        user.user_app_id = app.id
       end
     end
   end

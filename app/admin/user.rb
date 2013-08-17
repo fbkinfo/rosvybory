@@ -5,7 +5,7 @@ ActiveAdmin.register User do
   collection_action :review, method: :get do
     @app = UserApp.find(params[:user_app_id])
     @user = User.new_from_app(@app)
-    render "new"
+    render "new", layout: false
   end
 
   scope :all, :default => true
@@ -27,21 +27,7 @@ ActiveAdmin.register User do
 
   filter :email
 
-  form do |f|
-    f.inputs "Пользовательские данные" do
-      f.input :roles
-      f.input :email
-      f.input :phone
-      f.input :adm_region
-      f.input :region
-      f.input :organisation
-    end
-    #f.inputs "Смена пароля" do
-      #f.input :password
-      #f.input :password_confirmation
-    #end
-    f.actions
-  end
+  form :partial => "form"
 
   controller do
     def permitted_params

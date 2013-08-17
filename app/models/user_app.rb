@@ -187,6 +187,10 @@ class UserApp < ActiveRecord::Base
     ConfirmationMailer.email_confirmation(self).deliver
   end
 
+  def reviewed?
+    approved? || rejected?
+  end
+
   private
 
   def set_phone_verified_status
