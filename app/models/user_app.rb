@@ -55,7 +55,18 @@ class UserApp < ActiveRecord::Base
   after_create :send_email_confirmation
 
   state_machine initial: :pending do
-    event(:reject) {transition all => :rejected}
+    # what about int value for states?
+    state :rejected
+    state :approved
+    state :pending
+
+    event :reject do
+      transition all => :rejected
+    end
+
+    event :set_approved do
+      transition :pending => :approved
+    end
   end
 
   SOCIAL_ACCOUNTS = {vk: "ВКонтакте", fb: "Facebook", twitter: "Twitter", lj: "LiveJournal" , ok: "Одноклассники"}
@@ -67,16 +78,15 @@ class UserApp < ActiveRecord::Base
     end
   end
 
-
   def self.all_future_statuses
     {
-        STATUS_OBSERVER => "observer",
-        STATUS_MOBILE => "mobile",
-        STATUS_CALLER => "caller",
-        STATUS_COORD_REGION => "coord_region",
-        STATUS_COORD_MOBILE => "coord_mobile",
-        STATUS_COORD_CALLER => "coord_caller"
-        #STATUS_PRG_RESERVE => "prg_reserve"
+      STATUS_OBSERVER => "observer",
+      STATUS_MOBILE => "mobile",
+      STATUS_CALLER => "caller",
+      STATUS_COORD_REGION => "coord_region",
+      STATUS_COORD_MOBILE => "coord_mobile",
+      STATUS_COORD_CALLER => "coord_caller"
+      #STATUS_PRG_RESERVE => "prg_reserve"
     }
   end
 
@@ -86,18 +96,32 @@ class UserApp < ActiveRecord::Base
 
   def self.all_previous_statuses
     {
-        STATUS_OBSERVER => "observer",
-        STATUS_MOBILE => "mobile",
-        STATUS_PRG => "prg",
-        STATUS_PSG => "psg",
-        STATUS_TIC_PRG => "tic_prg",
-        STATUS_TIC_PSG => "tic_psg",
-        STATUS_LAWYER => "lawyer",
-        STATUS_CANDIDATE => "candidate",
-        STATUS_DELEGATE => "delegate",
-        STATUS_JOURNALIST => "journalist",
-        STATUS_COORD => "coord"
+      STATUS_OBSERVER => "observer",
+      STATUS_MOBILE => "mobile",
+      STATUS_PRG => "prg",
+      STATUS_PSG => "psg",
+      STATUS_TIC_PRG => "tic_prg",
+      STATUS_TIC_PSG => "tic_psg",
+      STATUS_LAWYER => "lawyer",
+      STATUS_CANDIDATE => "candidate",
+      STATUS_DELEGATE => "delegate",
+      STATUS_JOURNALIST => "journalist",
+      STATUS_COORD => "coord"
     }
+  end
+
+  def approve!
+    transaction do
+      set_approved!
+      password = SecureRandom.hex[0..8]
+      user = User.create! do |user|
+        user.email = email
+        user.password = password
+        user.region_id = region_id
+      end
+
+      user.send_sms_with_password(password)
+    end
   end
 
   def self.previous_statuses_methods
@@ -111,7 +135,7 @@ class UserApp < ActiveRecord::Base
   def self.all_statuses
     all_future_statuses.merge(all_previous_statuses).merge(NO_STATUS => "no_status")
   end
-  
+
   def confirm!
     update_attributes confirmed_at: Time.now
   end
@@ -119,7 +143,7 @@ class UserApp < ActiveRecord::Base
   def confirmed?
     confirmed_at ? true : false
   end
-  
+
   def can_be(status_value)
     desired_statuses & status_value == status_value
   end

@@ -28,4 +28,6 @@ class User < ActiveRecord::Base
     role = Role.where(slug: role_name).first!
     roles.delete role
   end
+
+  def send_sms_with_password(raw_password);end
 end
