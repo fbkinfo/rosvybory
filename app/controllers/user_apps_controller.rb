@@ -13,6 +13,7 @@ class UserAppsController < ApplicationController
   # GET /user_apps/new
   def new
     @user_app = UserApp.new
+    gon.recaptcha_key = Recaptcha.configuration.public_key
     CurrentRole.order(:position).each {|cr| @user_app.user_app_current_roles.build current_role_id: cr.id}
   end
 

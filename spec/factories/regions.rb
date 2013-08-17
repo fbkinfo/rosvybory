@@ -1,15 +1,15 @@
 FactoryGirl.define do
   factory :region do
     sequence(:name) { |n| "region#{n}" }
-    kind Region::CITY
+    kind :city
 
     trait :adm_region do
-      kind Region::ADM_REGION
+      kind :adm_region
       parent { FactoryGirl.create :region }
     end
 
     trait :mun_region do
-      kind Region::MUN_REGION
+      kind :mun_region
       parent { FactoryGirl.create :adm_region }
     end
   end
