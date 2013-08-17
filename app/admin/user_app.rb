@@ -66,7 +66,7 @@ ActiveAdmin.register UserApp do
   #  end
   #end
 
-  config.sort_order = "id_asc"
+  config.sort_order = "id_desc"
   controller do
     def scoped_collection
       resource_class.includes(:region).includes(:adm_region).includes(:organisation) # prevents N+1 queries to your database
