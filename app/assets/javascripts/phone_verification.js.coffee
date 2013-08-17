@@ -42,9 +42,13 @@ class PhoneVerification
       @complete_verification(code)
 
   start_verification: (number)=>
+    params = {phone_number: number}
+    if (typeof(Recaptcha) != "undefined")
+      params.recaptcha_challenge_field = Recaptcha.get_challenge()
+      params.recaptcha_response_field = Recaptcha.get_response()
     $.ajax
       url: '/verifications'
-      data: $.param(phone_number: number, recaptcha_challenge_field: Recaptcha.get_challenge(), recaptcha_response_field: Recaptcha.get_response())
+      data: $.param(params)
       method: 'POST'
       success: (data)=>
         @on_success(data)
@@ -70,7 +74,8 @@ class PhoneVerification
       $('#verification_start_button').hide()
       $('#verification_controls').css('display', 'inline-block')
       @hide_error()
-      Recaptcha.destroy()
+      if (typeof(Recaptcha) != "undefined")
+        Recaptcha.destroy()
     if data.error
       @error_message(data.error)
       @restore()
