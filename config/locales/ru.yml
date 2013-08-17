@@ -20,6 +20,8 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 ru:
+  active_admin:
+    review_model: "Принятие заявки"
   formtastic:
     required: "обязательное поле"
   date:

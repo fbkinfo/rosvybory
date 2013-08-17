@@ -2,6 +2,12 @@ ActiveAdmin.register User do
 
   menu :if => proc{ can? :manage, User }
 
+  collection_action :review, method: :get do
+    @app = UserApp.find(params[:user_app_id])
+    @user = User.new_from_app(@app)
+    render "new"
+  end
+
   scope :all, :default => true
   Role.all.each do |role|
     scope role.short_name do |items|
@@ -25,6 +31,8 @@ ActiveAdmin.register User do
     f.inputs "Пользовательские данные" do
       f.input :roles
       f.input :email
+      f.input :phone
+      f.input :adm_region
       f.input :region
       f.input :organisation
     end

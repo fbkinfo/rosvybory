@@ -8,16 +8,6 @@ ActiveAdmin.register UserApp do
     redirect_to control_user_app_path(resource)
   end
 
-  member_action :approve, method: :post do
-    resource.approve!
-    redirect_to control_user_app_path(resource)
-  end
-
-  member_action :review, method: :get do
-    @user = User.new_from_app(resource)
-    render "active_admin/users/new"
-  end
-
   action_item only: [:edit, :show] do
     link_to('Отклонить', reject_control_user_app_path(user_app), method: :post) unless user_app.rejected?
   end
@@ -115,7 +105,7 @@ ActiveAdmin.register UserApp do
       links = ''.html_safe
       links << link_to(I18n.t('active_admin.view'), resource_path(resource), class: "member_link view_link")
       links << link_to('Отклонить', reject_control_user_app_path(resource), method: :post, class: "member_link view_link") unless resource.rejected?
-      links << link_to('Принять', review_control_user_app_path(resource), class: "member_link view_link") unless resource.approved?
+      links << link_to('Принять', review_control_users_path(user_app_id: resource.id), class: "member_link view_link") unless resource.approved?
       links
     end
   end
