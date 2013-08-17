@@ -94,4 +94,4 @@ jQuery ->
   updateExpCounterState()
   updateSubmitState()
   updateCurrentRoles()
-  #verification = new PhoneVerification
+  verification = new PhoneVerification
