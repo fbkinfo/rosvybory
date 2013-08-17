@@ -4,9 +4,13 @@ ActiveAdmin.register UserApp do
   menu :if => proc{ can? :read, UserApp }
 
   member_action :reject, method: :post do
-    user_app = resource
-    user_app.reject!
-    redirect_to control_user_app_path(user_app)
+    resource.reject!
+    redirect_to control_user_app_path(resource)
+  end
+
+  member_action :approve, method: :post do
+    resource.approve!
+    redirect_to control_user_app_path(resource)
   end
 
   action_item only: [:edit, :show] do
@@ -81,36 +85,26 @@ ActiveAdmin.register UserApp do
 
   index do
     selectable_column
-    column :id
     column :created_at
 
     column :desired_statuses, :sortable => false
-    column :adm_region
-    column :region
+    column :adm_region do |user_app|
+      [
+        link_to(user_app.region.name, [:control, user_app.region]),
+        link_to(user_app.adm_region.name, [:control, user_app.adm_region])
+      ].join(", ").html_safe
+    end
     column :uic
 
     column :full_name, :sortable => false
-    column :phone_formatted, :sortable => false
-    column :phone_verified
+    column :phone_formatted, :sortable => false do |user_app|
+      status_tag(user_app.phone_formatted, user_app.phone_verified? ? :ok : :error)
+    end
     column :email
     column :year_born
     column :sex_male
 
     column :current_roles, :sortable => false
-    column :has_car
-    column :legal_status
-    column :has_video
-
-    column :previous_statuses, :sortable => false
-    column :experience_count
-
-    column :can_be_coord_region, :sortable => false
-
-    column :social_accounts, :sortable => false
-    column :extra
-
-    column :ip
-    column :useragent
 
     default_actions
   end
