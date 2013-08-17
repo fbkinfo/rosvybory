@@ -109,6 +109,9 @@ GEM
       actionpack (>= 3.0)
     formtastic-bootstrap (2.1.3)
       formtastic (~> 2.2)
+    gon (4.1.1)
+      actionpack (>= 2.3.0)
+      json
     guard (1.8.2)
       formatador (>= 0.2.4)
       listen (>= 1.0.0)
@@ -329,6 +332,7 @@ DEPENDENCIES
   foreman-export-initscript
   formtastic (= 2.3.0.rc2)
   formtastic-bootstrap
+  gon
   guard
   guard-rspec
   haml-rails

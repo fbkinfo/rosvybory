@@ -37,6 +37,7 @@ gem 'ransack', "~> 1.0.0"
 gem 'inherited_resources', "~> 1.4.1"
 gem 'sms_ru'
 gem "recaptcha", :require => "recaptcha/rails"
+gem 'gon'
 
 group :development do
   gem 'capistrano'

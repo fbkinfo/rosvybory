@@ -13,18 +13,20 @@ class PhoneVerification
 
   init_form: =>
     $('#user_app_phone_input .controls').append('
-    <div id="recaptcha"></div>
     <input type="button" id="verification_start_button" class="btn btn-warning" value="Подтвердить">
+    <div id="recaptcha"></div>
     <div id="verification_controls">
       <input type="text" id="verification_code" class="input-small" placeholder="Код из SMS"/>
       <input type="button" name="" class="btn btn-warning" id="verification_confirm_button" value="Отправить"/>
     </div>')
 
   init_recaptcha: =>
-    Recaptcha.create("6LeMMuYSAAAAAA9rYZ7oCz2vtbKlt_kwx_Uyn2JC", "recaptcha", {
-      theme: "clean",
-      callback: Recaptcha.focus_response_field
-    })
+    if (typeof(Recaptcha) != "undefined")
+      Recaptcha.focus_response_field = (->)
+      Recaptcha.create(gon.recaptcha_key, "recaptcha", {
+        theme: "clean",
+        callback: Recaptcha.focus_response_field
+      })
 
   init_controls: =>
     $('#verification_start_button').on 'click', (e)=>
@@ -42,7 +44,7 @@ class PhoneVerification
   start_verification: (number)=>
     $.ajax
       url: '/verifications'
-      data: $.param(phone_number: number, challenge: Recaptcha.get_challenge(), response: Recaptcha.get_response())
+      data: $.param(phone_number: number, recaptcha_challenge_field: Recaptcha.get_challenge(), recaptcha_response_field: Recaptcha.get_response())
       method: 'POST'
       success: (data)=>
         @on_success(data)
@@ -68,6 +70,7 @@ class PhoneVerification
       $('#verification_start_button').hide()
       $('#verification_controls').css('display', 'inline-block')
       @hide_error()
+      Recaptcha.destroy()
     if data.error
       @error_message(data.error)
       @restore()
@@ -77,6 +80,7 @@ class PhoneVerification
     @restore()
 
   restore: =>
+    Recaptcha.reload("t")
     $('#user_app_phone').removeAttr('readonly')
 
   success_message: =>

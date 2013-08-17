@@ -27,7 +27,8 @@
     = f.input :last_name
     = f.input :first_name
     = f.input :patronymic
-    = f.input :phone, :label => "Контактный телефон", :placeholder => "Пример: 903 111 22 33", input_html: {data: { confirmed: f.object.verified? } }
+    .well
+      = f.input :phone, :label => "Контактный телефон", :placeholder => "Пример: 903 111 22 33", input_html: {data: { confirmed: f.object.verified? } }
     = f.input :email
     = f.input :year_born
     = f.input :sex_male, :as => :radio, collection: {"Мужской" => true, "Женский" => false}
