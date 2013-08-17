@@ -1,5 +1,7 @@
 ActiveAdmin.register User do
 
+  menu :if => proc{ can? :manage, User }
+
   scope :all, :default => true
   Role.all.each do |role|
     scope role.short_name do |items|
