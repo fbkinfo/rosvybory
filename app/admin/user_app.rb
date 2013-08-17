@@ -12,6 +12,10 @@ ActiveAdmin.register UserApp do
     link_to('Отклонить', reject_control_user_app_path(user_app), method: :post) unless user_app.rejected?
   end
 
+  action_item only: [:edit, :show] do
+    link_to('Принять', review_control_users_path(user_app_id: user_app.id)) unless user_app.approved?
+  end
+
 
   #scope :all, :default => true
   #scope :trash
