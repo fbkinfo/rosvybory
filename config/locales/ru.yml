@@ -298,6 +298,7 @@ ru:
         updated_at: Обновлено
       user:
         password: Пароль
+        password_confirmation: Подтверждение пароля
         phone: Телефон
         region: "Район/Округ"
         created_at: Создано
