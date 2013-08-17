@@ -374,3 +374,9 @@ ru:
       coord: "Координатор"
       prg_reserve: "ПРГ в резерве"
       no_status: ""
+  enumerize:
+    region:
+      kind:
+        city: "Город"
+        adm_region: "Админ. регион"
+        mun_region: "Мун. регион"

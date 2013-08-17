@@ -89,6 +89,8 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       request_store (~> 1.0.3)
+    enumerize (0.6.1)
+      activesupport (>= 3.2)
     erubis (2.7.0)
     execjs (1.4.0)
       multi_json (~> 1.0)
@@ -322,6 +324,7 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   database_cleaner
   draper
+  enumerize
   factory_girl_rails
   ffaker
   foreman
