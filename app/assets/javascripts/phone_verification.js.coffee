@@ -14,7 +14,7 @@ class PhoneVerification
     $('#user_app_phone_input .controls').append('
     <input type="button" id="verification_start_button" class="btn btn-warning" value="Подтвердить">
     <div id="verification_controls">
-      <input type="text" id="verification_code" class="input-small" placeholder="Код"/>
+      <input type="text" id="verification_code" class="input-small" placeholder="Код из SMS"/>
       <input type="button" name="" class="btn btn-warning" id="verification_confirm_button" value="Отправить"/>
     </div>')
 
