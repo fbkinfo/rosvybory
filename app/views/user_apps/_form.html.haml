@@ -53,7 +53,7 @@
   = f.inputs :name => "Аккаунты в соц. сетях", :id => "social_accounts" do
     -UserApp::SOCIAL_ACCOUNTS.each do |provider_key, provider_name|
       = f.input 'social_'+provider_key.to_s, :label => (link_to provider_name, social_account_links(provider_key), target: "_blank"), placeholder: social_account_placeholders(provider_key)
-  = f.inputs "Дополнителные сведения", :id => "extra" do
+  = f.inputs "Дополнительные сведения", :id => "extra" do
     = f.input :extra, :label => false, :input_html => {:rows => 10}
 
   = f.actions do
