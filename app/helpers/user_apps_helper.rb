@@ -33,6 +33,16 @@ module UserAppsHelper
     social_block.join(", <br>")
   end
 
+  def social_account_links(provider)
+    {
+        vk: "http://vk.com",
+        fb: "https://www.facebook.com",
+        twitter: "https://twitter.com",
+        lj: "http://livejournal.com" ,
+        ok: "http://www.odnoklassniki.ru"
+    }[provider]
+  end
+
   def social_account_placeholders(provider)
     {
         vk: "http://vk.com/<...>",
