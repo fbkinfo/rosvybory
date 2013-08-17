@@ -13,6 +13,11 @@ ActiveAdmin.register UserApp do
     redirect_to control_user_app_path(resource)
   end
 
+  member_action :review, method: :get do
+    @user = User.new_from_app(resource)
+    render "active_admin/users/new"
+  end
+
   action_item only: [:edit, :show] do
     link_to('Отклонить', reject_control_user_app_path(user_app), method: :post) unless user_app.rejected?
   end
@@ -89,10 +94,10 @@ ActiveAdmin.register UserApp do
 
     column :desired_statuses, :sortable => false
     column :adm_region do |user_app|
-      [
-        link_to(user_app.region.name, [:control, user_app.region]),
-        link_to(user_app.adm_region.name, [:control, user_app.adm_region])
-      ].join(", ").html_safe
+      links = []
+      links << link_to(user_app.region.name, [:control, user_app.region]) if user_app.region
+      links << link_to(user_app.adm_region.name, [:control, user_app.adm_region]) if user_app.adm_region
+      links.join(", ").html_safe
     end
     column :uic
 
@@ -106,7 +111,13 @@ ActiveAdmin.register UserApp do
 
     column :current_roles, :sortable => false
 
-    default_actions
+    actions(defaults: false) do |resource|
+      links = ''.html_safe
+      links << link_to(I18n.t('active_admin.view'), resource_path(resource), class: "member_link view_link")
+      links << link_to('Отклонить', reject_control_user_app_path(resource), method: :post, class: "member_link view_link") unless resource.rejected?
+      links << link_to('Принять', review_control_user_app_path(resource), class: "member_link view_link") unless resource.approved?
+      links
+    end
   end
 
   form do |f|

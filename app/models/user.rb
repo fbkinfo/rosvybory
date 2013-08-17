@@ -14,7 +14,19 @@ class User < ActiveRecord::Base
   has_many :roles, through: :user_roles
 
   belongs_to :region
+  belongs_to :adm_region, class_name: "Region"
   belongs_to :organisation
+
+  class << self
+    def new_from_app(app)
+      new do |user|
+        user.email = app.email
+        user.region_id = app.region_id
+        user.adm_region_id = app.adm_region_id
+        #user.phone = app.phone.gsub(/[-\s]/, "")
+      end
+    end
+  end
 
   def has_role?(role_name)
     !!roles.exists?(slug: role_name)

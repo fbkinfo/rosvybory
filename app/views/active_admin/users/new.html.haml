@@ -1,0 +1,6 @@
+= semantic_fields_for @user do |f|
+  = f.input :email
+  = f.input :adm_region, :as => :select, :collection => Region.adm_regions.to_a, :input_html => {:style => "width: 280px;", :class => "selectify"}
+  = f.input :region, :as => :select, :collection => (@user.adm_region ? @user.adm_region.regions : []), :input_html => {:style => "width: 280px;"}, hint: "Можно оставить пустым или выбрать конкретный район"
+  -#= f.input :phone
+ 
