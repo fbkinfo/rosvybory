@@ -23,6 +23,8 @@ class User < ActiveRecord::Base
 
   validates :phone, presence: true
 
+  after_create :mark_user_app_state
+
   accepts_nested_attributes_for :user_current_roles, allow_destroy: true
 
   class << self
@@ -52,4 +54,12 @@ class User < ActiveRecord::Base
   end
 
   def send_sms_with_password(raw_password);end
+
+  private
+
+  def mark_user_app_state
+    if user_app.present?
+      user_app.approved!
+    end
+  end
 end
