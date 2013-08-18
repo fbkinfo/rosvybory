@@ -1,6 +1,8 @@
 :javascript
   var regions=#{regions_hash.to_json};
 
+= include_gon
+
 = semantic_form_for [:control, @user], builder: ::Formtastic::FormBuilder do |f|
   = f.inputs do
     = f.input :roles

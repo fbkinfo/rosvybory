@@ -1,8 +1,8 @@
 .nested-fields{"data-role" => "user-current-role"}
   = f.inputs do
-    = f.input :current_role, include_blank: false
+    = f.input :current_role, include_blank: false, input_html: {"data-role" => "current-role"}
     = f.input :adm_region_id, as: :select, collection: Region.adm_regions.pluck(:name, :id), input_html: {"data-role" => "adm-region-select"}
     = f.input :region, collection: [], input_html: {"data-role" => "region-select"}
-    = f.input :uic, as: :select, collection: Uic.all.pluck(:number, :id)
+    = f.input :uic, as: :select, collection: Uic.all.pluck(:number, :id), input_html: {"data-role" => "uic"}
     = f.input :user_id, as: :hidden, input_html: {value: @user.id}
     = link_to_remove_association "удалить роль", f

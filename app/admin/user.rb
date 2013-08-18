@@ -43,5 +43,10 @@ ActiveAdmin.register User do
       resource_class.includes(:region).includes(:roles) # prevent N+1 queries
     end
 
+    before_filter :expose_current_roles
+
+    def expose_current_roles
+      gon.current_roles = Hash[CurrentRole.pluck(:id, :slug)]
+    end
   end
 end
