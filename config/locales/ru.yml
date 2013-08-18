@@ -307,7 +307,8 @@ ru:
         password: Пароль
         password_confirmation: Подтверждение пароля
         phone: Телефон
-        region: "Район/Округ"
+        region: "Район"
+        adm_region: "Адм. округ"
         created_at: Создано
         updated_at: Изменено
         roles: Роли
