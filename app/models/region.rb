@@ -12,6 +12,7 @@ class Region < ActiveRecord::Base
   scope :with_tics, -> { where(has_tic: true) }
 
   has_many :regions, -> { order :name }, foreign_key: "parent_id"
+  has_many :uics, dependent: :destroy
 
   def subregions_with_tics
     if has_tic?

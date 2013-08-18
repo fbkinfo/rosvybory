@@ -101,26 +101,44 @@ describe User do
       }
     end
 
-    context "пользователь с ролью координатора округа" do
+    context "пользователь с ролью территориального координатора" do
       let(:user)              { create :user, region: first_adm_region}
       let(:first_adm_region)  { Region.where(name: "Южный АО").first }
       let(:second_adm_region) { Region.where(name: "Северный АО").first }
+      let(:first_organisation) { Organisation.where(name: "РосВыборы").first }
+      let(:second_organisation) { Organisation.where(name: "КоксВыборы").first }
 
       before do
-        create :role, slug: "dc"
-        user.add_role :dc
+        create :role, slug: "tc"
+        user.add_role :tc
       end
 
       it {
         should_not be_able_to(:manage, :all)
-        should be_able_to(:read, Region.new)
+        should_not be_able_to(:read, Region.new)
         should_not be_able_to(:manage, Region.new)
-        should be_able_to(:read, Organisation.new)
+        should_not be_able_to(:read, Organisation.new)
         should_not be_able_to(:manage, Organisation.new)
         should_not be_able_to(:read, User.new)
         should_not be_able_to(:read, UserApp.new)
+
+        should_not be_able_to(:manage, User.new(adm_region: first_adm_region))
+        should_not be_able_to(:read, User.new(adm_region: second_adm_region))
+        should_not be_able_to(:manage, UserApp.new(adm_region: first_adm_region))
         should_not be_able_to(:read, UserApp.new(adm_region: second_adm_region))
-        should be_able_to(:manage, UserApp.new(adm_region: first_adm_region))
+
+        should be_able_to(:manage, User.new(adm_region: first_adm_region, organisation: first_organisation))
+        should_not be_able_to(:manage, User.new(adm_region: first_adm_region, organisation: second_organisation))
+
+        should be_able_to(:manage, UserApp.new(adm_region: first_adm_region, organisation: first_organisation))
+        should_not be_able_to(:manage, UserApp.new(adm_region: first_adm_region, organisation: second_organisation))
+
+        should_not be_able_to(:manage, User.new(adm_region: second_adm_region, organisation: first_organisation))
+        should_not be_able_to(:manage, User.new(adm_region: second_adm_region, organisation: second_organisation))
+
+        should_not be_able_to(:manage, UserApp.new(adm_region: second_adm_region, organisation: first_organisation))
+        should_not be_able_to(:manage, UserApp.new(adm_region: second_adm_region, organisation: second_organisation))
+
       }
     end
   end
