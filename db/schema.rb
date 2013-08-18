@@ -133,8 +133,8 @@ ActiveRecord::Schema.define(version: 20130817223022) do
   create_table "user_current_roles", force: true do |t|
     t.integer  "user_id",         null: false
     t.integer  "current_role_id", null: false
-    t.integer  "uic_id",          null: false
-    t.integer  "region_id",       null: false
+    t.integer  "uic_id"
+    t.integer  "region_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

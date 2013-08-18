@@ -294,6 +294,11 @@ ru:
         one: "Организация"
         other: "Организации"
     attributes:
+      user_current_role:
+        current_role: Роль
+        adm_region_id: Адм регион
+        region: Регион
+        uic: УИК
       organisation:
         name: Название
         created_at: Создано

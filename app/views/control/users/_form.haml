@@ -1,3 +1,8 @@
+- raise @user.errors.inspect
+
+:javascript
+  var regions=#{regions_hash.to_json};
+
 = semantic_form_for [:control, @user], builder: ::Formtastic::FormBuilder do |f|
   = f.inputs do
     = f.input :roles
@@ -10,7 +15,8 @@
 
   = f.inputs "Роли наблюдателя" do
     - f.semantic_fields_for :user_current_roles do |fc|
+      / из-за бага в formtastic fc.object => nil и строка ниже не работает
       =# render 'user_current_role_fields', :f => fc
-    = link_to_add_association 'add user_current_role', f, :user_current_roles
+    = link_to_add_association 'Добавить роль', f, :user_current_roles
 
   = f.actions
