@@ -110,20 +110,6 @@ class UserApp < ActiveRecord::Base
     }
   end
 
-  def approve!
-    transaction do
-      set_approved!
-      password = SecureRandom.hex[0..8]
-      user = User.create! do |user|
-        user.email = email
-        user.password = password
-        user.region_id = region_id
-      end
-
-      user.send_sms_with_password(password)
-    end
-  end
-
   def self.previous_statuses_methods
     self.all_previous_statuses.values.collect{ |v| "was_#{v}" }
   end

@@ -1,4 +1,9 @@
 = render 'form'
+
+- if !@user.user_app.phone_verified || !@user.user_app.confirmed?
+  %p
+    %h2 Заявка не верифицирована. Пожалуйста, позвоните и верифицируйте заявку
+    = "Телефон: #{@user.user_app.phone}, email: #{@user.user_app.email}"
 - if @user.user_app
   %h3 Заявка подробнее
   .panel_contents
