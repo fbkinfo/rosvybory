@@ -21,4 +21,5 @@
 
     = link_to_add_association 'Добавить роль', f, :user_current_roles
 
-  = f.actions
+  = f.actions do
+    = f.submit "Принять заявку"
