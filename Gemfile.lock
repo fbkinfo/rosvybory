@@ -68,6 +68,7 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
+    cocoon (1.2.0)
     coderay (1.0.9)
     coffee-rails (4.0.0)
       coffee-script (>= 2.2.0)
@@ -325,6 +326,7 @@ DEPENDENCIES
   capistrano
   capistrano_colors
   capybara
+  cocoon
   coffee-rails (~> 4.0.0)
   database_cleaner
   draper
