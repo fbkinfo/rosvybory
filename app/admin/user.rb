@@ -34,6 +34,8 @@ ActiveAdmin.register User do
 
   form :partial => "form"
 
+  config.action_items.clear
+
   controller do
     def permitted_params
       params.permit!
