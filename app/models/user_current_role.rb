@@ -4,7 +4,7 @@ class UserCurrentRole < ActiveRecord::Base
   belongs_to :region
   belongs_to :uic
 
-  validates :current_role, :user, presence: true
+  validates :current_role, presence: true
   validate :region_or_uic_present
 
   attr_accessor :adm_region_id

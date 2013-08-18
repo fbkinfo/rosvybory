@@ -4,4 +4,5 @@
     = f.input :adm_region_id, as: :select, collection: Region.adm_regions.pluck(:name, :id), input_html: {"data-role" => "adm-region-select"}
     = f.input :region, collection: [], input_html: {"data-role" => "region-select"}
     = f.input :uic, as: :select, collection: Uic.all.pluck(:number, :id)
+    = f.input :user_id, as: :hidden, input_html: {value: @user.id}
     = link_to_remove_association "удалить роль", f

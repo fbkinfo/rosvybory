@@ -5,7 +5,7 @@ ActiveAdmin.register User do
   collection_action :review, method: :get do
     @app = UserApp.find(params[:user_app_id])
     @user = User.new_from_app(@app)
-    render "new", layout: false
+    render "new"
   end
 
   scope :all, :default => true

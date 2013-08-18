@@ -19,6 +19,7 @@ class User < ActiveRecord::Base
   belongs_to :region
   belongs_to :adm_region, class_name: "Region"
   belongs_to :organisation
+  belongs_to :user_app
 
   validates :phone, presence: true
 

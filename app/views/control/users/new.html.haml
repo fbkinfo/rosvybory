@@ -1,0 +1,10 @@
+= render 'form'
+- if @user.user_app
+  %h3 Заявка подробнее
+  .panel_contents
+    .attributes_table
+      %table
+        - %w(last_name first_name patronymic current_statuses experience_count previous_statuses has_car social_accounts extra legal_status desired_statuses region_id year_born sex_male phone_verified has_video).each do |field|
+          %tr.row
+            %th= UserApp.human_attribute_name(field)
+            %td= @user.user_app[field]
