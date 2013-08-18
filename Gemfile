@@ -39,6 +39,7 @@ gem 'enumerize'
 gem 'sms_ru'
 gem "recaptcha", :require => "recaptcha/rails"
 gem 'gon'
+gem 'cocoon'
 
 group :development do
   gem 'capistrano'

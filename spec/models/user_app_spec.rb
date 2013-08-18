@@ -37,4 +37,21 @@ describe UserApp do
       specify { @user_app.phone_verified.should be_true }
     end
   end
+
+  describe "#approve", pending: true do
+    let(:verification) { Verification.new phone_number: '1234567', confirmed: true }
+    subject { create(:user_app, verification: verification, phone: '1234567') }
+
+    it "обновляет статус" do
+      subject.approve!
+
+      expect(subject.reload.state_name).to eq(:approved)
+    end
+
+    it "создает User" do
+      expect {
+        subject.approve!
+      }.to change(User, :count).by(1)
+    end
+  end
 end
