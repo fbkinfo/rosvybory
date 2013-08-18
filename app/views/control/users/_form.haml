@@ -6,6 +6,7 @@
     = f.input :roles
     = f.input :email
     = f.input :phone
+    = f.input :password
     = f.input :adm_region
     = f.input :region
     = f.input :organisation
@@ -14,7 +15,8 @@
   = f.inputs "Роли наблюдателя" do
     - f.semantic_fields_for :user_current_roles do |fc|
       / из-за бага в formtastic fc.object => nil и строка ниже не работает
-      =# render 'user_current_role_fields', :f => fc
+      = render 'user_current_role_fields', :f => fc
+
     = link_to_add_association 'Добавить роль', f, :user_current_roles
 
   = f.actions
