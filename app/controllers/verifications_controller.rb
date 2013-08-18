@@ -1,14 +1,19 @@
 class VerificationsController < ApplicationController
 
   def create
-    verification = Verification.new phone_number: params[:phone_number]
+    if verify_recaptcha || !AppConfig["captcha_enabled"]
+      verification = Verification.new phone_number: params[:phone_number]
 
-    begin
-      verification.save!
-      session[:verification_id] = verification.id
-      render json: { success: true }
-    rescue
-      render json: { error: $!.to_s }
+      begin
+        verification.save!
+        session[:verification_id] = verification.id
+        render json: { success: true }
+      rescue
+        render json: { error: $!.to_s }
+      end
+    else
+      flash.delete(:recaptcha_error)
+      render json: {error: "Неверно введены слова с картинки"}
     end
   end
 

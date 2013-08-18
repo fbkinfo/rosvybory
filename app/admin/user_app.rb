@@ -1,6 +1,8 @@
 ActiveAdmin.register UserApp do
   decorate_with UserAppDecorator
 
+  menu :if => proc{ can? :read, UserApp }
+
   member_action :reject, method: :post do
     user_app = resource
     user_app.reject!
@@ -66,7 +68,7 @@ ActiveAdmin.register UserApp do
   #  end
   #end
 
-  config.sort_order = "id_asc"
+  config.sort_order = "id_desc"
   controller do
     def scoped_collection
       resource_class.includes(:region).includes(:adm_region).includes(:organisation) # prevents N+1 queries to your database
