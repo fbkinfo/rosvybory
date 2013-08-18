@@ -5,7 +5,7 @@
 
 = semantic_form_for [:control, @user], builder: ::Formtastic::FormBuilder do |f|
   = f.inputs do
-    = f.input :roles
+    = f.input :roles, collection: Role.where("slug != ?", ["admin"])
     = f.input :email
     = f.input :phone
     = f.input :password, as: :hidden
