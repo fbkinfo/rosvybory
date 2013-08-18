@@ -2,6 +2,8 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
+    cannot :create, UserApp
+
     if has_role?(user, :admin)
       can :manage, :all
     end
@@ -10,34 +12,22 @@ class Ability
     can :read, Organisation
     can :read, ActiveAdmin::Page, :name => "Dashboard"
 
-    if Rails.env == "development"
-      can :manage, User #debug
-    end
-
     if has_role?(user, :federal_repr)
       #ФП видит заявки своего наблюдательного объединения
       can :manage, UserApp, :organisation_id => user.organisation_id
+      can :manage, User, :organisation_id => user.organisation_id
     end
 
-    if has_role?(user, :dc)
-      #ОК видит заявки своего адм. округа.
-      can :manage, UserApp, :adm_region_id => user.region.id
+    if has_role?(user, :tc)
+      #ТК видит заявки своего адм. округа или района и только из своего НО
+      can :manage, UserApp, :region_id => user.region_id, :organisation_id => user.organisation_id
+      can :manage, User, :region_id => user.region_id, :organisation_id => user.organisation_id
+
+      if user.region.kind.adm_region?
+        can :manage, UserApp, :adm_region_id => user.region_id, :organisation_id => user.organisation_id
+        can :manage, User, :region => { :parent_id => user.region_id }, :organisation_id => user.organisation_id
+      end
     end
-
-    #if has_role?(user, :rc)
-    #  #РК видит пользователей своего района
-    #  can :read, User, :region_id => user.region.id
-    #end
-    #
-    #
-    #if has_role?(user, :mc)
-    #  can :read, :User
-    #end
-    #
-    #if has_role?(user, :cc)
-    #    can :read, :User
-    #end
-
 
     # Define abilities for the passed in user here. For example:
     #
@@ -48,12 +38,12 @@ class Ability
     #     can :read, :all
     #   end
     #
-    # The first argument to `can` is the action you are giving the user 
+    # The first argument to `can` is the action you are giving the user
     # permission to do.
     # If you pass :manage it will apply to every action. Other common actions
     # here are :read, :create, :update and :destroy.
     #
-    # The second argument is the resource the user can perform the action on. 
+    # The second argument is the resource the user can perform the action on.
     # If you pass :all it will apply to every resource. Otherwise pass a Ruby
     # class of the resource.
     #

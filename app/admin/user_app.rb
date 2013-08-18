@@ -4,15 +4,23 @@ ActiveAdmin.register UserApp do
   menu :if => proc{ can? :read, UserApp }
 
   member_action :reject, method: :post do
-    user_app = resource
-    user_app.reject!
-    redirect_to control_user_app_path(user_app)
+    resource.reject!
+    redirect_to control_user_app_path(resource)
+  end
+
+  member_action :confirm_app, method: :post do
+    resource.confirm_phone! unless resource.phone_verified?
+    resource.confirm_email! unless resource.confirmed?
+    redirect_to :back
   end
 
   action_item only: [:edit, :show] do
-    link_to('Отклонить', reject_control_user_app_path(user_app), method: :post) unless user_app.rejected?
+    link_to('Отклонить', reject_control_user_app_path(user_app), method: :post) unless user_app.reviewed?
   end
 
+  action_item only: [:edit, :show] do
+    link_to('Принять', review_control_users_path(user_app_id: user_app.id)) unless user_app.reviewed?
+  end
 
   #scope :all, :default => true
   #scope :trash
@@ -81,38 +89,34 @@ ActiveAdmin.register UserApp do
 
   index do
     selectable_column
-    column :id
     column :created_at
 
     column :desired_statuses, :sortable => false
-    column :adm_region
-    column :region
+    column :adm_region do |user_app|
+      links = []
+      links << link_to(user_app.region.name, [:control, user_app.region]) if user_app.region
+      links << link_to(user_app.adm_region.name, [:control, user_app.adm_region]) if user_app.adm_region
+      links.join(", ").html_safe
+    end
     column :uic
 
     column :full_name, :sortable => false
-    column :phone_formatted, :sortable => false
-    column :phone_verified
+    column :phone_formatted, :sortable => false do |user_app|
+      status_tag(user_app.phone_formatted, user_app.phone_verified? ? :ok : :error)
+    end
     column :email
     column :year_born
     column :sex_male
 
     column :current_roles, :sortable => false
-    column :has_car
-    column :legal_status
-    column :has_video
 
-    column :previous_statuses, :sortable => false
-    column :experience_count
-
-    column :can_be_coord_region, :sortable => false
-
-    column :social_accounts, :sortable => false
-    column :extra
-
-    column :ip
-    column :useragent
-
-    default_actions
+    actions(defaults: false) do |resource|
+      links = ''.html_safe
+      links << link_to(I18n.t('active_admin.view'), resource_path(resource), class: "member_link view_link")
+      links << link_to('Отклонить', reject_control_user_app_path(resource), method: :post, class: "member_link view_link") unless resource.rejected?
+      links << link_to('Принять', review_control_users_path(user_app_id: resource.id), class: "member_link view_link") unless resource.approved?
+      links
+    end
   end
 
   form do |f|

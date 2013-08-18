@@ -18,8 +18,8 @@
     -UserApp.future_statuses_methods.each do | method_name|
       = f.input method_name, :as => :boolean
   %br
-  = f.input :adm_region, :as => :select, :collection => Region.adm_regions.to_a, :input_html => {:style => "width: 280px;", :class => "selectify"}
-  = f.input :region, :as => :select, :collection => (@user_app.adm_region ? @user_app.adm_region.regions : []), :input_html => {:style => "width: 280px;"}, hint: "Можно оставить пустым или выбрать конкретный район" #ширина прописана inline, чтобы select2 её правильно подхватил, через css он не понимает
+  = f.input :adm_region, :as => :select, :collection => Region.adm_regions.pluck(:name, :id), :input_html => {:style => "width: 280px;", :class => "selectify", "data-role" => "adm-region-select"}
+  = f.input :region, :as => :select, :collection => (@user_app.adm_region ? @user_app.adm_region.regions.pluck(:name, :id) : []), :input_html => {:style => "width: 280px;", "data-role" => "region-select"}, hint: "Можно оставить пустым или выбрать конкретный район" #ширина прописана inline, чтобы select2 её правильно подхватил, через css он не понимает
   -#= f.input :region, :as => :select, :collection => option_groups_from_collection_for_select(Region.cities.where(name: "Москва").first.regions, :regions, :name, :id, :name), :input_html => {:style => "width: 280px;", :class => "selectify"}
   = f.input :uic, :label => raw("Номера желаемых УИК (<a href='http://www.wikiuiki.org/' target=\"_blank\">найти номера в базе УИК</a>).<br>Если подойдёт любой, оставьте пустым."), :input_html => {:disabled => true, :style => "width: 280px;"}
 
