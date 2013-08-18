@@ -3,7 +3,7 @@ $ ->
 
   $("body").on "change", admRegionSelector, (e) ->
     admRegion = $(@)
-    currentRole = admRegion.parents("[data-role='user-current-role']")
+    currentRole = admRegion.parents("[data-role='user-fields-container']")
     regionSelect = currentRole.find("[data-role='region-select']")
 
     currentValue = admRegion.val()

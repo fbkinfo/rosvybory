@@ -29,7 +29,7 @@ updateRoleFields = (el) ->
 $ ->
   $(".formtastic.user").on "click", ".add_fields", ->
     setTimeout (->
-      el = $("[data-role=user-current-role]:last")
+      el = $("[data-role=user-fields-role]:last")
       updateRoleFields el
       el.change ->
         updateRoleFields $(this)

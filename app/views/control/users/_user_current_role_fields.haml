@@ -1,4 +1,4 @@
-.nested-fields{"data-role" => "user-current-role"}
+.nested-fields{"data-role" => "user-fields-container"}
   = f.inputs do
     = f.input :current_role, include_blank: false, input_html: {"data-role" => "current-role"}
     = f.input :adm_region_id, as: :select, collection: Region.adm_regions.pluck(:name, :id), input_html: {"data-role" => "adm-region-select"}
