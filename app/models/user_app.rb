@@ -50,7 +50,7 @@ class UserApp < ActiveRecord::Base
   validate :check_regions
 
   attr_accessor :verification
-  validate :check_phone_verified
+  validate :check_phone_verified, on: :create
   before_create :set_phone_verified_status
   after_create :send_email_confirmation
 
@@ -111,7 +111,7 @@ class UserApp < ActiveRecord::Base
   def self.all_statuses
     all_future_statuses.merge(all_previous_statuses).merge(NO_STATUS => "no_status")
   end
-  
+
   def confirm!
     update_attributes confirmed_at: Time.now
   end
@@ -119,7 +119,7 @@ class UserApp < ActiveRecord::Base
   def confirmed?
     confirmed_at ? true : false
   end
-  
+
   def can_be(status_value)
     desired_statuses & status_value == status_value
   end
