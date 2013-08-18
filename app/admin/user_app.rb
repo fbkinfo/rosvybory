@@ -8,13 +8,9 @@ ActiveAdmin.register UserApp do
     redirect_to control_user_app_path(resource)
   end
 
-  member_action :confirm_email, method: :post do
-    resource.confirm_email!
-    redirect_to :back
-  end
-
-  member_action :confirm_phone, method: :post do
-    resource.confirm_phone!
+  member_action :confirm_app, method: :post do
+    resource.confirm_phone! unless resource.phone_verified?
+    resource.confirm_email! unless resource.confirmed?
     redirect_to :back
   end
 
