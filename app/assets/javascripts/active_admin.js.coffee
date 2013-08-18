@@ -35,3 +35,10 @@ $ ->
         updateRoleFields $(this)
       el.find("[data-role=uic]").select2()
     ), 0
+
+  $(".formtastic.user #user_role_ids").on "click", ->
+    el =$("[data-role=observer-roles]")
+    if ($.inArray(gon.observer_role_id + '', $(this).val()) != -1)
+      el.removeClass("hidden")
+    else
+      el.addClass("hidden")

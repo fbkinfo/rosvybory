@@ -50,6 +50,7 @@ ActiveAdmin.register User do
 
     def expose_current_roles
       gon.current_roles = Hash[CurrentRole.pluck(:id, :slug)]
+      gon.observer_role_id = Role.where(slug: "observer").first.id
     end
   end
 end
