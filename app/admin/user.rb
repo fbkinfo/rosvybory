@@ -4,8 +4,13 @@ ActiveAdmin.register User do
 
   collection_action :review, method: :get do
     @app = UserApp.find(params[:user_app_id])
-    @user = User.new_from_app(@app)
-    render "new"
+    if @app.reviewed?
+      redirect_to action: :index, notice: "Заявка уже обработана"
+    else
+      @user = User.new_from_app(@app)
+      @user.user_current_roles.build(user_id: @user.id)
+      render "new"
+    end
   end
 
   scope :all, :default => true
