@@ -16,7 +16,6 @@ ActiveAdmin.register UserApp do
     link_to('Принять', review_control_users_path(user_app_id: user_app.id)) unless user_app.reviewed?
   end
 
-
   #scope :all, :default => true
   #scope :trash
   #scope :accepted

@@ -22,6 +22,8 @@ class User < ActiveRecord::Base
 
   validates :phone, presence: true
 
+  accepts_nested_attributes_for :user_current_roles, allow_destroy: true
+
   class << self
     def new_from_app(app)
       new do |user|

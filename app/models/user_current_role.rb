@@ -2,6 +2,18 @@ class UserCurrentRole < ActiveRecord::Base
   belongs_to :user
   belongs_to :current_role
   belongs_to :region
+  belongs_to :uic
 
-  validates :current_role, :user, :region, presence: true
+  validates :current_role, :user, presence: true
+  validate :region_or_uic_present
+
+  attr_accessor :adm_region_id
+
+  private
+
+  def region_or_uic_present
+    unless region.present? || uic.present?
+      errors.add(:region, "Надо выбрать район или УИК")
+    end
+  end
 end
