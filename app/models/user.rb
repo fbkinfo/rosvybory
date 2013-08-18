@@ -36,6 +36,7 @@ class User < ActiveRecord::Base
         user.phone = app.phone.gsub(/[-\s]/, "")
         user.organisation_id = app.organisation_id
         user.user_app_id = app.id
+        user.password = "%08d" % [SecureRandom.random_number * 100000000]
       end
     end
   end
@@ -59,7 +60,7 @@ class User < ActiveRecord::Base
 
   def mark_user_app_state
     if user_app.present?
-      user_app.approved!
+      user_app.set_approved!
     end
   end
 end
