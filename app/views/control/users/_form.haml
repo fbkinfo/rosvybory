@@ -14,7 +14,7 @@
     = f.input :organisation, as: :hidden
     = f.input :user_app_id, as: :hidden
 
-  = f.inputs "Роли наблюдателя" do
+  = f.inputs "Роли наблюдателя", "data-role" => "observer-roles", class: "hidden" do
     - f.semantic_fields_for :user_current_roles do |fc|
       / из-за бага в formtastic fc.object => nil и строка ниже не работает
       = render 'user_current_role_fields', :f => fc
