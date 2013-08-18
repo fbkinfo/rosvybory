@@ -8,6 +8,16 @@ ActiveAdmin.register UserApp do
     redirect_to control_user_app_path(resource)
   end
 
+  member_action :confirm_email, method: :post do
+    resource.confirm_email!
+    redirect_to :back
+  end
+
+  member_action :confirm_phone, method: :post do
+    resource.confirm_phone!
+    redirect_to :back
+  end
+
   action_item only: [:edit, :show] do
     link_to('Отклонить', reject_control_user_app_path(user_app), method: :post) unless user_app.reviewed?
   end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130817223022) do
+ActiveRecord::Schema.define(version: 20130818091534) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -103,7 +103,7 @@ ActiveRecord::Schema.define(version: 20130817223022) do
     t.integer  "experience_count",   default: 0
     t.integer  "previous_statuses",  default: 0
     t.boolean  "has_car"
-    t.string   "social_accounts"
+    t.text     "social_accounts"
     t.text     "extra"
     t.integer  "legal_status"
     t.integer  "desired_statuses",   default: 0
@@ -120,8 +120,8 @@ ActiveRecord::Schema.define(version: 20130817223022) do
     t.string   "state",              default: "pending", null: false
     t.boolean  "phone_verified",     default: false,     null: false
     t.boolean  "has_video"
-    t.integer  "organisation_id"
     t.string   "forwarded_for"
+    t.integer  "organisation_id"
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
   end
