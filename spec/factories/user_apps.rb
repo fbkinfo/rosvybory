@@ -5,7 +5,8 @@ FactoryGirl.define do
     patronymic        { Faker::NameRU.patronymic }
     email             { Faker::Internet.email }
     phone             { Faker::PhoneNumber.short_phone_number }
-    adm_region        { FactoryGirl.create :region, :adm_region }
+    adm_region        { FactoryGirl.create(:region, :adm_region) }
+    region            { |a| FactoryGirl.create(:region, parent: a.adm_region) }
     desired_statuses  { UserApp::STATUS_OBSERVER }
     has_car           false
     has_video         false
