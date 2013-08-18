@@ -164,7 +164,7 @@ class UserApp < ActiveRecord::Base
   end
 
   def verified?
-    verification.present? && verification.confirmed? && verification.phone_number == self.phone
+    phone_verified_was || verification.present? && verification.confirmed? && verification.phone_number == self.phone
   end
 
   def send_email_confirmation
