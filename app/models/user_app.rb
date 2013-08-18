@@ -50,7 +50,7 @@ class UserApp < ActiveRecord::Base
   validate :check_regions
 
   attr_accessor :verification
-  validate :check_phone_verified
+  validate :check_phone_verified, on: :create
   before_create :set_phone_verified_status
   after_create :send_email_confirmation
 
@@ -175,6 +175,14 @@ class UserApp < ActiveRecord::Base
 
   def reviewed?
     approved? || rejected?
+  end
+
+  def confirm_email!
+    self.update_attributes! confirmed_at: Time.now
+  end
+
+  def confirm_phone!
+    self.update_attributes! phone_verified: true
   end
 
   private
