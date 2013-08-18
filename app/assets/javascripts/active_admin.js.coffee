@@ -33,4 +33,5 @@ $ ->
       updateRoleFields el
       el.change ->
         updateRoleFields $(this)
+      el.find("[data-role=uic]").select2()
     ), 0
