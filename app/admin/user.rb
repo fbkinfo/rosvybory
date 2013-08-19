@@ -13,12 +13,16 @@ ActiveAdmin.register User do
     end
   end
 
+  
   scope :all, :default => true
   Role.all.each do |role|
     scope role.short_name do |items|
       items.where(:user_roles => {:role => role})
     end
   end if Role.table_exists?
+  
+  batch_action :new_group_email
+  batch_action :other
 
   show do |user|
     if can? :manage, user #вид для админа
@@ -45,6 +49,7 @@ ActiveAdmin.register User do
 
   #TODO: Нужен рефакторинг
   index do
+    selectable_column
     column :created_at
     column "ФИО" do |user|
       user.user_app ? UserAppDecorator.decorate(user.user_app).full_name : ''
@@ -128,8 +133,13 @@ ActiveAdmin.register User do
       params.permit!
     end
 
+<<<<<<< HEAD
     def password_params
       params.require(:user).permit([:current_password, :password, :password_confirmation])
+=======
+    def batch_action
+      redirect_to send(params[:batch_action] + '_path', params: params)
+>>>>>>> group-email-sending
     end
 
     def scoped_collection
