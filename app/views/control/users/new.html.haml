@@ -1,16 +1,17 @@
 
 - unless @user.user_app.phone_verified && @user.user_app.confirmed?
-  %p
-    %h2 Заявка не верифицирована.
-  %p
-    %h3
-      - unless @user.user_app.phone_verified
-        == Телефон: #{@user.user_app.phone}.
-      - unless @user.user_app.confirmed?
-        == Адрес электронной почты: #{@user.user_app.email}
-      - if !@user.user_app.confirmed? || !@user._user_app.phone_verified?
-        == Пожалуйста, позвоните и верифицируйте заявку.
-        = link_to 'Подтвердить', confirm_app_control_user_app_path(@user.user_app), method: :post
+  #unverified
+    %p
+      %h2 Заявка не верифицирована.
+    %p
+      %h3
+        - unless @user.user_app.phone_verified
+          == Телефон: #{@user.user_app.phone}.
+        - unless @user.user_app.confirmed?
+          == Адрес электронной почты: #{@user.user_app.email}
+        - if !@user.user_app.confirmed? || !@user._user_app.phone_verified?
+          == Пожалуйста, позвоните и верифицируйте заявку.
+          = link_to 'Подтвердить', confirm_app_control_user_app_path(@user.user_app), method: :post, class: 'verify_link', remote: true
 
 
 = render 'form'
