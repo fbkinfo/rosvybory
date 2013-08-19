@@ -9,7 +9,7 @@ ActiveAdmin.register User do
     else
       @user = User.new_from_app(@app)
       @user.user_current_roles.build(user_id: @user.id)
-      render "new"
+      render "new", layout: false
     end
   end
 
