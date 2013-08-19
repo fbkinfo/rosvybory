@@ -10,7 +10,7 @@
     = f.input :phone
     = f.input :password, as: :hidden
     = f.input :adm_region_id, as: :select, collection: Region.adm_regions.pluck(:name, :id), input_html: {"data-role" => "adm-region-select"}
-    = f.input :region_id, as: :select, collection: @user.user_app.adm_region ? @user.user_app.adm_region.regions.pluck(:name, :id) : [], input_html: {"data-role" => "region-select"}
+    = f.input :region_id, as: :select, collection: @user.user_app && @user.user_app.adm_region ? @user.user_app.adm_region.regions.pluck(:name, :id) : [], input_html: {"data-role" => "region-select"}
     = f.input :organisation_id, as: :hidden
     = f.input :user_app_id, as: :hidden
 
