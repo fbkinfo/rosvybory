@@ -120,8 +120,8 @@ ActiveRecord::Schema.define(version: 20130818214757) do
     t.string   "state",              default: "pending", null: false
     t.boolean  "phone_verified",     default: false,     null: false
     t.boolean  "has_video"
-    t.string   "forwarded_for"
     t.integer  "organisation_id"
+    t.string   "forwarded_for"
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
   end

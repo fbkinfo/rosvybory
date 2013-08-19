@@ -1,0 +1,24 @@
+.row
+  .span3
+    %legend
+      Письмо будет направлено следующим получателям
+    - @users.pluck(:email).each do |email|
+      = email
+  .span9
+    %legend
+      Содержимое письма
+    = form_for :group_email, url: :send_group_email,  html: {class: 'form-horizontal'} do |f|
+      - @users.pluck(:email).each do |email|
+        = f.hidden_field :emails, :multiple => true, :value => email
+      
+      .control-group
+        = f.label 'Тема', class: 'control-label'
+        .controls
+          = f.text_field :subject, class: 'input-xxlarge'
+      .control-group
+        = f.label 'Текст', class: 'control-label'
+        .controls
+          = f.text_area :body, class: 'input-xxlarge', rows: 10
+      .control-group
+        .controls
+          = f.submit 'Отправить', class: 'btn btn-primary'
