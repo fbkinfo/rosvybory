@@ -3,15 +3,20 @@ ActiveAdmin.register UserApp do
 
   menu :if => proc{ can? :read, UserApp }
 
+  member_action :spam, method: :post do
+    SpamReportingService.report(resource)
+    redirect_to :action => :index
+  end
+
   member_action :confirm_app, method: :post do
     resource.confirm_phone! unless resource.phone_verified?
     resource.confirm_email! unless resource.confirmed?
     redirect_to :back
   end
 
-  #action_item only: [:edit, :show] do
-  #  link_to('Отклонить', reject_control_user_app_path(user_app), method: :post) unless user_app.reviewed?
-  #end
+  action_item only: [:edit, :show] do
+    link_to('Это спам', spam_control_user_app_path(user_app), method: :post, 'data-confirm' => 'Заявка будет удалена, а номер телефона добавлен в черный список, продолжить?')
+  end
 
   action_item only: [:edit, :show] do
     link_to('Принять', review_control_users_path(user_app_id: user_app.id)) unless user_app.reviewed?
