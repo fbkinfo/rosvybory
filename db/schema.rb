@@ -11,10 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130818214757) do
-
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+ActiveRecord::Schema.define(version: 20130819170952) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -115,13 +112,13 @@ ActiveRecord::Schema.define(version: 20130818214757) do
     t.string   "ip"
     t.integer  "year_born"
     t.boolean  "sex_male"
-    t.string   "useragent"
+    t.text     "useragent"
     t.integer  "adm_region_id"
     t.string   "state",              default: "pending", null: false
     t.boolean  "phone_verified",     default: false,     null: false
     t.boolean  "has_video"
-    t.string   "forwarded_for"
     t.integer  "organisation_id"
+    t.string   "forwarded_for"
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
   end
