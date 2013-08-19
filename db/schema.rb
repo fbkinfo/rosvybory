@@ -11,7 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130816220301) do
+ActiveRecord::Schema.define(version: 20130818214757) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -66,6 +69,18 @@ ActiveRecord::Schema.define(version: 20130816220301) do
   add_index "roles", ["short_name"], name: "index_roles_on_short_name", unique: true, using: :btree
   add_index "roles", ["slug"], name: "index_roles_on_slug", unique: true, using: :btree
 
+  create_table "uics", force: true do |t|
+    t.integer  "region_id",                    null: false
+    t.integer  "number",                       null: false
+    t.boolean  "is_temporary", default: false, null: false
+    t.string   "has_koib",     default: "f",   null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "uics", ["number"], name: "index_uics_on_number", unique: true, using: :btree
+  add_index "uics", ["region_id"], name: "index_uics_on_region_id", using: :btree
+
   create_table "user_app_current_roles", force: true do |t|
     t.integer  "user_app_id",     null: false
     t.integer  "current_role_id", null: false
@@ -88,7 +103,7 @@ ActiveRecord::Schema.define(version: 20130816220301) do
     t.integer  "experience_count",   default: 0
     t.integer  "previous_statuses",  default: 0
     t.boolean  "has_car"
-    t.string   "social_accounts"
+    t.text     "social_accounts"
     t.text     "extra"
     t.integer  "legal_status"
     t.integer  "desired_statuses",   default: 0
@@ -105,8 +120,8 @@ ActiveRecord::Schema.define(version: 20130816220301) do
     t.string   "state",              default: "pending", null: false
     t.boolean  "phone_verified",     default: false,     null: false
     t.boolean  "has_video"
-    t.integer  "organisation_id"
     t.string   "forwarded_for"
+    t.integer  "organisation_id"
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
   end
@@ -114,6 +129,20 @@ ActiveRecord::Schema.define(version: 20130816220301) do
   add_index "user_apps", ["adm_region_id"], name: "index_user_apps_on_adm_region_id", using: :btree
   add_index "user_apps", ["organisation_id"], name: "index_user_apps_on_organisation_id", using: :btree
   add_index "user_apps", ["region_id"], name: "index_user_apps_on_region_id", using: :btree
+
+  create_table "user_current_roles", force: true do |t|
+    t.integer  "user_id",         null: false
+    t.integer  "current_role_id", null: false
+    t.integer  "uic_id"
+    t.integer  "region_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_current_roles", ["current_role_id"], name: "index_user_current_roles_on_current_role_id", using: :btree
+  add_index "user_current_roles", ["region_id"], name: "index_user_current_roles_on_region_id", using: :btree
+  add_index "user_current_roles", ["uic_id"], name: "index_user_current_roles_on_uic_id", using: :btree
+  add_index "user_current_roles", ["user_id"], name: "index_user_current_roles_on_user_id", using: :btree
 
   create_table "user_roles", force: true do |t|
     t.integer  "user_id"
@@ -141,8 +170,12 @@ ActiveRecord::Schema.define(version: 20130816220301) do
     t.datetime "updated_at"
     t.integer  "region_id"
     t.integer  "organisation_id"
+    t.string   "phone"
+    t.integer  "adm_region_id"
+    t.integer  "user_app_id"
   end
 
+  add_index "users", ["adm_region_id"], name: "index_users_on_adm_region_id", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["organisation_id"], name: "index_users_on_organisation_id", using: :btree
   add_index "users", ["region_id"], name: "index_users_on_region_id", using: :btree
