@@ -81,6 +81,11 @@ ActiveAdmin.register User do
   end
 
   filter :email
+  filter :user_app_created_at, as: :date_range, label: 'Дата подачи заявки'
+  filter :created_at, label: 'Дата создания'
+  filter :user_app_experience_count, :as => :numeric, label: 'Опыт'
+  filter :adm_region, :as => :select, :collection => proc { Region.adm_regions.all } #, :input_html => {:style => "width: 220px;"}
+  filter :region, :as => :select, :collection => proc { Region.mun_regions.all } #, :input_html => {:style => "width: 220px;"}
 
   form :partial => "form"
 
