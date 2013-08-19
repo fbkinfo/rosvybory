@@ -3,20 +3,15 @@ ActiveAdmin.register UserApp do
 
   menu :if => proc{ can? :read, UserApp }
 
-  member_action :reject, method: :post do
-    resource.reject!
-    redirect_to control_user_app_path(resource)
-  end
-
   member_action :confirm_app, method: :post do
     resource.confirm_phone! unless resource.phone_verified?
     resource.confirm_email! unless resource.confirmed?
     redirect_to :back
   end
 
-  action_item only: [:edit, :show] do
-    link_to('Отклонить', reject_control_user_app_path(user_app), method: :post) unless user_app.reviewed?
-  end
+  #action_item only: [:edit, :show] do
+  #  link_to('Отклонить', reject_control_user_app_path(user_app), method: :post) unless user_app.reviewed?
+  #end
 
   action_item only: [:edit, :show] do
     link_to('Принять', review_control_users_path(user_app_id: user_app.id)) unless user_app.reviewed?
@@ -113,8 +108,8 @@ ActiveAdmin.register UserApp do
     actions(defaults: false) do |resource|
       links = ''.html_safe
       links << link_to(I18n.t('active_admin.view'), resource_path(resource), class: "member_link view_link")
-      links << link_to('Отклонить', reject_control_user_app_path(resource), method: :post, class: "member_link view_link") unless resource.rejected?
       links << link_to('Принять', review_control_users_path(user_app_id: resource.id), class: "member_link view_link") unless resource.approved?
+      links << link_to('Удалить', control_user_app_path(resource), method: :вудуеу, class: "member_link view_link", 'data-confirm' => 'Точно удалить?')
       links
     end
   end
