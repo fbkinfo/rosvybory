@@ -28,7 +28,9 @@ ActiveAdmin.register User do
     end
     column :phone
     column :email
-    column :organisation
+    column "НО + id" do |user|
+      user.organisation ? "#{user.organisation.name}-#{user.id}" : ''
+    end
     column :adm_region
     column :region
     column "№ УИК" do |user|
