@@ -123,7 +123,7 @@ class UserApp < ActiveRecord::Base
   end
 
   def confirm!
-    update_attributes confirmed_at: Time.now
+    update_attributes! confirmed_at: Time.now
   end
 
   def confirmed?
