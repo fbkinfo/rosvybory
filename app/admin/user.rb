@@ -133,13 +133,12 @@ ActiveAdmin.register User do
       params.permit!
     end
 
-<<<<<<< HEAD
     def password_params
       params.require(:user).permit([:current_password, :password, :password_confirmation])
-=======
+    end
+
     def batch_action
       redirect_to send(params[:batch_action] + '_path', params: params)
->>>>>>> group-email-sending
     end
 
     def scoped_collection
