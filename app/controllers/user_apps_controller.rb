@@ -59,9 +59,18 @@ class UserAppsController < ApplicationController
       }
     end
   end
-  
+
   def done
 
+  end
+
+  def new_group_email
+    @users = User.where(id: params[:collection_selection])
+    render layout: 'custom_layout'
+  end
+
+  def send_group_email
+    UserMailer.group_email(*params[:group_email].values).deliver
   end
 
   # PATCH/PUT /user_apps/1
