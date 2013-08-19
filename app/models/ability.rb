@@ -3,6 +3,7 @@ class Ability
 
   def initialize(user)
     cannot :create, UserApp
+    cannot :manage, User
 
     if has_role?(user, :admin)
       can :manage, :all
@@ -12,6 +13,10 @@ class Ability
     can :read, Organisation
     can :read, ActiveAdmin::Page, :name => "Dashboard"
 
+    can :read, User, :id => user.id
+
+    #cannot [:index, :show, :read, :create], ActiveAdmin::Comment
+
     if has_role?(user, :federal_repr)
       #ФП видит заявки своего наблюдательного объединения
       can :manage, UserApp, :organisation_id => user.organisation_id
@@ -20,12 +25,14 @@ class Ability
 
     if has_role?(user, :tc)
       #ТК видит заявки своего адм. округа или района и только из своего НО
-      can :manage, UserApp, :region_id => user.region_id, :organisation_id => user.organisation_id
-      can :manage, User, :region_id => user.region_id, :organisation_id => user.organisation_id
+      if user.region && user.organisation
+        can :manage, UserApp, :region_id => user.region_id, :organisation_id => user.organisation_id
+        can :manage, User, :region_id => user.region_id, :organisation_id => user.organisation_id
 
-      if user.region.kind.adm_region?
-        can :manage, UserApp, :adm_region_id => user.region_id, :organisation_id => user.organisation_id
-        can :manage, User, :region => { :parent_id => user.region_id }, :organisation_id => user.organisation_id
+        if user.region.kind.adm_region?
+          can :manage, UserApp, :adm_region_id => user.region_id, :organisation_id => user.organisation_id
+          can :manage, User, :adm_region_id => user.region_id, :organisation_id => user.organisation_id
+        end
       end
     end
 
