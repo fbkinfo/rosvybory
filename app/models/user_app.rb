@@ -55,8 +55,6 @@ class UserApp < ActiveRecord::Base
   after_create :send_email_confirmation
 
   state_machine initial: :pending do
-    # what about int value for states?
-    state :rejected
     state :approved
     state :pending
 
@@ -174,7 +172,7 @@ class UserApp < ActiveRecord::Base
   end
 
   def reviewed?
-    approved? || rejected?
+    approved?
   end
 
   def confirm_email!
