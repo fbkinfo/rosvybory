@@ -54,6 +54,12 @@ ActiveAdmin.register User do
     column "Может быть ТК" do |user|
       user.user_app.try(:decorate).try(:can_be_coord_region)
     end
+    column "Может быть оп. КЦ" do |user|
+      user.user_app.try(:decorate).try(:can_be_caller)
+    end
+    column "Может быть уч. моб. гр." do |user|
+      user.user_app.try(:decorate).try(:can_be_mobile)
+    end
     column "Автомобиль" do |user|
       user.user_app.try(:decorate).try(:has_car)
     end
@@ -61,15 +67,9 @@ ActiveAdmin.register User do
       user.user_app.try(:decorate).try(:has_video)
     end
     column "Юр.образование" do |user|
-      if user.user_app
-        user.user_app.legal_status & UserApp::LEGAL_STATUS_YES ? "Да":"Нет"
-      end
+      user.user_app.try(:decorate).try(:legal_status)
     end
-    column "Адвокатский статус" do |user|
-      if user.user_app
-        user.user_app.legal_status & UserApp::LEGAL_STATUS_LAWYER ? "Да":"Нет"
-      end
-    end
+
     column "Соцсети" do |user|
       user.user_app.try(:decorate).try(:social_accounts)
     end
