@@ -17,8 +17,12 @@ class UserAppDecorator < Draper::Decorator
     h.status_human_readable object.previous_statuses
   end
 
-  def can_be_coord_region
-    object.can_be_coord_region ? "Да":"Нет"
+  UserApp.all_future_statuses.each do |status_value, status_name|
+    define_method("can_be_#{status_name}") { yes_no (object.can_be status_value) }
+  end
+
+  UserApp.all_previous_statuses.each do |status_value, status_name|
+    define_method("was_#{status_name}") { yes_no (object.was status_value) }
   end
 
   def has_car
@@ -26,7 +30,7 @@ class UserAppDecorator < Draper::Decorator
   end
 
   def has_video
-    object.has_video ? "Да":"Нет"
+    yes_no object.has_video
   end
 
   def social_accounts
@@ -38,7 +42,7 @@ class UserAppDecorator < Draper::Decorator
   end
 
   def phone_verified
-    object.phone_verified ? "Да":"Нет"
+    yes_no object.phone_verified
   end
 
   def phone_formatted
@@ -58,4 +62,10 @@ class UserAppDecorator < Draper::Decorator
   def full_name
     [last_name, first_name, patronymic].join ' '
   end
+
+  private
+    def yes_no(value)
+      value ? "Да":"Нет"
+    end
+
 end
