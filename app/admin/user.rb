@@ -2,6 +2,17 @@ ActiveAdmin.register User do
 
   menu :if => proc{ can? :manage, User }
 
+  collection_action :review, method: :get do
+    @app = UserApp.find(params[:user_app_id])
+    if @app.reviewed?
+      redirect_to action: :index, notice: "Заявка уже обработана"
+    else
+      @user = User.new_from_app(@app)
+      @user.user_current_roles.build(user_id: @user.id)
+      render "new"
+    end
+  end
+
   scope :all, :default => true
   Role.all.each do |role|
     scope role.short_name do |items|
@@ -34,6 +45,7 @@ ActiveAdmin.register User do
 
   index do
     column :email
+    column :phone
     column :current_sign_in_at
     column :last_sign_in_at
     column :sign_in_count
@@ -44,15 +56,9 @@ ActiveAdmin.register User do
 
   filter :email
 
-  form do |f|
-    f.inputs "Пользовательские данные" do
-      f.input :roles
-      f.input :email
-      f.input :region
-      f.input :organisation
-    end
-    f.actions
-  end
+  form :partial => "form"
+
+  config.action_items.clear
 
   member_action :edit_password do
     @user = User.find(current_user.id)
@@ -74,6 +80,13 @@ ActiveAdmin.register User do
 
     def scoped_collection
       resource_class.includes(:region).includes(:roles) # prevent N+1 queries
+    end
+
+    before_filter :expose_current_roles
+
+    def expose_current_roles
+      gon.current_roles = Hash[CurrentRole.pluck(:id, :slug)]
+      gon.observer_role_id = Role.where(slug: "observer").first.id
     end
 
     def update

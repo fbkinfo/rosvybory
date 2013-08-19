@@ -61,9 +61,6 @@ jQuery ->
 
     e.preventDefault() unless chk == 0
 
-
-
-
   $("#user_app_adm_region_id").on "change", (e) ->
     chosen_val = $(@).val()
     $el = $("#user_app_region_id")
