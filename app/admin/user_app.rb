@@ -41,7 +41,7 @@ ActiveAdmin.register UserApp do
   filter   :patronymic
   filter   :phone
   filter   :email
-  filter   :uic, :as => :numeric_range
+  filter   :uic #, :as => :numeric_range
 
 
   filter   :experience_count
@@ -63,7 +63,7 @@ ActiveAdmin.register UserApp do
   #
   filter   :year_born, :as => :numeric_range
   #column(:sex_male) {|user_app| user_app.sex_male ? "М":"Ж"}
-  filter   :organisation
+  filter   :organisation, :input_html => {:style => "width: 220px;"}
   filter   :ip
   filter   :useragent
 
