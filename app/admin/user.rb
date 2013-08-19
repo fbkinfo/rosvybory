@@ -65,7 +65,7 @@ ActiveAdmin.register User do
     @page_title = "Смена пароля"
   end
 
-  action_item do
+  action_item(only: [:show]) do
     link_to "Сменить пароль", edit_password_control_user_path(current_user) if user == current_user
   end
 
