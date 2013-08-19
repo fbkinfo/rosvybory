@@ -13,14 +13,19 @@ ActiveAdmin.register User do
     end
   end
 
+  
   scope :all, :default => true
   Role.all.each do |role|
     scope role.short_name do |items|
       items.where(:user_roles => {:role => role})
     end
   end if Role.table_exists?
+  
+  batch_action :new_group_email
+  batch_action :other
 
   index do
+    selectable_column
     column :email
     column :phone
     column :current_sign_in_at
@@ -40,6 +45,10 @@ ActiveAdmin.register User do
   controller do
     def permitted_params
       params.permit!
+    end
+
+    def batch_action
+      redirect_to send(params[:batch_action] + '_path', params: params)
     end
 
     def scoped_collection
