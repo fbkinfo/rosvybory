@@ -71,6 +71,7 @@ class UserAppsController < ApplicationController
 
   def send_group_email
     UserMailer.group_email(*params[:group_email].values).deliver
+    redirect_to '/control'
   end
 
   # PATCH/PUT /user_apps/1
