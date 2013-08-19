@@ -20,14 +20,63 @@ ActiveAdmin.register User do
     end
   end if Role.table_exists?
 
+  #TODO: Нужен рефакторинг
   index do
-    column :email
+    column :created_at
+    column "ФИО" do |user|
+      user.user_app ? UserAppDecorator.decorate(user.user_app).full_name : ''
+    end
     column :phone
-    column :current_sign_in_at
-    column :last_sign_in_at
-    column :sign_in_count
+    column :email
+    column "НО + id" do |user|
+      user.organisation ? "#{user.organisation.name}-#{user.id}" : ''
+    end
+    column :adm_region
     column :region
-    column :organisation
+    column "№ УИК" do |user|
+      user.user_app.try(:decorate).try(:uic)
+    end
+    column "Готов стать" do |user|
+      user.user_app.try(:decorate).try(:desired_statuses)
+    end
+    column "Пол" do |user|
+      user.user_app.try(:decorate).try(:sex_male)
+    end
+    column "Текущие статусы" do |user|
+      user.user_app.try(:decorate).try(:current_roles)
+    end
+    column "Прежний опыт: количество раз" do |user|
+      user.user_app.try(:experience_count)
+    end
+    column "Прежний опыт: статусы" do |user|
+      user.user_app.try(:decorate).try(:previous_statuses)
+    end
+    column "Может быть ТК" do |user|
+      user.user_app.try(:decorate).try(:can_be_coord_region)
+    end
+    column "Может быть оп. КЦ" do |user|
+      user.user_app.try(:decorate).try(:can_be_caller)
+    end
+    column "Может быть уч. моб. гр." do |user|
+      user.user_app.try(:decorate).try(:can_be_mobile)
+    end
+    column "Автомобиль" do |user|
+      user.user_app.try(:decorate).try(:has_car)
+    end
+    column "Видеосъёмка" do |user|
+      user.user_app.try(:decorate).try(:has_video)
+    end
+    column "Юр.образование" do |user|
+      user.user_app.try(:decorate).try(:legal_status)
+    end
+
+    column "Соцсети" do |user|
+      user.user_app.try(:decorate).try(:social_accounts)
+    end
+    column "Дополнительные сведения" do |user|
+      user.user_app.try(:decorate).try(:extra)
+    end
+
     default_actions
   end
 
