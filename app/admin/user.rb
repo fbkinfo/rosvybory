@@ -47,28 +47,21 @@ ActiveAdmin.register User do
     end
   end
 
-  #TODO: Нужен рефакторинг
   index do
     selectable_column
-    column :created_at
-    column "ФИО" do |user|
-      user.user_app ? UserAppDecorator.decorate(user.user_app).full_name : ''
-    end
-    column :phone
-    column :email
     column "НО + id" do |user|
       user.organisation ? "#{user.organisation.name}-#{user.id}" : ''
     end
+    column :created_at
     column :adm_region
     column :region
+    column "ФИО" do |user|
+      user.user_app.try(:decorate).try(:full_name)
+    end
+    column :phone
+    column :email
     column "№ УИК" do |user|
       user.user_app.try(:decorate).try(:uic)
-    end
-    column "Готов стать" do |user|
-      user.user_app.try(:decorate).try(:desired_statuses)
-    end
-    column "Пол" do |user|
-      user.user_app.try(:decorate).try(:sex_male)
     end
     column "Текущие статусы" do |user|
       user.user_app.try(:decorate).try(:current_roles)
@@ -91,13 +84,12 @@ ActiveAdmin.register User do
     column "Автомобиль" do |user|
       user.user_app.try(:decorate).try(:has_car)
     end
-    column "Видеосъёмка" do |user|
-      user.user_app.try(:decorate).try(:has_video)
-    end
     column "Юр.образование" do |user|
       user.user_app.try(:decorate).try(:legal_status)
     end
-
+    column "Видеосъёмка" do |user|
+      user.user_app.try(:decorate).try(:has_video)
+    end
     column "Соцсети" do |user|
       user.user_app.try(:decorate).try(:social_accounts)
     end
