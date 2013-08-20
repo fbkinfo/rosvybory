@@ -3,14 +3,14 @@
 
 = include_gon
 
-= semantic_form_for [:control, @user], builder: ::Formtastic::FormBuilder do |f|
+= semantic_form_for [:control, @user], builder: ::Formtastic::FormBuilder, remote: true do |f|
   = f.inputs "data-role" => "user-fields-container" do
     = f.input :roles, collection: Role.where("slug != ?", ["admin"]), :input_html => {:style => "width: 220px;"}
     = f.input :email
     = f.input :phone
     = f.input :password, as: :hidden
-    = f.input :adm_region_id, as: :select, collection: Region.adm_regions.pluck(:name, :id), input_html: {"data-role" => "adm-region-select",:style => "width: 220px;"}
-    = f.input :region_id, as: :select, collection: @user.user_app && @user.user_app.adm_region ? @user.user_app.adm_region.regions.pluck(:name, :id) : [], input_html: {"data-role" => "region-select",:style => "width: 220px;"}
+    = f.input :adm_region, as: :select, collection: Region.adm_regions.pluck(:name, :id), input_html: {"data-role" => "adm-region-select",:style => "width: 220px;"}
+    = f.input :region, as: :select, collection: @user.user_app && @user.user_app.adm_region ? @user.user_app.adm_region.regions.pluck(:name, :id) : [], input_html: {"data-role" => "region-select",:style => "width: 220px;"}
     = f.input :organisation_id, as: :hidden
     = f.input :user_app_id, as: :hidden
 
