@@ -2,18 +2,6 @@ ActiveAdmin.register User do
 
   menu :if => proc{ can? :manage, User }
 
-  collection_action :review, method: :get do
-    @app = UserApp.find(params[:user_app_id])
-    if @app.reviewed?
-      redirect_to action: :index, notice: "Заявка уже обработана"
-    else
-      @user = User.new_from_app(@app)
-      @user.user_current_roles.build(user_id: @user.id)
-      render "new", layout: false
-    end
-  end
-
-  
   scope :all, :default => true
   Role.all.each do |role|
     scope role.short_name do |items|

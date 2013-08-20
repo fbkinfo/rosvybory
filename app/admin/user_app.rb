@@ -19,7 +19,7 @@ ActiveAdmin.register UserApp do
   end
 
   action_item only: [:edit, :show] do
-    link_to('Принять', review_control_users_path(user_app_id: user_app.id)) unless user_app.reviewed?
+    link_to('Принять', new_user_path(user_app_id: user_app.id)) unless user_app.reviewed?
   end
 
   #scope :all, :default => true
@@ -114,7 +114,7 @@ ActiveAdmin.register UserApp do
       links = ''.html_safe
       links << link_to(I18n.t('active_admin.view'), resource_path(resource), class: "member_link view_link")
       links << link_to('Отклонить', reject_control_user_app_path(resource), method: :post, remote: true, data: {"user-app-id" => resource.id}, class: "member_link view_link reject_link") unless resource.rejected?
-      links << link_to('Принять', review_control_users_path(user_app_id: resource.id), data: {"user-app-id" => resource.id}, class: "member_link view_link accept_link") unless resource.approved?
+      links << link_to('Принять', new_user_path(user_app_id: resource.id), data: {"user-app-id" => resource.id}, class: "member_link view_link accept_link") unless resource.approved?
       links
     end
   end

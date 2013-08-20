@@ -6,7 +6,8 @@ $ ->
     alert xhr.responseText
 
   $(".accept_link").on("click", (e) ->
-    $dialog = $("<div>Загружаю...</div>").dialog(
+    user_app_id = $(this).data('user-app-id')
+    $dialog = $("<div id='dialog_#{user_app_id}'>Загружаю...</div>").dialog(
       autoOpen: false
       height: 500
       width: 600

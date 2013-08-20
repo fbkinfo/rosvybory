@@ -1,6 +1,6 @@
 
 - unless @user.user_app.phone_verified && @user.user_app.confirmed?
-  #unverified
+  .unverified
     %p
       %h2 Заявка не верифицирована.
     %p
@@ -16,7 +16,7 @@
 
 = render 'form'
 - if @user.user_app
-  - user_app = UserAppDecorator.decorate(@user.user_app)
+  - user_app = @user.user_app.decorate
   %h3 Заявка подробнее
   .panel_contents
     .attributes_table
