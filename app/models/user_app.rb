@@ -24,7 +24,7 @@ class UserApp < ActiveRecord::Base
   validates :last_name,  :presence => true
   validates :patronymic,  :presence => true
   validates :email, :presence => true, :format => { :with => /.+@.+\..+/i }
-  validates :phone, :presence => true
+  validates :phone, :presence => true, uniqueness: true, format: { with: /\A\d{10}\z/ }
   #validates_format_of :phone, with: /\A\d{10}\z/
   validates :adm_region, :presence => true
   validates :desired_statuses, :presence => true, :exclusion => { :in => [NO_STATUS], :message => "Требуется выбрать хотя бы один вариант" }
@@ -48,9 +48,11 @@ class UserApp < ActiveRecord::Base
   validates :uic, format: {with: /\A([0-9]+)(,\s*[0-9]+)*\z/}, allow_blank: true
 
   validate :check_regions
+  validate :check_phone_verified, on: :create
 
   attr_accessor :verification
-  validate :check_phone_verified, on: :create
+
+  before_validation :normalize_phone
   before_create :set_phone_verified_status
   after_create :send_email_confirmation
 
@@ -196,5 +198,9 @@ class UserApp < ActiveRecord::Base
 
   def check_phone_verified
     errors.add(:phone, 'не подтвержден') unless verified?
+  end
+
+  def normalize_phone
+    self.phone = phone.gsub /[^\d]+/, '' unless self.phone.blank?
   end
 end
