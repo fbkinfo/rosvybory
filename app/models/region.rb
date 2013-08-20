@@ -21,4 +21,8 @@ class Region < ActiveRecord::Base
       regions.with_tics
     end
   end
+
+  def to_s
+    name
+  end
 end
