@@ -64,7 +64,7 @@ class UserApp < ActiveRecord::Base
       transition all => :rejected
     end
 
-    event :set_approved do
+    event :approve do
       transition :pending => :approved
     end
   end
