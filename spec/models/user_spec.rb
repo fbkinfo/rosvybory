@@ -68,7 +68,7 @@ describe User do
       }
     end
 
-    context "пользователь с ролью адимна" do
+    context "пользователь с ролью админа" do
       let(:user)  { create :user}
       before do
         create :role, slug: "admin"
