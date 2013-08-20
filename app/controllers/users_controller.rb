@@ -5,13 +5,34 @@ class UsersController < ApplicationController
     if @app.reviewed?
       render text: "Заявка уже обработана"
     else
-      gon.user_app_id = params[:user_app_id]
+      gon.user_app_id = @app.id
       @user = User.new_from_app(@app)
       @user.user_current_roles.build(user_id: @user.id)
-      authorize! :manage, @user
+      authorize! :create, @user
       render "new", layout: false
     end
   end
 
+  # POST /users
+  def create
+    @user = User.new(user_params)
+    authorize! :create, @user
+    if @user.save
+      render json: {status: :ok}, :content_type => 'text/html'
+    else
+      render "new", layout: false
+    end
+  end
 
+  private
+  # Use callbacks to share common setup or constraints between actions.
+  #def set_user
+  #  @user = User.find(params[:id])
+  #end
+
+  # Only allow a trusted parameter "white list" through.
+  def user_params
+    params.require(:user).permit([:email, :region_id, :role_ids, :adm_region_id, :phone,
+                                      :organisation_id, :password, :user_app_id])
+  end
 end
