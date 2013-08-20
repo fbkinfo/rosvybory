@@ -1,11 +1,10 @@
 class SpamReportingService
   def self.report(user_app)
-    # add phone number to black list
-    blacklist(user_app.phone)
+    add_to_blacklist(user_app.phone)
     user_app.destroy
   end
 
-  def self.blacklist(phone)
-
+  def self.add_to_blacklist(phone)
+    Blacklist.find_or_create_by(phone: phone)
   end
 end
