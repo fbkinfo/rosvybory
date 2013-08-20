@@ -12,18 +12,12 @@ $ ->
       height: 500
       width: 600
       title: "Утверждение заявки"
+      hide: {
+        effect: "fadeOut",
+        duration: 200
+      }
     )
 
     $dialog.load(this.href).dialog('open');
     false
   )
-
-
-@initAcceptForm = ->
-  selectify($("select.select2"));
-
-  $(".verify_link").on("ajax:success", (e, data, status, xhr) ->
-    alert 'Данные подтверждены!'
-    $("#unverified").fadeOut()
-  ).bind "ajax:error", (e, xhr, status, error) ->
-    alert xhr.responseText

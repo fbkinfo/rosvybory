@@ -5,6 +5,7 @@
 #= require cocoon
 #= require_tree ./active_admin
 #= require region_select
+#= require users
 
 uicRoles = ["psg", "prg"]
 regionRoles = ["psg_tic", "prg_tic"]

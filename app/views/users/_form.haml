@@ -3,7 +3,7 @@
 
 = include_gon
 
-= semantic_form_for [:control, @user], builder: ::Formtastic::FormBuilder, remote: true do |f|
+= semantic_form_for @user, builder: ::Formtastic::FormBuilder, remote: true do |f|
   = f.inputs "data-role" => "user-fields-container" do
     = f.input :roles, collection: Role.where("slug != ?", ["admin"]), :input_html => {:style => "width: 220px;"}
     = f.input :email
