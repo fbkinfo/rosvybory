@@ -13,14 +13,13 @@ ActiveAdmin.register User do
     end
   end
 
-  
   scope :all, :default => true
   Role.all.each do |role|
     scope role.short_name do |items|
       items.where(:user_roles => {:role => role})
     end
   end if Role.table_exists?
-  
+
   batch_action :new_group_email
   batch_action :other
 
