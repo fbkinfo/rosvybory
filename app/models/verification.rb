@@ -1,5 +1,5 @@
 class Verification < ActiveRecord::Base
-  validates :phone_number, presence: true
+  validates :phone_number, presence: true, format: { with: /\A\d{10}\z/ }
 
   scope :confirmed, -> { where(confirmed: true) }
 
@@ -7,6 +7,7 @@ class Verification < ActiveRecord::Base
     self[:code] ||= (100000 + rand(899999)).to_s
   end
 
+  before_validation :normalize_phone_number
   after_create :send_sms
 
   def send_sms
@@ -20,5 +21,9 @@ class Verification < ActiveRecord::Base
     else
       false
     end
+  end
+
+  def normalize_phone_number
+    self.phone_number = phone_number.gsub /[^\d+]/, '' unless phone_number.blank?
   end
 end
