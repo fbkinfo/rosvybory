@@ -152,7 +152,7 @@ ActiveAdmin.register User do
         end
       else
         @user = User.find(params[:user])
-        authorize! :assign_roles, @project
+        authorize! :manage, @user
         update!
       end
     end
