@@ -133,13 +133,6 @@ ActiveAdmin.register User do
       resource_class.includes(:region).includes(:roles) # prevent N+1 queries
     end
 
-    before_filter :expose_current_roles
-
-    def expose_current_roles
-      gon.current_roles = Hash[CurrentRole.pluck(:id, :slug)]
-      gon.observer_role_id = Role.where(slug: "observer").first.id
-    end
-
     def update
       if params[:user] && params[:user][:current_password]
         @user = User.find(current_user.id)

@@ -1,5 +1,7 @@
 class UsersController < ApplicationController
 
+  before_filter :expose_current_roles, only: [:new]
+
   def new
     @app = UserApp.find(params[:user_app_id])
     if @app.reviewed?
@@ -35,4 +37,10 @@ class UsersController < ApplicationController
     params.require(:user).permit([:email, :region_id, :role_ids, :adm_region_id, :phone,
                                       :organisation_id, :password, :user_app_id])
   end
+
+  def expose_current_roles
+    gon.current_roles = Hash[CurrentRole.pluck(:id, :slug)]
+    gon.observer_role_id = Role.where(slug: "observer").first.id
+  end
+
 end
