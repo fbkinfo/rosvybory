@@ -11,7 +11,7 @@ ActiveAdmin.register User do
   end if Role.table_exists?
 
   batch_action :new_group_email
-  batch_action :other
+  batch_action :new_group_sms
 
   show do |user|
     if can? :manage, user #вид для админа
