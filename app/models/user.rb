@@ -24,6 +24,7 @@ class User < ActiveRecord::Base
   validates :phone, presence: true
 
   after_create :mark_user_app_state
+  after_create :send_sms_with_password
 
   accepts_nested_attributes_for :user_current_roles, allow_destroy: true
 
@@ -33,7 +34,7 @@ class User < ActiveRecord::Base
         user.email = app.email
         user.region_id = app.region_id
         user.adm_region_id = app.adm_region_id
-        user.phone = app.phone.gsub(/[-\s]/, "")
+        user.phone = app.phone.gsub(/[^\d+]/, '')
         user.organisation_id = app.organisation_id
         user.user_app_id = app.id
         user.password = "%08d" % [SecureRandom.random_number * 100000000]
@@ -54,13 +55,19 @@ class User < ActiveRecord::Base
     roles.delete role
   end
 
-  def send_sms_with_password(raw_password);end
+  def send_sms_with_password
+    SmsService.send_message(phone, "bit.ly/rosvybory пароль: #{self.password}") if send_invitation?
+  end
 
   private
 
+  def send_invitation?
+    (%w{tc mc cc federal_repr} & roles.map{ |e| e.slug }).any?
+  end
+
   def mark_user_app_state
     if user_app.present?
-      user_app.set_approved!
+      user_app.approve!
     end
   end
 end

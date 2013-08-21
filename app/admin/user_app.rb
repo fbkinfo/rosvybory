@@ -1,11 +1,18 @@
 ActiveAdmin.register UserApp do
   decorate_with UserAppDecorator
 
+  actions :all, :except => [:destroy]
+
   menu :if => proc{ can? :read, UserApp }
 
   member_action :reject, method: :post do
     resource.reject!
     render json: {status: :ok}, :content_type => 'text/html'
+  end
+
+  member_action :spam, method: :post do
+    SpamReportingService.report(resource)
+    redirect_to :action => :index
   end
 
   member_action :confirm_app, method: :post do
@@ -15,7 +22,11 @@ ActiveAdmin.register UserApp do
   end
 
   action_item only: [:edit, :show] do
-    link_to('Отклонить', reject_control_user_app_path(user_app), method: :post) unless user_app.reviewed?
+    link_to('Отклонить', reject_control_user_app_path(user_app), method: :post, 'data-confirm' => 'Отклонить заявку?')
+  end
+
+  action_item only: [:edit, :show] do
+    link_to('Это спам', spam_control_user_app_path(user_app), method: :post, 'data-confirm' => 'Заявка будет удалена, а номер телефона добавлен в черный список, продолжить?')
   end
 
   action_item only: [:edit, :show] do

@@ -62,5 +62,6 @@ group :test do
   gem 'shoulda-matchers'
   gem 'guard'
   gem 'guard-rspec'
+  gem 'growl'
   gem 'ffaker'
 end
