@@ -125,7 +125,6 @@ ActiveAdmin.register UserApp do
       links = ''.html_safe
       links << link_to(I18n.t('active_admin.view'), resource_path(resource), class: "member_link view_link")
       links << link_to('Принять', review_control_users_path(user_app_id: resource.id), class: "member_link view_link") unless resource.approved?
-      links << link_to('Удалить', control_user_app_path(resource), method: :delete, class: "member_link view_link", 'data-confirm' => 'Точно удалить?')
       links
     end
   end
