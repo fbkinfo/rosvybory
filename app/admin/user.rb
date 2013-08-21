@@ -58,8 +58,11 @@ ActiveAdmin.register User do
     column "Пол" do |user|
       user.user_app.try(:decorate).try(:sex_male)
     end
-    column "Текущие статусы" do |user|
+    column "Текущие статусы(заявка)" do |user|
       user.user_app.try(:decorate).try(:current_roles)
+    end
+    column "Текущие статусы(Утверждённые)" do |user|
+      user.try(:decorate).try(:user_current_roles)
     end
     column "Прежний опыт: количество раз" do |user|
       user.user_app.try(:experience_count)
