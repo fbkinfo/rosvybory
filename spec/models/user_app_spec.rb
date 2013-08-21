@@ -9,7 +9,7 @@ describe UserApp do
   # дописать остальные валидации
   # ...
 
-  describe 'отправка формы должна быть с подтвержденным номером телефона' do
+  describe '.create' do
     context 'без подтвержденного номера телефона' do
       before  { @user_app = build :user_app }
       specify do
@@ -35,6 +35,17 @@ describe UserApp do
 
       specify { @user_app.should be_valid }
       specify { @user_app.phone_verified.should be_true }
+    end
+
+    context 'с существующей отклоненной заявкой на тот же телефон' do
+      before do
+        create :user_app, :verified, :rejected, phone: '1111122222'
+      end
+
+      specify do
+        @user_app = build :user_app, :verified, phone: '1111122222'
+        @user_app.should be_valid
+      end
     end
   end
 end
