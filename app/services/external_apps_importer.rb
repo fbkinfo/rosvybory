@@ -69,6 +69,10 @@ class ExternalAppsImporter
       a.state = :approved
 
       a.has_car = row[COLUMNS[:has_car]] == "1"
+
+      # осталось заполнить оставшиеся поля
+      # сейчас падает на валидации:
+      # Готов стать Требуется выбрать хотя бы один вариант, Видеосъемка требуется указать, Юр. образование имеет непредусмотренное значение, Пол требуется указать, Год рождения требуется указать, Год рождения Неверный формат, ip требуется указать, Телефон не подтвержден
     end
     user_app.confirm!
     user_app.save!
@@ -78,6 +82,8 @@ class ExternalAppsImporter
       u.phone = phone
       u.region = region
       u.user_app = user_app
+
+      # заполнить пароль (рандом?)
     end
 
   end
@@ -127,7 +133,6 @@ class ExternalAppsImporter
     when "тао"
       "Троицкий АО"
     else
-      raise "else #{downcased}"
       name
     end
   end
