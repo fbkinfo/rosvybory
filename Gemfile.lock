@@ -346,6 +346,7 @@ DEPENDENCIES
   honeybadger
   inherited_resources (~> 1.4.1)
   jquery-rails
+  jquery-ui-rails
   launchy
   less-rails
   pg

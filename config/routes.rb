@@ -10,6 +10,9 @@ Rosvibory::Application.routes.draw do
     post :confirm
   end
 
+  resources :users, only: [:new, :create, :edit, :update] do
+  end
+
   root 'user_apps#new'
   get 'confirm_email' => 'user_apps#confirm_email'
   post 'send_group_email' => 'user_apps#send_group_email'
