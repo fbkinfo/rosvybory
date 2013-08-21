@@ -22,15 +22,14 @@ updateRoleFields = (el) ->
 
 initRoles = ->
   $(".formtastic.user").on "click", ".add_fields", ->
-  setTimeout (->
-    el = $("[data-role=user-fields-container]:last")
-    updateRoleFields el
-    el.change ->
-      updateRoleFields $(this)
-
-    selectify($("[data-role=user-fields-container] select"))
-    #    el.find("[data-role=uic]").select2()
-  ), 0
+    setTimeout (->
+      el = $("[data-role=user-fields-container]:last")
+      updateRoleFields el
+      el.change ->
+        updateRoleFields $(this)
+      selectify($("[data-role=user-fields-container] select.select2"))
+      #    el.find("[data-role=uic]").select2()
+    ), 0
 
   $(".formtastic.user #user_role_ids").on "click", ->
     el =$("[data-role=observer-roles]")
