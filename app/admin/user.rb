@@ -156,11 +156,6 @@ ActiveAdmin.register User do
         else
           render :edit_password, layout: "active_admin"
         end
-      else
-        @user = User.find(params[:user])
-        authorize! :manage, @user
-        update!
-      end
     end
 
   end
