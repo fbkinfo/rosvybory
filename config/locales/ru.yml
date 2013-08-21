@@ -300,6 +300,8 @@ ru:
         one: 'Черный список'
         other: 'Черный список'
     attributes:
+      verification:
+        phone_number: Телефон
       user_current_role:
         current_role: Роль
         adm_region_id: Адм регион
