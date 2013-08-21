@@ -15,6 +15,25 @@ describe Verification do
     verification = Verification.create phone_number: '1234567890'
   end
 
+  describe 'проверка', :focus do
+    context 'когда телефон уже использован другим пользователем' do
+      before { create :user, phone: '1111122222' }
+
+      specify 'не проходит' do
+        verification = Verification.new phone_number: '1111122222'
+        verification.should have(1).errors_on(:phone_number)
+      end
+    end
+
+    context 'когда телефон используется в другой заявке' do
+      before { create :user_app, :verified, phone: '1111122222' }
+      specify 'не проходит' do
+        verification = Verification.new phone_number: '1111122222'
+        verification.should have(1).errors_on(:phone_number)
+      end
+    end
+  end
+
   describe '#confirm!' do
     before do
       # we don't want to actually send SMS messages in tests
@@ -36,4 +55,5 @@ describe Verification do
       end
     end
   end
+
 end
