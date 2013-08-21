@@ -11,6 +11,6 @@ $ ->
   $("body").on "app-status-change", (event, app_id, status) ->
 #    if current_scope does not include status
 
-#   $(".accept_link[data-user-app-id=#{app_id}]").remove() - спрятать действие
+    $(".accept_link[data-user-app-id=#{app_id}]").remove() #прячем линк на действие - для страницы просмотра заявки
     $row = $("#user_app_"+app_id)
     $row.fadeOut()
