@@ -19,7 +19,7 @@ ActiveAdmin.register UserApp do
   end
 
   action_item only: [:edit, :show] do
-    link_to('Принять', new_user_path(user_app_id: user_app.id)) unless user_app.reviewed?
+    link_to('Принять', new_user_path(user_app_id: resource.id), data: {"user-app-id" => resource.id}, class: "member_link accept_link")
   end
 
   #scope :all, :default => true
