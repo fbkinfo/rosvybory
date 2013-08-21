@@ -1,5 +1,5 @@
 class Verification < ActiveRecord::Base
-  validates :phone_number, presence: true, format: { with: /\A\d{10}\z/ }
+  validates :phone_number, presence: true, format: { with: /\A\d{10}\z/ }, unique_phone: true
 
   scope :confirmed, -> { where(confirmed: true) }
 
