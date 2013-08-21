@@ -1,11 +1,18 @@
 ActiveAdmin.register UserApp do
   decorate_with UserAppDecorator
 
+  actions :all, :except => [:destroy]
+
   menu :if => proc{ can? :read, UserApp }
 
   member_action :reject, method: :post do
     resource.reject!
     redirect_to control_user_app_path(resource)
+  end
+
+  member_action :spam, method: :post do
+    SpamReportingService.report(resource)
+    redirect_to :action => :index
   end
 
   member_action :confirm_app, method: :post do
@@ -15,7 +22,11 @@ ActiveAdmin.register UserApp do
   end
 
   action_item only: [:edit, :show] do
-    link_to('Отклонить', reject_control_user_app_path(user_app), method: :post) unless user_app.reviewed?
+    link_to('Отклонить', reject_control_user_app_path(user_app), method: :post, 'data-confirm' => 'Отклонить заявку?')
+  end
+
+  action_item only: [:edit, :show] do
+    link_to('Это спам', spam_control_user_app_path(user_app), method: :post, 'data-confirm' => 'Заявка будет удалена, а номер телефона добавлен в черный список, продолжить?')
   end
 
   action_item only: [:edit, :show] do
@@ -113,7 +124,6 @@ ActiveAdmin.register UserApp do
     actions(defaults: false) do |resource|
       links = ''.html_safe
       links << link_to(I18n.t('active_admin.view'), resource_path(resource), class: "member_link view_link")
-      links << link_to('Отклонить', reject_control_user_app_path(resource), method: :post, class: "member_link view_link") unless resource.rejected?
       links << link_to('Принять', review_control_users_path(user_app_id: resource.id), class: "member_link view_link") unless resource.approved?
       links
     end
