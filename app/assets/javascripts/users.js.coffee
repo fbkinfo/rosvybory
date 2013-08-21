@@ -49,7 +49,6 @@ initRoles = ->
   updateRoleFields()
 
 @initUserForm = ->
-
   if gon.user_app_id
     $(".verify_link").on("ajax:success", (e, data, status, xhr) ->
       $(this).closest(".unverified").html('Данные подтверждены!').fadeOut()
@@ -83,6 +82,15 @@ initRoles = ->
   ).bind "ajax:error", (evt, xhr, status, error) ->
     alert "Произошла ошибка! Перезагрузите страницу и попробуйте ещё раз"
     $(this).closest('.ui-dialog-content').html(xhr.responseText)
+
+  $form.find("#user_adm_region_id").on "change", (e) ->
+    chosen_val = $(@).val()
+    $el = $form.find("#user_region_id")
+    $el.empty(); # remove old options
+    $el.append $("<option></option>").attr("value", "")
+    $.each regions[chosen_val], (index, region) ->
+      $el.append $("<option></option>").attr("value", region.id).text(region.name)
+    $el.select2("val", "")
 
   selectify($("select.select2"))
 
