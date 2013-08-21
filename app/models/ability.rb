@@ -25,13 +25,13 @@ class Ability
 
     if has_role?(user, :tc)
       #ТК видит заявки своего адм. округа или района и только из своего НО
-      if user.region && user.organisation
-        can :manage, UserApp, :region_id => user.region_id, :organisation_id => user.organisation_id
-        can :manage, User, :region_id => user.region_id, :organisation_id => user.organisation_id
-
-        if user.region.kind.adm_region?
-          can :manage, UserApp, :adm_region_id => user.region_id, :organisation_id => user.organisation_id
-          can :manage, User, :adm_region_id => user.region_id, :organisation_id => user.organisation_id
+      if user.organisation
+        if user.region
+          can :manage, UserApp, :region_id => user.region_id, :organisation_id => user.organisation_id
+          can :manage, User, :region_id => user.region_id, :organisation_id => user.organisation_id
+        elsif  user.adm_region
+          can :manage, UserApp, :adm_region_id => user.adm_region_id, :organisation_id => user.organisation_id
+          can :manage, User, :adm_region_id => user.adm_region_id, :organisation_id => user.organisation_id
         end
       end
     end

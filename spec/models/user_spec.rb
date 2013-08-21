@@ -102,9 +102,11 @@ describe User do
     end
 
     context "пользователь с ролью территориального координатора" do
-      let(:user)              { create :user, region: first_adm_region, organisation: first_organisation}
+      let(:user)              { create :user, adm_region: first_adm_region, organisation: first_organisation }
       let(:first_adm_region)  { Region.where(name: "Южный АО").with_kind(:adm_region).first_or_create }
       let(:second_adm_region) { Region.where(name: "Северный АО").with_kind(:adm_region).first_or_create }
+      let(:first_region)      { Region.create parent: first_adm_region, name: "Арбат" }
+      let(:second_region)      { Region.create parent: first_adm_region, name: "Якиманка" }
       let(:first_organisation) { Organisation.where(name: "РосВыборы").first_or_create }
       let(:second_organisation) { Organisation.where(name: "КоксВыборы").first_or_create }
 
@@ -138,7 +140,6 @@ describe User do
 
         should_not be_able_to(:manage, UserApp.new(adm_region: second_adm_region, organisation: first_organisation))
         should_not be_able_to(:manage, UserApp.new(adm_region: second_adm_region, organisation: second_organisation))
-
       }
     end
   end
