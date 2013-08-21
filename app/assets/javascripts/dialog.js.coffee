@@ -8,6 +8,8 @@
       effect: "fadeOut",
       duration: 200
     }
+    close: (ev, ui)->
+      $(this).remove()
   )
   $dialog.load(url).dialog('open');
 
