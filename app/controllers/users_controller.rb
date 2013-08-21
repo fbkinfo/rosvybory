@@ -51,8 +51,11 @@ class UsersController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def user_params
-    params.require(:user).permit([:email, :region_id, :role_ids, :adm_region_id, :phone,
-                                      :organisation_id, :password, :user_app_id])
+     #raise params.to_yaml
+     params.require(:user).permit([:email, :region_id, :role_ids, :adm_region_id, :phone,
+                                      :organisation_id, :password, :user_app_id,
+                                      :user_current_roles_attributes =>[:id, :current_role_id, :region_id, :uic_id, :user_id, :_destroy]
+                                 ])
   end
 
   def expose_current_roles

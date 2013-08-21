@@ -2,41 +2,51 @@
 uicRoles = ["psg", "prg"]
 regionRoles = ["psg_tic", "prg_tic"]
 
-updateRoleFields = (el) ->
-  role = gon.current_roles[el.find("[data-role=current-role]").val()]
-  $uic = el.find("[data-role=uic]").parent()
-  $region = el.find("[data-role=region-select]").parent()
-  $admRegion = el.find("[data-role=adm-region-select]").parent()
+updateRoleFields = ->
+#  $(".user-current-role").change ->
+#    updateRoleFields()
+  $(".user-current-role").each (index, element)->
+    $el = $(element)
+    role = gon.current_roles[$el.find("[data-role=current-role]").val()]
+    $uic = $el.find("[data-role=uic]").parent()
+    $region = $el.find("[data-role=region-select]").parent()
 
-  if ($.inArray(role, uicRoles) != -1)
-    $uic.show()
-  else
-    $uic.hide()
+    if ($.inArray(role, uicRoles) != -1)
+      $uic.show()
+    else
+      $uic.find("select").select2('val', '');
+      $uic.hide()
 
-  if ($.inArray(role, regionRoles) != -1)
-    $admRegion.show()
-    $region.show()
+
+    if ($.inArray(role, regionRoles) != -1)
+      $region.show()
+    else
+      $region.find("select").select2('val', '');
+      $region.hide()
+
+
+checkForObserverRole = ->
+  el =$("[data-role=observer-roles]")
+  if ($.inArray(gon.observer_role_id + '', $(".formtastic.user #user_role_ids").val()) != -1)
+    el.removeClass("hidden")
   else
-    $admRegion.hide()
-    $region.hide()
+    el.addClass("hidden")
 
 initRoles = ->
+
+  $(".formtastic.user").on "change", ".user-current-role", ->
+    updateRoleFields()
+
   $(".formtastic.user").on "click", ".add_fields", ->
     setTimeout (->
-      el = $("[data-role=user-fields-container]:last")
-      updateRoleFields el
-      el.change ->
-        updateRoleFields $(this)
+      updateRoleFields()
       selectify($("[data-role=user-fields-container] select.select2"))
-      #    el.find("[data-role=uic]").select2()
     ), 0
 
   $(".formtastic.user #user_role_ids").on "click", ->
-    el =$("[data-role=observer-roles]")
-    if ($.inArray(gon.observer_role_id + '', $(this).val()) != -1)
-      el.removeClass("hidden")
-    else
-      el.addClass("hidden")
+    checkForObserverRole()
+  checkForObserverRole()
+  updateRoleFields()
 
 @initUserForm = ->
 
