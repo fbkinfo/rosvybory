@@ -154,11 +154,9 @@ ActiveAdmin.register User do
           render :edit_password, layout: "active_admin"
         end
       else
-        @user = User.find(params[:user])
-        authorize! :assign_roles, @project
+        # TODO: это не работает!
         update!
       end
     end
-
   end
 end
