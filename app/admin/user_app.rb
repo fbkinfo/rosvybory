@@ -5,9 +5,9 @@ ActiveAdmin.register UserApp do
 
   menu :if => proc{ can? :read, UserApp }
 
-  scope :all
+  scope "Все", :all
   UserApp.state_machine.states.each do |state|
-    scope state.name, :default => (state.name.to_s == "pending") do |items|
+    scope state.human_name, :default => (state.name.to_s == "pending") do |items|
       items.with_state(state.name)
     end
   end
