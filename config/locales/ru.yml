@@ -404,9 +404,19 @@ ru:
       coord: "Координатор"
       prg_reserve: "ПРГ в резерве"
       no_status: ""
+  user_apps:
+    send_group_sms:
+      messages_sent: 'Сообщения отправлены'
+    send_group_email:
+      messages_sent: 'Сообщения отправлены'
   enumerize:
     region:
       kind:
         city: "Город"
         adm_region: "Админ. регион"
         mun_region: "Мун. регион"
+  active_admin:
+    batch_actions:
+      labels:
+        new_group_sms: "Отправить SMS"
+        new_group_email: "Отправить почту"
