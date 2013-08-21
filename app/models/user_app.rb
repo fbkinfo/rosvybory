@@ -24,8 +24,7 @@ class UserApp < ActiveRecord::Base
   validates :last_name,  :presence => true
   validates :patronymic,  :presence => true
   validates :email, :presence => true, :format => { :with => /.+@.+\..+/i }
-  validates :phone, :presence => true, format: { with: /\A\d{10}\z/ }
-  validates :phone, uniqueness: { :message => "Заявка с таким номером телефона уже существует" }, unless: :rejected?
+  validates :phone, :presence => true, uniqueness: { scope: :state }, format: { with: /\A\d{10}\z/ } #TODO это более мягкая проверка, чем в валидаторе на форме (уникальность внутри одного статуса, а там - среди всех статусов кроме rejected)
   #validates_format_of :phone, with: /\A\d{10}\z/
   validates :adm_region, :presence => true
   validates :desired_statuses, :presence => true, :exclusion => { :in => [NO_STATUS], :message => "Требуется выбрать хотя бы один вариант" }
