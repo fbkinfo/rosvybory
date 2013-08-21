@@ -1,0 +1,19 @@
+.row
+  .span3
+    %legend
+      Письмо будет направлено следующим получателям
+    - @users.pluck(:phone).each do |phone|
+      = phone
+  .span9
+    %legend
+      Содержимое письма
+    = form_for :group_sms, url: :send_group_sms,  html: {class: 'form-horizontal'} do |f|
+      - @users.pluck(:phone).each do |phone|
+        = f.hidden_field :phones, :multiple => true, :value => phone
+      .control-group
+        = f.label 'Сообщение', class: 'control-label'
+        .controls
+          = f.text_area :message, class: 'input-xxlarge', rows: 10
+      .control-group
+        .controls
+          = f.submit 'Отправить', class: 'btn btn-primary'
