@@ -115,6 +115,7 @@ GEM
     gon (4.1.1)
       actionpack (>= 2.3.0)
       json
+    growl (1.0.3)
     guard (1.8.2)
       formatador (>= 0.2.4)
       listen (>= 1.0.0)
@@ -338,12 +339,14 @@ DEPENDENCIES
   formtastic (= 2.3.0.rc2)
   formtastic-bootstrap
   gon
+  growl
   guard
   guard-rspec
   haml-rails
   honeybadger
   inherited_resources (~> 1.4.1)
   jquery-rails
+  jquery-ui-rails
   launchy
   less-rails
   pg

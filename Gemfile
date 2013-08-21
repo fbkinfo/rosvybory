@@ -6,6 +6,7 @@ gem 'rails', '4.0.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
 
 # Use postgresql as the database for Active Record
 gem 'pg'
@@ -61,5 +62,6 @@ group :test do
   gem 'shoulda-matchers'
   gem 'guard'
   gem 'guard-rspec'
+  gem 'growl'
   gem 'ffaker'
 end

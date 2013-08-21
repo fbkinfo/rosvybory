@@ -7,13 +7,13 @@ class UserCurrentRole < ActiveRecord::Base
   validates :current_role, presence: true
   validate :region_or_uic_present
 
-  attr_accessor :adm_region_id
+  #attr_accessor :adm_region_id
 
   private
 
   def region_or_uic_present
     unless region.present? || uic.present?
-      errors.add(:region, "Надо выбрать район или УИК") unless current_role.slug == "reserve"
+      errors.add(:region, "Надо выбрать ТИК или УИК") unless current_role.slug == "reserve"
     end
   end
 end

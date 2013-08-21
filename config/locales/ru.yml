@@ -20,8 +20,6 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 ru:
-  active_admin:
-    review_model: "Принятие заявки"
   formtastic:
     required: "обязательное поле"
   date:
@@ -147,7 +145,7 @@ ru:
     messages:
       accepted: нужно подтвердить
       blank: требуется указать
-      confirmation: не совпадает с подтверждением
+      confirmation: подтверждение не совпадает
       empty: не может быть пустым
       equal_to: может иметь лишь значение, равное %{count}
       even: может иметь лишь нечетное значение
@@ -172,12 +170,17 @@ ru:
         few: недостаточной длины (не может быть меньше %{count} символов)
         many: недостаточной длины (не может быть меньше %{count} символов)
         one: недостаточной длины (не может быть меньше %{count} символа)
-        other: недостаточной длины (не может быть меньше %{count} символа)
+        other: недостаточной длины (не может быть меньше %{count} символов)
       wrong_length:
         few: неверной длины (может быть длиной ровно %{count} символа)
         many: неверной длины (может быть длиной ровно %{count} символов)
         one: неверной длины (может быть длиной ровно %{count} символ)
         other: неверной длины (может быть длиной ровно %{count} символа)
+    models:
+      user:
+        attributes:
+          current_password:
+            invalid: "Указан неверено!"
     template:
       body: ! 'Проблемы возникли со следующими полями:'
       header:
@@ -280,6 +283,14 @@ ru:
   activerecord:
     errors:
       <<: *errors
+    state_machines:
+      user_app:
+        state:
+          states:
+            pending: "Новые"
+            approved: "Утверждено"
+            rejected: "Отклонено"
+            spammed: "Спам"
     models:
       region:
         one: "Округ/район"
@@ -293,7 +304,12 @@ ru:
       organisation:
         one: "Организация"
         other: "Организации"
+      blacklist:
+        one: 'Черный список'
+        other: 'Черный список'
     attributes:
+      verification:
+        phone_number: Телефон
       user_current_role:
         current_role: Роль
         adm_region_id: Адм регион
@@ -316,6 +332,9 @@ ru:
         sign_in_count: Заходов
         last_sign_in_at: Последний визит
         current_sign_in_at: Текущий визит
+        current_password: Текущий пароль
+        password: Пароль
+        password_confirmation: Пароль (подтверждение)
       region:
         kind: Тип
         name: Название

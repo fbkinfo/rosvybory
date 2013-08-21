@@ -85,7 +85,7 @@ class PhoneVerification
     @restore()
 
   restore: =>
-    Recaptcha.reload("t")
+#    Recaptcha.reload("t")
     $('#user_app_phone').removeAttr('readonly')
 
   success_message: =>

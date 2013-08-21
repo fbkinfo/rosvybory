@@ -11,7 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130819170952) do
+ActiveRecord::Schema.define(version: 20130820192419) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -27,6 +30,14 @@ ActiveRecord::Schema.define(version: 20130819170952) do
   add_index "active_admin_comments", ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id", using: :btree
   add_index "active_admin_comments", ["namespace"], name: "index_active_admin_comments_on_namespace", using: :btree
   add_index "active_admin_comments", ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id", using: :btree
+
+  create_table "blacklists", force: true do |t|
+    t.string   "phone"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "blacklists", ["phone"], name: "index_blacklists_on_phone", unique: true, using: :btree
 
   create_table "current_roles", force: true do |t|
     t.string   "name",                   null: false
@@ -117,8 +128,8 @@ ActiveRecord::Schema.define(version: 20130819170952) do
     t.string   "state",              default: "pending", null: false
     t.boolean  "phone_verified",     default: false,     null: false
     t.boolean  "has_video"
-    t.integer  "organisation_id"
     t.string   "forwarded_for"
+    t.integer  "organisation_id"
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
   end
