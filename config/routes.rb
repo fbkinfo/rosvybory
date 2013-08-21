@@ -17,4 +17,6 @@ Rosvibory::Application.routes.draw do
   get 'confirm_email' => 'user_apps#confirm_email'
   post 'send_group_email' => 'user_apps#send_group_email'
   get 'new_group_email' => 'user_apps#new_group_email'
+  post 'send_group_sms' => 'user_apps#send_group_sms'
+  get 'new_group_sms' => 'user_apps#new_group_sms'
 end

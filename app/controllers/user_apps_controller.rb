@@ -62,9 +62,18 @@ class UserAppsController < ApplicationController
 
   def send_group_email
     UserMailer.group_email(*params[:group_email].values).deliver
-    redirect_to '/control'
+    redirect_to '/control/users', notice: t('.messages_sent')
   end
 
+  def new_group_sms
+    @users = User.where(id: params[:collection_selection])
+    render layout: 'custom_layout'
+  end
+
+  def send_group_sms
+    Resque.enqueue(SmsMassSender, phones: params[:group_sms][:phones].delete_if{|i| i.empty?}, message: params[:group_sms][:message])
+    redirect_to '/control/users', notice: t('.messages_sent')
+  end
   # PATCH/PUT /user_apps/1
   #def update
   #  if @user_app.update(user_app_params)
