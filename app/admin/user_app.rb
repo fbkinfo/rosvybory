@@ -1,25 +1,44 @@
 ActiveAdmin.register UserApp do
   decorate_with UserAppDecorator
 
+  actions :all, :except => [:destroy]
+
   menu :if => proc{ can? :read, UserApp }
+
+  scope "Все", :all
+  UserApp.state_machine.states.each do |state|
+    scope state.human_name, :default => (state.name.to_s == "pending") do |items|
+      items.with_state(state.name)
+    end
+  end
+
 
   member_action :reject, method: :post do
     resource.reject!
-    redirect_to control_user_app_path(resource)
+    render json: {status: :ok}, :content_type => 'text/html'
+  end
+
+  member_action :spam, method: :post do
+    SpamReportingService.report(resource)
+    redirect_to :action => :index
   end
 
   member_action :confirm_app, method: :post do
     resource.confirm_phone! unless resource.phone_verified?
     resource.confirm_email! unless resource.confirmed?
-    redirect_to :back
+    render json: {status: :ok}, :content_type => 'text/html'
   end
 
   action_item only: [:edit, :show] do
-    link_to('Отклонить', reject_control_user_app_path(user_app), method: :post) unless user_app.reviewed?
+    link_to('Отклонить', reject_control_user_app_path(user_app), method: :post, 'data-confirm' => 'Отклонить заявку?')
   end
 
   action_item only: [:edit, :show] do
-    link_to('Принять', review_control_users_path(user_app_id: user_app.id)) unless user_app.reviewed?
+    link_to('Это спам', spam_control_user_app_path(user_app), method: :post, 'data-confirm' => 'Заявка будет удалена, а номер телефона добавлен в черный список, продолжить?')
+  end
+
+  action_item only: [:edit, :show] do
+    link_to('Принять', new_user_path(user_app_id: resource.id), data: {"user-app-id" => resource.id}, class: "member_link accept_link")
   end
 
   #scope :all, :default => true
@@ -41,7 +60,7 @@ ActiveAdmin.register UserApp do
   filter   :patronymic
   filter   :phone
   filter   :email
-  filter   :uic, :as => :numeric_range
+  filter   :uic #, :as => :numeric_range
 
 
   filter   :experience_count
@@ -63,7 +82,7 @@ ActiveAdmin.register UserApp do
   #
   filter   :year_born, :as => :numeric_range
   #column(:sex_male) {|user_app| user_app.sex_male ? "М":"Ж"}
-  filter   :organisation
+  filter   :organisation, :input_html => {:style => "width: 220px;"}
   filter   :ip
   filter   :useragent
 
@@ -84,6 +103,10 @@ ActiveAdmin.register UserApp do
 
     def permitted_params
       params.permit!
+    end
+
+    rescue_from ActiveAdmin::AccessDenied do |exception|
+      redirect_to '/control/dashboard', :notice => exception.message
     end
   end
 
@@ -113,8 +136,10 @@ ActiveAdmin.register UserApp do
     actions(defaults: false) do |resource|
       links = ''.html_safe
       links << link_to(I18n.t('active_admin.view'), resource_path(resource), class: "member_link view_link")
-      links << link_to('Отклонить', reject_control_user_app_path(resource), method: :post, class: "member_link view_link") unless resource.rejected?
-      links << link_to('Принять', review_control_users_path(user_app_id: resource.id), class: "member_link view_link") unless resource.approved?
+
+      links << link_to('Принять', new_user_path(user_app_id: resource.id), data: {"user-app-id" => resource.id}, class: "member_link view_link accept_link") unless resource.approved?
+      links << '<br/> <br/>'.html_safe
+      links << link_to('Отклонить', reject_control_user_app_path(resource), method: :post, remote: true, data: {"user-app-id" => resource.id}, class: "member_link view_link reject_link") unless resource.rejected?
       links
     end
   end

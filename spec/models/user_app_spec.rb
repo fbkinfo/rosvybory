@@ -9,7 +9,7 @@ describe UserApp do
   # дописать остальные валидации
   # ...
 
-  describe 'отправка формы должна быть с подтвержденным номером телефона' do
+  describe '.create' do
     context 'без подтвержденного номера телефона' do
       before  { @user_app = build :user_app }
       specify do
@@ -29,29 +29,23 @@ describe UserApp do
 
     context 'с подтвежденным номером' do
       before do
-        verification = Verification.new phone_number: '11111', confirmed: true
-        @user_app = create :user_app, verification: verification, phone: '11111'
+        verification = Verification.new phone_number: '1111122222', confirmed: true
+        @user_app = create :user_app, verification: verification, phone: '1111122222'
       end
 
       specify { @user_app.should be_valid }
       specify { @user_app.phone_verified.should be_true }
     end
-  end
 
-  describe "#approve", pending: true do
-    let(:verification) { Verification.new phone_number: '1234567', confirmed: true }
-    subject { create(:user_app, verification: verification, phone: '1234567') }
+    context 'с существующей отклоненной заявкой на тот же телефон' do
+      before do
+        create :user_app, :verified, :rejected, phone: '1111122222'
+      end
 
-    it "обновляет статус" do
-      subject.approve!
-
-      expect(subject.reload.state_name).to eq(:approved)
-    end
-
-    it "создает User" do
-      expect {
-        subject.approve!
-      }.to change(User, :count).by(1)
+      specify do
+        @user_app = build :user_app, :verified, phone: '1111122222'
+        @user_app.should be_valid
+      end
     end
   end
 end

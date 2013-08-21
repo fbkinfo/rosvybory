@@ -23,21 +23,12 @@ class UserAppsController < ApplicationController
 
   # POST /user_apps
   def create
-    @user_app = UserApp.new(user_app_params)
+    @user_app = UserApp.new(user_app_params.merge(user_app_extra_params))
 
-    # supposing that nginx is configured like this
-    # proxy_set_header   X-Real-IP        $remote_addr;
-    # proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
-
-    @user_app.ip            = request.env['HTTP_X_REAL_IP'] || request.ip
-    @user_app.useragent     = request.env['HTTP_USER_AGENT']
-    @user_app.forwarded_for = request.env['HTTP_X_FORWARDED_FOR']
-    @user_app.verification = Verification.find_by_id session[:verification_id]
-
-    @user_app.organisation = Organisation.where(name: "РосВыборы").first_or_create
     user_app_current_roles = @user_app.user_app_current_roles.to_a
-    @user_app.user_app_current_roles = @user_app.user_app_current_roles.select {|a| a.keep}
-    if @user_app.save
+    @user_app.user_app_current_roles = @user_app.user_app_current_roles.select { |a| a.keep }
+
+    if UserAppCreator.save(@user_app)
       session.delete(:verification_id)
       render action: 'done'
       #redirect_to new_user_app_path, notice: 'User app was successfully created.'
@@ -46,7 +37,7 @@ class UserAppsController < ApplicationController
       render action: 'new'
     end
   end
-  
+
   def confirm_email
     respond_to do |format|
       format.html {
@@ -59,9 +50,19 @@ class UserAppsController < ApplicationController
       }
     end
   end
-  
+
   def done
 
+  end
+
+  def new_group_email
+    @users = User.where(id: params[:collection_selection])
+    render layout: 'custom_layout'
+  end
+
+  def send_group_email
+    UserMailer.group_email(*params[:group_email].values).deliver
+    redirect_to '/control'
   end
 
   # PATCH/PUT /user_apps/1
@@ -80,19 +81,32 @@ class UserAppsController < ApplicationController
   #end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user_app
-      @user_app = UserApp.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def user_app_params
-      params.require(:user_app).permit([:data_processing_allowed, :region_id, :adm_region_id, :uic,
-                                       :last_name, :first_name, :patronymic, :phone, :email, :has_car, :has_video, :legal_status,
-                                       {:user_app_current_roles_attributes => [:value, :keep, :current_role_id]},
-                                       :experience_count, :sex_male, :year_born, :extra] +
-                                           UserApp.future_statuses_methods +
-                                           UserApp.previous_statuses_methods +
-                                           UserApp.social_methods)
-    end
+
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_user_app
+    @user_app = UserApp.find(params[:id])
+  end
+
+  def user_app_extra_params
+    {
+      :ip             => request.env['HTTP_X_REAL_IP'] || request.ip,
+      :useragent      => request.env['HTTP_USER_AGENT'],
+      :forwarded_for  => request.env['HTTP_X_FORWARDED_FOR'],
+      :verification   => Verification.find_by_id(session[:verification_id]),
+      :organisation   => Organisation.where(name: "РосВыборы").first_or_create
+    }
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def user_app_params
+    params.require(:user_app).permit([:data_processing_allowed, :region_id, :adm_region_id, :uic,
+                                     :last_name, :first_name, :patronymic, :phone, :email, :has_car, :has_video, :legal_status,
+                                     {:user_app_current_roles_attributes => [:value, :keep, :current_role_id]},
+                                     :experience_count, :sex_male, :year_born, :extra] +
+                                         UserApp.future_statuses_methods +
+                                         UserApp.previous_statuses_methods +
+                                         UserApp.social_methods)
+  end
 end
