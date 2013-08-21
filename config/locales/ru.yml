@@ -283,6 +283,14 @@ ru:
   activerecord:
     errors:
       <<: *errors
+    state_machines:
+      user_app:
+        state:
+          states:
+            pending: "Новые"
+            approved: "Утверждено"
+            rejected: "Отклонено"
+            spammed: "Спам"
     models:
       region:
         one: "Округ/район"
@@ -300,6 +308,8 @@ ru:
         one: 'Черный список'
         other: 'Черный список'
     attributes:
+      verification:
+        phone_number: Телефон
       user_current_role:
         current_role: Роль
         adm_region_id: Адм регион
