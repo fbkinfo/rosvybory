@@ -5,6 +5,15 @@ ActiveAdmin.register UserApp do
 
   menu :if => proc{ can? :read, UserApp }
 
+  scope :all, :default => true
+
+  UserApp.state_machine.states.each do |state|
+    scope state.name do |items|
+      items.with_state(state.name)
+    end
+  end
+
+
   member_action :reject, method: :post do
     resource.reject!
     render json: {status: :ok}, :content_type => 'text/html'
