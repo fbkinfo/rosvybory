@@ -28,6 +28,8 @@ class User < ActiveRecord::Base
 
   accepts_nested_attributes_for :user_current_roles, allow_destroy: true
 
+  delegate :created_at, to: :user_app, allow_nil: true, prefix: true
+
   class << self
     def new_from_app(app)
       new do |user|
