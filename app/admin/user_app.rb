@@ -105,6 +105,10 @@ ActiveAdmin.register UserApp do
     def permitted_params
       params.permit!
     end
+
+    rescue_from ActiveAdmin::AccessDenied do |exception|
+      redirect_to '/control/dashboard', :notice => exception.message
+    end
   end
 
   index do

@@ -151,6 +151,5 @@ ActiveAdmin.register User do
         end
       end
     end
-
   end
 end

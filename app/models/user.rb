@@ -56,7 +56,7 @@ class User < ActiveRecord::Base
   end
 
   def send_sms_with_password
-    SmsService.send_message(phone, "bit.ly/rosvybory пароль: #{self.password}") if send_invitation?
+    SmsService.send_message(phone, "Вход в РосВыборы: bit.ly/rosvybory, пароль: #{self.password}") if send_invitation?
   end
 
   private
