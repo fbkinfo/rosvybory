@@ -15,13 +15,4 @@
 
 
 = render 'form'
-- if @user.user_app
-  - user_app = @user.user_app.decorate
-  %h3 Заявка подробнее
-  .panel_contents
-    .attributes_table
-      %table
-        - %w(last_name first_name patronymic desired_statuses current_roles previous_statuses experience_count has_car social_accounts extra legal_status  region_id year_born sex_male phone_verified has_video).each do |field|
-          %tr.row
-            %th= UserApp.human_attribute_name(field)
-            %td= user_app.send field
+= render 'user_app'

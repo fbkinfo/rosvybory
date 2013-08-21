@@ -1,6 +1,23 @@
 class UsersController < ApplicationController
 
-  before_filter :expose_current_roles, only: [:new]
+  before_filter :expose_current_roles, only: [:new, :edit]
+  before_filter :set_user, only: [:edit, :update]
+
+  def edit
+    authorize! :update, @user
+    gon.user_id = @user.id
+    render "edit", layout: false
+  end
+
+  def update
+    authorize! :update, @user
+    if @user.update(user_params)
+      render json: {status: :ok}, :content_type => 'text/html'
+    else
+      render "edit", layout: false
+    end
+  end
+
 
   def new
     @app = UserApp.find(params[:user_app_id])
@@ -28,9 +45,9 @@ class UsersController < ApplicationController
 
   private
   # Use callbacks to share common setup or constraints between actions.
-  #def set_user
-  #  @user = User.find(params[:id])
-  #end
+  def set_user
+    @user = User.find(params[:id])
+  end
 
   # Only allow a trusted parameter "white list" through.
   def user_params
