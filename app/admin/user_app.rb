@@ -1,7 +1,14 @@
 ActiveAdmin.register UserApp do
   decorate_with UserAppDecorator
 
+  actions :all, :except => [:destroy]
+
   menu :if => proc{ can? :read, UserApp }
+
+  member_action :reject, method: :post do
+    resource.reject!
+    redirect_to control_user_app_path(resource)
+  end
 
   member_action :spam, method: :post do
     SpamReportingService.report(resource)
@@ -12,6 +19,10 @@ ActiveAdmin.register UserApp do
     resource.confirm_phone! unless resource.phone_verified?
     resource.confirm_email! unless resource.confirmed?
     redirect_to :back
+  end
+
+  action_item only: [:edit, :show] do
+    link_to('Отклонить', reject_control_user_app_path(user_app), method: :post, 'data-confirm' => 'Отклонить заявку?')
   end
 
   action_item only: [:edit, :show] do
