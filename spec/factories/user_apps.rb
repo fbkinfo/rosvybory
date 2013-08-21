@@ -15,5 +15,24 @@ FactoryGirl.define do
     sex_male          true
     year_born         1976
     ip                '192.168.1.1'
+
+    trait :verified do
+      after(:build) do |user_app|
+        user_app.verification = Verification.create phone_number: user_app.phone, confirmed: true
+      end
+    end
+
+    trait :rejected do
+      state 'rejected'
+    end
+
+    trait :spam do
+      state 'spammed'
+    end
+
+    trait :approved do
+      state 'approved'
+    end
+
   end
 end

@@ -298,6 +298,9 @@ ru:
       organisation:
         one: "Организация"
         other: "Организации"
+      blacklist:
+        one: 'Черный список'
+        other: 'Черный список'
     attributes:
       user_current_role:
         current_role: Роль
