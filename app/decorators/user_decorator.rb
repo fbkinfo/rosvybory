@@ -18,6 +18,7 @@ class UserDecorator < Draper::Decorator
   end
 
   def human_roles
+    #user.roles.collect(&:short_name).to_sentence
     object.roles.pluck(:short_name).join("; ")
   end
 
