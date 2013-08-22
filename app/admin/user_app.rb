@@ -1,7 +1,7 @@
 ActiveAdmin.register UserApp do
   decorate_with UserAppDecorator
 
-  actions :all, :except => [:destroy]
+  actions :all, :except => [:destroy, :new]
 
   menu :if => proc{ can? :read, UserApp }
 
