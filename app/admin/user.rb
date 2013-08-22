@@ -15,7 +15,6 @@ ActiveAdmin.register User do
 
   show do |user|
     if can? :manage, user #вид для админа
-      h1 user.full_name
       attributes_table do
         row :organisation do
           "#{user.organisation.name}-#{user.organisation_id}" if user.organisation
@@ -44,6 +43,7 @@ ActiveAdmin.register User do
         row :last_sign_in_at
         row :sign_in_count
         row :created_at
+        row :updated_at
       end
       active_admin_comments
     elsif can? :read, user
