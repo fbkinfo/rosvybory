@@ -50,12 +50,12 @@ class UserApp < ActiveRecord::Base
   validate :check_regions
   validate :check_phone_verified, on: :create
 
-  attr_accessor :verification
+  attr_accessor :verification, :skip_phone_verification, :skip_email_confirmation
 
   before_validation :normalize_phone
   before_validation :set_phone_verified_status, on: :create
 
-  after_create :send_email_confirmation
+  after_create :send_email_confirmation, :unless => :skip_email_confirmation
 
   state_machine initial: :pending do
     state :approved
@@ -180,7 +180,7 @@ class UserApp < ActiveRecord::Base
   end
 
   def verified?
-    verification.present? && verification.confirmed? && verification.phone_number == self.phone
+    skip_phone_verification || (verification.present? && verification.confirmed? && verification.phone_number == self.phone)
   end
 
   def reviewed?
