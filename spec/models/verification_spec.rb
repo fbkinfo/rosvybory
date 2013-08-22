@@ -15,7 +15,7 @@ describe Verification do
     verification = Verification.create phone_number: '1234567890'
   end
 
-  describe 'проверка', :focus do
+  describe 'проверка' do
     context 'когда телефон уже использован другим пользователем' do
       before { create :user, phone: '1111122222' }
 
