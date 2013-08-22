@@ -11,7 +11,7 @@ class ExcelUserAppRow
     email: 8,
     uic: 9,
 
-    current_statuses: 10,
+    current_roles: 10,
     experience_count: 11,
     previous_statuses: 12,
     can_be_reserv: 13,   #нет прямого поля
@@ -40,7 +40,7 @@ class ExcelUserAppRow
 
   attr_reader :user_app, :user
   attr_accessor :uid # lost after save
-  attr_accessor :adm_region, :region, :has_car, :current_statuses, :experience_count, :previous_statuses, :can_be_coord_region, :can_be_reserv, :social_accounts, :uic
+  attr_accessor :adm_region, :region, :has_car, :current_roles, :experience_count, :previous_statuses, :can_be_coord_region, :can_be_reserv, :social_accounts, :uic
 
   delegate :organisation, :organisation=,
             # require no special treatment
@@ -68,9 +68,9 @@ class ExcelUserAppRow
     @user = @user_app.user || User.new_from_app(@user_app)
   end
 
-  def current_statuses=(v)
+  def current_roles=(v)
     # raise v.inspect
-    @current_statuses = v
+    @current_roles = v
   end
 
   def previous_statuses=(v)
