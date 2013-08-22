@@ -335,6 +335,21 @@ ru:
         current_password: Текущий пароль
         password: Пароль
         password_confirmation: Пароль (подтверждение)
+        full_name: ФИО
+        user_app_created_at: Дата заполнения заявки
+        uic: № УИК
+        current_roles: "Роли(Заявка)"
+        user_current_roles: "Роли наблюдателя"
+        experience_count: "Прежний опыт: количество раз"
+        previous_statuses: "Прежний опыт: статусы"
+        can_be_coord_region: "Может быть ТК"
+        can_be_caller: "Может быть оп. КЦ"
+        can_be_mobile: "Может быть уч. моб. гр."
+        has_car: "Автомобиль"
+        legal_status: "Юр.образование"
+        has_video: "Видеосъёмка"
+        social_accounts: "Соцсети"
+        extra: "Дополнительные сведения"
       region:
         kind: Тип
         name: Название
