@@ -1,19 +1,19 @@
 class UserAppDecorator < Draper::Decorator
   delegate_all
 
-  def current_roles
+  def human_current_roles
     object.current_roles.pluck(:name, :value).map {|r| r.join(": ")}.join("; ")
   end
 
-  def desired_statuses
+  def human_desired_statuses
     h.status_human_readable object.desired_statuses
   end
 
-  def legal_status
+  def human_legal_status
     h.legal_status_human_readable object.legal_status
   end
 
-  def previous_statuses
+  def human_previous_statuses
     h.status_human_readable object.previous_statuses
   end
 
@@ -25,23 +25,23 @@ class UserAppDecorator < Draper::Decorator
     define_method("was_#{status_name}") { yes_no (object.was status_value) }
   end
 
-  def has_car
+  def human_has_car
     object.has_car ? "Есть":"Нет"
   end
 
-  def has_video
+  def human_has_video
     yes_no object.has_video
   end
 
-  def social_accounts
+  def human_social_accounts
     h.raw h.social_accounts_readable(object.social_accounts)
   end
 
-  def sex_male
+  def human_sex_male
     object.sex_male ? "М":"Ж"
   end
 
-  def phone_verified
+  def human_phone_verified
     yes_no object.phone_verified
   end
 
