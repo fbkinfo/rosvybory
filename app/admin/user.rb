@@ -1,4 +1,7 @@
 ActiveAdmin.register User do
+  decorate_with UserDecorator
+
+  actions :all, :except => [:new]
 
   menu :if => proc{ can? :manage, User }
 
@@ -15,11 +18,28 @@ ActiveAdmin.register User do
   show do |user|
     if can? :manage, user #вид для админа
       attributes_table do
-        row :email
+        row :organisation do
+          "#{user.organisation.name}-#{user.organisation_id}" if user.organisation
+        end
+        row :user_app_created_at
+        row :adm_region
         row :region
-        row :organisation
-        #row :roles
-        row :current_sign_in_at
+        row :phone
+        row :email
+        row :uic
+        row :user_current_roles
+        row :roles, &:human_roles
+        row :experience_count
+        row :previous_statuses, &:human_previous_statuses
+        row :can_be_coord_region
+        row :can_be_caller
+        row :can_be_mobile
+        row :has_car, &:human_has_car
+        row :legal_status, &:human_legal_status
+        row :has_video, &:human_has_video
+        row :social_accounts, &:human_social_accounts
+        row :extra
+
         row :last_sign_in_at
         row :sign_in_count
         row :created_at
@@ -43,51 +63,24 @@ ActiveAdmin.register User do
     column :created_at
     column :adm_region
     column :region
-    column "ФИО" do |user|
-      user.user_app.try(:decorate).try(:full_name)
-    end
+    column :full_name
     column :phone
     column :email
-    column "№ УИК" do |user|
-      user.user_app.try(:decorate).try(:uic)
-    end
+    column :uic
 
-    column "Текущие статусы(заявка)" do |user|
-      user.user_app.try(:decorate).try(:current_roles)
-    end
-    column "Текущие статусы(Утверждённые)" do |user|
-      user.try(:decorate).try(:user_current_roles)
-    end
-    column "Прежний опыт: количество раз" do |user|
-      user.user_app.try(:experience_count)
-    end
-    column "Прежний опыт: статусы" do |user|
-      user.user_app.try(:decorate).try(:previous_statuses)
-    end
-    column "Может быть ТК" do |user|
-      user.user_app.try(:decorate).try(:can_be_coord_region)
-    end
-    column "Может быть оп. КЦ" do |user|
-      user.user_app.try(:decorate).try(:can_be_caller)
-    end
-    column "Может быть уч. моб. гр." do |user|
-      user.user_app.try(:decorate).try(:can_be_mobile)
-    end
-    column "Автомобиль" do |user|
-      user.user_app.try(:decorate).try(:has_car)
-    end
-    column "Юр.образование" do |user|
-      user.user_app.try(:decorate).try(:legal_status)
-    end
-    column "Видеосъёмка" do |user|
-      user.user_app.try(:decorate).try(:has_video)
-    end
-    column "Соцсети" do |user|
-      user.user_app.try(:decorate).try(:social_accounts)
-    end
-    column "Дополнительные сведения" do |user|
-      user.user_app.try(:decorate).try(:extra)
-    end
+    column :current_roles, &:human_current_roles
+    column :roles, &:human_roles
+    column :user_current_roles
+    column :experience_count
+    column :previous_statuses, &:human_previous_statuses
+    column :can_be_coord_region
+    column :can_be_caller
+    column :can_be_mobile
+    column :has_car, &:human_has_car
+    column :legal_status, &:human_legal_status
+    column :has_video, &:human_has_video
+    column :social_accounts, &:human_social_accounts
+    column :extra
 
     #default_actions
 

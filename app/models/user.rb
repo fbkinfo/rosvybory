@@ -18,6 +18,7 @@ class User < ActiveRecord::Base
 
   belongs_to :region
   belongs_to :adm_region, class_name: "Region"
+  belongs_to :mobile_group # future stub
   belongs_to :organisation
   belongs_to :user_app
 
@@ -27,6 +28,8 @@ class User < ActiveRecord::Base
   after_create :send_sms_with_password
 
   accepts_nested_attributes_for :user_current_roles, allow_destroy: true
+
+  delegate :created_at, to: :user_app, allow_nil: true, prefix: true
 
   class << self
     def new_from_app(app)
