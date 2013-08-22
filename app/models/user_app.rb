@@ -25,8 +25,7 @@ class UserApp < ActiveRecord::Base
   validates :last_name,  :presence => true
   validates :patronymic,  :presence => true
   validates :email, :presence => true, :format => { :with => /.+@.+\..+/i }
-  validates :phone, :presence => true, uniqueness: { scope: :state }, format: { with: /\A\d{10}\z/ }
-  #validates_format_of :phone, with: /\A\d{10}\z/
+  validates :phone, :presence => true, uniqueness: { scope: :state }, format: { with: /\A\d{10}\z/ } #TODO это более мягкая проверка, чем в валидаторе на форме (уникальность внутри одного статуса, а там - среди всех статусов кроме rejected)
   validates :adm_region, :presence => true
   validates :desired_statuses, :presence => true, :exclusion => { :in => [NO_STATUS], :message => "Требуется выбрать хотя бы один вариант" }
   validates :has_car, :inclusion =>  { :in => [true, false], :message => "требуется указать" }
@@ -54,7 +53,8 @@ class UserApp < ActiveRecord::Base
   attr_accessor :verification
 
   before_validation :normalize_phone
-  before_validation :set_phone_verified_status
+  before_validation :set_phone_verified_status, on: :create
+
   after_create :send_email_confirmation
 
   state_machine initial: :pending do
@@ -173,14 +173,14 @@ class UserApp < ActiveRecord::Base
     end
   end
 
-  def verified?
-    verification.present? && verification.confirmed? && verification.phone_number == self.phone
-  end
-
   def send_email_confirmation
     self.confirmation_token = SecureRandom.hex(16)
     save
     ConfirmationMailer.email_confirmation(self).deliver
+  end
+
+  def verified?
+    verification.present? && verification.confirmed? && verification.phone_number == self.phone
   end
 
   def reviewed?

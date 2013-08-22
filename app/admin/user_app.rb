@@ -5,10 +5,9 @@ ActiveAdmin.register UserApp do
 
   menu :if => proc{ can? :read, UserApp }
 
-  scope :all, :default => true
-
+  scope "Все", :all
   UserApp.state_machine.states.each do |state|
-    scope state.name do |items|
+    scope state.human_name, :default => (state.name.to_s == "pending") do |items|
       items.with_state(state.name)
     end
   end
@@ -133,7 +132,7 @@ ActiveAdmin.register UserApp do
     selectable_column
     column :created_at
 
-    column :desired_statuses, :sortable => false
+    column :desired_statuses, :sortable => false, &:human_desired_statuses
     column :adm_region do |user_app|
       links = []
       links << link_to(user_app.region.name, [:control, user_app.region]) if user_app.region
@@ -148,9 +147,9 @@ ActiveAdmin.register UserApp do
     end
     column :email
     column :year_born
-    column :sex_male
+    column :sex_male, &:human_sex_male
 
-    column :current_roles, :sortable => false
+    column :current_roles, :sortable => false, &:human_current_roles
 
     actions(defaults: false) do |resource|
       links = ''.html_safe
