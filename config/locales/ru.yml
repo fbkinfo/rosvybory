@@ -338,8 +338,8 @@ ru:
         full_name: ФИО
         user_app_created_at: Дата заполнения заявки
         uic: № УИК
-        current_roles: "Текущие статусы(заявка)"
-        user_current_roles: "Текущие статусы(Утверждённые)"
+        current_roles: "Роли(Заявка)"
+        user_current_roles: "Роли наблюдателя"
         experience_count: "Прежний опыт: количество раз"
         previous_statuses: "Прежний опыт: статусы"
         can_be_coord_region: "Может быть ТК"
