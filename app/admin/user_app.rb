@@ -29,6 +29,16 @@ ActiveAdmin.register UserApp do
     render json: {status: :ok}, :content_type => 'text/html'
   end
 
+  config.action_items.clear
+
+  action_item only: [:show] do
+    link_to I18n.t('active_admin.edit'), edit_resource_path(resource) if can?(:update, resource)
+  end
+
+  action_item only: [:edit] do
+    link_to I18n.t('active_admin.view'), resource_path(resource) if can?(:read, resource)
+  end
+
   action_item only: [:edit, :show] do
     link_to('Отклонить', reject_control_user_app_path(user_app), method: :post, 'data-confirm' => 'Отклонить заявку?')
   end
