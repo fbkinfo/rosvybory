@@ -13,6 +13,24 @@ ActiveAdmin.register UserApp do
     end
   end
 
+  action_item :only => [:index] do
+    if controller.current_ability.can?(:create, resource_class)
+      link_to('Загрузить из Excel', xls_import_control_user_apps_path)
+    end
+  end
+
+  collection_action :xls_import, :method => :get do
+    @many_apps = ManyUserAppsForm.new(current_user.organisation)
+  end
+
+  collection_action :process_xls, :method => :post do
+    @many_apps = ManyUserAppsForm.new(current_user.organisation, params[:many_apps])
+    if @many_apps.fail_count == 0
+      redirect_to control_user_apps_path
+    else
+      render "control/user_apps/xls_import"
+    end
+  end
 
   member_action :reject, method: :post do
     resource.reject!
