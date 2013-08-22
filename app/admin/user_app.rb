@@ -25,7 +25,7 @@ ActiveAdmin.register UserApp do
 
   collection_action :process_xls, :method => :post do
     @many_apps = ManyUserAppsForm.new(current_user.organisation, params[:many_apps])
-    if @many_apps.fail_count == 0
+    if @many_apps.save
       redirect_to control_user_apps_path
     else
       render "control/user_apps/xls_import"
