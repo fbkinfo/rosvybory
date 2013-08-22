@@ -93,8 +93,11 @@ class UserApp < ActiveRecord::Base
       STATUS_COORD_REGION => "coord_region",
       STATUS_COORD_MOBILE => "coord_mobile",
       STATUS_COORD_CALLER => "coord_caller"
-      #STATUS_PRG_RESERVE => "prg_reserve"
     }
+  end
+
+  def self.all_future_statuses_with_archived
+    all_future_statuses.merge STATUS_PRG_RESERVE => "prg_reserve"
   end
 
   def self.future_statuses_methods
@@ -146,7 +149,7 @@ class UserApp < ActiveRecord::Base
   end
 
 
-  self.all_future_statuses.each do |status_value, status_name|
+  self.all_future_statuses_with_archived.each do |status_value, status_name|
     method_n = "can_be_#{status_name}"
     define_method(method_n) { can_be status_value }
     define_method("#{method_n}=") do |val|

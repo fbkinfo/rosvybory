@@ -6,3 +6,6 @@
       = content_tag(:div, f.object.errors[i].to_sentence) if f.object.errors[i].present?
   %td
     = link_to_remove_association 'Удалить', f
+  - if (more_errors = f.object.errors.keys - ExcelUserAppRow.column_names).present?
+    %td
+      = more_errors.map {|i| f.object.errors.full_messages_for(i)}.flatten.to_sentence

@@ -9,6 +9,7 @@ class ExcelUserAppRow
     patronymic: 6,
     phone: 7,
     email: 8,
+    uic: 9,
 
     current_statuses: 10,
     experience_count: 11,
@@ -20,6 +21,8 @@ class ExcelUserAppRow
     social_accounts: 16,
     extra: 17
   }.freeze
+
+  TRUTH = %w{1 да есть}.freeze
 
   class <<self
     def columns
@@ -37,45 +40,80 @@ class ExcelUserAppRow
 
   attr_reader :user_app, :user
   attr_accessor :uid # lost after save
-  attr_accessor :can_be_reserv
+  attr_accessor :adm_region, :region, :has_car, :current_statuses, :experience_count, :previous_statuses, :can_be_coord_region, :can_be_reserv, :social_accounts
 
-  delegate :organisation, :organisation=, :created_at, :adm_region, :region, :last_name, :first_name, :patronymic, :phone, :email, :current_statuses, :experience_count, :previous_statuses, :can_be_coord_region, :has_car, :social_accounts, :extra,
+  delegate :organisation, :organisation=,
+            # require no special treatment
+            :first_name,  :last_name,  :patronymic,  :email,  :extra,  :phone,  :uic,  :created_at,
+            :first_name=, :last_name=, :patronymic=, :email=, :extra=, :phone=, :uic=, :created_at=,
+            # read-only
             :persisted?, :new_record?, :to => :user_app, :allow_nil => true
 
-  def initialize(raw_attrs)
-    attrs = {}.with_indifferent_access
-    raw_attrs.each do |k,v|
-      attrs[k] = v.strip if v.present?
+  def initialize(attrs)
+    phone = Verification.normalize_phone_number(attrs[:phone])
+
+    @user_app = UserApp.find_or_initialize_by(phone: phone) do |a|
+      a.ip = '127.0.0.1'
+      a.year_born = 1913
+      a.sex_male = true
+      a.has_video = false
+      a.legal_status = UserApp::LEGAL_STATUS_NO
     end
-    attrs.delete '_destroy'
 
-    phone = attrs[:phone]
-    region = Region.find_by(name: attrs[:region])
-    adm_region = Region.adm_regions.find_by(name: normalize_adm_region(attrs[:adm_region_name]))
-
-    self.uid = attrs[:uid]
-    @user_app = UserApp.find_or_initialize_by(phone: phone).tap do |a|
-      a.email = attrs[:email]
-      a.first_name = attrs[:first_name]
-      a.last_name = attrs[:last_name]
-      a.patronymic = attrs[:patronymic]
-
-      a.region = region
-      a.adm_region = adm_region
-
-      a.social_accounts = attrs[:social_accounts]
-      a.extra = attrs[:extra]
-
-      a.phone_verified = true
-      a.state = :approved
-
-      a.has_car = attrs[:has_car] == ""
-
-      # осталось заполнить оставшиеся поля
-      # сейчас падает на валидации:
-      # Готов стать Требуется выбрать хотя бы один вариант, Видеосъемка требуется указать, Юр. образование имеет непредусмотренное значение, Пол требуется указать, Год рождения требуется указать, Год рождения Неверный формат, ip требуется указать, Телефон не подтвержден
+    attrs.each do |k,v|
+      v = v.strip if v.respond_to?(:strip)
+      send "#{k}=", v if v.present? && k != '_destroy'
     end
     @user = @user_app.user || User.new_from_app(@user_app)
+  end
+
+  #     # осталось заполнить оставшиеся поля
+  #     # сейчас падает на валидации:
+  #     # Готов стать Требуется выбрать хотя бы один вариант, Видеосъемка требуется указать, Юр. образование имеет непредусмотренное значение, Пол требуется указать, Год рождения требуется указать, Год рождения Неверный формат, ip требуется указать, Телефон не подтвержден
+
+  def current_statuses=(v)
+    # raise v.inspect
+    @current_statuses = v
+  end
+
+  def previous_statuses=(v)
+    # raise v.inspect
+    @previous_statuses = v
+  end
+
+  def social_accounts=(v)
+    # raise v.inspect
+    @social_accounts = v
+  end
+
+  def has_car=(v)
+    @user_app.has_car = TRUTH.include?(v)
+    @has_car = v
+  end
+
+  def can_be_coord_region=(v)
+    @user_app.can_be_coord_region = TRUTH.include?(v)
+    @can_be_coord_region = v
+  end
+
+  def can_be_reserv=(v)
+    @user_app.can_be_prg_reserve = TRUTH.include?(v)
+    @can_be_reserv = v
+  end
+
+  def adm_region=(v)
+    @user_app.adm_region = Region.adm_regions.find_by(name: normalize_adm_region(v))
+    @adm_region = v
+  end
+
+  def experience_count=(v)
+    @user_app.experience_count = v.to_i
+    @experience_count = v
+  end
+
+  def region=(v)
+    @user_app.region = Region.find_by(name: v)
+    @region = v
   end
 
   def errors
@@ -83,8 +121,9 @@ class ExcelUserAppRow
   end
 
   def save
-    @user_app.save && @user.save
-    # @user_app.confirm!
+    success = @user_app.save && @user.save
+    @user_app.confirm! if success
+    success
   end
 
   private
