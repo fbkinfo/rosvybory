@@ -6,8 +6,7 @@ describe UserApp do
 
   it { should validate_presence_of :first_name }
 
-  # дописать остальные валидации
-  # ...
+  # TODO:  дописать остальные валидации
 
   describe '.create' do
     context 'без подтвержденного номера телефона' do
@@ -45,6 +44,18 @@ describe UserApp do
       specify do
         @user_app = build :user_app, :verified, phone: '1111122222'
         @user_app.should be_valid
+      end
+    end
+
+    context 'верификация телефона' do
+      before { @user_app = create :user_app, :verified }
+      specify 'должна сохраняться при последующем редактировании' do
+        @user_app = UserApp.find @user_app.id
+        @user_app.year_born = '1980'
+        @user_app.save
+
+        @user_app.should be_valid
+        @user_app.phone_verified.should be_true
       end
     end
   end
