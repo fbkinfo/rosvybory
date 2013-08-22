@@ -20,6 +20,12 @@ class ManyUserAppsForm
     build_user_app if @user_apps.blank?
   end
 
+  def file=(value)
+    ext = File.extname(value.original_filename)
+    eai = ExternalAppsImporter.new(value.tempfile.path, ext)
+    eai.import(method(:build_user_app))
+  end
+
   def save
     @user_apps.each &:save
     fail_count == 0
