@@ -1,6 +1,8 @@
 ActiveAdmin.register User do
   decorate_with UserDecorator
 
+  actions :all, :except => [:new]
+
   menu :if => proc{ can? :manage, User }
 
   scope :all, :default => true
