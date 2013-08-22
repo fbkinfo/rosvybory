@@ -1,0 +1,7 @@
+
+%tr.nested-fields
+  - ExcelUserAppRow.column_names.each do |i|
+    %td{:class => i}
+      = f.text_field i
+  %td
+    = link_to_remove_association 'Удалить', f
