@@ -22,7 +22,7 @@ class ExcelUserAppRow
     extra: 17
   }.freeze
 
-  TRUTH = %w{1 да есть}.freeze
+  TRUTH = %w{1 1.0 да есть}.freeze
 
   class <<self
     def columns
@@ -40,12 +40,12 @@ class ExcelUserAppRow
 
   attr_reader :user_app, :user
   attr_accessor :uid # lost after save
-  attr_accessor :adm_region, :region, :has_car, :current_statuses, :experience_count, :previous_statuses, :can_be_coord_region, :can_be_reserv, :social_accounts
+  attr_accessor :adm_region, :region, :has_car, :current_statuses, :experience_count, :previous_statuses, :can_be_coord_region, :can_be_reserv, :social_accounts, :uic
 
   delegate :organisation, :organisation=,
             # require no special treatment
-            :first_name,  :last_name,  :patronymic,  :email,  :extra,  :phone,  :uic,  :created_at,
-            :first_name=, :last_name=, :patronymic=, :email=, :extra=, :phone=, :uic=, :created_at=,
+            :first_name,  :last_name,  :patronymic,  :email,  :extra,  :phone,  :created_at,
+            :first_name=, :last_name=, :patronymic=, :email=, :extra=, :phone=, :created_at=,
             # read-only
             :persisted?, :new_record?, :to => :user_app, :allow_nil => true
 
@@ -53,12 +53,13 @@ class ExcelUserAppRow
     phone = Verification.normalize_phone_number(attrs[:phone])
 
     @user_app = UserApp.find_or_initialize_by(phone: phone) do |a|
-      a.ip = '127.0.0.1'
-      a.year_born = 1913
-      a.sex_male = true
-      a.has_video = false
-      a.legal_status = UserApp::LEGAL_STATUS_NO
+      a.ip ||= '127.0.0.1'
+      a.year_born ||= 1913
+      a.sex_male = true if a.sex_male.nil?
+      a.has_video = false if a.has_video.nil?
+      a.legal_status ||= UserApp::LEGAL_STATUS_NO
     end
+    @user_app.can_be_observer = true
 
     attrs.each do |k,v|
       v = v.strip if v.respond_to?(:strip)
@@ -67,17 +68,22 @@ class ExcelUserAppRow
     @user = @user_app.user || User.new_from_app(@user_app)
   end
 
-  #     # осталось заполнить оставшиеся поля
-  #     # сейчас падает на валидации:
-  #     # Готов стать Требуется выбрать хотя бы один вариант, Видеосъемка требуется указать, Юр. образование имеет непредусмотренное значение, Пол требуется указать, Год рождения требуется указать, Год рождения Неверный формат, ip требуется указать, Телефон не подтвержден
-
   def current_statuses=(v)
     # raise v.inspect
     @current_statuses = v
   end
 
   def previous_statuses=(v)
-    # raise v.inspect
+    values_by_name = {
+      "ОК" => UserApp::STATUS_COORD,
+      "ПРГ" => UserApp::STATUS_PRG,
+      "МГ" => UserApp::STATUS_MOBILE,
+      "ТИК" => UserApp::STATUS_TIC_PSG,
+      "ДК" => UserApp::STATUS_DELEGATE
+    }
+    status_value = values_by_name[v]
+    @user_app.previous_statuses |= status_value
+    self.experience_count = @experience_count if @experience_count
     @previous_statuses = v
   end
 
@@ -87,17 +93,17 @@ class ExcelUserAppRow
   end
 
   def has_car=(v)
-    @user_app.has_car = TRUTH.include?(v)
+    @user_app.has_car = TRUTH.include?(v.to_s)
     @has_car = v
   end
 
   def can_be_coord_region=(v)
-    @user_app.can_be_coord_region = TRUTH.include?(v)
+    @user_app.can_be_coord_region = TRUTH.include?(v.to_s)
     @can_be_coord_region = v
   end
 
   def can_be_reserv=(v)
-    @user_app.can_be_prg_reserve = TRUTH.include?(v)
+    @user_app.can_be_prg_reserve = TRUTH.include?(v.to_s)
     @can_be_reserv = v
   end
 
@@ -107,8 +113,13 @@ class ExcelUserAppRow
   end
 
   def experience_count=(v)
-    @user_app.experience_count = v.to_i
+    @user_app.experience_count = v.to_i if v.to_i > 0 && @user_app.previous_statuses > 0
     @experience_count = v
+  end
+
+  def uic=(v)
+    @user_app.uic = v.to_i if v.to_i > 0
+    @uic = v
   end
 
   def region=(v)
@@ -121,6 +132,8 @@ class ExcelUserAppRow
   end
 
   def save
+    @user_app.skip_phone_verification = true
+    @user_app.skip_email_confirmation = true
     success = @user_app.save && @user.save
     @user_app.confirm! if success
     success
