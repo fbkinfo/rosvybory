@@ -1,6 +1,15 @@
 
 = form_for @many_apps, as: :many_apps, url: process_xls_control_user_apps_path, method: :post do |f|
 
+  - if @many_apps.user_apps.size == 1
+    %h2 Выберите файл
+    %fieldset
+      = f.label :file
+      = f.file_field :file
+    %h2 Или скопируйте строки из екселя
+  - else
+    %h2 Эти данные не удалось сохранить
+
   %table.many-new
     %thead
       %tr

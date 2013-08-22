@@ -8,20 +8,25 @@
 require 'roo'
 class ExternalAppsImporter
 
-  def initialize(file, source_type)
-    @file = file
+  def initialize(path, source_type = File.extname(path))
+    @file = path
     @source_type = source_type
   end
 
-  def import
+  def import(receiver = method(:build_and_persist))
     spreadsheet = open_spreadsheet(@file)
     header = spreadsheet.row(1)
     (2..spreadsheet.last_row).each do |i|
       row = spreadsheet.row(i)
-      model = ExcelUserAppRow.new(attributes_from_row(row))
-      if model && !model.save
-        logger.info("Error at row #{i}: #{model.errors.inspect}")
-      end
+      attrs = attributes_from_row(row)
+      receiver.call(attrs)
+    end
+  end
+
+  def build_and_persist(attrs)
+    model = ExcelUserAppRow.new(attrs)
+    if model && !model.save
+      logger.info("Error at row #{i}: #{model.errors.inspect}")
     end
   end
 
@@ -36,7 +41,7 @@ class ExternalAppsImporter
   end
 
   def open_spreadsheet(file_path)
-    case File.extname(file_path)
+    case @source_type
       when '.csv' then Roo::Csv.new(file_path, nil, :ignore)
       when '.xls' then Roo::Excel.new(file_path, nil, :ignore)
       when '.xlsx' then Roo::Excelx.new(file_path, nil, :ignore)
