@@ -1,6 +1,8 @@
 ActiveAdmin.register User do
   decorate_with UserDecorator
 
+  actions :all, :except => [:new]
+
   menu :if => proc{ can? :manage, User }
 
   scope :all, :default => true
@@ -26,18 +28,16 @@ ActiveAdmin.register User do
         row :email
         row :uic
         row :user_current_roles
-        row :roles do |user|
-          user.roles.collect(&:name).to_sentence
-        end
+        row :roles, &:human_roles
         row :experience_count
-        row :previous_statuses
+        row :previous_statuses, &:human_previous_statuses
         row :can_be_coord_region
         row :can_be_caller
         row :can_be_mobile
-        row :has_car
-        row :legal_status
-        row :has_video
-        row :social_accounts
+        row :has_car, &:human_has_car
+        row :legal_status, &:human_legal_status
+        row :has_video, &:human_has_video
+        row :social_accounts, &:human_social_accounts
         row :extra
 
         row :last_sign_in_at
