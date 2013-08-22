@@ -68,17 +68,18 @@ ActiveAdmin.register User do
     column :email
     column :uic
 
-    column :current_roles
+    column :current_roles, &:human_current_roles
+    column :roles, &:human_roles
     column :user_current_roles
     column :experience_count
-    column :previous_statuses
+    column :previous_statuses, &:human_previous_statuses
     column :can_be_coord_region
     column :can_be_caller
     column :can_be_mobile
-    column :has_car
-    column :legal_status
-    column :has_video
-    column :social_accounts
+    column :has_car, &:human_has_car
+    column :legal_status, &:human_legal_status
+    column :has_video, &:human_has_video
+    column :social_accounts, &:human_social_accounts
     column :extra
 
     #default_actions
