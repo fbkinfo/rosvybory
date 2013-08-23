@@ -72,11 +72,15 @@ class ExcelUserAppRow
 
   def current_roles=(v)
     roles_by_name = {
-      "РЗ" => UserApp::STATUS_PRG_RESERVE,
-      "УПРГ" => UserApp::STATUS_PRG,
-      "ТПСГ" => UserApp::STATUS_TIC_PSG,
-      "ТПРГ" => UserApp::STATUS_TIC_PRG
+      "РЗ" => 'reserve',
+      "УПРГ" => 'prg',
+      "ТПСГ" => 'psg_tic',
+      "ТПРГ" => 'prg_tic'
     }
+    role = CurrentRole.where(:slug => roles_by_name[v]).first
+    if role && !@user_app.user_app_current_roles.where(:current_role_id => role.id).first
+      @user_app.user_app_current_roles.build(:current_role_id => role.id).keep = '1'
+    end
     @current_roles = v
   end
 
