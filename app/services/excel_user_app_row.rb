@@ -42,7 +42,7 @@ class ExcelUserAppRow
   attr_accessor :uid # lost after save
   attr_accessor :adm_region, :region, :has_car, :current_roles, :experience_count, :previous_statuses, :can_be_coord_region, :can_be_reserv, :social_accounts, :uic
 
-  delegate :organisation, :organisation=,
+  delegate :organisation,
             # require no special treatment
             :first_name,  :last_name,  :patronymic,  :email,  :extra,  :phone,  :created_at,
             :first_name=, :last_name=, :patronymic=, :email=, :extra=, :phone=, :created_at=,
@@ -140,6 +140,10 @@ class ExcelUserAppRow
   def region=(v)
     @user_app.region = Region.find_by(name: v)
     @region = v
+  end
+
+  def organisation=(org)
+    @user_app.organisation = @user.organisation = org
   end
 
   def errors
