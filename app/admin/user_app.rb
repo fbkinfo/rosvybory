@@ -19,10 +19,12 @@ ActiveAdmin.register UserApp do
   end
 
   collection_action :xls_import, :method => :get do
+    authorize! :create, UserApp
     @many_apps = ManyUserAppsForm.new(current_user.organisation)
   end
 
   collection_action :process_xls, :method => :post do
+    authorize! :create, UserApp
     @many_apps = ManyUserAppsForm.new(current_user.organisation, params[:many_apps])
     if @many_apps.save
       redirect_to control_user_apps_path
