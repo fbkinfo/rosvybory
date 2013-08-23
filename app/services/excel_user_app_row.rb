@@ -40,12 +40,12 @@ class ExcelUserAppRow
 
   attr_reader :user_app, :user
   attr_accessor :uid # lost after save
-  attr_accessor :adm_region, :region, :has_car, :current_roles, :experience_count, :previous_statuses, :can_be_coord_region, :can_be_reserv, :social_accounts, :uic
+  attr_accessor :created_at, :adm_region, :region, :has_car, :current_roles, :experience_count, :previous_statuses, :can_be_coord_region, :can_be_reserv, :social_accounts, :uic
 
   delegate :organisation,
             # require no special treatment
-            :first_name,  :last_name,  :patronymic,  :email,  :extra,  :phone,  :created_at,
-            :first_name=, :last_name=, :patronymic=, :email=, :extra=, :phone=, :created_at=,
+            :first_name,  :last_name,  :patronymic,  :email,  :extra,  :phone,
+            :first_name=, :last_name=, :patronymic=, :email=, :extra=, :phone=,
             # read-only
             :persisted?, :new_record?, :to => :user_app, :allow_nil => true
 
@@ -146,6 +146,11 @@ class ExcelUserAppRow
     @user_app.organisation = @user.organisation = org
   end
 
+  def created_at=(v)
+    @user_app.created_at = v # convert to datetime
+    @created_at = @user_app.created_at
+  end
+
   def errors
     @user_app.errors
   end
@@ -154,7 +159,10 @@ class ExcelUserAppRow
     @user_app.skip_phone_verification = true
     @user_app.skip_email_confirmation = true
     success = @user_app.save && @user.save
-    @user_app.confirm! if success
+    if success
+      @user_app.confirm!
+      @user.update_column :created_at, created_at if created_at
+    end
     success
   end
 
