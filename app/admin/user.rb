@@ -19,7 +19,7 @@ ActiveAdmin.register User do
     if can? :manage, user #вид для админа
       attributes_table do
         row :organisation do
-          "#{user.organisation.name}-#{user.organisation_id}" if user.organisation
+          "#{user.organisation.name}-#{user.id}" if user.organisation
         end
         row :user_app_created_at
         row :adm_region
