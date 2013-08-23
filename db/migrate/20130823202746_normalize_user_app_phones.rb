@@ -13,7 +13,7 @@ class NormalizeUserAppPhones < ActiveRecord::Migration
         end
       end
     end
-    if problematic_user_apps
+    if problematic_user_apps.present?
       puts "Не удалось сохранить заявки: "
       puts problematic_user_apps.to_yaml
     end
