@@ -61,8 +61,8 @@ class User < ActiveRecord::Base
   # override Devise password recovery
   def send_reset_password_instructions
     generate_password
-    send_sms_with_password
     save!
+    send_sms_with_password
   end
 
   private
