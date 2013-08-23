@@ -61,7 +61,9 @@ class ExcelUserAppRow
     end
     @user_app.can_be_observer = true
 
-    attrs.each do |k,v|
+    # attrs.each do |k,v|  # insecure!
+    self.class.column_names.each do |k|
+      v = attrs[k]
       v = v.strip if v.respond_to?(:strip)
       send "#{k}=", v if v.present? && k != '_destroy'
     end
@@ -113,7 +115,11 @@ class ExcelUserAppRow
   end
 
   def experience_count=(v)
-    @user_app.experience_count = v.to_i if v.to_i > 0 && @user_app.previous_statuses > 0
+    if @user_app.previous_statuses > 0
+      @user_app.experience_count = v.to_i if v.to_i > 0
+    else
+      @user_app.experience_count = 0
+    end
     @experience_count = v
   end
 

@@ -18,16 +18,15 @@ class ExternalAppsImporter
     header = spreadsheet.row(1)
     (2..spreadsheet.last_row).each do |i|
       row = spreadsheet.row(i)
-      attrs = attributes_from_row(row)
-      receiver.call(attrs)
+      if attrs = attributes_from_row(row)
+        receiver.call(attrs)
+      end
     end
   end
 
   def build_and_persist(attrs)
     model = ExcelUserAppRow.new(attrs)
-    if model && !model.save
-      logger.info("Error at row #{i}: #{model.errors.inspect}")
-    end
+    model.save || logger.warn("Error at row #{i}: #{model.errors.inspect}")
   end
 
   private
