@@ -68,7 +68,8 @@ class User < ActiveRecord::Base
   private
 
     def generate_password
-      self.password = "%08d" % [SecureRandom.random_number * 100000000]
+      self.password = ([0,1,2,3,4,5,6,7,8,9] * 8).shuffle.first(8).join
+      # self.password = "%08d" % [SecureRandom.random_number * 100000000]
     end
 
     def send_sms_with_password
