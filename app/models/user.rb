@@ -39,7 +39,7 @@ class User < ActiveRecord::Base
         user.adm_region_id = app.adm_region_id
         user.phone = app.phone.to_s.gsub(/[^\d+]/, '')
         user.organisation_id = app.organisation_id
-        user.user_app_id = app.id
+        user.user_app = app
         user.password = "%08d" % [SecureRandom.random_number * 100000000]
       end
     end
