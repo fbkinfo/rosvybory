@@ -10,6 +10,10 @@ class Verification < ActiveRecord::Base
   before_validation :normalize_phone_number
   after_create :send_sms
 
+  def self.normalize_phone_number(phone_number)
+    phone_number.to_s.gsub(/[^\d+]/, '')
+  end
+
   def send_sms
     SmsService.send_message(phone_number, "Код подтверждения: #{code}")
   end
@@ -24,6 +28,6 @@ class Verification < ActiveRecord::Base
   end
 
   def normalize_phone_number
-    self.phone_number = phone_number.gsub /[^\d+]/, '' unless phone_number.blank?
+    self.phone_number = self.class.normalize_phone_number(phone_number) unless phone_number.blank?
   end
 end
