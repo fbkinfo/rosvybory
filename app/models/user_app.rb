@@ -3,8 +3,9 @@ class UserApp < ActiveRecord::Base
   belongs_to :region
   belongs_to :adm_region, class_name: "Region"
   belongs_to :organisation
-  has_many :user_app_current_roles, dependent: :destroy
+  has_many :user_app_current_roles, dependent: :destroy, :autosave => true
   has_many :current_roles, through: :user_app_current_roles
+  has_one :user
   accepts_nested_attributes_for :user_app_current_roles
 
   #наблюдатель, участник мобильной группы, территориальный координатор, координатор мобильной группы, оператор горячей линии
@@ -49,12 +50,12 @@ class UserApp < ActiveRecord::Base
   validate :check_regions
   validate :check_phone_verified, on: :create
 
-  attr_accessor :verification
+  attr_accessor :verification, :skip_phone_verification, :skip_email_confirmation
 
   before_validation :normalize_phone
   before_validation :set_phone_verified_status, on: :create
 
-  after_create :send_email_confirmation
+  after_create :send_email_confirmation, :unless => :skip_email_confirmation
 
   state_machine initial: :pending do
     state :approved
@@ -92,8 +93,11 @@ class UserApp < ActiveRecord::Base
       STATUS_COORD_REGION => "coord_region",
       STATUS_COORD_MOBILE => "coord_mobile",
       STATUS_COORD_CALLER => "coord_caller"
-      #STATUS_PRG_RESERVE => "prg_reserve"
     }
+  end
+
+  def self.all_future_statuses_with_archived
+    all_future_statuses.merge STATUS_PRG_RESERVE => "prg_reserve"
   end
 
   def self.future_statuses_methods
@@ -145,7 +149,7 @@ class UserApp < ActiveRecord::Base
   end
 
 
-  self.all_future_statuses.each do |status_value, status_name|
+  self.all_future_statuses_with_archived.each do |status_value, status_name|
     method_n = "can_be_#{status_name}"
     define_method(method_n) { can_be status_value }
     define_method("#{method_n}=") do |val|
@@ -176,7 +180,7 @@ class UserApp < ActiveRecord::Base
   end
 
   def verified?
-    verification.present? && verification.confirmed? && verification.phone_number == self.phone
+    skip_phone_verification || (verification.present? && verification.confirmed? && verification.phone_number == self.phone)
   end
 
   def reviewed?
