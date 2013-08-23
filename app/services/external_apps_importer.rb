@@ -7,6 +7,7 @@
 
 require 'roo'
 class ExternalAppsImporter
+  attr_accessor :organisation
 
   def initialize(path, source_type = File.extname(path))
     @file = path
@@ -26,6 +27,7 @@ class ExternalAppsImporter
 
   def build_and_persist(attrs)
     model = ExcelUserAppRow.new(attrs)
+    model.organisation = organisation
     model.save || logger.warn("Error at row #{i}: #{model.errors.inspect}")
   end
 
