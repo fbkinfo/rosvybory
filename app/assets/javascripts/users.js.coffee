@@ -51,8 +51,12 @@ initRoles = ->
 @initUserForm = ->
   if gon.user_app_id
     $(".verify_link").on("ajax:success", (e, data, status, xhr) ->
-      $(this).closest(".unverified").html('Данные подтверждены!').fadeOut()
-      $("#user_app_"+gon.user_app_id+" .status_tag.error").removeClass("error").addClass("ok")
+      if data.success
+        $(this).closest(".unverified").html('Данные подтверждены!').fadeOut()
+        $("#user_app_"+gon.user_app_id+" .status_tag.error").removeClass("error").addClass("ok")
+      else
+        $(this).closest(".unverified").find(".error-message").html(data.error)
+        $(this).closest(".unverified").find(".errors").fadeIn()
     ).bind "ajax:error", (e, xhr, status, error) ->
       alert xhr.responseText
     $form = $("form#new_user")

@@ -45,9 +45,13 @@ ActiveAdmin.register UserApp do
   end
 
   member_action :confirm_app, method: :post do
-    resource.confirm_phone! unless resource.phone_verified?
-    resource.confirm_email! unless resource.confirmed?
-    render json: {status: :ok}, :content_type => 'text/html'
+    begin
+      resource.confirm_phone! unless resource.phone_verified?
+      resource.confirm_email! unless resource.confirmed?
+      render json: { success: true }
+    rescue
+      render json: { error: $!.to_s }
+    end
   end
 
   action_item only: [:edit, :show] do
