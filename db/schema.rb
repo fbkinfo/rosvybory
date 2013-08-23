@@ -11,10 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130822094843) do
-
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+ActiveRecord::Schema.define(version: 20130823202746) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -128,8 +125,8 @@ ActiveRecord::Schema.define(version: 20130822094843) do
     t.string   "state",              default: "pending", null: false
     t.boolean  "phone_verified",     default: false,     null: false
     t.boolean  "has_video"
-    t.string   "forwarded_for"
     t.integer  "organisation_id"
+    t.string   "forwarded_for"
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
   end
@@ -186,7 +183,7 @@ ActiveRecord::Schema.define(version: 20130822094843) do
 
   add_index "users", ["adm_region_id"], name: "index_users_on_adm_region_id", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-  add_index "users", ["mobile_group_id"], name: "index_users_on_mobile_group_id"
+  add_index "users", ["mobile_group_id"], name: "index_users_on_mobile_group_id", using: :btree
   add_index "users", ["organisation_id"], name: "index_users_on_organisation_id", using: :btree
   add_index "users", ["region_id"], name: "index_users_on_region_id", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
