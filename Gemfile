@@ -42,6 +42,8 @@ gem "recaptcha", :require => "recaptcha/rails"
 gem 'gon'
 gem 'cocoon'
 
+gem 'roo' #import from excel
+
 group :development do
   gem 'capistrano'
   gem 'capistrano_colors'
