@@ -3,7 +3,7 @@ class UserApp < ActiveRecord::Base
   belongs_to :region
   belongs_to :adm_region, class_name: "Region"
   belongs_to :organisation
-  has_many :user_app_current_roles, dependent: :destroy
+  has_many :user_app_current_roles, dependent: :destroy, :autosave => true
   has_many :current_roles, through: :user_app_current_roles
   has_one :user
   accepts_nested_attributes_for :user_app_current_roles
