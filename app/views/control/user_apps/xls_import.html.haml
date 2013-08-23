@@ -1,0 +1,28 @@
+
+= form_for @many_apps, as: :many_apps, url: process_xls_control_user_apps_path, method: :post do |f|
+
+  - if @many_apps.user_apps.size == 1
+    %h2 Выберите файл
+    %fieldset
+      = f.label :file
+      = f.file_field :file
+    %h2 Или скопируйте строки из екселя
+  - else
+    %h2 Эти данные не удалось сохранить
+
+  %table.many-new
+    %thead
+      %tr
+        - ExcelUserAppRow.column_names.each do |i|
+          %th
+            = ExcelUserAppRow.human_attribute_name(i)
+
+    %tbody
+      = f.fields_for :user_apps, f.object.user_apps.reject(&:persisted?) do |uaf|
+        = render 'xls_fields', :f => uaf
+
+  %div
+    = link_to_add_association 'Добавить заявку', f, :user_apps, :partial => 'xls_fields', :data => {:association_insertion_node => 'table.many-new tbody tr:last', :association_insertion_method => 'after'}
+
+  .actions
+    = f.submit 'Загрузить'
