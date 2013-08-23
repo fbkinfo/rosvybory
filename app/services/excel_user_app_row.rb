@@ -71,19 +71,24 @@ class ExcelUserAppRow
   end
 
   def current_roles=(v)
-    # raise v.inspect
+    roles_by_name = {
+      "РЗ" => UserApp::STATUS_PRG_RESERVE,
+      "УПРГ" => UserApp::STATUS_PRG,
+      "ТПСГ" => UserApp::STATUS_TIC_PSG,
+      "ТПРГ" => UserApp::STATUS_TIC_PRG
+    }
     @current_roles = v
   end
 
   def previous_statuses=(v)
-    values_by_name = {
+    statuses_by_name = {
       "ОК" => UserApp::STATUS_COORD,
       "ПРГ" => UserApp::STATUS_PRG,
       "МГ" => UserApp::STATUS_MOBILE,
       "ТИК" => UserApp::STATUS_TIC_PSG,
       "ДК" => UserApp::STATUS_DELEGATE
     }
-    status_value = values_by_name[v]
+    status_value = statuses_by_name[v]
     @user_app.previous_statuses |= status_value
     self.experience_count = @experience_count if @experience_count
     @previous_statuses = v
