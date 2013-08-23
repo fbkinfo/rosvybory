@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
   validates :phone, presence: true
 
   after_create :mark_user_app_state
-  after_create :send_sms_with_password
+  after_create :send_sms_with_password, :if => :send_invitation?
 
   accepts_nested_attributes_for :user_current_roles, allow_destroy: true
 
@@ -40,7 +40,7 @@ class User < ActiveRecord::Base
         user.phone = app.phone.to_s.gsub(/[^\d+]/, '')
         user.organisation_id = app.organisation_id
         user.user_app = app
-        user.password = "%08d" % [SecureRandom.random_number * 100000000]
+        user.generate_password
       end
     end
   end
@@ -58,11 +58,23 @@ class User < ActiveRecord::Base
     roles.delete role
   end
 
-  def send_sms_with_password
-    SmsService.send_message(phone, "Вход в РосВыборы: bit.ly/rosvybory, пароль: #{self.password}") if send_invitation?
+  # override Devise password recovery
+  def send_reset_password_instructions
+    generate_password
+    save(validate: false)
+    send_sms_with_password
   end
 
   private
+
+    def generate_password
+      self.password = ([0,1,2,3,4,5,6,7,8,9] * 8).shuffle.first(8).join
+      # self.password = "%08d" % [SecureRandom.random_number * 100000000]
+    end
+
+    def send_sms_with_password
+      SmsService.send_message(phone, "Вход в РосВыборы: bit.ly/rosvybory, пароль: #{self.password}")
+    end
 
   def send_invitation?
     (%w{tc mc cc federal_repr} & roles.map{ |e| e.slug }).any?
