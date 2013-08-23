@@ -35,7 +35,7 @@ ActiveAdmin.register UserApp do
 
   member_action :reject, method: :post do
     resource.reject(false)
-    resrouce.save(validate: false)
+    resource.save(validate: false)
     render json: {status: :ok}, :content_type => 'text/html'
   end
 
