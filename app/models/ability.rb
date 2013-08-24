@@ -2,8 +2,6 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    cannot :create, UserApp
-    cannot :manage, User
 
     if has_role?(user, :admin)
       can :manage, :all
@@ -67,6 +65,12 @@ class Ability
 
     if has_role?(user, :cc)
       # TODO КК может просматривать только участников КЦ в координаторском формате и формате "Состав КЦ".
+    end
+
+    if has_role?(user, :federal_repr) || has_role?(user, :admin)
+      can :import, UserApp
+    else
+      cannot :import, UserApp      #должно быть указано после все разрешений на manage заявок для всех ролей, по любым условиям
     end
 
     # Define abilities for the passed in user here. For example:
