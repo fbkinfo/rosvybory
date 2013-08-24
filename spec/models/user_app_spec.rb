@@ -8,6 +8,7 @@ describe UserApp do
   it { should validate_presence_of :email}
 
   it { should allow_value("prefix.email@addresse.foo").for(:email) }
+  it { should allow_value("v.stiff+test@gmail.com").for(:email) }
   it { should_not allow_value("@email@addresse.foo").for(:email) }
   it { should_not allow_value("@email@addresse.foo").for(:email) }
   it { should_not allow_value("ema il@addresse.foo").for(:email) }
