@@ -67,7 +67,7 @@ class Ability
       # TODO КК может просматривать только участников КЦ в координаторском формате и формате "Состав КЦ".
     end
 
-    if has_role?(user, :federal_repr) || has_role?(user, :admin)
+    if has_role?(user, [:admin, :federal_repr])
       can :import, UserApp
     else
       cannot :import, UserApp      #должно быть указано после все разрешений на manage заявок для всех ролей, по любым условиям
