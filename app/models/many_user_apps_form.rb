@@ -11,7 +11,7 @@ class ManyUserAppsForm
   end
 
   def initialize(organisation, params = {})
-    @organisation = organisation
+    @organisation = organisation || Organisation.where(name: "РосВыборы").first_or_create
 
     @user_apps = []
     params.each do |k, v|
