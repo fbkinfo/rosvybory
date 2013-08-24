@@ -91,8 +91,9 @@ class ExcelUserAppRow
       "ТИК" => UserApp::STATUS_TIC_PSG,
       "ДК" => UserApp::STATUS_DELEGATE
     }
-    status_value = statuses_by_name[v]
-    @user_app.previous_statuses |= status_value
+    if status_value = statuses_by_name[v]
+      @user_app.previous_statuses |= status_value
+    end
     self.experience_count = @experience_count if @experience_count
     @previous_statuses = v
   end
@@ -161,7 +162,7 @@ class ExcelUserAppRow
     if success
       @user_app.confirm!
       @user = @user_app.user || User.new
-      @user.update_from_app(@user_app)
+      @user.update_from_user_app(@user_app)
       if success = @user.save
         @user.update_column :created_at, created_at if created_at
       end
