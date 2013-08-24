@@ -13,7 +13,7 @@ class User < ActiveRecord::Base
   has_many :user_roles, dependent: :destroy
   has_many :roles, through: :user_roles
 
-  has_many :user_current_roles, dependent: :destroy
+  has_many :user_current_roles, dependent: :destroy, autosave: true
   has_many :current_roles, through: :user_current_roles  #роли наблюдателя/члена комиссии
 
   belongs_to :region
@@ -33,24 +33,7 @@ class User < ActiveRecord::Base
 
   class << self
     def new_from_app(app)
-      new do |user|
-        user.email = app.email
-        user.region_id = app.region_id
-        user.adm_region_id = app.adm_region_id
-        user.phone = app.phone.to_s.gsub(/[^\d+]/, '')
-        user.organisation_id = app.organisation_id
-        user.user_app = app
-        user.generate_password
-
-        if app.can_be_observer || app.user_app_current_roles.present?
-          user.add_role :observer
-          app.user_app_current_roles.each do |ua_cr|
-            #TODO Перенести доп. данные в связку - УИК (если в заявке 1) или ТИК
-            #TODO Откуда-то берётся дополнительная запись о Резеве УИКов, надо разобраться откуда и убрать её
-            user.user_current_roles.build(current_role: ua_cr.current_role)
-          end
-        end
-      end
+      new.update_from_user_app(app)
     end
   end
 
@@ -74,15 +57,36 @@ class User < ActiveRecord::Base
     send_sms_with_password
   end
 
-  def generate_password
-    self.password = ([0,1,2,3,4,5,6,7,8,9] * 8).shuffle.first(8).join
-    # self.password = "%08d" % [SecureRandom.random_number * 100000000]
+  def update_from_user_app(app)
+    self.email = app.email
+    self.region = app.region
+    self.adm_region_id = app.adm_region_id
+    self.phone = Verification.normalize_phone_number(app.phone)
+    self.organisation = app.organisation
+    self.user_app = app
+    generate_password
+
+    if app.can_be_observer || app.user_app_current_roles.present?
+      # FIXME isn't it excel_user_app_row-specific?
+      self.add_role :observer
+      app.user_app_current_roles.each do |ua_role|
+        #TODO Откуда-то берётся дополнительная запись о Резеве УИКов, надо разобраться откуда и убрать её
+        ucr = user_current_roles.find_or_initialize_by(current_role: ua_role.current_role)
+        ucr.region = region
+        ucr.uic = Uic.find_by(number: app.uic)
+      end
+    end
+    self
   end
 
   private
 
     def send_sms_with_password
       SmsService.send_message(phone, "Вход в РосВыборы: bit.ly/rosvybory, пароль: #{self.password}")
+    end
+
+    def generate_password
+      self.password = "%08d" % [SecureRandom.random_number(100000000)]
     end
 
   def send_invitation?
