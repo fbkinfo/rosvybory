@@ -71,9 +71,11 @@ class User < ActiveRecord::Base
       self.add_role :observer
       app.user_app_current_roles.each do |ua_role|
         #TODO Откуда-то берётся дополнительная запись о Резеве УИКов, надо разобраться откуда и убрать её
-        ucr = user_current_roles.find_or_initialize_by(current_role: ua_role.current_role)
-        ucr.region = region
-        ucr.uic = Uic.find_by(number: app.uic)
+        if ua_role.current_role
+          ucr = user_current_roles.find_or_initialize_by(current_role_id: ua_role.current_role.id)
+          ucr.region = region
+          ucr.uic = Uic.find_by(number: app.uic)
+        end
       end
     end
     self

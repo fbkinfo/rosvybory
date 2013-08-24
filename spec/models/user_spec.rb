@@ -147,5 +147,28 @@ describe User do
       }
     end
   end
+
+  describe "#update_from_user_app" do
+    let(:user) {create :user}
+    let(:current_role) {create :current_role}
+    let(:uic) { create :uic }
+
+    it "should create user_current_role for observer" do
+      # pre-setup
+      Role.create(:slug => :observer, :name => 'Big brother', :short_name => 'bro')
+      # setup
+      user_app = UserApp.new(:uic => uic.number)
+      user_app.can_be_observer = true
+      uar = user_app.user_app_current_roles.build(:current_role => current_role)
+      uar.keep = '1'
+      # excercise
+      user.update_from_user_app(user_app).save
+      # verify
+      user.user_current_roles.should_not be_empty
+      user.user_current_roles.first.current_role.should == current_role
+      user.user_current_roles.first.uic.should == uic
+    end
+  end
+
 end
 
