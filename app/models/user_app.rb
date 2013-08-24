@@ -52,7 +52,6 @@ class UserApp < ActiveRecord::Base
 
   attr_accessor :verification, :skip_phone_verification, :skip_email_confirmation
 
-  before_validation :normalize_phone
   before_validation :set_phone_verified_status, on: :create
 
   after_create :send_email_confirmation, :unless => :skip_email_confirmation
@@ -195,6 +194,10 @@ class UserApp < ActiveRecord::Base
     self.update_attributes! phone_verified: true
   end
 
+  def phone=(value)
+    self[:phone] = Verification.normalize_phone_number(value)
+  end
+
   private
 
   def set_phone_verified_status
@@ -208,9 +211,5 @@ class UserApp < ActiveRecord::Base
 
   def check_phone_verified
     errors.add(:phone, 'не подтвержден') unless verified?
-  end
-
-  def normalize_phone
-    self.phone = phone.gsub /[^\d]+/, '' unless self.phone.blank?
   end
 end
