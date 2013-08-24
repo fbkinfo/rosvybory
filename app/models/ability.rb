@@ -38,7 +38,7 @@ class Ability
           can :manage, UserApp, :region_id => user.region_id, :organisation_id => user.organisation_id
           # ТК с заданным районом может просматривать:
           # карточки волонтёров своего района
-          can :manage, User, :region_id => user.region_id #, :organisation_id => user.organisation_id
+          can :manage, User, :region_id => user.region_id, :organisation_id => user.organisation_id
           # TODO волонтёров своего района в координаторском формате без участников МГ и КЦ
           # TODO волонтёров своего района во формате "Расстановка с контактами" без участников МГ и КЦ
           # TODO волонтёров своего округа во формате "Расстановка с ФИО" без участников МГ и КЦ
@@ -47,7 +47,7 @@ class Ability
           can :manage, UserApp, :adm_region_id => user.adm_region_id, :organisation_id => user.organisation_id
           # ТК с незаданным райном может просматривать:
           # карточки волонтёров своего округа
-          can :manage, User, :adm_region_id => user.adm_region_id #, :organisation_id => user.organisation_id
+          can :manage, User, :adm_region_id => user.adm_region_id, :organisation_id => user.organisation_id
           # TODO волонтёров своего округа в координаторском формате без участников МГ и КЦ
           # TODO волонтёров своего округа во формате "Расстановка с контактами" без участников МГ и КЦ
           # TODO всю базу волонтёров в форматах "Расстановка с ФИО" и "Обезличенная расстановка" без участников МГ и КЦ
