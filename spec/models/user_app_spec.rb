@@ -5,6 +5,14 @@ describe UserApp do
   it { should belong_to :adm_region }
 
   it { should validate_presence_of :first_name }
+  it { should validate_presence_of :email}
+
+  it { should allow_value("prefix.email@addresse.foo").for(:email) }
+  it { should_not allow_value("@email@addresse.foo").for(:email) }
+  it { should_not allow_value("@email@addresse.foo").for(:email) }
+  it { should_not allow_value("ema il@addresse.foo").for(:email) }
+  it { should_not allow_value("ema.\ il@addresse.foo").for(:email) }
+  it { should_not allow_value("ema\ .il@addresse.foo").for(:email) }
 
   # TODO:  дописать остальные валидации
 
