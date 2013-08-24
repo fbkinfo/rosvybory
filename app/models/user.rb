@@ -14,7 +14,7 @@ class User < ActiveRecord::Base
   has_many :roles, through: :user_roles
 
   has_many :user_current_roles, dependent: :destroy
-  has_many :current_roles, through: :user_current_roles
+  has_many :current_roles, through: :user_current_roles  #роли наблюдателя/члена комиссии
 
   belongs_to :region
   belongs_to :adm_region, class_name: "Region"
@@ -41,6 +41,15 @@ class User < ActiveRecord::Base
         user.organisation_id = app.organisation_id
         user.user_app = app
         user.generate_password
+
+        if app.can_be_observer || app.user_app_current_roles.present?
+          user.add_role :observer
+          app.user_app_current_roles.each do |ua_cr|
+            #TODO Перенести доп. данные в связку - УИК (если в заявке 1) или ТИК
+            #TODO Откуда-то берётся дополнительная запись о Резеве УИКов, надо разобраться откуда и убрать её
+            user.user_current_roles.build(current_role: ua_cr.current_role)
+          end
+        end
       end
     end
   end
