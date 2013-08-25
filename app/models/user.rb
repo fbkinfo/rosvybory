@@ -73,15 +73,10 @@ class User < ActiveRecord::Base
         #TODO Откуда-то берётся дополнительная запись о Резеве УИКов, надо разобраться откуда и убрать её
         if ua_role.current_role
           ucr = user_current_roles.find_or_initialize_by(current_role_id: ua_role.current_role.id)
-          #"reserve" - без УИК и ТИК
-          if ["psg", "prg"].include? ua_role.current_role.slug
-            ucr.uic = Uic.find_by(number: app.uic)
-          elsif ["psg_tic", "prg_tic"].include? ua_role.current_role.slug
-            if region.try(:has_tic?)#для районов с ТИКами
-              ucr.region = region
-            elsif adm_region.try(:has_tic?) #для округов с ТИКами
-              ucr.region = adm_region
-            end
+          if ua_role.current_role.must_have_uic?
+            ucr.uic = Uic.find_by(number: ua_role.value)
+          elsif ua_role.current_role.must_have_tic?
+            ucr.region = Region.find_by(name: ua_role.value)
           end
         end
       end
