@@ -67,7 +67,6 @@ class ExcelUserAppRow
       v = v.strip if v.respond_to?(:strip)
       send "#{k}=", v if v.present? && k != '_destroy'
     end
-    @user = @user_app.user || User.new_from_app(@user_app)
   end
 
   def current_roles=(v)
@@ -92,8 +91,9 @@ class ExcelUserAppRow
       "ТИК" => UserApp::STATUS_TIC_PSG,
       "ДК" => UserApp::STATUS_DELEGATE
     }
-    status_value = statuses_by_name[v]
-    @user_app.previous_statuses |= status_value
+    if status_value = statuses_by_name[v]
+      @user_app.previous_statuses |= status_value
+    end
     self.experience_count = @experience_count if @experience_count
     @previous_statuses = v
   end
@@ -143,7 +143,7 @@ class ExcelUserAppRow
   end
 
   def organisation=(org)
-    @user_app.organisation = @user.organisation = org
+    @user_app.organisation = org
   end
 
   def created_at=(v)
@@ -158,10 +158,14 @@ class ExcelUserAppRow
   def save
     @user_app.skip_phone_verification = true
     @user_app.skip_email_confirmation = true
-    success = @user_app.save && @user.save
+    success = @user_app.save
     if success
       @user_app.confirm!
-      @user.update_column :created_at, created_at if created_at
+      @user = @user_app.user || User.new
+      @user.update_from_user_app(@user_app)
+      if success = @user.save
+        @user.update_column :created_at, created_at if created_at
+      end
     end
     success
   end
