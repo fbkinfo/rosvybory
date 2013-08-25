@@ -77,7 +77,11 @@ class User < ActiveRecord::Base
           if ["psg", "prg"].include? ua_role.current_role.slug
             ucr.uic = Uic.find_by(number: app.uic)
           elsif ["psg_tic", "prg_tic"].include? ua_role.current_role.slug
-            ucr.region = region if region.has_tic? #TODO Если указан район без ТИК, то возможно стоит кидать ошибку
+            if region.try(:has_tic?)#для районов с ТИКами
+              ucr.region = region
+            elsif adm_region.try(:has_tic?) #для округов с ТИКами
+              ucr.region = adm_region
+            end
           end
         end
       end
