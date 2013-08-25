@@ -11,7 +11,7 @@ class ExcelUserAppRow
     email: 8,
     uic: 9,
 
-    current_roles: 10,
+    current_roles: 10, #инициализия этого поля требует уже инициализированных полей uic, region и adm_region, поэтому в этом хеше оно должно идти после них.
     experience_count: 11,
     previous_statuses: 12,
     can_be_reserv: 13,   #нет прямого поля
@@ -78,7 +78,17 @@ class ExcelUserAppRow
     }
     role = CurrentRole.where(:slug => roles_by_name[v]).first
     if role && !@user_app.user_app_current_roles.where(:current_role_id => role.id).first
-      @user_app.user_app_current_roles.build(:current_role_id => role.id).keep = '1'
+      value = nil
+      if role.must_have_uic?
+        value = "#{@user_app.uic}"
+      elsif role.must_have_tic?
+        if region.try(:has_tic?)#для районов с ТИКами
+          value = region.name
+        elsif adm_region.try(:has_tic?) #для округов с ТИКами
+          value = adm_region.name
+        end
+      end
+      @user_app.user_app_current_roles.build(:current_role_id => role.id, value: value).keep = '1'
     end
     @current_roles = v
   end
