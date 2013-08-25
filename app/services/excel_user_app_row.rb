@@ -11,7 +11,7 @@ class ExcelUserAppRow
     email: 8,
     uic: 9,
 
-    current_roles: 10,
+    current_roles: 10, #инициализия этого поля требует уже инициализированных полей uic, region и adm_region, поэтому в этом хеше оно должно идти после них.
     experience_count: 11,
     previous_statuses: 12,
     can_be_reserv: 13,   #нет прямого поля
