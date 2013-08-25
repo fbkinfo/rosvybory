@@ -18,6 +18,19 @@ class UsersController < ApplicationController
     end
   end
 
+  #TODO возможно стоит реализовать через обычные new и create
+  #/users/group_new
+  def group_new
+    render json: { collection: params[:collection_selection].join(",") }
+    #TODO создать виртуального пользователя, установив ему район и округ если у всех выбранных пользователей они равны, и его показать в форме
+  end
+
+  # POST /users/group_create
+  def group_create
+    #TODO create users
+  end
+
+
 
   def new
     @app = UserApp.find(params[:user_app_id])
