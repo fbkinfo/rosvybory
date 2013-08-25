@@ -2,6 +2,7 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
+    alias_action :create, :read, :update, :destroy, :to => :crud
 
     if has_role?(user, :admin)
       can :manage, :all
@@ -17,12 +18,12 @@ class Ability
 
     if has_role?(user, :federal_repr)
       #ФП видит заявки своего наблюдательного объединения
-      can :manage, UserApp, :organisation_id => user.organisation_id
+      can :crud, UserApp, :organisation_id => user.organisation_id
 
       # ФП может просматривать:
       # полный варианта базы своего НО
       # карточки всех волонтёров своего НО, включая координаторов всех видов
-      can :manage, User, :organisation_id => user.organisation_id
+      can :crud, User, :organisation_id => user.organisation_id
 
       # TODO волонтёров своего НО в координаторском формате без участников МГ и КЦ
       # TODO волонтёров своего НО во формате "Расстановка с контактами" без участников МГ и КЦ
@@ -33,19 +34,19 @@ class Ability
       #ТК видит заявки своего адм. округа или района и только из своего НО
       if user.organisation
         if user.region
-          can :manage, UserApp, :region_id => user.region_id, :organisation_id => user.organisation_id
+          can :crud, UserApp, :region_id => user.region_id, :organisation_id => user.organisation_id
           # ТК с заданным районом может просматривать:
           # карточки волонтёров своего района
-          can :manage, User, :region_id => user.region_id, :organisation_id => user.organisation_id
+          can :crud, User, :region_id => user.region_id, :organisation_id => user.organisation_id
           # TODO волонтёров своего района в координаторском формате без участников МГ и КЦ
           # TODO волонтёров своего района во формате "Расстановка с контактами" без участников МГ и КЦ
           # TODO волонтёров своего округа во формате "Расстановка с ФИО" без участников МГ и КЦ
           # TODO всю базу волонтёров в формате "Обезличенная расстановка" без участников МГ и КЦ
         elsif  user.adm_region
-          can :manage, UserApp, :adm_region_id => user.adm_region_id, :organisation_id => user.organisation_id
+          can :crud, UserApp, :adm_region_id => user.adm_region_id, :organisation_id => user.organisation_id
           # ТК с незаданным райном может просматривать:
           # карточки волонтёров своего округа
-          can :manage, User, :adm_region_id => user.adm_region_id, :organisation_id => user.organisation_id
+          can :crud, User, :adm_region_id => user.adm_region_id, :organisation_id => user.organisation_id
           # TODO волонтёров своего округа в координаторском формате без участников МГ и КЦ
           # TODO волонтёров своего округа во формате "Расстановка с контактами" без участников МГ и КЦ
           # TODO всю базу волонтёров в форматах "Расстановка с ФИО" и "Обезличенная расстановка" без участников МГ и КЦ
@@ -69,8 +70,6 @@ class Ability
 
     if has_role?(user, [:admin, :federal_repr])
       can :import, UserApp
-    else
-      cannot :import, UserApp      #должно быть указано после все разрешений на manage заявок для всех ролей, по любым условиям
     end
 
     # Define abilities for the passed in user here. For example:
