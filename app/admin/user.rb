@@ -96,11 +96,17 @@ ActiveAdmin.register User do
   end
 
   filter :email
+  filter :user_app_last_name, as: :string, label: 'Фамилия'
   filter :user_app_created_at, as: :date_range, label: 'Дата подачи заявки'
   filter :created_at, label: 'Дата создания'
+  filter :organisation, :as => :select, :input_html => {:style => "width: 220px;"}
   filter :user_app_experience_count, :as => :numeric, label: 'Опыт'
   filter :adm_region, :as => :select, :collection => proc { Region.adm_regions.all }, :input_html => {:style => "width: 220px;"}
   filter :region, :as => :select, :collection => proc { Region.mun_regions.all }, :input_html => {:style => "width: 220px;"}
+  filter :roles, :as => :select, :collection => proc { Role.all.pluck(:short_name, :id) }, :input_html => {:style => "width: 220px;"}
+  filter :user_app_uic, as: :string, label: 'УИК'
+  filter :user_app_has_car, as: :boolean, label: 'Есть машина'
+  filter :user_app_has_video, as: :boolean, label: 'Есть видео'
 
   form :partial => "form"
 
