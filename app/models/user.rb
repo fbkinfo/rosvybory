@@ -67,10 +67,8 @@ class User < ActiveRecord::Base
     generate_password
 
     if app.can_be_observer || app.user_app_current_roles.present?
-      # FIXME isn't it excel_user_app_row-specific?
       self.add_role :observer
       app.user_app_current_roles.each do |ua_role|
-        #TODO Откуда-то берётся дополнительная запись о Резеве УИКов, надо разобраться откуда и убрать её
         if ua_role.current_role
           ucr = user_current_roles.find_or_initialize_by(current_role_id: ua_role.current_role.id)
           if ua_role.current_role.must_have_uic?
