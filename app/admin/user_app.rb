@@ -83,6 +83,7 @@ ActiveAdmin.register UserApp do
   filter   :last_name
   filter   :first_name
   filter   :patronymic
+  filter   :sex_male, :as => :select, :collection => [['М', true], ['Ж', false]]
   filter   :phone
   filter   :email
   filter   :uic #, :as => :numeric_range
