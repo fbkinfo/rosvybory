@@ -26,7 +26,6 @@ class UsersController < ApplicationController
     else
       gon.user_app_id = @app.id
       @user = User.new_from_app(@app)
-      @user.user_current_roles.build(user_id: @user.id)
       authorize! :create, @user
       render "new", layout: false
     end
