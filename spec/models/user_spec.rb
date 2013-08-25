@@ -150,14 +150,18 @@ describe User do
 
   describe "#update_from_user_app" do
     let(:user) {create :user}
-    let(:current_role) {create :current_role}
-    let(:uic) { create :uic }
+    let(:current_role) {create :current_role, slug: "psg"}
+    let(:uic1) { create :uic }
+    let(:uic2) { create :uic }
 
-    it "should create user_current_role for observer" do
+    before do
       # pre-setup
       Role.create(:slug => :observer, :name => 'Big brother', :short_name => 'bro')
+    end
+
+    it "should create user_current_role for observer" do
       # setup
-      user_app = UserApp.new(:uic => uic.number)
+      user_app = UserApp.new(:uic => uic1.number)
       user_app.can_be_observer = true
       uar = user_app.user_app_current_roles.build(:current_role => current_role)
       uar.keep = '1'
@@ -166,8 +170,23 @@ describe User do
       # verify
       user.user_current_roles.should_not be_empty
       user.user_current_roles.first.current_role.should == current_role
-      user.user_current_roles.first.uic.should == uic
+      user.user_current_roles.first.uic.should == uic1
     end
+
+    it "should give priority to user_app_current_role data over user_app data while creating user_current_role" do
+      # setup
+      user_app = UserApp.new(:uic => uic1.number)
+      user_app.can_be_observer = true
+      uar = user_app.user_app_current_roles.build(:current_role => current_role, :value => uic2.number.to_s)
+      uar.keep = '1'
+      # excercise
+      user.update_from_user_app(user_app).save
+      # verify
+      user.user_current_roles.should_not be_empty
+      user.user_current_roles.first.current_role.should == current_role
+      user.user_current_roles.first.uic.should == uic2
+    end
+
   end
 
 end
