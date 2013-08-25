@@ -39,7 +39,7 @@ class ExcelUserAppRow
   end
 
   attr_reader :user_app, :user
-  attr_accessor :uid # lost after save
+  attr_accessor :uid # lost after save, but is used to detect organisation
   attr_accessor :created_at, :adm_region, :region, :has_car, :current_roles, :experience_count, :previous_statuses, :can_be_coord_region, :can_be_reserv, :social_accounts, :uic
 
   delegate :organisation,
@@ -67,6 +67,17 @@ class ExcelUserAppRow
       v = v.strip if v.respond_to?(:strip)
       send "#{k}=", v if v.present? && k != '_destroy'
     end
+  end
+
+  def uid=(v)
+    orgs_by_name = {
+        "ГН" => "Гражданин Наблюдатель",
+        "ГЛС" => "Голос",
+        "СНР" => "Сонар"
+    }
+    self.organisation = Organisation.where(name: orgs_by_name[v.split('-')[0]]).first
+    @user_app.has_car = TRUTH.include?(v.to_s)
+    @uid = v
   end
 
   def current_roles=(v)
