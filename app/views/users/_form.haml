@@ -18,7 +18,10 @@
     = f.input :password, as: :hidden if @user.new_record?
     = f.input :adm_region, as: :select, collection: Region.adm_regions.pluck(:name, :id), input_html: {:style => "width: 220px;"}
     = f.input :region, as: :select, collection: @user.user_app && @user.user_app.adm_region ? @user.user_app.adm_region.regions.pluck(:name, :id) : [], input_html: {:style => "width: 220px;"}
-    = f.input :organisation_id, as: :hidden if @user.new_record?
+    - if can?(:change_organisation, @user)
+      = f.input :organisation_id, as: :select, collection: Organisation.accessible_by(current_ability)
+    - else
+      = f.input :organisation_id, as: :hidden if @user.new_record?
     = f.input :user_app_id, as: :hidden if @user.new_record?
 
   = f.inputs "Роли наблюдателя", "data-role" => "observer-roles", class: "hidden" do

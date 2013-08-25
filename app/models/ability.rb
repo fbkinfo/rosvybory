@@ -1,6 +1,9 @@
 class Ability
   include CanCan::Ability
 
+  # custom actions:
+  #   :change_organisation
+
   def initialize(user)
     alias_action :create, :read, :update, :destroy, :to => :crud
 
