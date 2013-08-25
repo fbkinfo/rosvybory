@@ -72,9 +72,16 @@ class User < ActiveRecord::Base
         if ua_role.current_role
           ucr = user_current_roles.find_or_initialize_by(current_role_id: ua_role.current_role.id)
           if ua_role.current_role.must_have_uic?
-            ucr.uic = Uic.find_by(number: ua_role.value)
+            ucr.uic = Uic.find_by(number: ua_role.value) || Uic.find_by(number: app.uic)
           elsif ua_role.current_role.must_have_tic?
             ucr.region = Region.find_by(name: ua_role.value)
+            unless ucr.region
+              if region.try(:has_tic?)#для районов с ТИКами
+                ucr.region = region
+              elsif adm_region.try(:has_tic?) #для округов с ТИКами
+                ucr.region = adm_region
+              end
+            end
           end
         end
       end
