@@ -35,6 +35,20 @@ class User < ActiveRecord::Base
     def new_from_app(app)
       new.update_from_user_app(app)
     end
+
+    def normalize_phone(phone)
+      phone && phone.to_s.gsub(/\D/, '')[-10..-1]
+    end
+
+    def send_reset_password_instructions(attributes={})
+      attributes["phone"] = normalize_phone(attributes["phone"])
+      super
+    end
+
+    def find_for_database_authentication(conditions)
+      conditions[:phone] = normalize_phone(conditions[:phone])
+      super
+    end
   end
 
   def has_role?(role_name)
