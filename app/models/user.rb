@@ -73,17 +73,21 @@ class User < ActiveRecord::Base
     generate_password
 
     if app.can_be_observer || app.user_app_current_roles.present?
-      # FIXME isn't it excel_user_app_row-specific?
       self.add_role :observer
       app.user_app_current_roles.each do |ua_role|
-        #TODO Откуда-то берётся дополнительная запись о Резеве УИКов, надо разобраться откуда и убрать её
         if ua_role.current_role
           ucr = user_current_roles.find_or_initialize_by(current_role_id: ua_role.current_role.id)
-          #"reserve" - без УИК и ТИК
-          if ["psg", "prg"].include? ua_role.current_role.slug
-            ucr.uic = Uic.find_by(number: app.uic)
-          elsif ["psg_tic", "prg_tic"].include? ua_role.current_role.slug
-            ucr.region = region if region.has_tic? #TODO Если указан район без ТИК, то возможно стоит кидать ошибку
+          if ua_role.current_role.must_have_uic?
+            ucr.uic = Uic.find_by(number: ua_role.value) || Uic.find_by(number: app.uic)
+          elsif ua_role.current_role.must_have_tic?
+            ucr.region = Region.find_by(name: ua_role.value)
+            unless ucr.region
+              if region.try(:has_tic?)#для районов с ТИКами
+                ucr.region = region
+              elsif adm_region.try(:has_tic?) #для округов с ТИКами
+                ucr.region = adm_region
+              end
+            end
           end
         end
       end
