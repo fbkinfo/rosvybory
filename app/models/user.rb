@@ -73,8 +73,12 @@ class User < ActiveRecord::Base
         #TODO Откуда-то берётся дополнительная запись о Резеве УИКов, надо разобраться откуда и убрать её
         if ua_role.current_role
           ucr = user_current_roles.find_or_initialize_by(current_role_id: ua_role.current_role.id)
-          ucr.region = region
-          ucr.uic = Uic.find_by(number: app.uic)
+          #"reserve" - без УИК и ТИК
+          if ["psg", "prg"].include? ua_role.current_role.slug
+            ucr.uic = Uic.find_by(number: app.uic)
+          elsif ["psg_tic", "prg_tic"].include? ua_role.current_role.slug
+            ucr.region = region if region.has_tic? #TODO Если указан район без ТИК, то возможно стоит кидать ошибку
+          end
         end
       end
     end
