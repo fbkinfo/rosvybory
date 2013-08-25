@@ -12,6 +12,8 @@ ActiveAdmin.register UserApp do
     end
   end
 
+  batch_action :group_accept
+
   action_item :only => [:index] do
     if can?(:import, resource_class)
       link_to('Загрузить из Excel', xls_import_control_user_apps_path)
@@ -36,7 +38,7 @@ ActiveAdmin.register UserApp do
   member_action :reject, method: :post do
     resource.reject(false)
     resource.save(validate: false)
-    render json: {status: :ok}, :content_type => 'text/html'
+    render json: { success: true }
   end
 
   member_action :spam, method: :post do

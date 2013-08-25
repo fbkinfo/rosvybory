@@ -436,3 +436,4 @@ ru:
       labels:
         new_group_sms: "Отправить SMS"
         new_group_email: "Отправить почту"
+        group_accept: "Принять"
