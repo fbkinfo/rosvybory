@@ -76,7 +76,6 @@ class ExcelUserAppRow
         "СНР" => "Сонар"
     }
     self.organisation = Organisation.where(name: orgs_by_name[v.split('-')[0]]).first
-    @user_app.has_car = TRUTH.include?(v.to_s)
     @uid = v
   end
 
