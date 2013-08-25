@@ -59,7 +59,7 @@ class Ability
       # КМ может просматривать:
 
       # карточки волонтёров участников МГ своего НО
-      can :manage, User, :organisation_id => user.organisation_id, :mobile_group_id => user.mobile_group_id
+      #can :manage, User, :organisation_id => user.organisation_id, :mobile_group_id => user.mobile_group_id
 
       # TODO всех участников МГ в координаторском формате
       # TODO всех участников МГ в форматах "Сводка МГ с контактами", "Сводка МГ с ФИО" и "Обезличенная сводка МГ"
