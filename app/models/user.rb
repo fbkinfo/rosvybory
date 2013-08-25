@@ -6,10 +6,6 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable,
          :authentication_keys => [:phone]
 
-  validates_presence_of :phone
-  validates_uniqueness_of :phone
-  validates_format_of :phone, with: /\A\d{10}\z/
-
   has_many :user_roles, dependent: :destroy
   has_many :roles, through: :user_roles
 
@@ -22,7 +18,7 @@ class User < ActiveRecord::Base
   belongs_to :organisation
   belongs_to :user_app
 
-  validates :phone, presence: true
+  validates :phone, presence: true, uniqueness: true, format: {with: /\A\d{10}\z/}
 
   after_create :mark_user_app_state
   after_create :send_sms_with_password, :if => :send_invitation?
@@ -36,17 +32,13 @@ class User < ActiveRecord::Base
       new.update_from_user_app(app)
     end
 
-    def normalize_phone(phone)
-      phone && phone.to_s.gsub(/\D/, '')[-10..-1]
-    end
-
     def send_reset_password_instructions(attributes={})
-      attributes["phone"] = normalize_phone(attributes["phone"])
+      attributes["phone"] = Verification.normalize_phone_number(attributes["phone"])
       super
     end
 
     def find_for_database_authentication(conditions)
-      conditions[:phone] = normalize_phone(conditions[:phone])
+      conditions[:phone] = Verification.normalize_phone_number(conditions[:phone])
       super
     end
   end
