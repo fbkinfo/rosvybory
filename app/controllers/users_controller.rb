@@ -52,7 +52,7 @@ class UsersController < ApplicationController
   def user_params
    accessible_fields = [  :email, :phone, :password, :user_app_id,
                           :role_ids => [],
-                          :user_current_roles_attributes =>[:id, :current_role_id, :region_id, :uic_id, :user_id, :_destroy]
+                          :user_current_roles_attributes =>[:id, :current_role_id, :region_id, :uic_id, :uic_number, :user_id, :_destroy]
                         ]
     if !@user.try(:persisted?)
       accessible_fields += [:organisation_id, :region_id, :adm_region_id]

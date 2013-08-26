@@ -7,6 +7,11 @@ class UserCurrentRole < ActiveRecord::Base
   validates :current_role, presence: true
   validate :region_or_uic_present
 
+  delegate :number, :to => :uic, :prefix => true, :allow_nil => true
+  def uic_number=(number)
+    self.uic = Uic.find_by_number(number)
+  end
+
   #attr_accessor :adm_region_id
 
   private
