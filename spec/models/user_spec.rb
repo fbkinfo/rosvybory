@@ -144,8 +144,9 @@ describe User do
         should_not be_able_to(:manage, UserApp.new(adm_region: second_adm_region, organisation: second_organisation))
 
         should_not be_able_to(:change_organisation, User.new)
-        should_not be_able_to(:import, UserApp)
         should be_able_to(:read, UserApp)
+
+        should be_able_to(:import, UserApp)
       }
     end
   end
