@@ -32,6 +32,7 @@ class Ability
       # TODO волонтёров своего НО во формате "Расстановка с контактами" без участников МГ и КЦ
       # TODO всю базу волонтёров в форматах "Расстановка с ФИО" и "Обезличенная расстановка" без участников МГ и КЦ
       can :import, UserApp
+      can :view_dislocation, User
     end
 
     if has_role?(user, :tc)
@@ -58,6 +59,7 @@ class Ability
       end
 
       can :import, UserApp
+      can :view_dislocation, User
     end
 
     if has_role?(user, :mc)
