@@ -93,6 +93,8 @@ ActiveAdmin.register User do
   filter :region, :as => :select, :collection => proc { Region.mun_regions.all }, :input_html => {:style => "width: 230px;"}
   filter :organisation, label: 'Организация', as: :select, collection: proc { Organisation.order(:name).all }, :input_html => {:style => "width: 230px;"}
   filter :roles, :input_html => {:style => "width: 230px;"}
+  filter :user_current_roles_current_role_id, label: 'Роль наблюдателя', as: :select, collection: proc { CurrentRole.all }, :input_html => {:style => "width: 230px;"}
+  filter :user_current_roles_uic_number, as: :numeric, label: '№ УИК'
   filter :user_app_last_name, as: :string, label: 'Фамилия'
   filter :email, label: 'Почта'
   filter :user_app_created_at, as: :date_range, label: 'Дата подачи заявки'
@@ -100,7 +102,6 @@ ActiveAdmin.register User do
   filter :user_app_experience_count, :as => :numeric, label: 'Опыт'
   filter :user_app_has_car, as: :boolean, label: 'Автомобиль'
   filter :user_app_has_video, as: :boolean, label: 'Видеосъёмка'
-  filter :user_current_roles_uic_number, as: :numeric, label: '№ УИК'
 
   form :partial => 'form'
 
