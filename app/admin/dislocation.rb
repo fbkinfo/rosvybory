@@ -30,6 +30,6 @@ ActiveAdmin.register Dislocation do
   filter :phone
   filter :current_role_uic, as: :string
   filter :current_role_nomination_source_id, as: :select, collection: proc { NominationSource.order(:name) }
-  # filter :current_role_uic, as: :string
+  # filter :dislocation_errors, as: :something
 
 end
