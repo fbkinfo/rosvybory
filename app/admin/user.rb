@@ -18,9 +18,7 @@ ActiveAdmin.register User do
   show do |user|
     if can? :crud, user #вид для админа
       attributes_table do
-        row :organisation do
-          "#{user.organisation.name}-#{user.id}" if user.organisation
-        end
+        row :organisation, &:organisation_with_user_id
         row :user_app_created_at
         row :adm_region
         row :region
@@ -57,9 +55,7 @@ ActiveAdmin.register User do
 
   index do
     selectable_column
-    column "НО + id" do |user|
-      user.organisation ? "#{user.organisation.name}-#{user.id}" : ''
-    end
+    column "НО + id", &:organisation_with_user_id
     column :created_at
     column :adm_region
     column :region

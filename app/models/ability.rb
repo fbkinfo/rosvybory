@@ -35,6 +35,8 @@ class Ability
       # TODO волонтёров своего НО в координаторском формате без участников МГ и КЦ
       # TODO волонтёров своего НО во формате "Расстановка с контактами" без участников МГ и КЦ
       # TODO всю базу волонтёров в форматах "Расстановка с ФИО" и "Обезличенная расстановка" без участников МГ и КЦ
+      can :import, UserApp
+      can :view_dislocation, User
     end
 
     if has_role?(user, :tc)
@@ -62,6 +64,7 @@ class Ability
       end
 
       can :import, UserApp
+      can :view_dislocation, User
     end
 
     if has_role?(user, :mc)
@@ -76,10 +79,6 @@ class Ability
 
     if has_role?(user, :cc)
       # TODO КК может просматривать только участников КЦ в координаторском формате и формате "Состав КЦ".
-    end
-
-    if has_role?(user, [:admin, :federal_repr])
-      can :import, UserApp
     end
 
     # Define abilities for the passed in user here. For example:
