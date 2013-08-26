@@ -3,6 +3,8 @@ class Ability
 
   # custom actions:
   #   :change_organisation
+  #   :change_adm_region
+  #   :change_region
 
   def initialize(user)
     alias_action :create, :read, :update, :destroy, :to => :crud
@@ -22,15 +24,21 @@ class Ability
     if has_role?(user, :federal_repr)
       #ФП видит заявки своего наблюдательного объединения
       can :crud, UserApp, :organisation_id => user.organisation_id
+      can :approve, UserApp, :organisation_id => user.organisation_id
+      can :reject, UserApp, :organisation_id => user.organisation_id
 
       # ФП может просматривать:
       # полный варианта базы своего НО
       # карточки всех волонтёров своего НО, включая координаторов всех видов
       can :crud, User, :organisation_id => user.organisation_id
+      can :change_adm_region, User, :organisation_id => user.organisation_id
+      can :change_region, User, :organisation_id => user.organisation_id
 
       # TODO волонтёров своего НО в координаторском формате без участников МГ и КЦ
       # TODO волонтёров своего НО во формате "Расстановка с контактами" без участников МГ и КЦ
       # TODO всю базу волонтёров в форматах "Расстановка с ФИО" и "Обезличенная расстановка" без участников МГ и КЦ
+      can :import, UserApp
+      can :view_dislocation, User
     end
 
     if has_role?(user, :tc)
@@ -38,6 +46,8 @@ class Ability
       if user.organisation
         if user.region
           can :crud, UserApp, :region_id => user.region_id, :organisation_id => user.organisation_id
+          can :approve, UserApp, :region_id => user.region_id, :organisation_id => user.organisation_id
+          can :reject, UserApp, :region_id => user.region_id, :organisation_id => user.organisation_id
           # ТК с заданным районом может просматривать:
           # карточки волонтёров своего района
           can :crud, User, :region_id => user.region_id, :organisation_id => user.organisation_id
@@ -46,15 +56,21 @@ class Ability
           # TODO волонтёров своего округа во формате "Расстановка с ФИО" без участников МГ и КЦ
           # TODO всю базу волонтёров в формате "Обезличенная расстановка" без участников МГ и КЦ
         elsif  user.adm_region
-          can :crud, UserApp, :adm_region_id => user.adm_region_id, :organisation_id => user.organisation_id
+          can :crud, UserApp, :adm_region_id    => user.adm_region_id, :organisation_id => user.organisation_id
+          can :approve, UserApp, :adm_region_id => user.adm_region_id, :organisation_id => user.organisation_id
+          can :reject, UserApp, :adm_region_id  => user.adm_region_id, :organisation_id => user.organisation_id
           # ТК с незаданным райном может просматривать:
           # карточки волонтёров своего округа
           can :crud, User, :adm_region_id => user.adm_region_id, :organisation_id => user.organisation_id
+          can :change_region, User, :adm_region_id => user.adm_region_id, :organisation_id => user.organisation_id
           # TODO волонтёров своего округа в координаторском формате без участников МГ и КЦ
           # TODO волонтёров своего округа во формате "Расстановка с контактами" без участников МГ и КЦ
           # TODO всю базу волонтёров в форматах "Расстановка с ФИО" и "Обезличенная расстановка" без участников МГ и КЦ
         end
       end
+
+      can :import, UserApp
+      can :view_dislocation, User
     end
 
     if has_role?(user, :mc)
@@ -69,10 +85,6 @@ class Ability
 
     if has_role?(user, :cc)
       # TODO КК может просматривать только участников КЦ в координаторском формате и формате "Состав КЦ".
-    end
-
-    if has_role?(user, [:admin, :federal_repr])
-      can :import, UserApp
     end
 
     # Define abilities for the passed in user here. For example:

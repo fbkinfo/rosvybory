@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130826082649) do
+ActiveRecord::Schema.define(version: 20130826151025) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -40,6 +40,13 @@ ActiveRecord::Schema.define(version: 20130826082649) do
     t.string   "name",                   null: false
     t.string   "slug",                   null: false
     t.integer  "position",   default: 0, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "nomination_sources", force: true do |t|
+    t.string   "name"
+    t.string   "variant"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -125,8 +132,8 @@ ActiveRecord::Schema.define(version: 20130826082649) do
     t.string   "state",              default: "pending", null: false
     t.boolean  "phone_verified",     default: false,     null: false
     t.boolean  "has_video"
-    t.string   "forwarded_for"
     t.integer  "organisation_id"
+    t.string   "forwarded_for"
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
   end
@@ -136,12 +143,13 @@ ActiveRecord::Schema.define(version: 20130826082649) do
   add_index "user_apps", ["region_id"], name: "index_user_apps_on_region_id", using: :btree
 
   create_table "user_current_roles", force: true do |t|
-    t.integer  "user_id",         null: false
-    t.integer  "current_role_id", null: false
+    t.integer  "user_id",              null: false
+    t.integer  "current_role_id",      null: false
     t.integer  "uic_id"
     t.integer  "region_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "nomination_source_id"
   end
 
   add_index "user_current_roles", ["current_role_id"], name: "index_user_current_roles_on_current_role_id", using: :btree
