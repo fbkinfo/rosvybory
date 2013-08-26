@@ -3,6 +3,8 @@ class Ability
 
   # custom actions:
   #   :change_organisation
+  #   :change_adm_region
+  #   :change_region
 
   def initialize(user)
     alias_action :create, :read, :update, :destroy, :to => :crud
@@ -27,6 +29,8 @@ class Ability
       # полный варианта базы своего НО
       # карточки всех волонтёров своего НО, включая координаторов всех видов
       can :crud, User, :organisation_id => user.organisation_id
+      can :change_adm_region, User, :organisation_id => user.organisation_id
+      can :change_region, User, :organisation_id => user.organisation_id
 
       # TODO волонтёров своего НО в координаторском формате без участников МГ и КЦ
       # TODO волонтёров своего НО во формате "Расстановка с контактами" без участников МГ и КЦ
@@ -50,11 +54,14 @@ class Ability
           # ТК с незаданным райном может просматривать:
           # карточки волонтёров своего округа
           can :crud, User, :adm_region_id => user.adm_region_id, :organisation_id => user.organisation_id
+          can :change_region, User, :adm_region_id => user.adm_region_id, :organisation_id => user.organisation_id
           # TODO волонтёров своего округа в координаторском формате без участников МГ и КЦ
           # TODO волонтёров своего округа во формате "Расстановка с контактами" без участников МГ и КЦ
           # TODO всю базу волонтёров в форматах "Расстановка с ФИО" и "Обезличенная расстановка" без участников МГ и КЦ
         end
       end
+
+      can :import, UserApp
     end
 
     if has_role?(user, :mc)
