@@ -314,7 +314,7 @@ ru:
       dislocation:
         current_role_id: Роль
         current_role_nomination_source_id: Источник выдвижения
-        current_role_uic_id: УИК
+        current_role_uic: УИК
       nomination_source/variants:
         candidate: Кандидат
         party: Партия кандидата

@@ -14,7 +14,7 @@ ActiveAdmin.register Dislocation do
     column :region
     column :full_name
     column :phone
-    column :current_role_uic_id, -> (user) { Uic.find_by(:id => user.current_role_uic_id).try(:number) || user.current_role_uic_id }
+    column :current_role_uic, -> (user) { Uic.find_by(:id => user.current_role_uic_id).try(:number) || user.current_role_uic_id }
     column :current_role_id, -> (user) { CurrentRole.find_by(:id => user.current_role_id).try(:name) || user.current_role_id }
     column :current_role_nomination_source_id, -> (user) { NominationSource.find_by(:id => user.current_role_nomination_source_id).try(:name) || user.current_role_nomination_source_id }
     column :dislocation_errors, -> (user) { ' TODO ' }
@@ -28,7 +28,7 @@ ActiveAdmin.register Dislocation do
   filter :region, :as => :select, :collection => proc { Region.mun_regions }, :input_html => {:style => "width: 230px;"}
   filter :user_app_last_name, as: :string, label: 'Фамилия'
   filter :phone
-  filter :current_role_uic, as: :string
+  filter :current_role_uic, as: :numeric
   filter :current_role_nomination_source_id, as: :select, collection: proc { NominationSource.order(:name) }
   # filter :dislocation_errors, as: :something
 
