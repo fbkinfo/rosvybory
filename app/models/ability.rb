@@ -24,6 +24,8 @@ class Ability
     if has_role?(user, :federal_repr)
       #ФП видит заявки своего наблюдательного объединения
       can :crud, UserApp, :organisation_id => user.organisation_id
+      can :approve, UserApp, :organisation_id => user.organisation_id
+      can :reject, UserApp, :organisation_id => user.organisation_id
 
       # ФП может просматривать:
       # полный варианта базы своего НО
@@ -42,6 +44,8 @@ class Ability
       if user.organisation
         if user.region
           can :crud, UserApp, :region_id => user.region_id, :organisation_id => user.organisation_id
+          can :approve, UserApp, :region_id => user.region_id, :organisation_id => user.organisation_id
+          can :reject, UserApp, :region_id => user.region_id, :organisation_id => user.organisation_id
           # ТК с заданным районом может просматривать:
           # карточки волонтёров своего района
           can :crud, User, :region_id => user.region_id, :organisation_id => user.organisation_id
@@ -51,6 +55,8 @@ class Ability
           # TODO всю базу волонтёров в формате "Обезличенная расстановка" без участников МГ и КЦ
         elsif  user.adm_region
           can :crud, UserApp, :adm_region_id => user.adm_region_id, :organisation_id => user.organisation_id
+          can :approve, UserApp, :region_id => user.region_id, :organisation_id => user.organisation_id
+          can :reject, UserApp, :region_id => user.region_id, :organisation_id => user.organisation_id
           # ТК с незаданным райном может просматривать:
           # карточки волонтёров своего округа
           can :crud, User, :adm_region_id => user.adm_region_id, :organisation_id => user.organisation_id
