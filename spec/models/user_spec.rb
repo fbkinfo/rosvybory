@@ -89,17 +89,22 @@ describe User do
       end
 
       it {
-        should_not be_able_to(:manage, :all)
-        should be_able_to(:read, Region.new)
-        should_not be_able_to(:manage, Region.new)
+        # can
         should be_able_to(:read, Organisation.new)
+        should be_able_to(:read, Region.new)
+        should be_able_to(:crud, UserApp.new(organisation: first_organisation))
+        should be_able_to(:change_adm_region, user)
+        should be_able_to(:change_region, user)
+        should be_able_to(:import, UserApp)
+
+        # cannot
+        should_not be_able_to(:manage, :all)
+        should_not be_able_to(:manage, Region.new)
         should_not be_able_to(:manage, Organisation.new)
         should_not be_able_to(:read, User.new)
         should_not be_able_to(:read, UserApp.new)
         should_not be_able_to(:read, UserApp.new(organisation: second_organisation))
-        should_not be_able_to(:change_organisation, User.new)
-        should be_able_to(:crud, UserApp.new(organisation: first_organisation))
-        should be_able_to(:import, UserApp)
+        should_not be_able_to(:change_organisation, user)
       }
     end
 
@@ -118,34 +123,33 @@ describe User do
       end
 
       it {
-        should_not be_able_to(:manage, :all)
+        # can
         should be_able_to(:read, Region.new)
-        should_not be_able_to(:manage, Region.new)
         should be_able_to(:read, Organisation.new)
+        should be_able_to(:crud, User.new(adm_region: first_adm_region, organisation: first_organisation))
+        should be_able_to(:crud, UserApp.new(adm_region: first_adm_region, organisation: first_organisation))
+        should be_able_to(:change_region, user)
+        should be_able_to(:read, UserApp)
+        should be_able_to(:import, UserApp)
+
+        # cannot
+        should_not be_able_to(:manage, :all)
+        should_not be_able_to(:manage, Region.new)
         should_not be_able_to(:manage, Organisation.new)
         should_not be_able_to(:read, User.new)
         should_not be_able_to(:read, UserApp.new)
-
         should_not be_able_to(:manage, User.new(adm_region: first_adm_region))
         should_not be_able_to(:read, User.new(adm_region: second_adm_region))
         should_not be_able_to(:manage, UserApp.new(adm_region: first_adm_region))
         should_not be_able_to(:read, UserApp.new(adm_region: second_adm_region))
-
-        should be_able_to(:crud, User.new(adm_region: first_adm_region, organisation: first_organisation))
         should_not be_able_to(:manage, User.new(adm_region: first_adm_region, organisation: second_organisation))
-
-        should be_able_to(:crud, UserApp.new(adm_region: first_adm_region, organisation: first_organisation))
         should_not be_able_to(:manage, UserApp.new(adm_region: first_adm_region, organisation: second_organisation))
-
         should_not be_able_to(:manage, User.new(adm_region: second_adm_region, organisation: first_organisation))
         should_not be_able_to(:manage, User.new(adm_region: second_adm_region, organisation: second_organisation))
-
         should_not be_able_to(:manage, UserApp.new(adm_region: second_adm_region, organisation: first_organisation))
         should_not be_able_to(:manage, UserApp.new(adm_region: second_adm_region, organisation: second_organisation))
-
         should_not be_able_to(:change_organisation, User.new)
-        should_not be_able_to(:import, UserApp)
-        should be_able_to(:read, UserApp)
+        should_not be_able_to(:change_adm_region, user)
       }
     end
   end
