@@ -56,7 +56,6 @@ class UsersController < ApplicationController
       :password,
       :phone,
       :region_id,
-      :role_ids,
       :user_app_id,
       :role_ids => [],
       :user_current_roles_attributes => [
@@ -69,7 +68,13 @@ class UsersController < ApplicationController
         :user_id,
       ],
     ]
-    accessible_fields << :organisation_id if !@user.try(:persisted?) || can?(:change_organisation, @user)
+    if !@user.try(:persisted?)
+      accessible_fields += [:organisation_id, :region_id, :adm_region_id]
+    else
+      accessible_fields << :organisation_id if can?(:change_organisation, @user)
+      accessible_fields << :adm_region_id if can?(:change_adm_region, @user)
+      accessible_fields << :region_id if can?(:change_region, @user)
+    end
     params.require(:user).permit(accessible_fields)
   end
 
