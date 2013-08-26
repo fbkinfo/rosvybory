@@ -292,6 +292,9 @@ ru:
             rejected: "Отклонено"
             spammed: "Спам"
     models:
+      dislocation:
+        one: "Расстановка"
+        other: "Расстановки"
       region:
         one: "Округ/район"
         other: "Округа/районы"
@@ -308,6 +311,14 @@ ru:
         one: 'Черный список'
         other: 'Черный список'
     attributes:
+      dislocation:
+        current_role_id: Роль
+        current_role_nomination_source_id: Источник выдвижения
+        current_role_uic: УИК
+      nomination_source/variants:
+        candidate: Кандидат
+        party: Партия кандидата
+        parliament: Парламетская партия
       verification:
         phone_number: Телефон
       user_current_role:
@@ -437,3 +448,6 @@ ru:
       labels:
         new_group_sms: "Отправить SMS"
         new_group_email: "Отправить почту"
+    scopes:
+      with_current_roles: Все
+
