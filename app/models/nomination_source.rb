@@ -17,6 +17,6 @@ class NominationSource < ActiveRecord::Base
   end
 
   def human_variant
-    selff.class.human_variant(variant)
+    self.class.human_variant(variant)
   end
 end
