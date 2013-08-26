@@ -130,6 +130,7 @@ describe User do
         should be_able_to(:crud, UserApp.new(adm_region: first_adm_region, organisation: first_organisation))
         should be_able_to(:change_region, user)
         should be_able_to(:read, UserApp)
+        should be_able_to(:import, UserApp)
 
         # cannot
         should_not be_able_to(:manage, :all)
@@ -149,7 +150,6 @@ describe User do
         should_not be_able_to(:manage, UserApp.new(adm_region: second_adm_region, organisation: second_organisation))
         should_not be_able_to(:change_organisation, User.new)
         should_not be_able_to(:change_adm_region, user)
-        should_not be_able_to(:import, UserApp)
       }
     end
   end

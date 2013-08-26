@@ -60,6 +60,8 @@ class Ability
           # TODO всю базу волонтёров в форматах "Расстановка с ФИО" и "Обезличенная расстановка" без участников МГ и КЦ
         end
       end
+
+      can :import, UserApp
     end
 
     if has_role?(user, :mc)

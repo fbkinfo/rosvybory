@@ -2,6 +2,8 @@ class Region < ActiveRecord::Base
   extend Enumerize
 
   belongs_to :parent, class_name: 'Region'
+  default_scope -> { order(:name) }
+
   validates_uniqueness_of :name
 
   enumerize :kind, in: {city: 1, adm_region: 2, mun_region: 3}, default: :city, scope: true
