@@ -50,26 +50,17 @@ class UsersController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def user_params
-    accessible_fields = [
-      :adm_region_id,
-      :email,
-      :password,
-      :phone,
-      :region_id,
-      :role_ids,
-      :user_app_id,
-      :role_ids => [],
-      :user_current_roles_attributes => [
-        :_destroy,
-        :current_role_id,
-        :id,
-        :region_id,
-        :uic_id,
-        :uic_number,
-        :user_id,
-      ],
-    ]
-    accessible_fields << :organisation_id if !@user.try(:persisted?) || can?(:change_organisation, @user)
+   accessible_fields = [  :email, :phone, :password, :user_app_id,
+                          :role_ids => [],
+                          :user_current_roles_attributes =>[:id, :current_role_id, :region_id, :uic_id, :uic_number, :user_id, :_destroy]
+                        ]
+    if !@user.try(:persisted?)
+      accessible_fields += [:organisation_id, :region_id, :adm_region_id]
+    else
+      accessible_fields << :organisation_id if can?(:change_organisation, @user)
+      accessible_fields << :adm_region_id if can?(:change_adm_region, @user)
+      accessible_fields << :region_id if can?(:change_region, @user)
+    end
     params.require(:user).permit(accessible_fields)
   end
 
