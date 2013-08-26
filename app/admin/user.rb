@@ -91,18 +91,21 @@ ActiveAdmin.register User do
       links << link_to(I18n.t('active_admin.delete'), resource_path(resource), class: "member_link delete_link", method: :delete, data: { confirm: "Вы уверены? Удаление пользователя нельзя будет отменить" })
       links
     end
-
-
   end
 
-  filter :email
+  filter :adm_region, :as => :select, :collection => proc { Region.adm_regions.all }, :input_html => {:style => "width: 230px;"}
+  filter :region, :as => :select, :collection => proc { Region.mun_regions.all }, :input_html => {:style => "width: 230px;"}
+  filter :organisation, label: 'Организация', as: :select, collection: proc { Organisation.order(:name).all }, :input_html => {:style => "width: 230px;"}
+  filter :roles, :input_html => {:style => "width: 230px;"}
+  filter :user_app_last_name, as: :string, label: 'Фамилия'
+  filter :email, label: 'Почта'
   filter :user_app_created_at, as: :date_range, label: 'Дата подачи заявки'
   filter :created_at, label: 'Дата создания'
   filter :user_app_experience_count, :as => :numeric, label: 'Опыт'
-  filter :adm_region, :as => :select, :collection => proc { Region.adm_regions.all }, :input_html => {:style => "width: 220px;"}
-  filter :region, :as => :select, :collection => proc { Region.mun_regions.all }, :input_html => {:style => "width: 220px;"}
+  filter :user_app_has_car, as: :boolean, label: 'Автомобиль'
+  filter :user_app_has_video, as: :boolean, label: 'Видеосъёмка'
 
-  form :partial => "form"
+  form :partial => 'form'
 
   config.action_items.clear
 
