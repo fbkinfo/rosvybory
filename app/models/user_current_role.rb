@@ -1,6 +1,7 @@
 class UserCurrentRole < ActiveRecord::Base
   belongs_to :user
   belongs_to :current_role
+  belongs_to :nomination_source
   belongs_to :region
   belongs_to :uic
 
