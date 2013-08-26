@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130823202746) do
+ActiveRecord::Schema.define(version: 20130826151025) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,6 +43,13 @@ ActiveRecord::Schema.define(version: 20130823202746) do
     t.string   "name",                   null: false
     t.string   "slug",                   null: false
     t.integer  "position",   default: 0, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "nomination_sources", force: true do |t|
+    t.string   "name"
+    t.string   "variant"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -145,6 +152,7 @@ ActiveRecord::Schema.define(version: 20130823202746) do
     t.integer  "region_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "nomination_source_id"
   end
 
   add_index "user_current_roles", ["current_role_id"], name: "index_user_current_roles_on_current_role_id", using: :btree
