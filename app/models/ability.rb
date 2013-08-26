@@ -54,9 +54,9 @@ class Ability
           # TODO волонтёров своего округа во формате "Расстановка с ФИО" без участников МГ и КЦ
           # TODO всю базу волонтёров в формате "Обезличенная расстановка" без участников МГ и КЦ
         elsif  user.adm_region
-          can :crud, UserApp, :adm_region_id => user.adm_region_id, :organisation_id => user.organisation_id
-          can :approve, UserApp, :region_id => user.region_id, :organisation_id => user.organisation_id
-          can :reject, UserApp, :region_id => user.region_id, :organisation_id => user.organisation_id
+          can :crud, UserApp, :adm_region_id    => user.adm_region_id, :organisation_id => user.organisation_id
+          can :approve, UserApp, :adm_region_id => user.adm_region_id, :organisation_id => user.organisation_id
+          can :reject, UserApp, :adm_region_id  => user.adm_region_id, :organisation_id => user.organisation_id
           # ТК с незаданным райном может просматривать:
           # карточки волонтёров своего округа
           can :crud, User, :adm_region_id => user.adm_region_id, :organisation_id => user.organisation_id
