@@ -19,7 +19,7 @@ ActiveAdmin.register Dislocation do
     column :current_role_nomination_source_id, -> (user) { NominationSource.find_by(:id => user.current_role_nomination_source_id).try(:name) || user.current_role_nomination_source_id }
     column :dislocation_errors, -> (user) { ' TODO ' }
     actions(defaults: false) do |resource|
-      link_to(I18n.t('active_admin.edit'), resource_path(resource), class: "member_link edit_link")
+      link_to(I18n.t('active_admin.edit'), dislocate_user_path(resource), class: "member_link edit_link")
     end
   end
 

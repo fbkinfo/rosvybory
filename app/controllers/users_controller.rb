@@ -1,7 +1,13 @@
 class UsersController < ApplicationController
 
-  before_filter :expose_current_roles, only: [:new, :edit]
-  before_filter :set_user, only: [:edit, :update]
+  before_filter :expose_current_roles, only: [:new, :edit, :dislocate]
+  before_filter :set_user, only: [:edit, :update, :dislocate]
+
+  def dislocate
+    authorize! :update, @user
+    gon.user_id = @user.id
+    render "dislocate", layout: false
+  end
 
   def edit
     authorize! :update, @user
