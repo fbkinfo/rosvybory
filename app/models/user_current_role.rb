@@ -18,8 +18,8 @@ class UserCurrentRole < ActiveRecord::Base
   private
 
   def region_or_uic_present
-    unless region.present? || uic.present?
-      errors.add(:region, "Надо выбрать ТИК или УИК") unless current_role.slug == "reserve"
+    unless region.present? || uic.present? || %w(reserve observer).include?(current_role.slug)
+      errors.add(:region, "Надо выбрать ТИК или УИК")
     end
   end
 end

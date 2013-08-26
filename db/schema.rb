@@ -13,9 +13,6 @@
 
 ActiveRecord::Schema.define(version: 20130826151025) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
     t.text     "body"
@@ -135,8 +132,8 @@ ActiveRecord::Schema.define(version: 20130826151025) do
     t.string   "state",              default: "pending", null: false
     t.boolean  "phone_verified",     default: false,     null: false
     t.boolean  "has_video"
-    t.string   "forwarded_for"
     t.integer  "organisation_id"
+    t.string   "forwarded_for"
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
   end
@@ -146,8 +143,8 @@ ActiveRecord::Schema.define(version: 20130826151025) do
   add_index "user_apps", ["region_id"], name: "index_user_apps_on_region_id", using: :btree
 
   create_table "user_current_roles", force: true do |t|
-    t.integer  "user_id",         null: false
-    t.integer  "current_role_id", null: false
+    t.integer  "user_id",              null: false
+    t.integer  "current_role_id",      null: false
     t.integer  "uic_id"
     t.integer  "region_id"
     t.datetime "created_at"
