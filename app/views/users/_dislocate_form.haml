@@ -10,27 +10,24 @@
       %br
       = message
 
-= semantic_form_for @user, builder: ::Formtastic::FormBuilder, remote: true do |f|
+= semantic_form_for @user, url: user_path(@user, dislocation: true), builder: ::Formtastic::FormBuilder, remote: true do |f|
+  %h3
+    = @user.decorate.full_name
   = f.inputs "data-role" => "user-fields-container" do
-    = f.input :roles, collection: Role.where("slug != ?", ["admin"]), :input_html => {:style => "width: 300px;"}
-    = f.input :email
-    = f.input :phone
-    = f.input :password, as: :hidden if @user.new_record?
-    = f.input :adm_region, as: :select, collection: Region.adm_regions.pluck(:name, :id), input_html: {:style => "width: 220px;"} if f.object.new_record? || can?(:change_adm_region, f.object)
-    = f.input :region, as: :select, collection: f.object.user_app && f.object.user_app.adm_region ? f.object.user_app.adm_region.regions.pluck(:name, :id) : [], input_html: {:style => "width: 220px;"} if f.object.new_record? || can?(:change_region, f.object)
-    - if can?(:change_organisation, f.object)
-      = f.input :organisation_id, as: :select, collection: Organisation.accessible_by(current_ability)
-    - else
-      = f.input :organisation_id, as: :hidden if f.object.new_record?
-    = f.input :user_app_id, as: :hidden if f.object.new_record?
+    = f.input :roles, collection: Role.all, :input_html => {:style => "width: 300px;", disabled: true}
+    = f.input :email, :input_html => {disabled: true}
+    = f.input :phone, :input_html => {disabled: true}
+    = f.input :adm_region, as: :select, collection: Region.adm_regions.pluck(:name, :id), input_html: {:style => "width: 220px;", disabled: true}
+    = f.input :region, as: :select, collection: Region.mun_regions.pluck(:name, :id), input_html: {:style => "width: 220px;", disabled: true}
+    -#= f.input :organisation, as: :select, collection: Organisation.accessible_by(current_ability)
 
-  = f.inputs "Роли наблюдателя", "data-role" => "observer-roles", class: "hidden" do
+  = f.inputs "Расстановка наблюдателя", "data-role" => "observer-roles", class: "hidden" do
     = f.semantic_fields_for :user_current_roles do |fc|
       = render 'user_current_role_fields', :f => fc
 
     = link_to_add_association 'Добавить роль', f, :user_current_roles
 
   = f.actions do
-    = f.submit "Утвердить"
+    = f.submit "Сохранить"
 :javascript
   initUserForm();

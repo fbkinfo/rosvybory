@@ -323,6 +323,7 @@ ru:
         phone_number: Телефон
       user_current_role:
         current_role: Роль
+        nomination_source: Источник выдвижения
         adm_region_id: Адм регион
         region: Регион
         uic: УИК
