@@ -100,6 +100,7 @@ ActiveAdmin.register User do
   filter :user_app_experience_count, :as => :numeric, label: 'Опыт'
   filter :user_app_has_car, as: :boolean, label: 'Автомобиль'
   filter :user_app_has_video, as: :boolean, label: 'Видеосъёмка'
+  filter :user_current_roles_uic_number, as: :numeric, label: '№ УИК'
 
   form :partial => 'form'
 
