@@ -4,7 +4,7 @@ ActiveAdmin.register Dislocation do
   actions :all, :except => [:new]
   menu :if => proc{ can? :view_dislocation, User }, :priority => 20
 
-  scope :with_current_roles, :default => true
+  #scope :with_current_roles, :default => true
 
   index do
     column "НО + id" do |user|
@@ -31,5 +31,11 @@ ActiveAdmin.register Dislocation do
   filter :current_role_uic, as: :numeric
   filter :current_role_nomination_source_id, as: :select, collection: proc { NominationSource.order(:name) }
   # filter :dislocation_errors, as: :something
+
+  controller do
+    def scoped_collection
+      Dislocation.with_current_roles_and_role :observer
+    end
+  end
 
 end
