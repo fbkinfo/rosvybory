@@ -96,6 +96,7 @@ describe User do
         should be_able_to(:change_adm_region, user)
         should be_able_to(:change_region, user)
         should be_able_to(:import, UserApp)
+        should be_able_to(:view_dislocation, User)
 
         # cannot
         should_not be_able_to(:manage, :all)
@@ -131,6 +132,7 @@ describe User do
         should be_able_to(:change_region, user)
         should be_able_to(:read, UserApp)
         should be_able_to(:import, UserApp)
+        should be_able_to(:view_dislocation, User)
 
         # cannot
         should_not be_able_to(:manage, :all)
