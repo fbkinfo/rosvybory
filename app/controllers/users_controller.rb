@@ -17,10 +17,10 @@ class UsersController < ApplicationController
 
   def update
     authorize! :update, @user
-    if @user.update(user_params)
+    if @user.update( params[:dislocation] ? dislocate_params : user_params )
       render json: {status: :ok}, :content_type => 'text/html'
     else
-      render "edit", layout: false
+      render (params[:dislocation] ? "dislocate" : "edit"), layout: false
     end
   end
 
@@ -69,6 +69,7 @@ class UsersController < ApplicationController
         :current_role_id,
         :id,
         :region_id,
+        :nomination_source_id,
         :uic_id,
         :uic_number,
         :user_id,
@@ -80,7 +81,24 @@ class UsersController < ApplicationController
       accessible_fields << :organisation_id if can?(:change_organisation, @user)
       accessible_fields << :adm_region_id if can?(:change_adm_region, @user)
       accessible_fields << :region_id if can?(:change_region, @user)
+      accessible_fields << :region_id if can?(:change_region, @user)
     end
+    params.require(:user).permit(accessible_fields)
+  end
+
+  def dislocate_params
+    accessible_fields = [
+        :user_current_roles_attributes => [
+            :_destroy,
+            :current_role_id,
+            :id,
+            :region_id,
+            :nomination_source_id,
+            :uic_id,
+            :uic_number,
+            :user_id,
+        ],
+    ]
     params.require(:user).permit(accessible_fields)
   end
 

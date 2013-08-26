@@ -29,7 +29,7 @@ ActiveAdmin.register Dislocation do
   filter :user_app_last_name, as: :string, label: 'Фамилия'
   filter :phone
   filter :current_role_uic, as: :numeric
-  filter :current_role_nomination_source_id, as: :select, collection: proc { NominationSource.order(:name) }
+  filter :current_role_nomination_source_id, as: :select, collection: proc { NominationSource.order(:name) }, :input_html => {:style => "width: 230px;"}
   # filter :dislocation_errors, as: :something
 
   controller do
