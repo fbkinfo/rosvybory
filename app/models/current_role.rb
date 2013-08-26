@@ -3,6 +3,8 @@ class CurrentRole < ActiveRecord::Base
   has_many :user_app_current_roles, dependent: :destroy
   has_many :user_apps, through: :user_app_current_roles
 
+  default_scope -> { order(CurrentRole.arel_table[:position].asc) }
+
   def must_have_tic?
     ['psg_tic', 'prg_tic'].include? slug
   end
