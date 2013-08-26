@@ -3,7 +3,7 @@ ActiveAdmin.register User do
 
   actions :all, :except => [:new]
 
-  menu :if => proc{ can? :manage, User }
+  menu :if => proc{ can? :crud, User }
 
   scope :all, :default => true
   Role.all.each do |role|
@@ -16,7 +16,7 @@ ActiveAdmin.register User do
   batch_action :new_group_sms
 
   show do |user|
-    if can? :manage, user #вид для админа
+    if can? :crud, user #вид для админа
       attributes_table do
         row :organisation do
           "#{user.organisation.name}-#{user.id}" if user.organisation

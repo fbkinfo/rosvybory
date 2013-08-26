@@ -329,6 +329,7 @@ ru:
         updated_at: Изменено
         roles: Роли
         organisation: "Орг."
+        organisation_id: "Организация (НО)"
         sign_in_count: Заходов
         last_sign_in_at: Последний визит
         current_sign_in_at: Текущий визит
