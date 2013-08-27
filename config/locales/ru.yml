@@ -408,7 +408,7 @@ ru:
         legal_status: "Юр. образование"
         experience_count: "Опыт: кол-во"
         extra: "Доп. сведения"
-        social_accounts: "Соц. аккунты"
+        social_accounts: "Соц. аккаунты"
         year_born: "Год рождения"
         sex_male: "Пол"
         ip: "ip"
@@ -449,6 +449,6 @@ ru:
       labels:
         new_group_sms: "Отправить SMS"
         new_group_email: "Отправить почту"
+    edit_model: "Редактирование %{model}"
     scopes:
       with_current_roles: Все
-
