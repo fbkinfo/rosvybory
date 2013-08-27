@@ -57,8 +57,10 @@ class ExcelUserAppRow
       a.year_born ||= 1913
       a.sex_male = true if a.sex_male.nil?
       a.has_video = false if a.has_video.nil?
+      a.has_car = false if a.has_car.nil?
       a.legal_status ||= UserApp::LEGAL_STATUS_NO
     end
+    @user_app.imported!
     @user_app.can_be_observer = true
 
     # attrs.each do |k,v|  # insecure!
