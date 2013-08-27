@@ -19,8 +19,6 @@ class Ability
 
     can :read, User, :id => user.id
 
-    #cannot [:index, :show, :read, :create], ActiveAdmin::Comment
-
     if has_role?(user, :federal_repr)
       #ФП видит заявки своего наблюдательного объединения
       can :crud, UserApp, :organisation_id => user.organisation_id
@@ -39,6 +37,8 @@ class Ability
       # TODO всю базу волонтёров в форматах "Расстановка с ФИО" и "Обезличенная расстановка" без участников МГ и КЦ
       can :import, UserApp
       can :view_dislocation, User
+
+      can [:create, :read], ActiveAdmin::Comment
     end
 
     if has_role?(user, :tc)
@@ -71,6 +71,8 @@ class Ability
 
       can :import, UserApp
       can :view_dislocation, User
+
+      can [:create, :read], ActiveAdmin::Comment
     end
 
     if has_role?(user, :mc)
@@ -81,10 +83,14 @@ class Ability
 
       # TODO всех участников МГ в координаторском формате
       # TODO всех участников МГ в форматах "Сводка МГ с контактами", "Сводка МГ с ФИО" и "Обезличенная сводка МГ"
+
+      can [:create, :read], ActiveAdmin::Comment
     end
 
     if has_role?(user, :cc)
       # TODO КК может просматривать только участников КЦ в координаторском формате и формате "Состав КЦ".
+
+      can [:create, :read], ActiveAdmin::Comment
     end
 
     # Define abilities for the passed in user here. For example:
