@@ -58,8 +58,9 @@ ActiveAdmin.register User do
     actions(defaults: false) do |resource|
       links = ''.html_safe
       links << link_to(I18n.t('active_admin.view'), resource_path(resource), class: "member_link view_link")
+      links << '<br/> <br/>'.html_safe
       links << link_to(I18n.t('active_admin.edit'), edit_user_path(resource.id), class: "member_link edit_link")
-      links << link_to(I18n.t('active_admin.delete'), resource_path(resource), class: "member_link delete_link", method: :delete, data: { confirm: "Вы уверены? Удаление пользователя нельзя будет отменить" })
+      #links << link_to(I18n.t('active_admin.delete'), resource_path(resource), class: "member_link delete_link", method: :delete, data: { confirm: "Вы уверены? Удаление пользователя нельзя будет отменить" })
       links
     end
 
