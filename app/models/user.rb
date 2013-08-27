@@ -6,6 +6,8 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable,
          :authentication_keys => [:phone]
 
+  def email_required?; false end
+
   has_many :user_roles, dependent: :destroy
   has_many :roles, through: :user_roles
 
@@ -14,7 +16,7 @@ class User < ActiveRecord::Base
 
   belongs_to :region
   belongs_to :adm_region, class_name: "Region"
-  belongs_to :mobile_group # future stub
+  # belongs_to :mobile_group future stub
   belongs_to :organisation
   belongs_to :user_app
 
