@@ -6,11 +6,7 @@ class UserDecorator < Draper::Decorator
             to: :decorated_user_app, allow_nil: true
 
   def user_current_roles
-    ucrs = []
-    object.user_current_roles.each do |ucr|
-      ucrs << h.user_current_role_human_readable(ucr)
-    end
-    ucrs.join("; ")
+    object.user_current_roles.map {|ucr| h.user_current_role_human_readable(ucr) }.join("; ")
   end
 
   def decorated_user_app
@@ -22,6 +18,8 @@ class UserDecorator < Draper::Decorator
     object.roles.pluck(:short_name).join("; ")
   end
 
-
+  def organisation_with_user_id
+    "#{organisation.name}-#{id}" if organisation
+  end
 
 end
