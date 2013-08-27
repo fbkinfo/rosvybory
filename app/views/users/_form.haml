@@ -12,6 +12,8 @@
 
 = semantic_form_for @user, builder: ::Formtastic::FormBuilder, remote: true do |f|
   = f.inputs "data-role" => "user-fields-container" do
+    = f.input :full_name
+    = f.input :address, :input_html => {:rows => 2}
     = f.input :roles, collection: Role.where("slug != ?", ["admin"]), :input_html => {:style => "width: 300px;"}
     = f.input :email
     = f.input :phone

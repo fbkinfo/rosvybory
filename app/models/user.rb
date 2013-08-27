@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
   validates :phone, presence: true, uniqueness: true, format: {with: /\A\d{10}\z/}
 
   validates :year_born,
-            :numericality  => {:only_integer => true, :greater_than => 1900, :less_than => 2000,  :message => "Неверный формат"}
+            :numericality  => {:only_integer => true, :greater_than => 1900, :less_than => 2000,  :message => "Неверный формат", allow_nil: true}
 
   after_create :mark_user_app_state
   after_create :send_sms_with_password, :if => :send_invitation?
@@ -31,6 +31,18 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :user_current_roles, allow_destroy: true
 
   delegate :created_at, to: :user_app, allow_nil: true, prefix: true
+
+
+  def full_name
+    [last_name, first_name, patronymic].join ' '
+  end
+
+  def full_name=(name)
+    split = name.split(' ', 3)
+    self.last_name = split[0]
+    self.first_name = split[1]
+    self.patronymic = split[2]
+  end
 
   class << self
     def new_from_app(app)
@@ -69,11 +81,16 @@ class User < ActiveRecord::Base
   end
 
   def update_from_user_app(app)
+    #TODO refactor
+    self.last_name = app.last_name
+    self.first_name = app.first_name
+    self.patronymic = app.patronymic
     self.email = app.email
     self.region = app.region
     self.adm_region_id = app.adm_region_id
     self.phone = Verification.normalize_phone_number(app.phone)
     self.organisation = app.organisation
+    self.year_born = app.year_born
     self.user_app = app
     generate_password
 

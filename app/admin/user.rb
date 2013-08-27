@@ -20,6 +20,7 @@ ActiveAdmin.register User do
       attributes_table do
         row :organisation, &:organisation_with_user_id
         row :user_app_created_at
+        row :full_name
         row :adm_region
         row :region
         row :phone
@@ -37,6 +38,11 @@ ActiveAdmin.register User do
         row :has_video, &:human_has_video
         row :social_accounts, &:human_social_accounts
         row :extra
+        row :address
+        row :passport
+        row :place_of_birth
+        row :work
+        row :work_position
 
         row :last_sign_in_at
         row :sign_in_count
@@ -46,6 +52,7 @@ ActiveAdmin.register User do
       active_admin_comments
     elsif can? :read, user
       attributes_table do
+        row :full_name
         row :email
         row :region
         row :organisation
@@ -86,6 +93,7 @@ ActiveAdmin.register User do
     column :has_video, &:human_has_video
     column :social_accounts, &:human_social_accounts
     column :extra
+    column :year_born
 
   end
 
