@@ -4,7 +4,77 @@
   .panel_contents
     .attributes_table
       %table
-        - %w(last_name first_name patronymic desired_statuses current_roles previous_statuses experience_count has_car social_accounts extra legal_status  region_id year_born sex_male phone_verified has_video).each do |field|
+        %tbody
+          - %w[last_name first_name patronymic].each do |field|
+            %tr.row
+              %th= UserApp.human_attribute_name(field)
+              %td= user_app.send field
+          - UserApp.future_statuses_methods.each_with_index do |method_name, i|
+            - if user_app.send(method_name) ==  'Да'
+              %tr.row
+                %th
+                  - if i == 0
+                    = UserApp.human_attribute_name :desired_statuses
+                %td= UserApp.human_attribute_name method_name
+          - user_app.user_app_current_roles.each_with_index do |user_app_current_role, i|
+            %tr.row
+              %th
+                - if i == 0
+                  = UserApp.human_attribute_name :current_roles
+              %td
+                = user_app_current_role.current_role.name
+                №
+                = user_app_current_role.value
+          - UserApp.previous_statuses_methods.each_with_index do |method_name, i|
+            - if user_app.send(method_name) ==  'Да'
+              %tr.row
+                %th
+                  - if i == 0
+                    = UserApp.human_attribute_name :previous_statuses
+                %td= UserApp.human_attribute_name method_name
           %tr.row
-            %th= UserApp.human_attribute_name(field)
-            %td= user_app.send field
+            %th= UserApp.human_attribute_name(:experience_count)
+            %td= user_app.experience_count
+          %tr.row
+            %th= UserApp.human_attribute_name(:has_car)
+            %td= t(user_app.has_car.to_s)
+          - first = true
+          - user_app.social_accounts.each do |key, val|
+            - if val.present?
+              %tr.row
+                %th
+                  - if first
+                    - first = false
+                    = UserApp.human_attribute_name :social_accounts
+                %td
+                  = link_to UserApp::SOCIAL_ACCOUNTS[key.to_sym], val, target: :_blank
+          %tr.row
+            %th= UserApp.human_attribute_name(:extra)
+            %td= user_app.extra
+          %tr.row
+            %th= UserApp.human_attribute_name :legal_status
+            %td
+              - case user_app.legal_status
+              - when UserApp::LEGAL_STATUS_YES
+                Да
+              - when UserApp::LEGAL_STATUS_NO
+                Нет
+              - when UserApp::LEGAL_STATUS_LAWYER
+                Есть статус адвоката
+          %tr.row
+            %th= UserApp.human_attribute_name(:region)
+            %td= user_app.region.name
+          %tr.row
+            %th= UserApp.human_attribute_name(:year_born)
+            %td= user_app.year_born
+          %tr.row
+            %th= UserApp.human_attribute_name :sex_male
+            %td
+              -if user_app.sex_male
+                Мужской
+              - else
+                Женский
+          - %w[phone_verified has_video].each do |field|
+            %tr.row
+              %th= UserApp.human_attribute_name(field)
+              %td= t(user_app.send(field).to_s)
