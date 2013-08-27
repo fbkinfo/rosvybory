@@ -51,6 +51,7 @@ group :development do
   gem 'quiet_assets'
   gem 'rvm-capistrano'
   gem 'launchy'
+  gem 'letter_opener'
 end
 
 group :test, :development do
