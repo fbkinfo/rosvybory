@@ -272,5 +272,6 @@ ActiveAdmin.register UserApp do
         row attr, &custom[attr]
       end
     end
+    active_admin_comments
   end
 end
