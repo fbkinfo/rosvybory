@@ -61,6 +61,11 @@ class UsersController < ApplicationController
         :passport,
         :work,
         :work_position,
+        :last_name,
+        :first_name,
+        :full_name,
+        :patronymic,
+        :address,
         :user_current_roles_attributes => [
             :_destroy,
             :current_role_id,
