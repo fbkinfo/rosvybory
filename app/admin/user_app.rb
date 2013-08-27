@@ -261,4 +261,16 @@ ActiveAdmin.register UserApp do
       column(method_name) {|user_app| user_app.send(method_name) ? "Да" : "Нет" }
     end
   end
+
+  show do |app|
+    default = default_attribute_table_rows
+    custom = {
+      extra: Proc.new{ content_tag(:pre){ app.extra } }
+    }
+    attributes_table do
+      default.each do |attr|
+        row attr, &custom[attr]
+      end
+    end
+  end
 end
