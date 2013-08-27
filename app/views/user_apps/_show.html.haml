@@ -1,0 +1,132 @@
+.panel
+  %h3
+    Роль
+  .panel_contents
+    .attributes_table.user_app
+      %table
+        %tbody
+          - UserApp.future_statuses_methods.each do | method_name|
+            - if user_app.send(method_name) ==  'Да'
+              %tr.row
+                %th
+                %td= UserApp.human_attribute_name method_name
+          %tr.row
+            %th= UserApp.human_attribute_name :adm_region
+            %td= user_app.adm_region
+          %tr.row
+            %th= UserApp.human_attribute_name :region
+            %td= user_app.region
+          %tr.row
+            %th= UserApp.human_attribute_name :uic
+            %td= user_app.uic
+.panel
+  %h3
+    Личные данные
+  .panel_contents
+    .attributes_table.user_app
+      %table
+        %tbody
+          %tr.row
+            %th= UserApp.human_attribute_name :last_name
+            %td= user_app.last_name
+          %tr.row
+            %th= UserApp.human_attribute_name :first_name
+            %td= user_app.first_name
+          %tr.row
+            %th= UserApp.human_attribute_name :patronymic
+            %td= user_app.patronymic
+          %tr.row
+            %th= UserApp.human_attribute_name :phone
+            %td
+              = user_app.phone
+              - if user_app.phone_verified
+                подтверждён
+          %tr.row
+            %th= UserApp.human_attribute_name :year_born
+            %td= user_app.year_born
+          %tr.row
+            %th= UserApp.human_attribute_name :sex_male
+            %td
+              -if user_app.sex_male
+                Мужской
+              - else
+                Женский
+.panel
+  %h3
+    Подробнее
+  .panel_contents
+    .attributes_table.user_app
+      %table
+        %tbody
+          - user_app.user_app_current_roles.each do |user_app_current_role|
+            %tr.row
+              %th
+              %td
+                = user_app_current_role.current_role.name
+                №
+                = user_app_current_role.value
+          %tr.row
+            %th= UserApp.human_attribute_name :has_car
+            %td
+              - if user_app.has_car
+                да
+              - else
+                нет
+          %tr.row
+            %th= UserApp.human_attribute_name :has_video
+            %td
+              - if user_app.has_video
+                да
+              - else
+                нет
+          %tr.row
+            %th= UserApp.human_attribute_name :legal_status
+            %td
+              - case user_app.legal_status
+              - when UserApp::LEGAL_STATUS_YES
+                Да
+              - when UserApp::LEGAL_STATUS_NO
+                Нет
+              - when UserApp::LEGAL_STATUS_LAWYER
+                Есть статус адвоката
+.panel
+  %h3
+    Прежний опыт
+  .panel_contents
+    .attributes_table.user_app
+      %table
+        %tbody
+          - UserApp.previous_statuses_methods.each do | method_name|
+            - if user_app.send(method_name) ==  'Да'
+              %tr.row
+                %th
+                %td= UserApp.human_attribute_name method_name
+          %tr.row
+            %th= UserApp.human_attribute_name :experience_count
+            %td= user_app.experience_count
+.panel
+  %h3
+    Аккаунты в соцсетях
+  .panel_contents
+    .attributes_table.user_app
+      %table
+        %tbody
+          - user_app.social_accounts.each do |key, val|
+            - if val.present?
+              %tr.row
+                %th
+                %td
+                  = link_to UserApp::SOCIAL_ACCOUNTS[key.to_sym], val, target: :_blank
+.panel
+  %h3
+    Дополнительные сведения
+  .panel_contents
+    .attributes_table.user_app
+      %table
+        %tbody
+          %tr.row
+            %th= UserApp.human_attribute_name :extra
+            %td= user_app.extra
+          %tr.row
+            %th= UserApp.human_attribute_name :organisation
+            %td= user_app.organisation

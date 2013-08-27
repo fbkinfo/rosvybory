@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 ActiveAdmin.register UserApp do
   decorate_with UserAppDecorator
 
@@ -134,7 +135,7 @@ ActiveAdmin.register UserApp do
     rescue_from ActiveAdmin::AccessDenied do |exception|
       redirect_to '/control/dashboard', :notice => exception.message
     end
-  end
+  end   # controller
 
   index do
     selectable_column
@@ -168,12 +169,16 @@ ActiveAdmin.register UserApp do
       links << link_to('Отклонить', reject_control_user_app_path(resource), method: :post, remote: true, data: {"user-app-id" => resource.id}, class: "member_link view_link reject_link") unless resource.rejected?
       links
     end
-  end
+  end   # index
 
   form do |f|
+    user_app = f.object
     f.inputs "Роль" do
-      # TODO
-      f.input :desired_statuses
+      UserApp.future_statuses_methods.each do | method_name|
+        f.input method_name, as: :boolean,
+            input_html: {checked: user_app.send(method_name) == 'Да'}
+      end
+      # f.input :desired_statuses, as: :radio
       f.input :adm_region
       f.input :region
       f.input :uic
@@ -187,26 +192,32 @@ ActiveAdmin.register UserApp do
       f.input :phone_verified
       f.input :email
       f.input :year_born
-      f.input :sex_male, label: "Мужчина"
+      f.input :sex_male, as: :radio, collection: {"Мужской" => true, "Женский" => false}
     end
 
     f.inputs "Подробнее" do
       # TODO
       #f.input :current_roles
       f.input :has_car
-      f.input :legal_status
       f.input :has_video
+      f.input :legal_status, label: "Есть юридическое образование?", as: :radio,
+          collection: {"Да" => UserApp::LEGAL_STATUS_YES,
+                       "Нет" => UserApp::LEGAL_STATUS_NO,
+                       "Есть статус адвоката" => UserApp::LEGAL_STATUS_LAWYER}
     end
 
     f.inputs "Прежний опыт" do
-      # TODO
-      f.input :previous_statuses
+      UserApp.previous_statuses_methods.each do |method_name|
+        f.input method_name, :as => :boolean,
+            input_html: {checked: user_app.send(method_name) == 'Да'}
+      end
       f.input :experience_count
     end
 
     f.inputs "Аккаунты в соцсетях" do
-      # TODO
-      #f.input :social_accounts
+      UserApp::SOCIAL_ACCOUNTS.each do |provider_key, provider_name|
+        f.input 'social_'+provider_key.to_s, :label => (link_to provider_name, social_account_links(provider_key), target: "_blank"), placeholder: social_account_placeholders(provider_key).html_safe
+      end
     end
 
     f.inputs "Дополнительные сведения" do
@@ -215,7 +226,7 @@ ActiveAdmin.register UserApp do
     end
 
     f.actions
-  end
+  end   # form
 
   csv do
     column :id
@@ -260,5 +271,11 @@ ActiveAdmin.register UserApp do
     UserApp.previous_statuses_methods.each do | method_name|
       column(method_name) {|user_app| user_app.send(method_name) ? "Да" : "Нет" }
     end
-  end
+  end   # csv
+
+  show do |user_app|
+    render 'user_apps/show', user_app: user_app
+    active_admin_comments
+  end   # show
+
 end
