@@ -24,7 +24,8 @@ class UserApp < ActiveRecord::Base
   validates :first_name, :presence => true
   validates :last_name,  :presence => true
   validates :patronymic,  :presence => true
-  validates :email, :presence => true, email: true
+  validates :email, :email => true, :allow_blank => true
+  validates :email, :presence => true, :unless => :imported?
   validates :phone, :presence => true, uniqueness: { scope: :state }, format: { with: /\A\d{10}\z/ } #TODO это более мягкая проверка, чем в валидаторе на форме (уникальность внутри одного статуса, а там - среди всех статусов кроме rejected)
   validates :adm_region, :presence => true
   validates :desired_statuses, :presence => true, :exclusion => { :in => [NO_STATUS], :message => "Требуется выбрать хотя бы один вариант" }
@@ -196,6 +197,14 @@ class UserApp < ActiveRecord::Base
 
   def phone=(value)
     self[:phone] = Verification.normalize_phone_number(value)
+  end
+
+  def imported?
+    @imported
+  end
+
+  def imported!
+    @imported = true
   end
 
   private
