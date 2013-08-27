@@ -11,7 +11,7 @@ class ExcelUserAppRow
     email: 8,
     uic: 9,
 
-    current_roles: 10,
+    current_roles: 10, #инициализия этого поля требует уже инициализированных полей uic, region и adm_region, поэтому в этом хеше оно должно идти после них.
     experience_count: 11,
     previous_statuses: 12,
     can_be_reserv: 13,   #нет прямого поля
@@ -39,7 +39,7 @@ class ExcelUserAppRow
   end
 
   attr_reader :user_app, :user
-  attr_accessor :uid # lost after save
+  attr_accessor :uid # lost after save, but is used to detect organisation
   attr_accessor :created_at, :adm_region, :region, :has_car, :current_roles, :experience_count, :previous_statuses, :can_be_coord_region, :can_be_reserv, :social_accounts, :uic
 
   delegate :organisation,
@@ -57,8 +57,10 @@ class ExcelUserAppRow
       a.year_born ||= 1913
       a.sex_male = true if a.sex_male.nil?
       a.has_video = false if a.has_video.nil?
+      a.has_car = false if a.has_car.nil?
       a.legal_status ||= UserApp::LEGAL_STATUS_NO
     end
+    @user_app.imported!
     @user_app.can_be_observer = true
 
     # attrs.each do |k,v|  # insecure!
@@ -67,6 +69,16 @@ class ExcelUserAppRow
       v = v.strip if v.respond_to?(:strip)
       send "#{k}=", v if v.present? && k != '_destroy'
     end
+  end
+
+  def uid=(v)
+    orgs_by_name = {
+        "ГН" => "Гражданин Наблюдатель",
+        "ГЛС" => "Голос",
+        "СНР" => "Сонар"
+    }
+    self.organisation = Organisation.where(name: orgs_by_name[v.split('-')[0]]).first
+    @uid = v
   end
 
   def current_roles=(v)
@@ -78,7 +90,17 @@ class ExcelUserAppRow
     }
     role = CurrentRole.where(:slug => roles_by_name[v]).first
     if role && !@user_app.user_app_current_roles.where(:current_role_id => role.id).first
-      @user_app.user_app_current_roles.build(:current_role_id => role.id).keep = '1'
+      value = nil
+      if role.must_have_uic?
+        value = "#{@user_app.uic}"
+      elsif role.must_have_tic?
+        if region.try(:has_tic?)#для районов с ТИКами
+          value = region.name
+        elsif adm_region.try(:has_tic?) #для округов с ТИКами
+          value = adm_region.name
+        end
+      end
+      @user_app.user_app_current_roles.build(:current_role_id => role.id, value: value).keep = '1'
     end
     @current_roles = v
   end

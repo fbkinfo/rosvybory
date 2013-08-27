@@ -13,6 +13,7 @@ class UserAppCurrentRole < ActiveRecord::Base
   end
 
   private
+
     def check_keep
       errors.add :base, "#{current_role_id} Не отмечен для сохранения" unless keep
     end

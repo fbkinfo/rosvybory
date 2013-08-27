@@ -11,10 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130823202746) do
-
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+ActiveRecord::Schema.define(version: 20130827091430) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -43,6 +40,13 @@ ActiveRecord::Schema.define(version: 20130823202746) do
     t.string   "name",                   null: false
     t.string   "slug",                   null: false
     t.integer  "position",   default: 0, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "nomination_sources", force: true do |t|
+    t.string   "name"
+    t.string   "variant"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -139,12 +143,13 @@ ActiveRecord::Schema.define(version: 20130823202746) do
   add_index "user_apps", ["region_id"], name: "index_user_apps_on_region_id", using: :btree
 
   create_table "user_current_roles", force: true do |t|
-    t.integer  "user_id",         null: false
-    t.integer  "current_role_id", null: false
+    t.integer  "user_id",              null: false
+    t.integer  "current_role_id",      null: false
     t.integer  "uic_id"
     t.integer  "region_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "nomination_source_id"
   end
 
   add_index "user_current_roles", ["current_role_id"], name: "index_user_current_roles_on_current_role_id", using: :btree
@@ -164,7 +169,7 @@ ActiveRecord::Schema.define(version: 20130823202746) do
   add_index "user_roles", ["user_id"], name: "index_user_roles_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
-    t.string   "email",                  default: "", null: false
+    t.string   "email"
     t.string   "encrypted_password",     default: "", null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
@@ -185,7 +190,6 @@ ActiveRecord::Schema.define(version: 20130823202746) do
   end
 
   add_index "users", ["adm_region_id"], name: "index_users_on_adm_region_id", using: :btree
-  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["mobile_group_id"], name: "index_users_on_mobile_group_id", using: :btree
   add_index "users", ["organisation_id"], name: "index_users_on_organisation_id", using: :btree
   add_index "users", ["region_id"], name: "index_users_on_region_id", using: :btree

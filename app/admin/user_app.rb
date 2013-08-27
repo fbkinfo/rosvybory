@@ -57,7 +57,7 @@ ActiveAdmin.register UserApp do
   end
 
   action_item only: [:edit, :show] do
-    link_to('Отклонить', reject_control_user_app_path(user_app), method: :post, 'data-confirm' => 'Отклонить заявку?')
+    link_to('Отклонить', reject_control_user_app_path(user_app), method: :post, 'data-confirm' => 'Отклонить заявку?') unless resource.rejected?
   end
 
   action_item only: [:edit, :show] do
@@ -65,7 +65,7 @@ ActiveAdmin.register UserApp do
   end
 
   action_item only: [:edit, :show] do
-    link_to('Принять', new_user_path(user_app_id: resource.id), data: {"user-app-id" => resource.id}, class: "member_link accept_link")
+    link_to('Принять', new_user_path(user_app_id: resource.id), data: {"user-app-id" => resource.id}, class: "member_link accept_link")  unless resource.approved?
   end
 
   #scope :all, :default => true
@@ -85,6 +85,7 @@ ActiveAdmin.register UserApp do
   filter   :last_name
   filter   :first_name
   filter   :patronymic
+  filter   :sex_male, :as => :select, :collection => [['М', true], ['Ж', false]]
   filter   :phone
   filter   :email
   filter   :uic #, :as => :numeric_range
@@ -139,6 +140,16 @@ ActiveAdmin.register UserApp do
 
   index do
     selectable_column
+
+    actions(defaults: false) do |resource|
+      links = ''.html_safe
+      links << link_to(I18n.t('active_admin.view'), resource_path(resource), class: "member_link view_link")
+      links << link_to('Принять', new_user_path(user_app_id: resource.id), data: {"user-app-id" => resource.id}, class: "member_link view_link accept_link") unless resource.approved?
+      links << '<br/> <br/>'.html_safe
+      links << link_to('Отклонить', reject_control_user_app_path(resource), method: :post, remote: true, data: {"user-app-id" => resource.id}, 'data-confirm' => 'Отклонить заявку?', class: "member_link view_link reject_link") unless resource.rejected?
+      links
+    end
+
     column :created_at
 
     column :desired_statuses, :sortable => false, &:human_desired_statuses
@@ -160,15 +171,6 @@ ActiveAdmin.register UserApp do
 
     column :current_roles, :sortable => false, &:human_current_roles
 
-    actions(defaults: false) do |resource|
-      links = ''.html_safe
-      links << link_to(I18n.t('active_admin.view'), resource_path(resource), class: "member_link view_link")
-
-      links << link_to('Принять', new_user_path(user_app_id: resource.id), data: {"user-app-id" => resource.id}, class: "member_link view_link accept_link") unless resource.approved?
-      links << '<br/> <br/>'.html_safe
-      links << link_to('Отклонить', reject_control_user_app_path(resource), method: :post, remote: true, data: {"user-app-id" => resource.id}, class: "member_link view_link reject_link") unless resource.rejected?
-      links
-    end
   end
 
   form do |f|
@@ -261,5 +263,18 @@ ActiveAdmin.register UserApp do
     UserApp.previous_statuses_methods.each do | method_name|
       column(method_name) {|user_app| user_app.send(method_name) ? "Да" : "Нет" }
     end
+  end
+
+  show do |app|
+    default = default_attribute_table_rows
+    custom = {
+      extra: Proc.new{ content_tag(:pre){ app.extra } }
+    }
+    attributes_table do
+      default.each do |attr|
+        row attr, &custom[attr]
+      end
+    end
+    active_admin_comments
   end
 end

@@ -6,9 +6,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable,
          :authentication_keys => [:phone]
 
-  validates_presence_of :phone
-  validates_uniqueness_of :phone
-  validates_format_of :phone, with: /\A\d{10}\z/
+  def email_required?; false end
 
   has_many :user_roles, dependent: :destroy
   has_many :roles, through: :user_roles
@@ -18,11 +16,11 @@ class User < ActiveRecord::Base
 
   belongs_to :region
   belongs_to :adm_region, class_name: "Region"
-  belongs_to :mobile_group # future stub
+  # belongs_to :mobile_group future stub
   belongs_to :organisation
   belongs_to :user_app
 
-  validates :phone, presence: true
+  validates :phone, presence: true, uniqueness: true, format: {with: /\A\d{10}\z/}
 
   after_create :mark_user_app_state
   after_create :send_sms_with_password, :if => :send_invitation?
@@ -34,6 +32,16 @@ class User < ActiveRecord::Base
   class << self
     def new_from_app(app)
       new.update_from_user_app(app)
+    end
+
+    def send_reset_password_instructions(attributes={})
+      attributes["phone"] = Verification.normalize_phone_number(attributes["phone"])
+      super
+    end
+
+    def find_for_database_authentication(conditions)
+      conditions[:phone] = Verification.normalize_phone_number(conditions[:phone])
+      super
     end
   end
 
@@ -67,17 +75,21 @@ class User < ActiveRecord::Base
     generate_password
 
     if app.can_be_observer || app.user_app_current_roles.present?
-      # FIXME isn't it excel_user_app_row-specific?
       self.add_role :observer
       app.user_app_current_roles.each do |ua_role|
-        #TODO Откуда-то берётся дополнительная запись о Резеве УИКов, надо разобраться откуда и убрать её
         if ua_role.current_role
           ucr = user_current_roles.find_or_initialize_by(current_role_id: ua_role.current_role.id)
-          #"reserve" - без УИК и ТИК
-          if ["psg", "prg"].include? ua_role.current_role.slug
-            ucr.uic = Uic.find_by(number: app.uic)
-          elsif ["psg_tic", "prg_tic"].include? ua_role.current_role.slug
-            ucr.region = region if region.has_tic? #TODO Если указан район без ТИК, то возможно стоит кидать ошибку
+          if ua_role.current_role.must_have_uic?
+            ucr.uic = Uic.find_by(number: ua_role.value) || Uic.find_by(number: app.uic)
+          elsif ua_role.current_role.must_have_tic?
+            ucr.region = Region.find_by(name: ua_role.value)
+            unless ucr.region
+              if region.try(:has_tic?)#для районов с ТИКами
+                ucr.region = region
+              elsif adm_region.try(:has_tic?) #для округов с ТИКами
+                ucr.region = adm_region
+              end
+            end
           end
         end
       end
