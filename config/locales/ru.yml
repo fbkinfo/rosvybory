@@ -363,6 +363,11 @@ ru:
         has_video: "Видеосъёмка"
         social_accounts: "Соцсети"
         extra: "Дополнительные сведения"
+        year_born: Год рождения
+        place_of_birth: Место рождения
+        passport: Паспорт
+        work: Место работы
+        work_position: Должность
       region:
         kind: Тип
         name: Название

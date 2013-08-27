@@ -22,6 +22,9 @@ class User < ActiveRecord::Base
 
   validates :phone, presence: true, uniqueness: true, format: {with: /\A\d{10}\z/}
 
+  validates :year_born,
+            :numericality  => {:only_integer => true, :greater_than => 1900, :less_than => 2000,  :message => "Неверный формат"}
+
   after_create :mark_user_app_state
   after_create :send_sms_with_password, :if => :send_invitation?
 
