@@ -45,7 +45,7 @@ class ManyUserAppsForm
 
   def build_user_app(attrs = {})
     ExcelUserAppRow.new(attrs).tap do |euar|
-      euar.organisation = @organisation
+      euar.organisation = @organisation unless euar.organisation
       @user_apps << euar
     end
   end

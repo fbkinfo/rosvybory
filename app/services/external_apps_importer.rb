@@ -27,7 +27,7 @@ class ExternalAppsImporter
 
   def build_and_persist(attrs)
     model = ExcelUserAppRow.new(attrs)
-    model.organisation = organisation
+    model.organisation ||= organisation
     model.save || logger.warn("Error at row #{i}: #{model.errors.inspect}")
   end
 
