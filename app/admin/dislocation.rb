@@ -34,7 +34,7 @@ ActiveAdmin.register Dislocation do
 
   controller do
     def scoped_collection
-      Dislocation.with_current_roles_and_role :observer
+      Dislocation.with_current_roles.with_role :observer
     end
   end
 
