@@ -20,6 +20,7 @@
     = f.input :adm_region, as: :select, collection: Region.adm_regions.pluck(:name, :id), input_html: {:style => "width: 220px;", disabled: true}
     = f.input :region, as: :select, collection: Region.mun_regions.pluck(:name, :id), input_html: {:style => "width: 220px;", disabled: true}
     -#= f.input :organisation, as: :select, collection: Organisation.accessible_by(current_ability)
+    = render :partial => 'personal_data_inputs', locals: {f: f}
 
   = f.inputs "Расстановка наблюдателя", "data-role" => "observer-roles", class: "hidden" do
     = f.semantic_fields_for :user_current_roles do |fc|

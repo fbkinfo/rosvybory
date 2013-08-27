@@ -54,40 +54,13 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
   end
 
-  # Only allow a trusted parameter "white list" through.
-  def user_params
-    accessible_fields = [
-      :adm_region_id,
-      :email,
-      :password,
-      :phone,
-      :region_id,
-      :user_app_id,
-      :role_ids => [],
-      :user_current_roles_attributes => [
-        :_destroy,
-        :current_role_id,
-        :id,
-        :region_id,
-        :nomination_source_id,
-        :uic_id,
-        :uic_number,
-        :user_id,
-      ],
-    ]
-    if !@user.try(:persisted?)
-      accessible_fields += [:organisation_id, :region_id, :adm_region_id]
-    else
-      accessible_fields << :organisation_id if can?(:change_organisation, @user)
-      accessible_fields << :adm_region_id if can?(:change_adm_region, @user)
-      accessible_fields << :region_id if can?(:change_region, @user)
-      accessible_fields << :region_id if can?(:change_region, @user)
-    end
-    params.require(:user).permit(accessible_fields)
-  end
-
-  def dislocate_params
-    accessible_fields = [
+  def accessible_fields_dislocate
+    [
+        :year_born,
+        :place_of_birth,
+        :passport,
+        :work,
+        :work_position,
         :user_current_roles_attributes => [
             :_destroy,
             :current_role_id,
@@ -99,7 +72,33 @@ class UsersController < ApplicationController
             :user_id,
         ],
     ]
+  end
+
+  def user_params
+    accessible_fields = [
+      :adm_region_id,
+      :email,
+      :password,
+      :phone,
+      :region_id,
+      :user_app_id,
+      :role_ids => [],
+    ]
+    if !@user.try(:persisted?)
+      accessible_fields += [:organisation_id, :region_id, :adm_region_id]
+    else
+      accessible_fields << :organisation_id if can?(:change_organisation, @user)
+      accessible_fields << :adm_region_id if can?(:change_adm_region, @user)
+      accessible_fields << :region_id if can?(:change_region, @user)
+      accessible_fields << :region_id if can?(:change_region, @user)
+    end
+    accessible_fields += accessible_fields_dislocate
+
     params.require(:user).permit(accessible_fields)
+  end
+
+  def dislocate_params
+    params.require(:user).permit(accessible_fields_dislocate)
   end
 
   def expose_current_roles

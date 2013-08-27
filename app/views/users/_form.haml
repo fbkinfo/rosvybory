@@ -23,6 +23,8 @@
     - else
       = f.input :organisation_id, as: :hidden if f.object.new_record?
     = f.input :user_app_id, as: :hidden if f.object.new_record?
+    -unless f.object.new_record?
+      = render :partial => 'personal_data_inputs', locals: {f: f}
 
   = f.inputs "Роли наблюдателя", "data-role" => "observer-roles", class: "hidden" do
     = f.semantic_fields_for :user_current_roles do |fc|
