@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130826151025) do
+ActiveRecord::Schema.define(version: 20130827091430) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -169,7 +169,7 @@ ActiveRecord::Schema.define(version: 20130826151025) do
   add_index "user_roles", ["user_id"], name: "index_user_roles_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
-    t.string   "email",                  default: "", null: false
+    t.string   "email"
     t.string   "encrypted_password",     default: "", null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
@@ -190,7 +190,6 @@ ActiveRecord::Schema.define(version: 20130826151025) do
   end
 
   add_index "users", ["adm_region_id"], name: "index_users_on_adm_region_id", using: :btree
-  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["mobile_group_id"], name: "index_users_on_mobile_group_id", using: :btree
   add_index "users", ["organisation_id"], name: "index_users_on_organisation_id", using: :btree
   add_index "users", ["region_id"], name: "index_users_on_region_id", using: :btree
