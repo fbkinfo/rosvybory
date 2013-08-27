@@ -13,6 +13,11 @@
 = semantic_form_for @user, url: user_path(@user, dislocation: true), builder: ::Formtastic::FormBuilder, remote: true do |f|
   %h3
     = @user.decorate.full_name
+  = f.inputs "Расстановка наблюдателя", "data-role" => "observer-roles", class: "hidden" do
+    = f.semantic_fields_for :user_current_roles do |fc|
+      = render 'user_current_role_fields', :f => fc
+
+    = link_to_add_association 'Добавить роль', f, :user_current_roles
   = f.inputs "data-role" => "user-fields-container" do
     = f.input :roles, collection: Role.all, :input_html => {:style => "width: 300px;", disabled: true}
     = f.input :email, :input_html => {disabled: true}
@@ -22,11 +27,7 @@
     -#= f.input :organisation, as: :select, collection: Organisation.accessible_by(current_ability)
     = render :partial => 'personal_data_inputs', locals: {f: f}
 
-  = f.inputs "Расстановка наблюдателя", "data-role" => "observer-roles", class: "hidden" do
-    = f.semantic_fields_for :user_current_roles do |fc|
-      = render 'user_current_role_fields', :f => fc
 
-    = link_to_add_association 'Добавить роль', f, :user_current_roles
 
   = f.actions do
     = f.submit "Сохранить"
