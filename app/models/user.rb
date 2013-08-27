@@ -6,6 +6,8 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable,
          :authentication_keys => [:phone]
 
+  def email_required?; false end
+
   has_many :user_roles, dependent: :destroy
   has_many :roles, through: :user_roles
 
