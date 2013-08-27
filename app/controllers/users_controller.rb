@@ -26,7 +26,6 @@ class UsersController < ApplicationController
     else
       gon.user_app_id = @app.id
       @user = User.new_from_app(@app)
-      @user.user_current_roles.build(user_id: @user.id)
       authorize! :create, @user
       render "new", layout: false
     end
@@ -51,12 +50,32 @@ class UsersController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def user_params
-     #TODO при утверждении заявок почему-то не устанаваливаются роли, если параметры перечислять по человечески. Притом при редактировании пользователя всё работает
-     params.require(:user).permit!
-     #([:email, :region_id, :role_ids, :adm_region_id, :phone,
-     #                                 :organisation_id, :password, :user_app_id,
-     #                                 :user_current_roles_attributes =>[:id, :current_role_id, :region_id, :uic_id, :user_id, :_destroy]
-     #                            ])
+    accessible_fields = [
+      :adm_region_id,
+      :email,
+      :password,
+      :phone,
+      :region_id,
+      :user_app_id,
+      :role_ids => [],
+      :user_current_roles_attributes => [
+        :_destroy,
+        :current_role_id,
+        :id,
+        :region_id,
+        :uic_id,
+        :uic_number,
+        :user_id,
+      ],
+    ]
+    if !@user.try(:persisted?)
+      accessible_fields += [:organisation_id, :region_id, :adm_region_id]
+    else
+      accessible_fields << :organisation_id if can?(:change_organisation, @user)
+      accessible_fields << :adm_region_id if can?(:change_adm_region, @user)
+      accessible_fields << :region_id if can?(:change_region, @user)
+    end
+    params.require(:user).permit(accessible_fields)
   end
 
   def expose_current_roles
