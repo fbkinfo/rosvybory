@@ -138,6 +138,16 @@ ActiveAdmin.register UserApp do
 
   index do
     selectable_column
+
+    actions(defaults: false) do |resource|
+      links = ''.html_safe
+      links << link_to(I18n.t('active_admin.view'), resource_path(resource), class: "member_link view_link")
+      links << link_to('Принять', new_user_path(user_app_id: resource.id), data: {"user-app-id" => resource.id}, class: "member_link view_link accept_link") unless resource.approved?
+      links << '<br/> <br/>'.html_safe
+      links << link_to('Отклонить', reject_control_user_app_path(resource), method: :post, remote: true, data: {"user-app-id" => resource.id}, 'data-confirm' => 'Отклонить заявку?', class: "member_link view_link reject_link") unless resource.rejected?
+      links
+    end
+
     column :created_at
 
     column :desired_statuses, :sortable => false, &:human_desired_statuses
@@ -159,15 +169,6 @@ ActiveAdmin.register UserApp do
 
     column :current_roles, :sortable => false, &:human_current_roles
 
-    actions(defaults: false) do |resource|
-      links = ''.html_safe
-      links << link_to(I18n.t('active_admin.view'), resource_path(resource), class: "member_link view_link")
-
-      links << link_to('Принять', new_user_path(user_app_id: resource.id), data: {"user-app-id" => resource.id}, class: "member_link view_link accept_link") unless resource.approved?
-      links << '<br/> <br/>'.html_safe
-      links << link_to('Отклонить', reject_control_user_app_path(resource), method: :post, remote: true, data: {"user-app-id" => resource.id}, 'data-confirm' => 'Отклонить заявку?', class: "member_link view_link reject_link") unless resource.rejected?
-      links
-    end
   end
 
   form do |f|
