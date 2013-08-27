@@ -6,6 +6,7 @@ class UserCurrentRole < ActiveRecord::Base
   belongs_to :user
 
   validates :current_role, presence: true
+  validates :nomination_source, presence: true
   validate :region_or_uic_present
 
   delegate :number, :to => :uic, :prefix => true, :allow_nil => true
@@ -19,7 +20,8 @@ class UserCurrentRole < ActiveRecord::Base
 
   def region_or_uic_present
     unless region.present? || uic.present? || %w(reserve observer).include?(current_role.slug)
-      errors.add(:region, "Надо выбрать ТИК или УИК")
+      errors.add(:region, "Надо выбрать ТИК") if current_role.must_have_tic?
+      errors.add(:uic_number, "Надо выбрать УИК") if current_role.must_have_uic?
     end
   end
 end

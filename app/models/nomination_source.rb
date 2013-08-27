@@ -3,7 +3,7 @@ class NominationSource < ActiveRecord::Base
 
   has_many :user_current_roles
 
-  validates :name, presence: true
+  validates :name, presence: true, uniqueness: true
   validates :variant, presence: true, inclusion: {in: KNOWN_VARIANTS}
 
   class <<self

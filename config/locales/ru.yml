@@ -325,6 +325,7 @@ ru:
         phone_number: Телефон
       user_current_role:
         current_role: Роль
+        nomination_source: Источник выдвижения
         adm_region_id: Адм регион
         region: Регион
         uic: УИК
@@ -364,6 +365,13 @@ ru:
         has_video: "Видеосъёмка"
         social_accounts: "Соцсети"
         extra: "Дополнительные сведения"
+        year_born: Год рождения
+        place_of_birth: Место рождения
+        passport: Паспорт
+        work: Место работы
+        work_position: Должность
+        address: Адрес прописки
+        got_docs: Докуметы выданы
       region:
         kind: Тип
         name: Название
