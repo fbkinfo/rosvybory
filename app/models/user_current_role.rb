@@ -28,9 +28,9 @@ class UserCurrentRole < ActiveRecord::Base
   def tic_belongs_to_region
     return true unless region.present?
     if user.region.present? && user.region != region
-      errors.add(:region, "ТИК и район пользователя не совпадают")
+      errors.add(:region, "не совпадает с районом пользователя")
     elsif user.adm_region.present? && region.parent.present? && user.adm_region != region.parent
-      errors.add(:region, "ТИК и адм.округ пользователя не совпадают")
+      errors.add(:region, "не совпадает с адм.округом пользователя")
     end
   end
 
