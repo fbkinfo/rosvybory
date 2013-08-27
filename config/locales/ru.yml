@@ -369,6 +369,7 @@ ru:
         work: Место работы
         work_position: Должность
         address: Адрес прописки
+        got_docs: Докуметы выданы
       region:
         kind: Тип
         name: Название

@@ -14,6 +14,7 @@
   = f.inputs "data-role" => "user-fields-container" do
     = f.input :full_name
     = f.input :address, :input_html => {:rows => 2}
+    = f.input :got_docs
     = f.input :roles, collection: Role.where("slug != ?", ["admin"]), :input_html => {:style => "width: 300px;"}
     = f.input :email
     = f.input :phone

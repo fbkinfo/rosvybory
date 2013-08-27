@@ -28,6 +28,7 @@ ActiveAdmin.register User do
         row :uic
         row :user_current_roles
         row :roles, &:human_roles
+        row :got_docs, &:human_got_docs
         row :experience_count
         row :previous_statuses, &:human_previous_statuses
         row :can_be_coord_region
@@ -94,6 +95,7 @@ ActiveAdmin.register User do
     column :social_accounts, &:human_social_accounts
     column :extra
     column :year_born
+    column :got_docs, &:human_got_docs
 
   end
 
@@ -110,6 +112,7 @@ ActiveAdmin.register User do
   filter :user_app_experience_count, :as => :numeric, label: 'Опыт'
   filter :user_app_has_car, as: :boolean, label: 'Автомобиль'
   filter :user_app_has_video, as: :boolean, label: 'Видеосъёмка'
+  filter :got_docs
 
   form :partial => 'form'
 
