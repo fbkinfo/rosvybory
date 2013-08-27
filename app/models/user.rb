@@ -9,7 +9,9 @@ class User < ActiveRecord::Base
   has_many :user_roles, dependent: :destroy
   has_many :roles, through: :user_roles
 
-  has_many :user_current_roles, dependent: :destroy, autosave: true
+  has_many :user_current_roles, dependent: :destroy, autosave: true, inverse_of: :user
+  validates_associated :user_current_roles
+
   has_many :current_roles, through: :user_current_roles  #роли наблюдателя/члена комиссии
 
   belongs_to :region
