@@ -28,6 +28,7 @@ ActiveAdmin.register Dislocation do
   filter :region, :as => :select, :collection => proc { Region.mun_regions }, :input_html => {:style => "width: 230px;"}
   filter :user_app_last_name, as: :string, label: 'Фамилия'
   filter :phone
+  filter :got_docs
   filter :current_role_uic, as: :numeric
   filter :current_role_nomination_source_id, as: :select, collection: proc { NominationSource.order(:name) }, :input_html => {:style => "width: 230px;"}
   # filter :dislocation_errors, as: :something

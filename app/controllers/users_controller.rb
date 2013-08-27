@@ -56,6 +56,7 @@ class UsersController < ApplicationController
 
   def accessible_fields_dislocate
     [
+        :got_docs,
         :year_born,
         :place_of_birth,
         :passport,
