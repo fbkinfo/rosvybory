@@ -327,8 +327,10 @@ ru:
         current_role: Роль
         nomination_source: Источник выдвижения
         adm_region_id: Адм регион
-        region: Регион
+        region: Регион/ТИК
         uic: УИК
+      user_current_roles:
+        region: ТИК
       organisation:
         name: Название
         created_at: Создано
