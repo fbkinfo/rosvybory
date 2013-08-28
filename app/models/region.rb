@@ -18,7 +18,7 @@ class Region < ActiveRecord::Base
 
   def subregions_with_tics
     if has_tic?
-      Region.where(id: id)
+      Region.where(id: id)  # self?
     else
       regions.with_tics
     end

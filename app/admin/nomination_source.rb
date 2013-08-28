@@ -1,6 +1,10 @@
 ActiveAdmin.register NominationSource do
   menu :if => proc{ can? :crud, NominationSource }
 
+  filter :name
+  filter :variant, :as => :select
+  filter :created_at
+
   form do |f|
     f.inputs do
       f.input :name
