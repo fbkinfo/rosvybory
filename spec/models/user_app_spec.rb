@@ -1,6 +1,9 @@
 require 'spec_helper'
 
 describe UserApp do
+
+  subject { create :user_app, skip_phone_verification: true }
+
   it { should belong_to :region }
   it { should belong_to :adm_region }
 
@@ -68,4 +71,10 @@ describe UserApp do
       end
     end
   end
+
+  it 'should respond_to :full_name' do
+    subject.full_name.should ==
+        [subject.last_name, subject.first_name, subject.patronymic].join(' ')
+  end
+
 end
