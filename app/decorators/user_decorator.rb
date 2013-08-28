@@ -1,8 +1,9 @@
 class UserDecorator < Draper::Decorator
   delegate_all
   delegate :can_be_caller, :can_be_coord_region, :can_be_mobile, :human_current_roles, :extra,
-           :experience_count, :full_name, :human_has_car, :human_has_video, :human_legal_status,
+           :experience_count, :human_has_car, :human_has_video, :human_legal_status,
            :human_previous_statuses, :human_social_accounts, :uic,
+           :yes_no,
             to: :decorated_user_app, allow_nil: true
 
   def user_current_roles
@@ -20,6 +21,10 @@ class UserDecorator < Draper::Decorator
 
   def organisation_with_user_id
     "#{organisation.name}-#{id}" if organisation
+  end
+
+  def human_got_docs
+    yes_no object.got_docs
   end
 
 end

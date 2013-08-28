@@ -23,11 +23,13 @@ describe User do
     it "роль должна появляться у пользователя" do
       user.roles.should be_empty
       user.add_role role.slug
-      user.roles.should include(role)
+      user.save!
+      user.roles(true).should include(role)
     end
 
     it "не должно быть ошибки при повторном добавлении роли" do
       user.add_role role.slug
+      user.save!
       expect {user.add_role role.slug}.not_to raise_error
     end
   end
@@ -39,7 +41,8 @@ describe User do
     it "должна исчезнуть у пользователя" do
       user.roles << role
       user.remove_role role.slug
-      user.roles.should be_empty
+      user.save
+      user.roles(true).should be_empty
     end
 
     it "не должно вызвать ошибки удаление отсутствующей роли" do
@@ -73,6 +76,7 @@ describe User do
       before do
         create :role, slug: "admin"
         user.add_role :admin
+        user.save!
       end
 
       it { should be_able_to(:manage, :all) }
@@ -86,6 +90,7 @@ describe User do
       before do
         create :role, slug: "federal_repr"
         user.add_role :federal_repr
+        user.save!
       end
 
       it {
@@ -121,6 +126,7 @@ describe User do
       before do
         create :role, slug: "tc"
         user.add_role :tc
+        user.save
       end
 
       it {

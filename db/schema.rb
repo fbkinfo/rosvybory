@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130827091430) do
+ActiveRecord::Schema.define(version: 20130828121339) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -132,8 +132,8 @@ ActiveRecord::Schema.define(version: 20130827091430) do
     t.string   "state",              default: "pending", null: false
     t.boolean  "phone_verified",     default: false,     null: false
     t.boolean  "has_video"
-    t.integer  "organisation_id"
     t.string   "forwarded_for"
+    t.integer  "organisation_id"
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
   end
@@ -170,7 +170,7 @@ ActiveRecord::Schema.define(version: 20130827091430) do
 
   create_table "users", force: true do |t|
     t.string   "email"
-    t.string   "encrypted_password",     default: "", null: false
+    t.string   "encrypted_password",     default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -187,6 +187,16 @@ ActiveRecord::Schema.define(version: 20130827091430) do
     t.integer  "adm_region_id"
     t.integer  "user_app_id"
     t.integer  "mobile_group_id"
+    t.integer  "year_born"
+    t.text     "place_of_birth"
+    t.text     "passport"
+    t.text     "work"
+    t.text     "work_position"
+    t.string   "last_name"
+    t.string   "first_name"
+    t.string   "patronymic"
+    t.text     "address"
+    t.boolean  "got_docs",               default: false
   end
 
   add_index "users", ["adm_region_id"], name: "index_users_on_adm_region_id", using: :btree

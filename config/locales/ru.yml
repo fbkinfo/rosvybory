@@ -20,6 +20,8 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 ru:
+  'false': нет
+  'true': да
   formtastic:
     required: "обязательное поле"
   date:
@@ -161,6 +163,7 @@ ru:
       odd: может иметь лишь четное значение
       record_invalid: ! 'Возникли ошибки: %{errors}'
       taken: уже существует
+      incorrect_nomination_source: некорректный источник выдвижения
       too_long:
         few: слишком большой длины (не может быть больше чем %{count} символа)
         many: слишком большой длины (не может быть больше чем %{count} символов)
@@ -310,22 +313,32 @@ ru:
       blacklist:
         one: 'Черный список'
         other: 'Черный список'
+      nomination_source:
+        one: 'Источник выдвижения'
+        other: 'Источники выдвижения'
     attributes:
       dislocation:
         current_role_id: Роль
         current_role_nomination_source_id: Источник выдвижения
         current_role_uic: УИК
+      nomination_source:
+        variant: Тип
+        name: Название
       nomination_source/variants:
         candidate: Кандидат
         party: Партия кандидата
         parliament: Парламетская партия
+        media: СМИ
       verification:
         phone_number: Телефон
       user_current_role:
         current_role: Роль
+        nomination_source: Источник выдвижения
         adm_region_id: Адм регион
-        region: Регион
+        region: Регион/ТИК
         uic: УИК
+      user_current_roles:
+        region: ТИК
       organisation:
         name: Название
         created_at: Создано
@@ -362,6 +375,13 @@ ru:
         has_video: "Видеосъёмка"
         social_accounts: "Соцсети"
         extra: "Дополнительные сведения"
+        year_born: Год рождения
+        place_of_birth: Место рождения
+        passport: Паспорт
+        work: Место работы
+        work_position: Должность
+        address: Адрес прописки
+        got_docs: Докуметы выданы
       region:
         kind: Тип
         name: Название
