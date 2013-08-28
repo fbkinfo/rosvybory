@@ -65,35 +65,54 @@ class User < ActiveRecord::Base
     send_sms_with_password
   end
 
-  def update_from_user_app(app)
-    self.email = app.email
-    self.region = app.region
-    self.adm_region_id = app.adm_region_id
-    self.phone = Verification.normalize_phone_number(app.phone)
-    self.organisation = app.organisation
-    self.user_app = app
-    generate_password
-
-    if app.can_be_observer || app.user_app_current_roles.present?
-      self.add_role :observer
-      app.user_app_current_roles.each do |ua_role|
-        if ua_role.current_role
-          ucr = user_current_roles.find_or_initialize_by(current_role_id: ua_role.current_role.id)
-          if ua_role.current_role.must_have_uic?
-            ucr.uic = Uic.find_by(number: ua_role.value) || Uic.find_by(number: app.uic)
-          elsif ua_role.current_role.must_have_tic?
-            ucr.region = Region.find_by(name: ua_role.value)
-            unless ucr.region
-              if region.try(:has_tic?)#для районов с ТИКами
-                ucr.region = region
-              elsif adm_region.try(:has_tic?) #для округов с ТИКами
-                ucr.region = adm_region
-              end
-            end
-          end
-        end
+  def update_from_user_app(apps)
+    apps = Array.wrap apps
+    app = apps.first
+    unless apps.size > 1
+      self.email = app.email
+      self.phone = Verification.normalize_phone_number(app.phone)
+      self.user_app = app
+      generate_password
+    end
+    if apps.map(&:adm_region_id).uniq.size == 1
+      self.adm_region_id = app.adm_region_id
+      if apps.map(&:region_id).uniq.size == 1
+        self.region = app.region
       end
     end
+    if apps.map(&:organisation_id).uniq.size == 1
+      self.organisation = app.organisation
+    end
+
+    if apps.map(&:can_be_observer).uniq == [true]
+      self.add_role :observer
+    end
+    common_roles =
+        apps[1..-1].inject(app.user_app_current_roles.map(&:current_role)) do |list, app|
+      list & app.user_app_current_roles.map(&:current_role)
+    end
+    logger.debug "User@#{__LINE__}#update_from_user_app #{app.current_roles.inspect} #{common_roles.inspect}" if logger.debug?
+    if common_roles.present?
+      app.user_app_current_roles.each do |ua_role|
+        if common_roles.include? ua_role.current_role
+          ucr = user_current_roles.find_or_initialize_by(current_role_id: ua_role.current_role.id)
+          if apps.size == 1
+            if ua_role.current_role.must_have_uic?
+              ucr.uic = Uic.find_by(number: ua_role.value) || Uic.find_by(number: app.uic)
+            elsif ua_role.current_role.must_have_tic?
+              ucr.region = Region.find_by(name: ua_role.value)
+              unless ucr.region
+                if region.try(:has_tic?)#для районов с ТИКами
+                  ucr.region = region
+                elsif adm_region.try(:has_tic?) #для округов с ТИКами
+                  ucr.region = adm_region
+                end
+              end
+            end
+          end   # if apps.size == 1
+        end   # if common_roles.include? ua_role.current_role
+      end   # app.user_app_current_roles.each
+    end   # if common_roles.present?
     self
   end
 
