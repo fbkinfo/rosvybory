@@ -38,7 +38,7 @@ class ExcelUserAppRow
     end
   end
 
-  attr_reader :user_app, :user
+  attr_reader :user_app, :user, :very_invalid
   attr_accessor :uid # lost after save, but is used to detect organisation
   attr_accessor :created_at, :adm_region, :region, :has_car, :current_roles, :experience_count, :previous_statuses, :can_be_coord_region, :can_be_reserv, :social_accounts, :uic
 
@@ -63,8 +63,8 @@ class ExcelUserAppRow
     @user_app.imported!
     @user_app.can_be_observer = true
 
-    # считаем строку невалидной
-    return unless phone
+    # local store-only mode
+    @very_invalid = phone.blank?
 
     self.class.column_names.each do |k|
       v = attrs[k]
@@ -83,90 +83,96 @@ class ExcelUserAppRow
         "ГЛС" => "Голос",
         "СНР" => "Сонар"
     }
-    self.organisation = Organisation.where(name: orgs_by_name[v.split('-')[0]]).first
+    self.organisation = Organisation.where(name: orgs_by_name[v.split('-')[0]]).first unless very_invalid
     @uid = v
   end
 
   def current_roles=(v)
-    roles_by_name = {
-      "РЗ" => 'reserve',
-      "УПРГ" => 'prg',
-      "ТПСГ" => 'psg_tic',
-      "ТПРГ" => 'prg_tic'
-    }
-    role = CurrentRole.where(:slug => roles_by_name[v]).first
-    if role && !@user_app.user_app_current_roles.where(:current_role_id => role.id).first
-      value = nil
-      if role.must_have_uic?
-        value = "#{@user_app.uic}"
-      elsif role.must_have_tic?
-        if region.try(:has_tic?)#для районов с ТИКами
-          value = region.name
-        elsif adm_region.try(:has_tic?) #для округов с ТИКами
-          value = adm_region.name
+    unless very_invalid
+      roles_by_name = {
+        "РЗ" => 'reserve',
+        "УПРГ" => 'prg',
+        "ТПСГ" => 'psg_tic',
+        "ТПРГ" => 'prg_tic'
+      }
+      role = CurrentRole.where(:slug => roles_by_name[v]).first
+      if role && !@user_app.user_app_current_roles.where(:current_role_id => role.id).first
+        value = nil
+        if role.must_have_uic?
+          value = "#{@user_app.uic}"
+        elsif role.must_have_tic?
+          if region.try(:has_tic?)#для районов с ТИКами
+            value = region.name
+          elsif adm_region.try(:has_tic?) #для округов с ТИКами
+            value = adm_region.name
+          end
         end
+        @user_app.user_app_current_roles.build(:current_role_id => role.id, value: value).keep = '1'
       end
-      @user_app.user_app_current_roles.build(:current_role_id => role.id, value: value).keep = '1'
     end
     @current_roles = v
   end
 
   def previous_statuses=(v)
-    statuses_by_name = {
-      "ОК" => UserApp::STATUS_COORD,
-      "ПРГ" => UserApp::STATUS_PRG,
-      "МГ" => UserApp::STATUS_MOBILE,
-      "ТИК" => UserApp::STATUS_TIC_PSG,
-      "ДК" => UserApp::STATUS_DELEGATE
-    }
-    if status_value = statuses_by_name[v]
-      @user_app.previous_statuses |= status_value
+    unless very_invalid
+      statuses_by_name = {
+        "ОК" => UserApp::STATUS_COORD,
+        "ПРГ" => UserApp::STATUS_PRG,
+        "МГ" => UserApp::STATUS_MOBILE,
+        "ТИК" => UserApp::STATUS_TIC_PSG,
+        "ДК" => UserApp::STATUS_DELEGATE
+      }
+      if status_value = statuses_by_name[v]
+        @user_app.previous_statuses |= status_value
+      end
+      self.experience_count = @experience_count if @experience_count
     end
-    self.experience_count = @experience_count if @experience_count
     @previous_statuses = v
   end
 
   def social_accounts=(v)
-    # raise v.inspect
+    # TODO when better times come
     @social_accounts = v
   end
 
   def has_car=(v)
-    @user_app.has_car = TRUTH.include?(v.to_s)
+    @user_app.has_car = TRUTH.include?(v.to_s) unless very_invalid
     @has_car = v
   end
 
   def can_be_coord_region=(v)
-    @user_app.can_be_coord_region = TRUTH.include?(v.to_s)
+    @user_app.can_be_coord_region = TRUTH.include?(v.to_s) unless very_invalid
     @can_be_coord_region = v
   end
 
   def can_be_reserv=(v)
-    @user_app.can_be_prg_reserve = TRUTH.include?(v.to_s)
+    @user_app.can_be_prg_reserve = TRUTH.include?(v.to_s) unless very_invalid
     @can_be_reserv = v
   end
 
   def adm_region=(v)
-    @user_app.adm_region = Region.adm_regions.find_by(name: normalize_adm_region(v))
+    @user_app.adm_region = Region.adm_regions.find_by(name: normalize_adm_region(v)) unless very_invalid
     @adm_region = v
   end
 
   def experience_count=(v)
-    if @user_app.previous_statuses > 0
-      @user_app.experience_count = v.to_i if v.to_i > 0
-    else
-      @user_app.experience_count = 0
+    unless very_invalid
+      if @user_app.previous_statuses > 0
+        @user_app.experience_count = v.to_i if v.to_i > 0
+      else
+        @user_app.experience_count = 0
+      end
     end
     @experience_count = v
   end
 
   def uic=(v)
-    @user_app.uic = v.to_i if v.to_i > 0
+    @user_app.uic = v.to_i if !very_invalid && v.to_i > 0
     @uic = v
   end
 
   def region=(v)
-    @user_app.region = Region.find_by(name: v)
+    @user_app.region = Region.find_by(name: v) unless very_invalid
     @region = v
   end
 
@@ -175,7 +181,7 @@ class ExcelUserAppRow
   end
 
   def created_at=(v)
-    @user_app.created_at = v # convert to datetime
+    @user_app.created_at = v unless very_invalid # convert to datetime
     @created_at = @user_app.created_at
   end
 
