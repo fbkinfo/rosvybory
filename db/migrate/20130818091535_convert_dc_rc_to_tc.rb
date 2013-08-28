@@ -7,6 +7,7 @@ class ConvertDcRcToTc < ActiveRecord::Migration
       u.add_role 'tc'
       u.remove_role 'dc'
       u.remove_role 'rc'
+      u.save
     end
 
     Role.destroy_all(slug: ['dc', 'rc'])

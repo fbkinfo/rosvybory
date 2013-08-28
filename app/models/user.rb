@@ -29,7 +29,7 @@ class User < ActiveRecord::Base
   validates :year_born,
             :numericality  => {:only_integer => true, :greater_than => 1900, :less_than => 2000,  :message => "Неверный формат", allow_nil: true}
 
-  validate :roles_assignable
+  validate :roles_assignable, :if => :valid_roles
 
   after_create :mark_user_app_state
   after_create :send_sms_with_password, :if => :send_invitation?
@@ -71,12 +71,12 @@ class User < ActiveRecord::Base
   end
 
   def add_role(role_name)
-    roles << Role.where(slug: role_name).first! unless roles.exists?(slug: role_name)
+    user_roles.build :role_id => Role.where(slug: role_name).first!.id unless has_role?(role_name)
   end
 
   def remove_role(role_name)
     role = Role.where(slug: role_name).first!
-    roles.delete role
+    user_roles.each {|ur| ur.mark_for_destruction if ur.role_id == role.id }
   end
 
   def role_ids=(values)
