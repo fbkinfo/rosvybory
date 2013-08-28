@@ -10,6 +10,7 @@ class UserCurrentRole < ActiveRecord::Base
   validate :region_or_uic_present
   validate :tic_belongs_to_region
   validate :uic_belongs_to_region
+  validate :validate_legitimacy
 
   delegate :number, :to => :uic, :prefix => true, :allow_nil => true
   def uic_number=(number)
@@ -45,4 +46,13 @@ class UserCurrentRole < ActiveRecord::Base
     end
   end
 
+  def validate_legitimacy
+    return unless current_role.present? && nomination_source.present?
+    case current_role.slug
+    when 'journalist'
+      if nomination_source.variant != 'media'
+        errors.add(:nomination_source, :incorrect_nomination_source)
+      end
+    end
+  end
 end
