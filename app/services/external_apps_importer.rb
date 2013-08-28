@@ -6,29 +6,46 @@
 # Утилита должна выводить для каждой строки, которую не удалось распознать/сохранить, номер строки и хоть какое-то описание причины проблем (понадобится впоследствии, когда будем наворачивать на утилиту web-интерфейс).
 
 require 'roo'
+
 class ExternalAppsImporter
+
   attr_accessor :organisation
 
-  def initialize(path, source_type = File.extname(path))
-    @file = path
-    @source_type = source_type
+  def initialize(file_path, file_type = File.extname(file_path))
+    @file_path = file_path
+    @file_type = file_type
   end
 
-  def import(receiver = method(:build_and_persist))
-    spreadsheet = open_spreadsheet(@file)
-    header = spreadsheet.row(1)
+  def import
+    spreadsheet = open_spreadsheet
     (2..spreadsheet.last_row).each do |i|
-      row = spreadsheet.row(i)
-      if attrs = attributes_from_row(row)
-        receiver.call(attrs)
+      if (attrs = attributes_from_row(spreadsheet.row(i)))
+        if (model = build(attrs))
+          if block_given?
+            yield attrs, model
+          else
+            persist model
+          end
+        end
       end
     end
   end
 
-  def build_and_persist(attrs)
+  def build(attrs)
     model = ExcelUserAppRow.new(attrs)
-    model.organisation ||= organisation
-    model.save || logger.warn("Error: #{model.errors.inspect}")
+    if model.valid?
+      model.organisation ||= organisation
+      model
+    else
+      logger.warn("Invalid data: #{attrs.inspect}")
+      false
+    end
+  end
+
+  def persist(model)
+    ok = model.save
+    logger.warn("Error: #{model.errors.inspect}") unless ok
+    ok
   end
 
   private
@@ -37,18 +54,21 @@ class ExternalAppsImporter
     if row.all?(&:blank?)
       nil
     else
-      Hash[ExcelUserAppRow.columns.map {|name, i| [name, row[i]] }]
+      Hash[ExcelUserAppRow.columns.map{|name, i| [name, row[i]] }]
     end
   end
 
-  def open_spreadsheet(file_path)
-    case @source_type
-      when '.csv' then Roo::Csv.new(file_path, nil, :ignore)
-      when '.xls' then Roo::Excel.new(file_path, nil, :ignore)
-      when '.xlsx' then Roo::Excelx.new(file_path, nil, :ignore)
-      else raise "Unknown file type: #{file_path}"
+  def open_spreadsheet
+    case @file_type.downcase
+    when '.csv'
+      Roo::Csv.new(@file_path, nil, :ignore)
+    when '.xls'
+      Roo::Excel.new(@file_path, nil, :ignore)
+    when '.xlsx'
+      Roo::Excelx.new(@file_path, nil, :ignore)
+    else
+      raise "Unknown file type: #{@file_path}"
     end
-
   end
 
   def logger
@@ -57,5 +77,4 @@ class ExternalAppsImporter
       Logger.new(Rails.root.join("log/user_apps_xls_import-#{stamp}.log"))
     end
   end
-
 end

@@ -63,12 +63,18 @@ class ExcelUserAppRow
     @user_app.imported!
     @user_app.can_be_observer = true
 
-    # attrs.each do |k,v|  # insecure!
+    # считаем строку невалидной
+    return unless phone
+
     self.class.column_names.each do |k|
       v = attrs[k]
       v = v.strip if v.respond_to?(:strip)
       send "#{k}=", v if v.present? && k != '_destroy'
     end
+  end
+
+  def valid?
+    @user_app.phone.present?
   end
 
   def uid=(v)
