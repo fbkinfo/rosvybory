@@ -7,15 +7,12 @@
       %br
       = message
 
-= semantic_form_for @user, builder: ::Formtastic::FormBuilder, remote: true do |f|
+= semantic_form_for @user, builder: ::Formtastic::FormBuilder,
+  url: group_create_users_path, remote: true do |f|
+  - @apps.each do |app|
+    =  hidden_field_tag 'apps[]', app.id
   = f.inputs "data-role" => "user-fields-container" do
-    = f.input :full_name
-    = f.input :address, :input_html => {:rows => 2}
-    = f.input :got_docs
-    = f.input :roles, collection: (Role.accessible_by(current_ability, :assign_users) + f.object.roles).uniq, :input_html => {:style => "width: 300px;"}
-    = f.input :email
-    = f.input :phone
-    = f.input :password, as: :hidden if @user.new_record?
+    = f.input :roles, collection: Role.common, :input_html => {:style => "width: 300px;"}
     = f.input :adm_region, as: :select, collection: Region.adm_regions.pluck(:name, :id), input_html: {:style => "width: 220px;"} if f.object.new_record? || can?(:change_adm_region, f.object)
     = f.input :region, as: :select, collection: f.object.user_app && f.object.user_app.adm_region ? f.object.user_app.adm_region.regions.pluck(:name, :id) : [], input_html: {:style => "width: 220px;"} if f.object.new_record? || can?(:change_region, f.object)
     - if can?(:change_organisation, f.object)
@@ -23,8 +20,6 @@
     - else
       = f.input :organisation_id, as: :hidden if f.object.new_record?
     = f.input :user_app_id, as: :hidden if f.object.new_record?
-    -unless f.object.new_record?
-      = render :partial => 'personal_data_inputs', locals: {f: f}
 
   = f.inputs "Роли наблюдателя", "data-role" => "observer-roles", class: "hidden" do
     = f.semantic_fields_for :user_current_roles do |fc|
@@ -34,5 +29,17 @@
 
   = f.actions do
     = f.submit "Утвердить"
+
+%h3 Завители
+.panel_contents
+  .attributes_table
+    %table
+      %tbody
+      - @apps.each do |app|
+        %tr
+          %td= app.full_name
+          %td= app.email
+          %td= app.phone
+
 :javascript
   initUserForm();
