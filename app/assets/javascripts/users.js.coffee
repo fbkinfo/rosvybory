@@ -1,5 +1,5 @@
 
-uicRoles = ["psg", "prg", "observer"]
+uicRoles = ["psg", "prg", "observer", "journalist"]
 regionRoles = ["psg_tic", "prg_tic"]
 
 updateRoleFields = ->
