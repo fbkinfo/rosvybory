@@ -181,8 +181,12 @@ class ExcelUserAppRow
   end
 
   def created_at=(v)
-    @user_app.created_at = v unless very_invalid # convert to datetime
-    @created_at = @user_app.created_at
+    unless very_invalid
+      @user_app.created_at = v # convert to datetime
+      @created_at = @user_app.created_at
+    else
+      @created_at = v
+    end
   end
 
   def errors
