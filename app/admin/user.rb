@@ -137,7 +137,17 @@ ActiveAdmin.register User do
     end
 
     def batch_action
-      redirect_to send(params[:batch_action] + '_path', params: params)
+      if ["new_group_email", "new_group_sms"].include? params[:batch_action]
+        redirect_to send(params[:batch_action] + '_path', params: params)
+      else
+        if selected_batch_action
+          selected_ids = params[:collection_selection]
+          selected_ids ||= []
+          instance_exec selected_ids, &selected_batch_action.block
+        else
+          raise "Couldn't find batch action \"#{params[:batch_action]}\""
+        end
+      end
     end
 
     def scoped_collection
