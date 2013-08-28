@@ -12,7 +12,6 @@ class ManyUserAppsForm
 
   def initialize(organisation, params = {})
     @organisation = organisation || Organisation.where(name: "РосВыборы").first_or_create
-
     @user_apps = []
     params.each do |k, v|
       send "#{k}=", v
@@ -23,7 +22,11 @@ class ManyUserAppsForm
   def file=(value)
     ext = File.extname(value.original_filename)
     eai = ExternalAppsImporter.new(value.tempfile.path, ext)
-    eai.import(method(:build_user_app))
+    eai.organisation = @organisation
+    eai.import do |attrs, model|
+      @user_apps << model
+    end
+    value
   end
 
   def save
