@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
@@ -7,7 +8,9 @@ class User < ActiveRecord::Base
          :authentication_keys => [:phone]
 
   has_many :user_roles, dependent: :destroy
-  has_many :roles, through: :user_roles
+  has_many :roles, through: :user_roles, 
+    :after_add => :check_permissions,
+    :after_remove => :check_permissions
 
   has_many :user_current_roles, dependent: :destroy, autosave: true
   has_many :current_roles, through: :user_current_roles  #роли наблюдателя/члена комиссии
@@ -19,6 +22,8 @@ class User < ActiveRecord::Base
   belongs_to :user_app
 
   validates :phone, presence: true, uniqueness: true, format: {with: /\A\d{10}\z/}
+
+  attr_accessor :current_user
 
   after_create :mark_user_app_state
   after_create :send_sms_with_password, :if => :send_invitation?
@@ -92,6 +97,26 @@ class User < ActiveRecord::Base
   end
 
   private
+
+    def check_permissions(record)
+      # Story 55070698.
+      #
+      # АДМ, ФП и ТК могут изменить роль волонтёра в системе, выбрав роль из перечня:
+      #  - член избирательной комисии / наблюдатель на участке
+      #  - участник мобильных групп
+      #  - оператор контакт-центра
+      #  - координатор мобильных групп
+      #  - координатор контакт-центра
+      #
+      # АДМ и ФП могут изменить роль волонтёра на указанные выше + ТК.
+      #
+      # АДМ может изменить роль волонтёра на указанные выше + ФП.
+      _role = record.slug.to_sym
+      raise ActiveRecord::ActiveRecordError, "Недостаточно полномочий для назначения/снятия роли '#{record.name}'" unless
+        current_user.has_role?(:tc) && [:observer, :mobile, :callcenter, :mc, :cc].include?(_role) ||
+        current_user.has_role?(:federal_repr) && [:observer, :mobile, :callcenter, :mc, :cc, :tc].include?(_role) ||
+        current_user.has_role?(:admin) && [:observer, :mobile, :callcenter, :mc, :cc, :tc, :federal_repr].include?(_role)
+    end
 
     def send_sms_with_password
       SmsService.send_message(phone, "Вход в РосВыборы: bit.ly/rosvybory, пароль: #{self.password}")

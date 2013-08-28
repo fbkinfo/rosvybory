@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class UsersController < ApplicationController
 
   before_filter :expose_current_roles, only: [:new, :edit]
@@ -11,10 +12,15 @@ class UsersController < ApplicationController
 
   def update
     authorize! :update, @user
-    if @user.update(user_params)
-      render json: {status: :ok}, :content_type => 'text/html'
-    else
-      render "edit", layout: false
+    begin
+      @user.current_user = current_user
+      if @user.update(user_params)
+        render json: {status: :ok}, :content_type => 'text/html'
+      else
+        render "edit", layout: false
+      end
+    rescue
+      render json: { ошибка: $!.to_s }
     end
   end
 
