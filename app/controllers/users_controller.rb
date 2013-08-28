@@ -1,7 +1,13 @@
 class UsersController < ApplicationController
 
-  before_filter :expose_current_roles, only: [:new, :edit]
-  before_filter :set_user, only: [:edit, :update]
+  before_filter :expose_current_roles, only: [:new, :edit, :dislocate]
+  before_filter :set_user, only: [:edit, :update, :dislocate]
+
+  def dislocate
+    authorize! :update, @user
+    gon.user_id = @user.id
+    render "dislocate", layout: false
+  end
 
   def edit
     authorize! :update, @user
@@ -11,10 +17,11 @@ class UsersController < ApplicationController
 
   def update
     authorize! :update, @user
-    if @user.update(user_params)
+    @user.valid_roles = Role.accessible_by(current_ability, :assign_users)
+    if @user.update( params[:dislocation] ? dislocate_params : user_params )
       render json: {status: :ok}, :content_type => 'text/html'
     else
-      render "edit", layout: false
+      render (params[:dislocation] ? "dislocate" : "edit"), layout: false
     end
   end
 
@@ -35,6 +42,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     authorize! :create, @user
+    @user.valid_roles = Role.accessible_by(current_ability, :assign_users)
     if @user.save
       render json: {status: :ok}, :content_type => 'text/html'
     else
@@ -48,7 +56,32 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
   end
 
-  # Only allow a trusted parameter "white list" through.
+  def accessible_fields_dislocate
+    [
+        :got_docs,
+        :year_born,
+        :place_of_birth,
+        :passport,
+        :work,
+        :work_position,
+        :last_name,
+        :first_name,
+        :full_name,
+        :patronymic,
+        :address,
+        :user_current_roles_attributes => [
+            :_destroy,
+            :current_role_id,
+            :id,
+            :region_id,
+            :nomination_source_id,
+            :uic_id,
+            :uic_number,
+            :user_id,
+        ],
+    ]
+  end
+
   def user_params
     accessible_fields = [
       :adm_region_id,
@@ -58,15 +91,6 @@ class UsersController < ApplicationController
       :region_id,
       :user_app_id,
       :role_ids => [],
-      :user_current_roles_attributes => [
-        :_destroy,
-        :current_role_id,
-        :id,
-        :region_id,
-        :uic_id,
-        :uic_number,
-        :user_id,
-      ],
     ]
     if !@user.try(:persisted?)
       accessible_fields += [:organisation_id, :region_id, :adm_region_id]
@@ -74,8 +98,15 @@ class UsersController < ApplicationController
       accessible_fields << :organisation_id if can?(:change_organisation, @user)
       accessible_fields << :adm_region_id if can?(:change_adm_region, @user)
       accessible_fields << :region_id if can?(:change_region, @user)
+      accessible_fields << :region_id if can?(:change_region, @user)
     end
+    accessible_fields += accessible_fields_dislocate
+
     params.require(:user).permit(accessible_fields)
+  end
+
+  def dislocate_params
+    params.require(:user).permit(accessible_fields_dislocate)
   end
 
   def expose_current_roles
