@@ -190,3 +190,10 @@ organisations = ["РосВыборы", "Гражданин Наблюдател�
 organisations.each do |name|
   Organisation.create name: name
 end
+
+NominationSource.create :name => 'ЛДПР', :variant => 'parliament'
+NominationSource.create :name => 'КПРФ', :variant => 'parliament'
+NominationSource.create :name => 'РПР-Парнас', :variant => 'party'
+NominationSource.create :name => 'Яблоко', :variant => 'party'
+NominationSource.create :name => 'Навальный', :variant => 'candidate'
+NominationSource.create :name => 'Левичев', :variant => 'candidate'

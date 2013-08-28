@@ -20,6 +20,8 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 ru:
+  'false': нет
+  'true': да
   formtastic:
     required: "обязательное поле"
   date:
@@ -292,6 +294,9 @@ ru:
             rejected: "Отклонено"
             spammed: "Спам"
     models:
+      dislocation:
+        one: "Расстановка"
+        other: "Расстановки"
       region:
         one: "Округ/район"
         other: "Округа/районы"
@@ -308,13 +313,24 @@ ru:
         one: 'Черный список'
         other: 'Черный список'
     attributes:
+      dislocation:
+        current_role_id: Роль
+        current_role_nomination_source_id: Источник выдвижения
+        current_role_uic: УИК
+      nomination_source/variants:
+        candidate: Кандидат
+        party: Партия кандидата
+        parliament: Парламетская партия
       verification:
         phone_number: Телефон
       user_current_role:
         current_role: Роль
+        nomination_source: Источник выдвижения
         adm_region_id: Адм регион
-        region: Регион
+        region: Регион/ТИК
         uic: УИК
+      user_current_roles:
+        region: ТИК
       organisation:
         name: Название
         created_at: Создано
@@ -329,6 +345,7 @@ ru:
         updated_at: Изменено
         roles: Роли
         organisation: "Орг."
+        organisation_id: "Организация (НО)"
         sign_in_count: Заходов
         last_sign_in_at: Последний визит
         current_sign_in_at: Текущий визит
@@ -350,6 +367,13 @@ ru:
         has_video: "Видеосъёмка"
         social_accounts: "Соцсети"
         extra: "Дополнительные сведения"
+        year_born: Год рождения
+        place_of_birth: Место рождения
+        passport: Паспорт
+        work: Место работы
+        work_position: Должность
+        address: Адрес прописки
+        got_docs: Докуметы выданы
       region:
         kind: Тип
         name: Название
@@ -395,7 +419,7 @@ ru:
         legal_status: "Юр. образование"
         experience_count: "Опыт: кол-во"
         extra: "Доп. сведения"
-        social_accounts: "Соц. аккунты"
+        social_accounts: "Соц. аккаунты"
         year_born: "Год рождения"
         sex_male: "Пол"
         ip: "ip"
@@ -436,3 +460,6 @@ ru:
       labels:
         new_group_sms: "Отправить SMS"
         new_group_email: "Отправить почту"
+    edit_model: "Редактирование %{model}"
+    scopes:
+      with_current_roles: Все

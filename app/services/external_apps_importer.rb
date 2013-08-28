@@ -27,8 +27,8 @@ class ExternalAppsImporter
 
   def build_and_persist(attrs)
     model = ExcelUserAppRow.new(attrs)
-    model.organisation = organisation
-    model.save || logger.warn("Error at row #{i}: #{model.errors.inspect}")
+    model.organisation ||= organisation
+    model.save || logger.warn("Error: #{model.errors.inspect}")
   end
 
   private
@@ -53,7 +53,7 @@ class ExternalAppsImporter
 
   def logger
     @logger ||= begin
-      stamp = Time.now.stftime("%d_%m_%Y_%H_%M")
+      stamp = Time.now.strftime("%d_%m_%Y_%H_%M")
       Logger.new(Rails.root.join("log/user_apps_xls_import-#{stamp}.log"))
     end
   end

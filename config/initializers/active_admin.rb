@@ -105,8 +105,8 @@ ActiveAdmin.setup do |config|
   # config.allow_comments = false
   #
   # You can disable the menu item for the comments index page:
-  # config.show_comments_in_menu = false
-  #
+  config.show_comments_in_menu = false
+
   # You can change the name under which comments are registered:
   # config.comments_registration_name = 'AdminComment'
 
@@ -209,4 +209,21 @@ ActiveAdmin.setup do |config|
 
   config.favicon = '/assets/favicon.ico'
 
+end
+
+ActiveAdmin.after_load do
+  Control::CommentsController.class_eval do
+
+    def index_with_cancan
+      authorize! :manage, :comments
+      index_without_cancan
+    end
+    alias_method_chain :index, :cancan
+
+    def show_with_cancan
+      authorize! :manage, :comments
+      show_without_cancan
+    end
+    alias_method_chain :show, :cancan
+  end
 end

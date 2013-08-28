@@ -7,23 +7,32 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable,
          :authentication_keys => [:phone]
 
+  def email_required?; false end
+
   has_many :user_roles, dependent: :destroy
   has_many :roles, through: :user_roles, 
     :after_add => :check_permissions,
     :after_remove => :check_permissions
 
-  has_many :user_current_roles, dependent: :destroy, autosave: true
+  has_many :user_current_roles, dependent: :destroy, autosave: true, inverse_of: :user
+  validates_associated :user_current_roles
+
   has_many :current_roles, through: :user_current_roles  #роли наблюдателя/члена комиссии
 
   belongs_to :region
   belongs_to :adm_region, class_name: "Region"
-  belongs_to :mobile_group # future stub
+  # belongs_to :mobile_group future stub
   belongs_to :organisation
   belongs_to :user_app
 
   validates :phone, presence: true, uniqueness: true, format: {with: /\A\d{10}\z/}
 
+<<<<<<< HEAD
   attr_accessor :current_user
+=======
+  validates :year_born,
+            :numericality  => {:only_integer => true, :greater_than => 1900, :less_than => 2000,  :message => "Неверный формат", allow_nil: true}
+>>>>>>> develop
 
   after_create :mark_user_app_state
   after_create :send_sms_with_password, :if => :send_invitation?
@@ -31,6 +40,18 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :user_current_roles, allow_destroy: true
 
   delegate :created_at, to: :user_app, allow_nil: true, prefix: true
+
+
+  def full_name
+    [last_name, first_name, patronymic].join ' '
+  end
+
+  def full_name=(name)
+    split = name.split(' ', 3)
+    self.last_name = split[0]
+    self.first_name = split[1]
+    self.patronymic = split[2]
+  end
 
   class << self
     def new_from_app(app)
@@ -69,26 +90,35 @@ class User < ActiveRecord::Base
   end
 
   def update_from_user_app(app)
+    #TODO refactor
+    self.last_name = app.last_name
+    self.first_name = app.first_name
+    self.patronymic = app.patronymic
     self.email = app.email
     self.region = app.region
     self.adm_region_id = app.adm_region_id
     self.phone = Verification.normalize_phone_number(app.phone)
     self.organisation = app.organisation
+    self.year_born = app.year_born
     self.user_app = app
     generate_password
 
     if app.can_be_observer || app.user_app_current_roles.present?
-      # FIXME isn't it excel_user_app_row-specific?
       self.add_role :observer
       app.user_app_current_roles.each do |ua_role|
-        #TODO Откуда-то берётся дополнительная запись о Резеве УИКов, надо разобраться откуда и убрать её
         if ua_role.current_role
           ucr = user_current_roles.find_or_initialize_by(current_role_id: ua_role.current_role.id)
-          #"reserve" - без УИК и ТИК
-          if ["psg", "prg"].include? ua_role.current_role.slug
-            ucr.uic = Uic.find_by(number: app.uic)
-          elsif ["psg_tic", "prg_tic"].include? ua_role.current_role.slug
-            ucr.region = region if region.has_tic? #TODO Если указан район без ТИК, то возможно стоит кидать ошибку
+          if ua_role.current_role.must_have_uic?
+            ucr.uic = Uic.find_by(number: ua_role.value) || Uic.find_by(number: app.uic)
+          elsif ua_role.current_role.must_have_tic?
+            ucr.region = Region.find_by(name: ua_role.value)
+            unless ucr.region
+              if region.try(:has_tic?)#для районов с ТИКами
+                ucr.region = region
+              elsif adm_region.try(:has_tic?) #для округов с ТИКами
+                ucr.region = adm_region
+              end
+            end
           end
         end
       end

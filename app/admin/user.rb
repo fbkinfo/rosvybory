@@ -3,7 +3,7 @@ ActiveAdmin.register User do
 
   actions :all, :except => [:new]
 
-  menu :if => proc{ can? :manage, User }
+  menu :if => proc{ can? :crud, User }
 
   scope :all, :default => true
   Role.all.each do |role|
@@ -16,12 +16,11 @@ ActiveAdmin.register User do
   batch_action :new_group_sms
 
   show do |user|
-    if can? :manage, user #вид для админа
+    if can? :crud, user #вид для админа
       attributes_table do
-        row :organisation do
-          "#{user.organisation.name}-#{user.id}" if user.organisation
-        end
+        row :organisation, &:organisation_with_user_id
         row :user_app_created_at
+        row :full_name
         row :adm_region
         row :region
         row :phone
@@ -29,6 +28,7 @@ ActiveAdmin.register User do
         row :uic
         row :user_current_roles
         row :roles, &:human_roles
+        row :got_docs, &:human_got_docs
         row :experience_count
         row :previous_statuses, &:human_previous_statuses
         row :can_be_coord_region
@@ -39,6 +39,11 @@ ActiveAdmin.register User do
         row :has_video, &:human_has_video
         row :social_accounts, &:human_social_accounts
         row :extra
+        row :address
+        row :passport
+        row :place_of_birth
+        row :work
+        row :work_position
 
         row :last_sign_in_at
         row :sign_in_count
@@ -48,6 +53,7 @@ ActiveAdmin.register User do
       active_admin_comments
     elsif can? :read, user
       attributes_table do
+        row :full_name
         row :email
         row :region
         row :organisation
@@ -57,9 +63,16 @@ ActiveAdmin.register User do
 
   index do
     selectable_column
-    column "НО + id" do |user|
-      user.organisation ? "#{user.organisation.name}-#{user.id}" : ''
+    actions(defaults: false) do |resource|
+      links = ''.html_safe
+      links << link_to(I18n.t('active_admin.view'), resource_path(resource), class: "member_link view_link")
+      links << '<br/> <br/>'.html_safe
+      links << link_to(I18n.t('active_admin.edit'), edit_user_path(resource.id), class: "member_link edit_link")
+      #links << link_to(I18n.t('active_admin.delete'), resource_path(resource), class: "member_link delete_link", method: :delete, data: { confirm: "Вы уверены? Удаление пользователя нельзя будет отменить" })
+      links
     end
+
+    column "НО + id", &:organisation_with_user_id
     column :created_at
     column :adm_region
     column :region
@@ -81,28 +94,27 @@ ActiveAdmin.register User do
     column :has_video, &:human_has_video
     column :social_accounts, &:human_social_accounts
     column :extra
-
-    #default_actions
-
-    actions(defaults: false) do |resource|
-      links = ''.html_safe
-      links << link_to(I18n.t('active_admin.view'), resource_path(resource), class: "member_link view_link")
-      links << link_to(I18n.t('active_admin.edit'), edit_user_path(resource.id), class: "member_link edit_link")
-      links << link_to(I18n.t('active_admin.delete'), resource_path(resource), class: "member_link delete_link", method: :delete, data: { confirm: "Вы уверены? Удаление пользователя нельзя будет отменить" })
-      links
-    end
-
+    column :year_born
+    column :got_docs, &:human_got_docs
 
   end
 
-  filter :email
+  filter :adm_region, :as => :select, :collection => proc { Region.adm_regions.all }, :input_html => {:style => "width: 230px;"}
+  filter :region, :as => :select, :collection => proc { Region.mun_regions.all }, :input_html => {:style => "width: 230px;"}
+  filter :organisation, label: 'Организация', as: :select, collection: proc { Organisation.order(:name).all }, :input_html => {:style => "width: 230px;"}
+  filter :roles, :input_html => {:style => "width: 230px;"}
+  filter :user_current_roles_current_role_id, label: 'Роль наблюдателя', as: :select, collection: proc { CurrentRole.all }, :input_html => {:style => "width: 230px;"}
+  filter :user_app_uic, as: :numeric, label: '№ УИК'
+  filter :user_app_last_name, as: :string, label: 'Фамилия'
+  filter :email, label: 'Почта'
   filter :user_app_created_at, as: :date_range, label: 'Дата подачи заявки'
   filter :created_at, label: 'Дата создания'
   filter :user_app_experience_count, :as => :numeric, label: 'Опыт'
-  filter :adm_region, :as => :select, :collection => proc { Region.adm_regions.all }, :input_html => {:style => "width: 220px;"}
-  filter :region, :as => :select, :collection => proc { Region.mun_regions.all }, :input_html => {:style => "width: 220px;"}
+  filter :user_app_has_car, as: :boolean, label: 'Автомобиль'
+  filter :user_app_has_video, as: :boolean, label: 'Видеосъёмка'
+  filter :got_docs
 
-  form :partial => "form"
+  form :partial => 'form'
 
   config.action_items.clear
 
