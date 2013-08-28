@@ -174,8 +174,8 @@ class ExcelUserAppRow
 
   COLUMNS.each do |field, _dummy|
     define_method "#{field}_with_localstore=" do |v|
-      send "#{field}_without_localstore=", v
       instance_variable_set("@#{field}", v)
+      send "#{field}_without_localstore=", v
     end
     alias_method_chain "#{field}=", :localstore
   end
