@@ -4,7 +4,7 @@ class Verification < ActiveRecord::Base
   scope :confirmed, -> { where(confirmed: true) }
 
   after_initialize do
-    self[:code] ||= (100000 + rand(899999)).to_s
+    self[:code] ||= (100000 + SecureRandom.random_number(899999)).to_s
   end
 
   before_validation :normalize_phone_number
