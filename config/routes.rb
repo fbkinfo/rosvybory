@@ -15,6 +15,9 @@ Rosvibory::Application.routes.draw do
       get :group_new
       post :group_create
     end
+    member do
+      get :dislocate
+    end
   end
 
   root 'user_apps#new'
