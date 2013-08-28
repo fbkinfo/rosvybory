@@ -38,6 +38,8 @@ class Ability
       can :import, UserApp
       can :view_dislocation, User
 
+      can :assign_users, Role, :slug => [:observer, :mobile, :callcenter, :mc, :cc, :tc]
+
       can [:create, :read], ActiveAdmin::Comment
     end
 
@@ -67,6 +69,7 @@ class Ability
           # TODO волонтёров своего округа во формате "Расстановка с контактами" без участников МГ и КЦ
           # TODO всю базу волонтёров в форматах "Расстановка с ФИО" и "Обезличенная расстановка" без участников МГ и КЦ
         end
+        can :assign_users, Role, :slug => [:observer, :mobile, :callcenter, :mc, :cc]
       end
 
       can :import, UserApp
