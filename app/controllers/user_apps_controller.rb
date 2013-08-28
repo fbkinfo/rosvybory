@@ -1,5 +1,6 @@
 class UserAppsController < ApplicationController
   before_action :set_user_app, only: [:show] #, :edit, :update, :destroy]
+  before_action :load_users_from_active_admin_batch
 
   ## GET /user_apps
   #def index
@@ -58,7 +59,6 @@ class UserAppsController < ApplicationController
   end
 
   def new_group_email
-    @users = User.where(id: params[:collection_selection])
     render layout: 'custom_layout'
   end
 
@@ -68,7 +68,6 @@ class UserAppsController < ApplicationController
   end
 
   def new_group_sms
-    @users = User.where(id: params[:collection_selection])
     render layout: 'custom_layout'
   end
 
@@ -92,8 +91,6 @@ class UserAppsController < ApplicationController
   #end
 
   private
-
-
 
   # Use callbacks to share common setup or constraints between actions.
   def set_user_app
@@ -120,4 +117,15 @@ class UserAppsController < ApplicationController
                                          UserApp.previous_statuses_methods +
                                          UserApp.social_methods)
   end
+
+    def load_users_from_active_admin_batch
+      if params[:filters].present? && params[:all_pages] == '1'
+        filters = Rack::Utils.parse_nested_query(params[:filters])['q'].with_indifferent_access
+        filters.delete_if {|key, value| value.blank? }
+        @users = User
+        @users = @users.ransack(filters).result if filters.present?
+      else
+        @users = User.where(id: params[:collection_selection])
+      end
+    end
 end

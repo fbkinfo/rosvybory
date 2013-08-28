@@ -12,6 +12,7 @@ ActiveAdmin.register User do
     end
   end if Role.table_exists?
 
+  #при добавлении нового группового действия - обратить внимание на флажок "Применить ко всем страницам", если нужен для этого действия - реализовывать обработку
   batch_action :new_group_email
   batch_action :new_group_sms
 
