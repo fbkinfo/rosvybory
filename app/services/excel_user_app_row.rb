@@ -132,6 +132,9 @@ class ExcelUserAppRow
 
   def social_accounts=(v)
     # TODO when better times come
+    # accounts_urls = v.to_s.scan(/http?:\/\/[\w\/\.]*/)
+    # known_networks = { vk: /vk.com/, ... }
+    # accounts_urls.each {|u| find_network and set in @user_app }
     @social_accounts = v
   end
 
