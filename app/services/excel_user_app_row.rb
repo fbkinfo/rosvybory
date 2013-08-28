@@ -43,12 +43,7 @@ class ExcelUserAppRow
   attr_accessor :created_at, :adm_region, :region, :has_car, :current_roles, :experience_count, :previous_statuses, :can_be_coord_region, :can_be_reserv, :social_accounts, :uic
   attr_accessor :first_name, :last_name, :patronymic, :email, :extra, :phone
 
-  delegate :organisation,
-            # require no special treatment
-            # :first_name,  :last_name,  :patronymic,  :email,  :extra,  :phone,  # moved to attr_accessor
-            :first_name=, :last_name=, :patronymic=, :email=, :extra=, :phone=,
-            # read-only
-            :persisted?, :new_record?, :to => :user_app, :allow_nil => true
+  delegate :organisation, :persisted?, :new_record?, :to => :user_app, :allow_nil => true
 
   def initialize(attrs)
     phone = Verification.normalize_phone_number(attrs[:phone])
@@ -69,8 +64,11 @@ class ExcelUserAppRow
     self.class.column_names.each do |k|
       v = attrs[k]
       v = v.strip if v.respond_to?(:strip)
-      instance_variable_set("@#{k}", v)
-      send "#{k}=", v if v.present? && !local_only
+      if local_only
+        instance_variable_set("@#{k}", v)
+      else
+        send "#{k}=", v if v.present?
+      end
     end
   end
 
@@ -80,7 +78,7 @@ class ExcelUserAppRow
         "ГЛС" => "Голос",
         "СНР" => "Сонар"
     }
-    self.organisation = Organisation.where(name: orgs_by_name[v.split('-')[0]]).first
+    self.organisation = Organisation.where(name: orgs_by_name[v.to_s.split('-')[0]]).first
   end
 
   def current_roles=(v)
@@ -141,7 +139,6 @@ class ExcelUserAppRow
 
   def adm_region=(v)
     @user_app.adm_region = Region.adm_regions.find_by(name: normalize_adm_region(v))
-    @adm_region = v
   end
 
   def experience_count=(v)
@@ -154,12 +151,10 @@ class ExcelUserAppRow
 
   def uic=(v)
     @user_app.uic = v.to_i if v.to_i > 0
-    @uic = v
   end
 
   def region=(v)
     @user_app.region = Region.find_by(name: v)
-    @region = v
   end
 
   def organisation=(org)
@@ -169,6 +164,20 @@ class ExcelUserAppRow
   def created_at=(v)
     @user_app.created_at = v # convert to datetime
     @created_at = @user_app.created_at
+  end
+
+  ['first_name', 'last_name', 'patronymic', 'email', 'extra', 'phone'].each do |field|
+    define_method "#{field}=" do |value|
+      @user_app.send "#{field}=", value
+    end
+  end
+
+  COLUMNS.each do |field, _dummy|
+    define_method "#{field}_with_localstore=" do |v|
+      send "#{field}_without_localstore=", v
+      instance_variable_set("@#{field}", v)
+    end
+    alias_method_chain "#{field}=", :localstore
   end
 
   def errors
