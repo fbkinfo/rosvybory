@@ -15,7 +15,7 @@
     = f.input :full_name
     = f.input :address, :input_html => {:rows => 2}
     = f.input :got_docs
-    = f.input :roles, collection: Role.where("slug != ?", ["admin"]), :input_html => {:style => "width: 300px;"}
+    = f.input :roles, collection: (Role.accessible_by(current_ability, :assign_users) + f.object.roles).uniq, :input_html => {:style => "width: 300px;"}
     = f.input :email
     = f.input :phone
     = f.input :password, as: :hidden if @user.new_record?

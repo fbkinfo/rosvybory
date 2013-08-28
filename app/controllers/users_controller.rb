@@ -17,6 +17,7 @@ class UsersController < ApplicationController
 
   def update
     authorize! :update, @user
+    @user.valid_roles = Role.accessible_by(current_ability, :assign_users)
     if @user.update( params[:dislocation] ? dislocate_params : user_params )
       render json: {status: :ok}, :content_type => 'text/html'
     else
@@ -41,6 +42,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     authorize! :create, @user
+    @user.valid_roles = Role.accessible_by(current_ability, :assign_users)
     if @user.save
       render json: {status: :ok}, :content_type => 'text/html'
     else
