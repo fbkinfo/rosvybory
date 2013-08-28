@@ -63,7 +63,7 @@
                 Есть статус адвоката
           %tr.row
             %th= UserApp.human_attribute_name(:region)
-            %td= user_app.region.name
+            %td= user_app.region.try(:name)
           %tr.row
             %th= UserApp.human_attribute_name(:year_born)
             %td= user_app.year_born
