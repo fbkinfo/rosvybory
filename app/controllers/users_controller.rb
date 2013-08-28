@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class UsersController < ApplicationController
 
   before_filter :expose_current_roles, only: [:new, :edit, :dislocate]
@@ -17,10 +18,15 @@ class UsersController < ApplicationController
 
   def update
     authorize! :update, @user
-    if @user.update( params[:dislocation] ? dislocate_params : user_params )
-      render json: {status: :ok}, :content_type => 'text/html'
-    else
-      render (params[:dislocation] ? "dislocate" : "edit"), layout: false
+    begin
+      @user.current_user = current_user
+      if @user.update( params[:dislocation] ? dislocate_params : user_params )
+        render json: {status: :ok}, :content_type => 'text/html'
+      else
+        render (params[:dislocation] ? "dislocate" : "edit"), layout: false
+      end
+    rescue
+      render json: { ошибка: $!.to_s }
     end
   end
 
