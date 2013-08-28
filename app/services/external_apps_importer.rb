@@ -33,7 +33,7 @@ class ExternalAppsImporter
 
   def build(attrs)
     model = ExcelUserAppRow.new(attrs)
-    if model.valid?
+    if model.minimally_valid?
       model.organisation ||= organisation
       model
     else

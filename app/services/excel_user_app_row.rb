@@ -41,13 +41,9 @@ class ExcelUserAppRow
   attr_reader :user_app, :user
   attr_accessor :uid # lost after save, but is used to detect organisation
   attr_accessor :created_at, :adm_region, :region, :has_car, :current_roles, :experience_count, :previous_statuses, :can_be_coord_region, :can_be_reserv, :social_accounts, :uic
+  attr_accessor :first_name, :last_name, :patronymic, :email, :extra, :phone
 
-  delegate :organisation,
-            # require no special treatment
-            :first_name,  :last_name,  :patronymic,  :email,  :extra,  :phone,
-            :first_name=, :last_name=, :patronymic=, :email=, :extra=, :phone=,
-            # read-only
-            :persisted?, :new_record?, :to => :user_app, :allow_nil => true
+  delegate :organisation, :persisted?, :new_record?, :to => :user_app, :allow_nil => true
 
   def initialize(attrs)
     phone = Verification.normalize_phone_number(attrs[:phone])
@@ -63,18 +59,17 @@ class ExcelUserAppRow
     @user_app.imported!
     @user_app.can_be_observer = true
 
-    # считаем строку невалидной
-    return unless phone
+    local_only = phone.blank?
 
     self.class.column_names.each do |k|
       v = attrs[k]
       v = v.strip if v.respond_to?(:strip)
-      send "#{k}=", v if v.present? && k != '_destroy'
+      if local_only
+        instance_variable_set("@#{k}", v)
+      else
+        send "#{k}=", v if v.present?
+      end
     end
-  end
-
-  def valid?
-    @user_app.phone.present?
   end
 
   def uid=(v)
@@ -83,8 +78,7 @@ class ExcelUserAppRow
         "ГЛС" => "Голос",
         "СНР" => "Сонар"
     }
-    self.organisation = Organisation.where(name: orgs_by_name[v.split('-')[0]]).first
-    @uid = v
+    self.organisation = Organisation.where(name: orgs_by_name[v.to_s.split('-')[0]]).first
   end
 
   def current_roles=(v)
@@ -108,7 +102,6 @@ class ExcelUserAppRow
       end
       @user_app.user_app_current_roles.build(:current_role_id => role.id, value: value).keep = '1'
     end
-    @current_roles = v
   end
 
   def previous_statuses=(v)
@@ -123,32 +116,29 @@ class ExcelUserAppRow
       @user_app.previous_statuses |= status_value
     end
     self.experience_count = @experience_count if @experience_count
-    @previous_statuses = v
   end
 
   def social_accounts=(v)
-    # raise v.inspect
-    @social_accounts = v
+    # TODO when better times come
+    # accounts_urls = v.to_s.scan(/http?:\/\/[\w\/\.]*/)
+    # known_networks = { vk: /vk.com/, ... }
+    # accounts_urls.each {|u| find_network and set in @user_app }
   end
 
   def has_car=(v)
     @user_app.has_car = TRUTH.include?(v.to_s)
-    @has_car = v
   end
 
   def can_be_coord_region=(v)
     @user_app.can_be_coord_region = TRUTH.include?(v.to_s)
-    @can_be_coord_region = v
   end
 
   def can_be_reserv=(v)
     @user_app.can_be_prg_reserve = TRUTH.include?(v.to_s)
-    @can_be_reserv = v
   end
 
   def adm_region=(v)
     @user_app.adm_region = Region.adm_regions.find_by(name: normalize_adm_region(v))
-    @adm_region = v
   end
 
   def experience_count=(v)
@@ -157,17 +147,14 @@ class ExcelUserAppRow
     else
       @user_app.experience_count = 0
     end
-    @experience_count = v
   end
 
   def uic=(v)
     @user_app.uic = v.to_i if v.to_i > 0
-    @uic = v
   end
 
   def region=(v)
     @user_app.region = Region.find_by(name: v)
-    @region = v
   end
 
   def organisation=(org)
@@ -179,8 +166,26 @@ class ExcelUserAppRow
     @created_at = @user_app.created_at
   end
 
+  ['first_name', 'last_name', 'patronymic', 'email', 'extra', 'phone'].each do |field|
+    define_method "#{field}=" do |value|
+      @user_app.send "#{field}=", value
+    end
+  end
+
+  COLUMNS.each do |field, _dummy|
+    define_method "#{field}_with_localstore=" do |v|
+      instance_variable_set("@#{field}", v)
+      send "#{field}_without_localstore=", v
+    end
+    alias_method_chain "#{field}=", :localstore
+  end
+
   def errors
     @user_app.errors
+  end
+
+  def minimally_valid?
+    @user_app.phone.present?
   end
 
   def save
