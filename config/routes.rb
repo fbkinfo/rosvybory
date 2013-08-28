@@ -11,6 +11,9 @@ Rosvibory::Application.routes.draw do
   end
 
   resources :users, only: [:new, :create, :edit, :update] do
+    member do
+      get :dislocate
+    end
   end
 
   root 'user_apps#new'
