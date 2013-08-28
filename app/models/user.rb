@@ -26,13 +26,10 @@ class User < ActiveRecord::Base
   belongs_to :user_app
 
   validates :phone, presence: true, uniqueness: true, format: {with: /\A\d{10}\z/}
-
-<<<<<<< HEAD
-  attr_accessor :current_user
-=======
   validates :year_born,
             :numericality  => {:only_integer => true, :greater_than => 1900, :less_than => 2000,  :message => "Неверный формат", allow_nil: true}
->>>>>>> develop
+
+  attr_accessor :current_user
 
   after_create :mark_user_app_state
   after_create :send_sms_with_password, :if => :send_invitation?
