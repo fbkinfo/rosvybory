@@ -5,7 +5,7 @@
     .attributes_table.user_app
       %table
         %tbody
-          - UserApp.future_statuses_methods.each do | method_name|
+          - UserApp.future_statuses_methods.each do |method_name|
             - if user_app.send(method_name) ==  'Да'
               %tr.row
                 %th
@@ -96,7 +96,7 @@
     .attributes_table.user_app
       %table
         %tbody
-          - UserApp.previous_statuses_methods.each do | method_name|
+          - UserApp.previous_statuses_methods.each do |method_name|
             - if user_app.send(method_name) ==  'Да'
               %tr.row
                 %th

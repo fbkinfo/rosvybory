@@ -15,6 +15,11 @@ class Dislocation < User
       select("users.*, uic_id as current_role_uic_id, current_role_id as current_role_id, nomination_source_id as current_role_nomination_source_id")
   end
 
+  def self.with_role(role_slug)
+    joins(:user_roles => :role).where(:roles => {:slug => role_slug})
+  end
+
+
   def self.ransackable_attributes(auth_object = nil)
     column_names + ["current_role_uic", 'current_role_nomination_source_id']
   end

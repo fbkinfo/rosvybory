@@ -63,9 +63,8 @@ class UserAppDecorator < Draper::Decorator
     [last_name, first_name, patronymic].join ' '
   end
 
-  private
-    def yes_no(value)
-      value ? "Да":"Нет"
-    end
+  def yes_no(value)
+    value ? "Да":"Нет"
+  end
 
 end
