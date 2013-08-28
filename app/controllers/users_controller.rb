@@ -1,6 +1,8 @@
 class UsersController < ApplicationController
 
-  before_filter :expose_current_roles, only: [:new, :edit]
+  include UserAppsHelper
+
+  before_filter :expose_current_roles, only: [:new, :edit, :group_new]
   before_filter :set_user, only: [:edit, :update]
 
   def edit
@@ -19,15 +21,47 @@ class UsersController < ApplicationController
   end
 
   #TODO возможно стоит реализовать через обычные new и create
+  # для new идея хорошая, но нет времени сливать (ДК)
   #/users/group_new
   def group_new
-    render json: { collection: params[:collection_selection].join(",") }
-    #TODO создать виртуального пользователя, установив ему район и округ если у всех выбранных пользователей они равны, и его показать в форме
+    @apps = UserApp.where id: params[:collection_selection]
+    @apps = @apps.where %q(state != ?), 'approved'
+    gon.user_app_ids = @apps.pluck(:id)
+    gon.regions = regions_hash
+    case @apps.count
+    when 0
+      render text: "Заявки уже обработаны"
+    when 1
+      @app = @apps.first
+      gon.user_app_id = @app.id
+      @user = User.new_from_app(@app)
+      authorize! :create, @user
+      render "new", layout: false
+    else
+      @user = User.new_from_app(@apps)
+      gon.user_app_id = @apps.first.id
+      authorize! :create, @user
+      render layout: false
+    end
   end
 
   # POST /users/group_create
   def group_create
-    #TODO create users
+    @apps = UserApp.where id: params[:apps]
+    @apps.each do |app|
+      user = User.new user_params
+      user.email = app.email
+      user.phone = Verification.normalize_phone_number(app.phone)
+      user.user_app = app
+      user.send :generate_password
+      user.adm_region_id ||= app.adm_region_id
+      user.region_id ||= app.region_id
+      user.organisation_id ||= app.organisation_id
+      user.save!
+      app.confirm_phone! unless app.phone_verified?
+      app.confirm_email! unless app.confirmed?
+   end
+    render json: {status: :ok}, :content_type => 'text/html'
   end
 
 
@@ -38,6 +72,8 @@ class UsersController < ApplicationController
       render text: "Заявка уже обработана"
     else
       gon.user_app_id = @app.id
+      gon.user_app_ids = [@app.id]
+      gon.regions = regions_hash
       @user = User.new_from_app(@app)
       authorize! :create, @user
       render "new", layout: false
