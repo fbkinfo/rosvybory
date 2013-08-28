@@ -175,6 +175,10 @@ class ExcelUserAppRow
     @user_app.errors
   end
 
+  def minimally_valid?
+    @user_app.phone.present?
+  end
+
   def save
     @user_app.skip_phone_verification = true
     @user_app.skip_email_confirmation = true
