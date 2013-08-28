@@ -215,6 +215,10 @@ describe User do
       user.user_current_roles.should_not be_empty
       user.user_current_roles.first.current_role.should == current_role
       user.user_current_roles.first.uic.should be_nil
+      user.last_name.should be_nil
+      user.first_name.should be_nil
+      user.patronymic.should be_nil
+      user.year_born.should be_nil
       user.email.should be_nil
       user.phone.should be_nil
       user.user_app.should be_nil
