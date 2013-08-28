@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
 
   def email_required?; false end
 
-  has_many :user_roles, dependent: :destroy
+  has_many :user_roles, dependent: :destroy, autosave: true
   has_many :roles, through: :user_roles
 
   has_many :user_current_roles, dependent: :destroy, autosave: true, inverse_of: :user
@@ -22,10 +22,14 @@ class User < ActiveRecord::Base
   belongs_to :organisation
   belongs_to :user_app
 
+  attr_accessor :valid_roles
+
   validates :phone, presence: true, uniqueness: true, format: {with: /\A\d{10}\z/}
 
   validates :year_born,
             :numericality  => {:only_integer => true, :greater_than => 1900, :less_than => 2000,  :message => "Неверный формат", allow_nil: true}
+
+  validate :roles_assignable
 
   after_create :mark_user_app_state
   after_create :send_sms_with_password, :if => :send_invitation?
@@ -75,6 +79,20 @@ class User < ActiveRecord::Base
     roles.delete role
   end
 
+  def role_ids=(values)
+    new_ids = values.reject(&:blank?).map(&:to_i).to_set
+    user_roles.each do |ur|
+      if new_ids.include?(ur.role_id)
+        new_ids.delete ur.role_id
+      else
+        ur.mark_for_destruction
+      end
+    end
+    new_ids.each do |role_id|
+      user_roles.build :role_id => role_id
+    end
+  end
+
   # override Devise password recovery
   def send_reset_password_instructions
     generate_password
@@ -97,7 +115,7 @@ class User < ActiveRecord::Base
     generate_password
 
     if app.can_be_observer || app.user_app_current_roles.present?
-      self.add_role :observer
+      add_role :observer
       app.user_app_current_roles.each do |ua_role|
         if ua_role.current_role
           ucr = user_current_roles.find_or_initialize_by(current_role_id: ua_role.current_role.id)
@@ -127,6 +145,14 @@ class User < ActiveRecord::Base
 
     def generate_password
       self.password = "%08d" % [SecureRandom.random_number(100000000)]
+    end
+
+    def roles_assignable
+      changed_roles = user_roles.select {|ur| ur.new_record? || ur.marked_for_destruction?}
+      bad_roles = changed_roles.select {|ur| !ur.role.in?(valid_roles) }
+      if bad_roles.present?
+        errors.add(:role_ids, "Вам нельзя изменять роль #{bad_roles.map(&:role_name).to_sentence} у пользователей")
+      end
     end
 
   def send_invitation?
