@@ -6,15 +6,11 @@ class Uic < ActiveRecord::Base
   # Returns +true+ if Uic belongs to +other_region+
   # which is a Region object of any kind (:city, :adm_region, :mun_region)
   #
-  def belongs_to_region?( other_region )
-    return false unless region.present?
-    if (
-      ( region == other_region ) ||
-      ( region.try(:parent) == other_region ) ||
-      ( region.try(:parent).try(:parent) == other_region )
+  def belongs_to_region?(other_region)
+    region.present? && (
+      region == other_region ||
+      region.try(:parent) == other_region ||
+      region.try(:parent).try(:parent) == other_region
     )
-      return true
-    end
-    false
   end
 end

@@ -62,6 +62,9 @@
               - when UserApp::LEGAL_STATUS_LAWYER
                 Есть статус адвоката
           %tr.row
+            %th= UserApp.human_attribute_name(:adm_region)
+            %td= user_app.adm_region.name
+          %tr.row
             %th= UserApp.human_attribute_name(:region)
             %td= user_app.region.try(:name)
           %tr.row
