@@ -207,6 +207,10 @@ class UserApp < ActiveRecord::Base
     @imported = true
   end
 
+  def full_name
+    [last_name, first_name, patronymic].compact.join(' ')
+  end
+
   # Разбивает содержимое поля uic на отдельные номера:
   # '1234,1235,1236' => '(1234),(1235),(1236)''
   #

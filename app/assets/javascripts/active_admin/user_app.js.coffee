@@ -29,3 +29,9 @@ $ ->
             $(this).val(row[i])
         $tbody.closest('form').find('.add_fields').click()
       return false;
+
+  $("#collection_selection").submit ->
+    if $("#batch_action").val() == "group_accept"
+      dialog_url = '/users/group_new?'+ $(this).serialize();
+      openDialog "group_accept", dialog_url, "Принять выбранные заявки"
+      false
