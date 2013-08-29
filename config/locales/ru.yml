@@ -318,11 +318,24 @@ ru:
       nomination_source:
         one: 'Источник выдвижения'
         other: 'Источники выдвижения'
+      dislocation_control:
+        one: 'Контроль расстановки'
+        other: 'Контроль расстановки'
     attributes:
       dislocation:
         current_role_id: Роль
         current_role_nomination_source_id: Источник выдвижения
         current_role_uic: УИК
+      dislocation_control:
+        number: УИК №
+        participant_0: Участник №1
+        participant_1: Участник №2
+        participant_2: Участник №3
+        participant_3: Участник №4
+        participant_4: Участник №5
+        participant_5: Участник №6
+        participant_6: Участник №7
+        others: ""
       nomination_source:
         variant: Тип
         name: Название
