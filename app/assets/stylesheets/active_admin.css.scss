@@ -12,6 +12,7 @@
 //= require jquery.ui.dialog
 //= require formtastic-bootstrap
 //= require select2
+//= require editable/jquery-editable
 
 @import "active_admin/mixins";
 @import "active_admin/base";
@@ -19,6 +20,7 @@
 @import "active_admin/select2";
 @import "active_admin/numeric_range";
 @import "active_admin/fix_titlebar_zindex";
+@import "active_admin/dislocation_errors";
 
 // Overriding any non-variable SASS must be done after the fact.
 // For example, to change the default status-tag color:
@@ -33,5 +35,10 @@
   }
   input {
     width: 100% !important;
+  }
+}
+.control_dislocations {
+  .unsaved {
+    background-color: #dd3;
   }
 }
