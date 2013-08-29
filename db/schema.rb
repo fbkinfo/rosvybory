@@ -44,6 +44,17 @@ ActiveRecord::Schema.define(version: 20130828121339) do
     t.datetime "updated_at"
   end
 
+  create_table "mobile_groups", force: true do |t|
+    t.integer  "organisation_id"
+    t.string   "name"
+    t.integer  "adm_region_id"
+    t.integer  "region_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "mobile_groups", ["organisation_id"], name: "index_mobile_groups_on_organisation_id"
+
   create_table "nomination_sources", force: true do |t|
     t.string   "name"
     t.string   "variant"
