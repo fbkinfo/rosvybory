@@ -9,6 +9,16 @@ class CurrentRole < ActiveRecord::Base
     reserve
   )
 
+  PRIORITY = {
+    'prg_tic'    => 1,
+    'prg'        => 2,
+    'psg_tic'    => 3,
+    'psg'        => 4,
+    'observer'   => 5,
+    'journalist' => 6,
+    'reserve'    => 7,
+  }
+
   has_many :user_app_current_roles, dependent: :destroy
   has_many :user_apps, through: :user_app_current_roles
 
@@ -24,4 +34,7 @@ class CurrentRole < ActiveRecord::Base
     ['psg', 'prg'].include? slug
   end
 
+  def priority
+    PRIORITY[slug]
+  end
 end
