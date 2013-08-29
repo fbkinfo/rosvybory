@@ -43,13 +43,6 @@ class User < ActiveRecord::Base
     [last_name, first_name, patronymic].join ' '
   end
 
-  def full_name=(name)
-    split = name.split(' ', 3)
-    self.last_name = split[0]
-    self.first_name = split[1]
-    self.patronymic = split[2]
-  end
-
   class << self
     def new_from_app(app)
       new.update_from_user_app(app)
