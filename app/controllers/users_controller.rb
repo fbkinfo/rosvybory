@@ -33,12 +33,24 @@ class UsersController < ApplicationController
   #/users/group_new
   def group_new
     @apps = UserApp.where id: params[:collection_selection]
-    @apps = @apps.where %q(state != ?), 'approved'
-    gon.user_app_ids = @apps.pluck(:id)
+    @apps, @rejected = @apps.inject([[], []]) do |pair, app|
+      if reason = app.can_not_be_approved?
+        pair.last << [app, reason]
+      else
+        pair.first << app
+      end
+      pair
+    end
+    logger.debug "UsersController@#{__LINE__}#group_new #{@apps.inspect} #{@rejected.inspect}" if logger.debug?
+    gon.user_app_ids = @apps.to_a.map(&:id)
     gon.regions = regions_hash
     case @apps.count
     when 0
-      render text: "Заявки уже обработаны"
+      if @rejected.present?
+        render partial: 'rejected', layout: false
+      else
+        render text: "Заявки уже обработаны"
+      end
     when 1
       @app = @apps.first
       gon.user_app_id = @app.id
