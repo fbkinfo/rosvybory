@@ -7,6 +7,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
+gem 'x-editable-rails'
 
 # Use postgresql as the database for Active Record
 gem 'pg'
