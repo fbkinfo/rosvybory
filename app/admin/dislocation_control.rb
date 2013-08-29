@@ -13,7 +13,7 @@ ActiveAdmin.register DislocationControl do
     end
     column :others do |uic|
       if uic.participants_count > 7
-        link_to 'Остальные', control_dislocations_path('q' => {'current_role_uic_equals' => 3755}), :target => '_blank'
+        link_to 'Остальные', control_dislocations_path('q' => {'current_role_uic_equals' => uic.number}), :target => '_blank'
       end
     end
   end
