@@ -14,10 +14,13 @@ describe User do
       let(:user)  { create :user }
 
       it {
-        should_not be_able_to(:manage, :all)
+        # can
         should be_able_to(:read, Region.new)
-        should_not be_able_to(:manage, Region.new)
         should be_able_to(:read, Organisation.new)
+
+        # cannot
+        should_not be_able_to(:manage, :all)
+        should_not be_able_to(:manage, Region.new)
         should_not be_able_to(:manage, Organisation.new)
         should_not be_able_to(:read, User.new)
         should_not be_able_to(:read, UserApp.new)
@@ -55,6 +58,7 @@ describe User do
         should be_able_to(:change_region, user)
         should be_able_to(:import, UserApp)
         should be_able_to(:view_dislocation, User)
+        should be_able_to(:crud, MobileGroup)
 
         # cannot
         should_not be_able_to(:manage, :all)
@@ -92,8 +96,57 @@ describe User do
         should be_able_to(:read, UserApp)
         should be_able_to(:import, UserApp)
         should be_able_to(:view_dislocation, User)
+        should be_able_to(:crud, MobileGroup)
 
         # cannot
+        should_not be_able_to(:manage, :all)
+        should_not be_able_to(:manage, Region.new)
+        should_not be_able_to(:manage, Organisation.new)
+        should_not be_able_to(:read, User.new)
+        should_not be_able_to(:read, UserApp.new)
+        should_not be_able_to(:manage, User.new(adm_region: first_adm_region))
+        should_not be_able_to(:read, User.new(adm_region: second_adm_region))
+        should_not be_able_to(:manage, UserApp.new(adm_region: first_adm_region))
+        should_not be_able_to(:read, UserApp.new(adm_region: second_adm_region))
+        should_not be_able_to(:manage, User.new(adm_region: first_adm_region, organisation: second_organisation))
+        should_not be_able_to(:manage, UserApp.new(adm_region: first_adm_region, organisation: second_organisation))
+        should_not be_able_to(:manage, User.new(adm_region: second_adm_region, organisation: first_organisation))
+        should_not be_able_to(:manage, User.new(adm_region: second_adm_region, organisation: second_organisation))
+        should_not be_able_to(:manage, UserApp.new(adm_region: second_adm_region, organisation: first_organisation))
+        should_not be_able_to(:manage, UserApp.new(adm_region: second_adm_region, organisation: second_organisation))
+        should_not be_able_to(:change_organisation, User.new)
+        should_not be_able_to(:change_adm_region, user)
+      }
+    end
+
+    context "пользователь с ролью координатора мобильных групп" do
+      let(:user)              { create :user, adm_region: first_adm_region, organisation: first_organisation }
+      let(:first_adm_region)  { Region.where(name: "Южный АО").with_kind(:adm_region).first_or_create }
+      let(:second_adm_region) { Region.where(name: "Северный АО").with_kind(:adm_region).first_or_create }
+      let(:first_region)      { Region.create parent: first_adm_region, name: "Арбат" }
+      let(:second_region)      { Region.create parent: first_adm_region, name: "Якиманка" }
+      let(:first_organisation) { Organisation.where(name: "РосВыборы").first_or_create }
+      let(:second_organisation) { Organisation.where(name: "КоксВыборы").first_or_create }
+
+      before do
+        create :role, slug: "mc"
+        user.add_role :mc
+        user.save
+      end
+
+      it {
+        # can
+        should be_able_to(:read, Region.new)
+        should be_able_to(:read, Organisation.new)
+        should be_able_to(:crud, MobileGroup)
+
+        # cannot
+        should_not be_able_to(:crud, User.new(adm_region: first_adm_region, organisation: first_organisation))
+        should_not be_able_to(:crud, UserApp.new(adm_region: first_adm_region, organisation: first_organisation))
+        should_not be_able_to(:change_region, user)
+        should_not be_able_to(:read, UserApp)
+        should_not be_able_to(:import, UserApp)
+        should_not be_able_to(:view_dislocation, User)
         should_not be_able_to(:manage, :all)
         should_not be_able_to(:manage, Region.new)
         should_not be_able_to(:manage, Organisation.new)
