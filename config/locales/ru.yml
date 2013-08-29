@@ -384,7 +384,7 @@ ru:
         work: Место работы
         work_position: Должность
         address: Адрес прописки
-        got_docs: Докуметы выданы
+        got_docs: Документы выданы
       region:
         kind: Тип
         name: Название
