@@ -433,7 +433,7 @@ ru:
         social_accounts: "Соц. аккаунты"
         year_born: "Год рождения"
         sex_male: "Пол"
-        ip: "ip"
+        ip: "IP"
         organisation: "Орг."
         current_roles: "Текущие статусы"
   user_app:
