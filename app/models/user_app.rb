@@ -207,6 +207,10 @@ class UserApp < ActiveRecord::Base
     @imported = true
   end
 
+  def full_name
+    [last_name, first_name, patronymic].compact.join(' ')
+  end
+
   private
 
   def set_phone_verified_status

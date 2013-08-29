@@ -4,14 +4,14 @@ class Verification < ActiveRecord::Base
   scope :confirmed, -> { where(confirmed: true) }
 
   after_initialize do
-    self[:code] ||= (100000 + rand(899999)).to_s
+    self[:code] ||= (100000 + SecureRandom.random_number(899999)).to_s
   end
 
   before_validation :normalize_phone_number
   after_create :send_sms
 
   def self.normalize_phone_number(phone_number)
-    phone_number && phone_number.to_s.gsub(/\D/, '')[-10..-1]
+    phone_number && phone_number.to_s.gsub(/\D/, '').last(10)
   end
 
   def send_sms
