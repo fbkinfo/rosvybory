@@ -130,3 +130,7 @@
           %tr.row
             %th= UserApp.human_attribute_name :organisation
             %td= user_app.organisation
+          %tr.row
+            %th= UserApp.human_attribute_name :ip
+            %td
+              %tt= user_app.ip
