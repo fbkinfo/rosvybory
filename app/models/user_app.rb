@@ -50,6 +50,7 @@ class UserApp < ActiveRecord::Base
 
   validate :check_regions
   validate :check_phone_verified, on: :create
+  validate :check_uic_belongs_to_region
 
   attr_accessor :verification, :skip_phone_verification, :skip_email_confirmation
 
@@ -225,4 +226,21 @@ class UserApp < ActiveRecord::Base
   def check_phone_verified
     errors.add(:phone, 'не подтвержден') unless verified?
   end
+
+  def check_uic_belongs_to_region
+    return true unless uic.present?
+    uic.split(',').each do |uic_number|
+      tmp_uic = Uic.find_by( number: uic_number )
+      if !tmp_uic.present?
+        errors.add(:uic, "УИК №#{uic_number} не найден")
+      elsif region.present? && !tmp_uic.belongs_to_region?( region )
+        errors.add(:uic, "Район УИК №#{uic_number} и район пользователя не совпадают")
+      elsif adm_region.present? && !tmp_uic.belongs_to_region?( adm_region )
+        errors.add(:uic, "Адм.округ УИК №#{uic_number} и пользователя не совпадают")
+      end
+    end
+    true
+  end
+
+
 end
