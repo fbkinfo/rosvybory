@@ -24,3 +24,14 @@
 // For example, to change the default status-tag color:
 //
 //   .status_tag { background: #6090DB; }
+
+#user_last_name_input, #user_first_name_input, #user_patronymic_input {
+  float: left;
+  width: 30%;
+  label {
+    float: none !important;
+  }
+  input {
+    width: 100% !important;
+  }
+}
