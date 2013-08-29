@@ -106,8 +106,11 @@ ActiveAdmin.register User do
   filter :roles, :input_html => {:style => "width: 230px;"}
   filter :user_current_roles_current_role_id, label: 'Роль наблюдателя', as: :select, collection: proc { CurrentRole.all }, :input_html => {:style => "width: 230px;"}
   filter :user_app_uic_matcher, as: :string, label: '№ УИК'
-  filter :user_app_last_name, as: :string, label: 'Фамилия'
-  filter :email, label: 'Почта'
+  filter :last_name
+  filter :first_name
+  filter :patronymic
+  filter :phone
+  filter :email
   filter :user_app_created_at, as: :date_range, label: 'Дата подачи заявки'
   filter :created_at, label: 'Дата создания'
   filter :user_app_experience_count, :as => :numeric, label: 'Опыт'

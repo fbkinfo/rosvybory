@@ -199,10 +199,11 @@ NominationSource.create :name => 'ЛДПР', :variant => 'party'
 NominationSource.create :name => 'Яблоко', :variant => 'party'
 NominationSource.create :name => 'РПР-Парнас', :variant => 'party'
 
-
 NominationSource.create :name => 'Навальный', :variant => 'candidate'
 NominationSource.create :name => 'Митрохин', :variant => 'candidate'
 NominationSource.create :name => 'Мельников', :variant => 'candidate'
 NominationSource.create :name => 'Дегтярёв', :variant => 'candidate'
 NominationSource.create :name => 'Левичев', :variant => 'candidate'
 NominationSource.create :name => 'Собянин', :variant => 'candidate'
+
+NominationSource.create :name => 'СМИ', :variant => 'media'
