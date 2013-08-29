@@ -122,7 +122,7 @@ class UserAppsController < ApplicationController
       if params[:filters].present? && params[:all_pages] == '1'
         filters = Rack::Utils.parse_nested_query(params[:filters])['q'].with_indifferent_access
         filters.delete_if {|key, value| value.blank? }
-        @users = User
+        @users = User.accessible_by(current_ability)
         @users = @users.ransack(filters).result if filters.present?
       else
         @users = User.where(id: params[:collection_selection])
