@@ -23,7 +23,7 @@ ActiveAdmin.register Dislocation do
     end
     column :current_role_id, -> (user) { CurrentRole.find_by(:id => user.current_role_id).try(:name) || user.current_role_id }
     column :current_role_nomination_source_id, -> (user) { NominationSource.find_by(:id => user.current_role_nomination_source_id).try(:name) || user.current_role_nomination_source_id }
-    column :got_docs, -> (user) { I18n.t user.got_docs.to_s }
+    column :got_docs, &:human_got_docs
     column :dislocation_errors, -> (user) { ' TODO ' }
   end
 
@@ -32,9 +32,9 @@ ActiveAdmin.register Dislocation do
   filter :region, :as => :select, :collection => proc { Region.mun_regions }, :input_html => {:style => "width: 230px;"}
   filter :user_app_last_name, as: :string, label: 'Фамилия'
   filter :phone
-  filter :got_docs
   filter :current_role_uic, as: :numeric
   filter :current_role_nomination_source_id, as: :select, collection: proc { NominationSource.order(:name) }, :input_html => {:style => "width: 230px;"}
+  filter :got_docs, as: :select
   # filter :dislocation_errors, as: :something
 
   controller do
