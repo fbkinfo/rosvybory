@@ -50,6 +50,7 @@ class UserApp < ActiveRecord::Base
 
   validate :check_regions
   validate :check_phone_verified, on: :create
+  validate :check_uic_belongs_to_region
 
   attr_accessor :verification, :skip_phone_verification, :skip_email_confirmation
 
@@ -220,6 +221,17 @@ class UserApp < ActiveRecord::Base
     false
   end
 
+  # Разбивает содержимое поля uic на отдельные номера:
+  # '1234,1235,1236' => '(1234),(1235),(1236)''
+  #
+  # В результате ransacker работает для:
+  #   uic_matcher_contains - возвращает true, если uic содержит искомый номер
+  #   uic_matcher_equals - возвращает true, если uic состоит в точности из одного искомого номера
+  #
+  ransacker :uic_matcher, type: :string, formatter: ->(str){ '('+str+')' } do |parent|
+    Arel::Nodes::NamedFunction.new( 'regexp_replace', [ parent.table[:uic], '[0-9]+', '(\\&)', 'g' ] )
+  end
+
   private
 
   def set_phone_verified_status
@@ -234,4 +246,21 @@ class UserApp < ActiveRecord::Base
   def check_phone_verified
     errors.add(:phone, 'не подтвержден') unless verified?
   end
+
+  def check_uic_belongs_to_region
+    return true unless uic.present?
+    uic.split(',').each do |uic_number|
+      tmp_uic = Uic.find_by( number: uic_number )
+      if !tmp_uic.present?
+        errors.add(:uic, "УИК №#{uic_number} не найден")
+      elsif region.present? && !tmp_uic.belongs_to_region?( region )
+        errors.add(:uic, "Район УИК №#{uic_number} и район пользователя не совпадают")
+      elsif adm_region.present? && !tmp_uic.belongs_to_region?( adm_region )
+        errors.add(:uic, "Адм.округ УИК №#{uic_number} и пользователя не совпадают")
+      end
+    end
+    true
+  end
+
+
 end
