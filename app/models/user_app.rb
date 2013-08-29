@@ -212,6 +212,17 @@ class UserApp < ActiveRecord::Base
     [last_name, first_name, patronymic].compact.join(' ')
   end
 
+  # Разбивает содержимое поля uic на отдельные номера:
+  # '1234,1235,1236' => '(1234),(1235),(1236)''
+  #
+  # В результате ransacker работает для:
+  #   uic_matcher_contains - возвращает true, если uic содержит искомый номер
+  #   uic_matcher_equals - возвращает true, если uic состоит в точности из одного искомого номера
+  #
+  ransacker :uic_matcher, type: :string, formatter: ->(str){ '('+str+')' } do |parent|
+    Arel::Nodes::NamedFunction.new( 'regexp_replace', [ parent.table[:uic], '[0-9]+', '(\\&)', 'g' ] )
+  end
+
   private
 
   def set_phone_verified_status
