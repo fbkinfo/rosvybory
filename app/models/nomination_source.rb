@@ -1,5 +1,10 @@
 class NominationSource < ActiveRecord::Base
-  KNOWN_VARIANTS = %w{candidate party parliament}
+  KNOWN_VARIANTS = %w{
+    candidate
+    media
+    parliament
+    party
+  }
 
   has_many :user_current_roles
 

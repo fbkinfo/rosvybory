@@ -1,5 +1,5 @@
 
-uicRoles = ["psg", "prg", "observer"]
+uicRoles = ["psg", "prg", "observer", "journalist"]
 regionRoles = ["psg_tic", "prg_tic"]
 
 updateRoleFields = ->
@@ -74,7 +74,10 @@ initRoles = ->
       response = $.parseJSON(xhr.responseText)
       if response.status == "ok"
         $dialog.dialog('close');
-        $("body").trigger "app-status-change", [gon.user_app_id, "approved"] if gon.user_app_id
+        if gon.user_app_ids
+          $("body").trigger "app-status-change", [id, "approved"] for id in gon.user_app_ids
+        else
+          $("body").trigger "app-status-change", [gon.user_app_id, "approved"] if gon.user_app_id
       else
         $dialog.html(xhr.responseText)
     catch err
@@ -92,7 +95,7 @@ initRoles = ->
     $el = $form.find("#user_region_id")
     $el.empty(); # remove old options
     $el.append $("<option></option>").attr("value", "")
-    $.each regions[chosen_val], (index, region) ->
+    $.each gon.regions[chosen_val], (index, region) ->
       $el.append $("<option></option>").attr("value", region.id).text(region.name)
     $el.select2("val", "")
 

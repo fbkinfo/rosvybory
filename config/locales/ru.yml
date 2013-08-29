@@ -163,6 +163,7 @@ ru:
       odd: может иметь лишь четное значение
       record_invalid: ! 'Возникли ошибки: %{errors}'
       taken: уже существует
+      incorrect_nomination_source: некорректный источник выдвижения
       too_long:
         few: слишком большой длины (не может быть больше чем %{count} символа)
         many: слишком большой длины (не может быть больше чем %{count} символов)
@@ -312,15 +313,22 @@ ru:
       blacklist:
         one: 'Черный список'
         other: 'Черный список'
+      nomination_source:
+        one: 'Источник выдвижения'
+        other: 'Источники выдвижения'
     attributes:
       dislocation:
         current_role_id: Роль
         current_role_nomination_source_id: Источник выдвижения
         current_role_uic: УИК
+      nomination_source:
+        variant: Тип
+        name: Название
       nomination_source/variants:
         candidate: Кандидат
         party: Партия кандидата
         parliament: Парламетская партия
+        media: СМИ
       verification:
         phone_number: Телефон
       user_current_role:
@@ -460,6 +468,7 @@ ru:
       labels:
         new_group_sms: "Отправить SMS"
         new_group_email: "Отправить почту"
+        group_accept: "Принять"
     edit_model: "Редактирование %{model}"
     scopes:
       with_current_roles: Все
