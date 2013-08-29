@@ -9,7 +9,9 @@
 
 = semantic_form_for @user, builder: ::Formtastic::FormBuilder, remote: true do |f|
   = f.inputs "data-role" => "user-fields-container" do
-    = f.input :full_name
+    = f.input :last_name
+    = f.input :first_name
+    = f.input :patronymic
     = f.input :address, :input_html => {:rows => 2}
     = f.input :got_docs
     = f.input :roles, collection: (Role.accessible_by(current_ability, :assign_users) + f.object.roles).uniq, :input_html => {:style => "width: 300px;"}
