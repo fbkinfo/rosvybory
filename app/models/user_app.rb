@@ -211,6 +211,15 @@ class UserApp < ActiveRecord::Base
     [last_name, first_name, patronymic].compact.join(' ')
   end
 
+  def can_not_be_approved?
+    return :valid unless valid?
+    return :approved if state_name == :approved
+    return :email_missing unless email.present?
+    return :email if UserApp.where('id != ?', id || 0).where('email = ?', email).count > 0
+    return :phone if UserApp.where('id != ?', id || 0).where('phone = ?', phone).count > 0
+    false
+  end
+
   private
 
   def set_phone_verified_status
