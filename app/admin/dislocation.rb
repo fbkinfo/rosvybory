@@ -41,7 +41,14 @@ ActiveAdmin.register Dislocation do
       inplace_helper[dislocation, text, name: :nomination_source_id, value: ns_id, source: nses]
     end
     column :got_docs, -> (user) { I18n.t user.got_docs.to_s }
-    column :dislocation_errors, -> (user) { ' TODO ' }
+    column "Ошибки расстановки", class: 'dislocation_errors_column' do |user|
+      errors = user.check_dislocation_for_errors
+      if errors
+        render partial: 'cell_with_errors', locals: { user: user, errors: errors }
+      else
+        render partial: 'cell_no_errors'
+      end
+    end
   end
 
   filter :organisation, label: 'Организация', as: :select, collection: proc { Organisation.order(:name) }, :input_html => {:style => "width: 230px;"}
@@ -89,6 +96,12 @@ ActiveAdmin.register Dislocation do
     def scoped_collection
       Dislocation.with_current_roles.with_role :observer
     end
+  end
+
+  member_action :errors_details do
+    @dislocation = Dislocation.with_current_roles.find(params[:id])
+    render layout: false
+    # This will render app/views/admin/posts/comments.html.erb
   end
 
 end
