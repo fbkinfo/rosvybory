@@ -40,6 +40,8 @@
           %td= app.full_name
           %td= app.email
           %td= app.phone
+- if @rejected.present?
+  = render 'rejected'
 
 :javascript
   initUserForm();
