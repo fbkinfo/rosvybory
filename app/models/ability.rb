@@ -37,7 +37,9 @@ class Ability
       # TODO всю базу волонтёров в форматах "Расстановка с ФИО" и "Обезличенная расстановка" без участников МГ и КЦ
       can :import, UserApp
       can :view_dislocation, User
+      can :crud, MobileGroup, :organisation_id => user.organisation_id
 
+      can :contribute_to, Organisation, :id => user.organisation_id
       can :assign_users, Role, :slug => [:observer, :mobile, :callcenter, :mc, :cc, :tc]
 
       can [:create, :read], ActiveAdmin::Comment
@@ -70,6 +72,8 @@ class Ability
           # TODO всю базу волонтёров в форматах "Расстановка с ФИО" и "Обезличенная расстановка" без участников МГ и КЦ
         end
         can :assign_users, Role, :slug => [:observer, :mobile, :callcenter, :mc, :cc]
+        can :crud, MobileGroup, :organisation_id => user.organisation_id
+        can :contribute_to, Organisation, :id => user.organisation_id
       end
 
       can :import, UserApp
@@ -86,6 +90,9 @@ class Ability
 
       # TODO всех участников МГ в координаторском формате
       # TODO всех участников МГ в форматах "Сводка МГ с контактами", "Сводка МГ с ФИО" и "Обезличенная сводка МГ"
+
+      can :crud, MobileGroup, :organisation_id => user.organisation_id
+      can :contribute_to, Organisation, :id => user.organisation_id
 
       can [:create, :read], ActiveAdmin::Comment
     end

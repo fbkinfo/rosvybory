@@ -1,5 +1,5 @@
 ActiveAdmin.register NominationSource do
-  menu :if => proc{ can? :crud, NominationSource }
+  menu :parent => I18n.t('active_admin.menu.dictionaries'), :if => proc{ can? :crud, NominationSource }
 
   filter :name
   filter :variant, :as => :select
