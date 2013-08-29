@@ -24,6 +24,8 @@ ru:
   'true': да
   formtastic:
     required: "обязательное поле"
+    'yes': да
+    'no': нет
   date:
     abbr_day_names:
     - Вс
@@ -337,6 +339,7 @@ ru:
         adm_region_id: Адм регион
         region: Регион/ТИК
         uic: УИК
+        got_docs: Документы выданы
       user_current_roles:
         region: ТИК
       organisation:
