@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ActiveAdmin.register Dislocation do
   decorate_with UserDecorator
 
@@ -20,6 +21,7 @@ ActiveAdmin.register Dislocation do
     column :current_role_uic, -> (user) { Uic.find_by(:id => user.current_role_uic_id).try(:number) || user.current_role_uic_id }
     column :current_role_id, -> (user) { CurrentRole.find_by(:id => user.current_role_id).try(:name) || user.current_role_id }
     column :current_role_nomination_source_id, -> (user) { NominationSource.find_by(:id => user.current_role_nomination_source_id).try(:name) || user.current_role_nomination_source_id }
+    column :got_docs, -> (user) { I18n.t user.got_docs.class }
     column :dislocation_errors, -> (user) { ' TODO ' }
   end
 
