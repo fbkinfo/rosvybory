@@ -1,6 +1,9 @@
 # Place all the behaviors and hooks related to the matching controller here.
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
+
+#= require jquery.maskedinput.js
+
 jQuery ->
   updateSubmitState = ->
     submit_enabled = $("#user_app_data_processing_allowed").prop('checked')
@@ -37,6 +40,8 @@ jQuery ->
     selectOnBlur: true
     formatNoMatches: ->
       "Введите номер УИК"
+  
+  $("#user_app_phone").mask("+7 (999) 999-99-99")
 
   $('#current_roles input.selectify').select2
     maximumSelectionSize: 1
