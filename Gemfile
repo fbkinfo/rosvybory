@@ -37,7 +37,7 @@ gem 'activeadmin',         github: 'gregbell/active_admin', branch: 'rails4'
 gem 'ransack', "~> 1.0.0"
 gem 'inherited_resources', "~> 1.4.1"
 gem 'enumerize'
-gem 'sms_ru'
+gem 'sms_ru', github: 'stiff/sms_ru'
 gem "recaptcha", :require => "recaptcha/rails"
 gem 'gon'
 gem 'cocoon'
