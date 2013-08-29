@@ -2,7 +2,7 @@ class UserCurrentRole < ActiveRecord::Base
   belongs_to :current_role
   belongs_to :nomination_source
   belongs_to :region
-  belongs_to :uic
+  belongs_to :uic, :inverse_of => :user_current_roles
   belongs_to :user, inverse_of: :user_current_roles
 
   validates :current_role, presence: true
@@ -16,6 +16,8 @@ class UserCurrentRole < ActiveRecord::Base
   def uic_number=(number)
     self.uic = Uic.find_by_number(number)
   end
+
+  delegate :priority, :to => :current_role, :prefix => true
 
   #attr_accessor :adm_region_id
 
