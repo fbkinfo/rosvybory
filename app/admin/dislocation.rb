@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ActiveAdmin.register Dislocation do
-  decorate_with UserDecorator
+  decorate_with DislocationDecorator
 
   actions :all, :except => [:new]
   menu :if => proc{ can? :view_dislocation, User }, :priority => 20
@@ -8,6 +8,10 @@ ActiveAdmin.register Dislocation do
   #scope :with_current_roles, :default => true
 
   index do
+    inplace_helper = proc do |dislocation, text, data|
+      content_tag(:span, text, :class => 'inplace', :data => data.merge(pk: dislocation.pk, type: 'select', url: inplace_control_dislocation_path(dislocation.user_current_role_id)))
+    end
+
     actions(defaults: false) do |resource|
       link_to(I18n.t('active_admin.edit'), dislocate_user_path(resource), class: "member_link edit_link")
     end
@@ -18,9 +22,24 @@ ActiveAdmin.register Dislocation do
     column :region
     column :full_name
     column :phone
-    column :current_role_uic, -> (user) { Uic.find_by(:id => user.current_role_uic_id).try(:number) || user.current_role_uic_id }
-    column :current_role_id, -> (user) { CurrentRole.find_by(:id => user.current_role_id).try(:name) || user.current_role_id }
-    column :current_role_nomination_source_id, -> (user) { NominationSource.find_by(:id => user.current_role_nomination_source_id).try(:name) || user.current_role_nomination_source_id }
+    column :current_role_uic, sortable: "user_current_roles.uic_id" do |dislocation|
+      region_id = dislocation.user_current_role_region_id || dislocation.adm_region_id
+      uics = region_id ? Uic.where(:region_id => region_id).map {|record| {:value => record.id, :text => record.number}} : []
+      text = Uic.find_by(:id => dislocation.user_current_role_uic_id).try(:number) || dislocation.user_current_role_uic_id
+      inplace_helper[dislocation, text, name: :uic_id, value: dislocation.user_current_role_uic_id, source: uics]
+    end
+    column :current_role_id do |dislocation|
+      role_id = dislocation.user_current_role_current_role_id
+      roles = CurrentRole.all.map {|record| {:value => record.id, :text => record.name}}
+      text = CurrentRole.find_by(:id => role_id).try(:name) || role_id
+      inplace_helper[dislocation, text, name: :current_role_id, value: role_id, source: roles]
+    end
+    column :current_role_nomination_source_id do |dislocation|
+      ns_id = dislocation.user_current_role_nomination_source_id
+      nses = NominationSource.all.map {|record| {:value => record.id, :text => record.name}}
+      text = NominationSource.find_by(:id => ns_id).try(:name) || ns_id
+      inplace_helper[dislocation, text, name: :nomination_source_id, value: ns_id, source: nses]
+    end
     column :got_docs, -> (user) { I18n.t user.got_docs.to_s }
     column :dislocation_errors, -> (user) { ' TODO ' }
   end
@@ -34,6 +53,37 @@ ActiveAdmin.register Dislocation do
   filter :current_role_uic, as: :numeric
   filter :current_role_nomination_source_id, as: :select, collection: proc { NominationSource.order(:name) }, :input_html => {:style => "width: 230px;"}
   # filter :dislocation_errors, as: :something
+
+  collection_action :inplace, :method => :post do
+    # TODO bug? routed to member action
+  end
+
+  member_action :inplace, :method => :post do
+    # FIXME method requires urgent refactoring
+    user, ucr = if params[:id].present?
+      ucr = UserCurrentRole.find(params[:id])
+      [User.accessible_by(current_ability).find(ucr.user_id), ucr] # TODO check security policy
+    else
+      user = User.accessible_by(current_ability).find(params[:pk])
+      [user, user.user_current_roles.build]
+    end
+    editable_fields = [:uic_id, :current_role_id, :nomination_source_id]
+    errors_normalization = {
+      :uic_number => :uic_id,
+      :nomination_source => :nomination_source_id,
+      :current_role => :current_role_id
+    }
+    ucr.update_attributes params.require(:dislocation).permit(editable_fields)
+    normalized_errors = ucr.errors.keys.map {|k| errors_normalization[k] || k }
+    fixable_errors = normalized_errors & editable_fields
+    ucr.save(validate: false) if ucr.errors.present? && fixable_errors.blank? # save if user can't help it anyway
+    render :json => {
+      :dislocation => ucr.as_json(:only => editable_fields + [:id]),
+      :url => inplace_control_dislocation_path(ucr.id),
+      :errors => fixable_errors,
+      :message => ucr.errors.full_messages.join(' ')
+    }
+  end
 
   controller do
     def scoped_collection
