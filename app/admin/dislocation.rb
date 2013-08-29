@@ -17,7 +17,9 @@ ActiveAdmin.register Dislocation do
     column :region
     column :full_name
     column :phone
-    column :current_role_uic, -> (user) { Uic.find_by(:id => user.current_role_uic_id).try(:number) || user.current_role_uic_id }
+    column :current_role_uic, sortable: "user_current_roles.uic_id" do |user|
+      Uic.find_by(:id => user.current_role_uic_id).try(:number) || user.current_role_uic_id
+    end
     column :current_role_id, -> (user) { CurrentRole.find_by(:id => user.current_role_id).try(:name) || user.current_role_id }
     column :current_role_nomination_source_id, -> (user) { NominationSource.find_by(:id => user.current_role_nomination_source_id).try(:name) || user.current_role_nomination_source_id }
     column :dislocation_errors, -> (user) { ' TODO ' }
