@@ -20,8 +20,6 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 ru:
-  FalseClass: нет
-  TrueClass: да
   'false': нет
   'true': да
   formtastic:
