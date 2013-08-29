@@ -1,0 +1,12 @@
+ru:
+  activerecord:
+    models:
+      mobile_group:
+        one: Мобильная группа
+        other: Мобильные группы
+    attributes:
+      mobile_group:
+        organisation: Организация
+        adm_region: Адм. округ
+        region: Район
+        name: Название МГ
