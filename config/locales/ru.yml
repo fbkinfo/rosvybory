@@ -20,6 +20,8 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 ru:
+  FalseClass: нет
+  TrueClass: да
   'false': нет
   'true': да
   formtastic:
@@ -384,7 +386,7 @@ ru:
         work: Место работы
         work_position: Должность
         address: Адрес прописки
-        got_docs: Докуметы выданы
+        got_docs: Документы выданы
       region:
         kind: Тип
         name: Название
