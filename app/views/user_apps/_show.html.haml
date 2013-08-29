@@ -40,7 +40,7 @@
             %td
               = user_app.phone
               - if user_app.phone_verified
-                подтверждён
+                %span.quiet.small подтверждён
           %tr.row
             %th= UserApp.human_attribute_name :year_born
             %td= user_app.year_born
@@ -104,19 +104,21 @@
           %tr.row
             %th= UserApp.human_attribute_name :experience_count
             %td= user_app.experience_count
-.panel
-  %h3
-    Аккаунты в соцсетях
-  .panel_contents
-    .attributes_table.user_app
-      %table
-        %tbody
-          - user_app.social_accounts.each do |key, val|
-            - if val.present?
-              %tr.row
-                %th
-                %td
-                  = link_to UserApp::SOCIAL_ACCOUNTS[key.to_sym], val, target: :_blank
+
+- if user_app.social_accounts.present?
+  .panel
+    %h3
+      Аккаунты в соцсетях
+    .panel_contents
+      .attributes_table.user_app
+        %table
+          %tbody
+            - user_app.social_accounts.each do |key, val|
+              - if val.present?
+                %tr.row
+                  %th
+                  %td
+                    = link_to UserApp::SOCIAL_ACCOUNTS[key.to_sym], val, target: :_blank
 .panel
   %h3
     Дополнительные сведения
@@ -124,12 +126,14 @@
     .attributes_table.user_app
       %table
         %tbody
-          %tr.row
-            %th= UserApp.human_attribute_name :extra
-            %td= user_app.extra
+          - if user_app.extra.present?
+            %tr.row
+              %th= UserApp.human_attribute_name :extra
+              %td= user_app.extra
           %tr.row
             %th= UserApp.human_attribute_name :organisation
             %td= user_app.organisation
           %tr.row
             %th= UserApp.human_attribute_name :ip
-            %td= user_app.ip  
+            %td
+              %tt= user_app.ip
