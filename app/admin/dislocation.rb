@@ -10,7 +10,7 @@ ActiveAdmin.register Dislocation do
   index do
     inplace_helper = proc do |dislocation, field, collection, display_method|
       field_value_id = dislocation.send("user_current_role_#{field}_id")
-      text = field.to_s.classify.constantize.find_by(:id => field_value_id).try(display_method) || field_value_id || 'изменить'
+      text = field.to_s.classify.constantize.find_by(:id => field_value_id).try(display_method) || field_value_id
       data = {
                 pk: dislocation.pk,
                 name: "#{field}_id",
