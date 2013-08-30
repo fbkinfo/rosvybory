@@ -33,7 +33,7 @@ ActiveAdmin.register Dislocation do
     column :full_name
     column :phone
     column :current_role_uic, sortable: "user_current_roles.uic_id" do |dislocation|
-      region_id = dislocation.user_current_role_region_id || dislocation.adm_region_id
+      region_id = dislocation.region_id || dislocation.adm_region.regions
       uics = region_id ? Uic.where(:region_id => region_id) : []
       inplace_helper[dislocation, :uic, uics, :number]
     end
