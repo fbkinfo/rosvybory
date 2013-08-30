@@ -326,6 +326,7 @@ ru:
         current_role_id: Роль
         current_role_nomination_source_id: Источник выдвижения
         current_role_uic: УИК
+        user_current_role_got_docs: Документы выданы
       dislocation_control:
         number: УИК №
         participant_0: Участник №1
