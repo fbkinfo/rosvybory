@@ -22,6 +22,7 @@ class UsersController < ApplicationController
     authorize! :update, @user
     @user.valid_roles = Role.accessible_by(current_ability, :assign_users)
     if @user.update( params[:dislocation] ? dislocate_params : user_params )
+      @user.send_reset_password_instructions if params[:send_password]
       render json: {status: :ok}, :content_type => 'text/html'
     else
       render (params[:dislocation] ? "dislocate" : "edit"), layout: false
@@ -109,7 +110,14 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     authorize! :create, @user
     @user.valid_roles = Role.accessible_by(current_ability, :assign_users)
-    if @user.save
+    begin
+      # @user.save may raise exception in after_create
+      user_save_result = @user.save
+    rescue Exception => e
+      @user.errors.add :base, e.to_s
+      user_save_result = false
+    end
+    if user_save_result
       render json: {status: :ok}, :content_type => 'text/html'
     else
       render "new", layout: false

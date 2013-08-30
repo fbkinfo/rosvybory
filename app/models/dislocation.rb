@@ -29,7 +29,7 @@ class Dislocation < User
   end
 
   # возвращает пользователей и их текущие роли (один пользователь может быть 1 и больше раз)
-  # каждая строка содержит все поля пользователя + uic_id, current_role_id и nomination_source_id из user_current_roles
+  # каждая строка содержит все поля таблиц users и user_current_roles
   def self.with_current_roles
     @@select_fields ||= User.column_names.map(&User.arel_table.method(:[])) +
                         UserCurrentRole.column_names.map {|col| UserCurrentRole.arel_table[col].as("user_current_role_#{col}")}
