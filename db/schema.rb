@@ -110,8 +110,8 @@ ActiveRecord::Schema.define(version: 20130830191309) do
   end
 
   add_index "uics", ["number"], name: "index_uics_on_number", unique: true, using: :btree
+  add_index "uics", ["parent_id"], name: "index_uics_on_parent_id", using: :btree
   add_index "uics", ["region_id"], name: "index_uics_on_region_id", using: :btree
-  add_index "uics", ["parent_id"], name: "index_uics_on_parent_id"
 
   create_table "user_app_current_roles", force: true do |t|
     t.integer  "user_app_id",     null: false
