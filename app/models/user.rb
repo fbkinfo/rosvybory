@@ -127,7 +127,8 @@ class User < ActiveRecord::Base
     logger.debug "User@#{__LINE__}#update_from_user_app #{app.current_roles.inspect} #{common_roles.inspect}" if logger.debug?
     if common_roles.present?
       app.user_app_current_roles.each do |ua_role|
-        if common_roles.include? ua_role.current_role
+        if common_roles.include? ua_role.current_role && user_current_roles.none? {|ucr| ucr.current_role == ua_role.current_role}
+          # TODO move this to user_current_role#from_user_app_current_role ?
           ucr = user_current_roles.find_or_initialize_by(current_role_id: ua_role.current_role.id)
           if apps.size == 1
             if ua_role.current_role.must_have_uic?
