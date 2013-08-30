@@ -8,8 +8,18 @@ ActiveAdmin.register Dislocation do
   #scope :with_current_roles, :default => true
 
   index do
-    inplace_helper = proc do |dislocation, text, data|
-      content_tag(:span, text, :class => 'inplace', :data => data.merge(pk: dislocation.pk, type: 'select', url: inplace_control_dislocation_path(dislocation.user_current_role_id)))
+    inplace_helper = proc do |dislocation, field, collection, display_method|
+      field_value_id = dislocation.send("user_current_role_#{field}_id")
+      text = field.to_s.classify.constantize.find_by(:id => field_value_id).try(display_method) || field_value_id
+      data = {
+                pk: dislocation.pk,
+                name: "#{field}_id",
+                value: field_value_id,
+                type: 'select',
+                source: collection.map {|record| {:value => record.id, :text => record.try(display_method)}},
+                url: inplace_control_dislocation_path(dislocation.user_current_role_id)
+              }
+      content_tag(:span, text, :class => 'inplace', :data => data)
     end
 
     actions(defaults: false) do |resource|
@@ -24,21 +34,14 @@ ActiveAdmin.register Dislocation do
     column :phone
     column :current_role_uic, sortable: "user_current_roles.uic_id" do |dislocation|
       region_id = dislocation.user_current_role_region_id || dislocation.adm_region_id
-      uics = region_id ? Uic.where(:region_id => region_id).map {|record| {:value => record.id, :text => record.number}} : []
-      text = Uic.find_by(:id => dislocation.user_current_role_uic_id).try(:number) || dislocation.user_current_role_uic_id
-      inplace_helper[dislocation, text, name: :uic_id, value: dislocation.user_current_role_uic_id, source: uics]
+      uics = region_id ? Uic.where(:region_id => region_id) : []
+      inplace_helper[dislocation, :uic, uics, :number]
     end
     column :current_role_id do |dislocation|
-      role_id = dislocation.user_current_role_current_role_id
-      roles = CurrentRole.all.map {|record| {:value => record.id, :text => record.name}}
-      text = CurrentRole.find_by(:id => role_id).try(:name) || role_id
-      inplace_helper[dislocation, text, name: :current_role_id, value: role_id, source: roles]
+      inplace_helper[dislocation, :current_role, CurrentRole.all, :name]
     end
     column :current_role_nomination_source_id do |dislocation|
-      ns_id = dislocation.user_current_role_nomination_source_id
-      nses = NominationSource.all.map {|record| {:value => record.id, :text => record.name}}
-      text = NominationSource.find_by(:id => ns_id).try(:name) || ns_id
-      inplace_helper[dislocation, text, name: :nomination_source_id, value: ns_id, source: nses]
+      inplace_helper[dislocation, :nomination_source, NominationSource.all, :name]
     end
     column :got_docs, -> (user) { I18n.t user.got_docs.to_s }
     column :dislocation_errors, -> (user) { ' TODO ' }
