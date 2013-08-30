@@ -2,7 +2,7 @@ class UserCurrentRole < ActiveRecord::Base
   belongs_to :current_role
   belongs_to :nomination_source
   belongs_to :region
-  belongs_to :uic
+  belongs_to :uic, :inverse_of => :user_current_roles
   belongs_to :user, inverse_of: :user_current_roles
 
   validates :current_role, presence: true
@@ -17,14 +17,16 @@ class UserCurrentRole < ActiveRecord::Base
     self.uic = Uic.find_by_number(number)
   end
 
+  delegate :priority, :to => :current_role, :prefix => true
+
   #attr_accessor :adm_region_id
 
   private
 
   def region_or_uic_present
-    unless region.present? || uic.present? || %w(reserve observer).include?(current_role.slug)
-      errors.add(:region, "Надо выбрать ТИК") if current_role.must_have_tic?
-      errors.add(:uic_number, "Надо выбрать УИК") if current_role.must_have_uic?
+    unless region.present? || uic.present? || %w(reserve observer).include?(current_role.try(:slug))
+      errors.add(:region, "Надо выбрать ТИК") if current_role.try(:must_have_tic?)
+      errors.add(:uic_number, "Надо выбрать УИК") if current_role.try(:must_have_uic?)
     end
   end
 
