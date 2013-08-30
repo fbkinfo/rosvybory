@@ -12,6 +12,10 @@ class Dislocation < User
     Arel::Nodes::SqlLiteral.new("user_current_roles.nomination_source_id")
   end
 
+  ransacker :user_current_role_got_docs do
+    Arel::Nodes::SqlLiteral.new('user_current_roles.got_docs')
+  end
+
   # возвращает пользователей и их текущие роли (один пользователь может быть 1 и больше раз)
   # каждая строка содержит все поля пользователя + uic_id, current_role_id и nomination_source_id из user_current_roles
   def self.with_current_roles
@@ -27,7 +31,7 @@ class Dislocation < User
 
 
   def self.ransackable_attributes(auth_object = nil)
-    column_names + ['current_role_uic', 'current_role_nomination_source_id']
+    column_names + ["current_role_uic", 'current_role_nomination_source_id', 'user_current_role_got_docs']
   end
 
 
