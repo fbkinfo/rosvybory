@@ -81,6 +81,7 @@ ActiveAdmin.register Dislocation do
     editable_fields = [:uic_id, :current_role_id, :nomination_source_id]
     errors_normalization = {
       :uic_number => :uic_id,
+      :uic => :uic_id,
       :nomination_source => :nomination_source_id,
       :current_role => :current_role_id
     }
