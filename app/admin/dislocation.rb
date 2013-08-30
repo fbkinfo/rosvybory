@@ -34,7 +34,7 @@ ActiveAdmin.register Dislocation do
     column :region, &:coalesced_mun_region_name
     column :current_role_uic, sortable: "user_current_roles.uic_id" do |dislocation|
       region = dislocation.coalesced_region
-      inplace_helper[dislocation, :uic, region.uics_with_nested_regions]
+      inplace_helper[dislocation, :uic, region.uics_with_nested_regions.order(:name)]
     end
     column :current_role_id do |dislocation|
       inplace_helper[dislocation, :current_role, CurrentRole.all]
