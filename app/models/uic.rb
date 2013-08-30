@@ -3,6 +3,8 @@ class Uic < ActiveRecord::Base
   validates :region_id, :number, presence: true
   validates_uniqueness_of :number
 
+  has_many :user_current_roles, :inverse_of => :uic
+
   # Returns +true+ if Uic belongs to +other_region+
   # which is a Region object of any kind (:city, :adm_region, :mun_region)
   #

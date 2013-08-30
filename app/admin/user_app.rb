@@ -170,9 +170,7 @@ ActiveAdmin.register UserApp do
     column :sex_male, &:human_sex_male
 
     column :current_roles, :sortable => false, &:human_current_roles
-    
     column :ip
-
   end   # index
 
   form do |f|
