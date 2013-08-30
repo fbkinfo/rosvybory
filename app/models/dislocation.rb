@@ -69,14 +69,14 @@ class Dislocation < User
   def check_dislocation_for_errors
     current_role_id = user_current_role_current_role_id
     # собираем все контролируемые роли
-    @controlled_roles_ids ||= CurrentRole.where( slug: CONTROLLED_ROLES_SLUGS ).pluck(:id)
-    unless @controlled_roles_ids.include? current_role_id
+    @@controlled_roles_ids ||= CurrentRole.where( slug: CONTROLLED_ROLES_SLUGS ).pluck(:id)
+    unless @@controlled_roles_ids.include? current_role_id
       # текущая роль не входит в проверяемые
       return nil
     end
 
     # все расстановки на этом же участке с контролируемыми ролями
-    uic_ucr = UserCurrentRole.where( uic_id: user_current_role_uic_id, current_role_id: @controlled_roles_ids )
+    uic_ucr = UserCurrentRole.where( uic_id: user_current_role_uic_id, current_role_id: @@controlled_roles_ids )
     errors = nil
 
     # 1) сколько раз пользователь расставлен на участок
@@ -108,6 +108,6 @@ class Dislocation < User
   # Уникальный идентификатор расстановки.
   #
   def duid
-    "duid_#{id}_#{user_current_role_uic_id}_#{user_current_role_id}_#{user_current_role_nomination_source_id}"
+    "duid_#{id}_#{user_current_role_id}"
   end
 end
