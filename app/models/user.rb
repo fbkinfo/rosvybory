@@ -18,7 +18,7 @@ class User < ActiveRecord::Base
 
   belongs_to :region
   belongs_to :adm_region, class_name: "Region"
-  # belongs_to :mobile_group future stub
+  belongs_to :mobile_group
   belongs_to :organisation
   belongs_to :user_app
 
@@ -134,14 +134,13 @@ class User < ActiveRecord::Base
           ucr = user_current_roles.find_or_initialize_by(current_role_id: ua_role.current_role.id)
           if apps.size == 1
             if ua_role.current_role.must_have_uic?
-              ucr.uic = Uic.find_by(number: ua_role.value) || Uic.find_by(number: app.uic)
+              ucr.uic = Uic.uics.find_by(number: ua_role.value) || Uic.find_by(number: app.uic)
             elsif ua_role.current_role.must_have_tic?
-              ucr.region = Region.find_by(name: ua_role.value)
-              unless ucr.region
+              unless ucr.uic = Uic.tics.find_by(name: ua_role.value)
                 if region.try(:has_tic?)#для районов с ТИКами
-                  ucr.region = region
+                  ucr.uic = region.uics.tics.first
                 elsif adm_region.try(:has_tic?) #для округов с ТИКами
-                  ucr.region = adm_region
+                  ucr.uic = adm_region.uics.tics.first
                 end
               end
             end

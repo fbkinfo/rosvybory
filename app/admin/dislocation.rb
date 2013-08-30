@@ -8,15 +8,15 @@ ActiveAdmin.register Dislocation do
   #scope :with_current_roles, :default => true
 
   index do
-    inplace_helper = proc do |dislocation, field, collection, display_method|
+    inplace_helper = proc do |dislocation, field, collection|
       field_value_id = dislocation.send("user_current_role_#{field}_id")
-      text = field.to_s.classify.constantize.find_by(:id => field_value_id).try(display_method) || field_value_id
+      text = field.to_s.classify.constantize.find_by(:id => field_value_id).try(:name) || field_value_id
       data = {
                 pk: dislocation.pk,
                 name: "#{field}_id",
                 value: field_value_id,
                 type: 'select',
-                source: collection.map {|record| {:value => record.id, :text => record.try(display_method)}},
+                source: collection.map {|record| {:value => record.id, :text => record.try(:name)}},
                 url: inplace_control_dislocation_path(dislocation.user_current_role_id)
               }
       content_tag(:span, text, :class => 'inplace', :data => data)
@@ -28,20 +28,19 @@ ActiveAdmin.register Dislocation do
     column "НО + id" do |user|
       link_to user.organisation_with_user_id, [:control, user], :target => '_blank'
     end
-    column :adm_region
-    column :region
     column :full_name
     column :phone
+    column :adm_region, &:coalesced_adm_region_name
+    column :region, &:coalesced_mun_region_name
     column :current_role_uic, sortable: "user_current_roles.uic_id" do |dislocation|
-      region_id = dislocation.region_id || dislocation.adm_region.regions
-      uics = region_id ? Uic.where(:region_id => region_id) : []
-      inplace_helper[dislocation, :uic, uics, :number]
+      region = dislocation.coalesced_region
+      inplace_helper[dislocation, :uic, region.uics_with_nested_regions]
     end
     column :current_role_id do |dislocation|
-      inplace_helper[dislocation, :current_role, CurrentRole.all, :name]
+      inplace_helper[dislocation, :current_role, CurrentRole.all]
     end
     column :current_role_nomination_source_id do |dislocation|
-      inplace_helper[dislocation, :nomination_source, NominationSource.all, :name]
+      inplace_helper[dislocation, :nomination_source, NominationSource.all]
     end
     column :user_current_role_got_docs do |dislocation|
       I18n.t ( dislocation.user_current_role_got_docs == true ).to_s
@@ -57,8 +56,8 @@ ActiveAdmin.register Dislocation do
   end
 
   filter :organisation, label: 'Организация', as: :select, collection: proc { Organisation.order(:name) }, :input_html => {:style => "width: 230px;"}
-  filter :adm_region, :as => :select, :collection => proc { Region.adm_regions }, :input_html => {:style => "width: 230px;"}
-  filter :region, :as => :select, :collection => proc { Region.mun_regions }, :input_html => {:style => "width: 230px;"}
+  filter :current_role_adm_region, :as => :select, :collection => proc { Region.adm_regions }, :input_html => {:style => "width: 230px;"}
+  filter :current_role_region, :as => :select, :collection => proc { Region.mun_regions }, :input_html => {:style => "width: 230px;"}
   filter :user_app_last_name, as: :string, label: 'Фамилия'
   filter :phone
   filter :current_role_uic, as: :numeric
