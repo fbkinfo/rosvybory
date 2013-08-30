@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
   validate :roles_assignable, :if => :valid_roles
 
   after_create :mark_user_app_state
-  after_create :send_sms_with_password, :if => :send_invitation?
+  after_create :send_sms_with_password, :if => :may_login?
 
   accepts_nested_attributes_for :user_current_roles, allow_destroy: true
 
@@ -88,9 +88,11 @@ class User < ActiveRecord::Base
 
   # override Devise password recovery
   def send_reset_password_instructions
-    generate_password
-    save(validate: false)
-    send_sms_with_password
+    if may_login?
+      generate_password
+      save(validate: false)
+      send_sms_with_password
+    end
   end
 
   def update_from_user_app(apps)
@@ -150,6 +152,10 @@ class User < ActiveRecord::Base
     self
   end
 
+  def may_login?
+    (%w{tc mc cc federal_repr} & roles.map{ |e| e.slug }).any?
+  end
+
   private
 
     def send_sms_with_password
@@ -168,13 +174,9 @@ class User < ActiveRecord::Base
       end
     end
 
-  def send_invitation?
-    (%w{tc mc cc federal_repr} & roles.map{ |e| e.slug }).any?
-  end
-
-  def mark_user_app_state
-    if user_app.present?
-      user_app.approve!
+    def mark_user_app_state
+      if user_app.present?
+        user_app.approve!
+      end
     end
-  end
 end
