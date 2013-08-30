@@ -7,6 +7,7 @@ class UserCurrentRole < ActiveRecord::Base
 
   validates :current_role, presence: true
   validates :nomination_source, presence: true
+  validates_uniqueness_of :current_role_id, :scope => :user_id
   validate :region_or_uic_present
   validate :tic_belongs_to_region
   validate :uic_belongs_to_region
