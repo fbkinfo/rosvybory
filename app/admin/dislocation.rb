@@ -100,10 +100,4 @@ ActiveAdmin.register Dislocation do
     end
   end
 
-  member_action :errors_details do
-    @dislocation = Dislocation.with_current_roles.find(params[:id])
-    render layout: false
-    # This will render app/views/admin/posts/comments.html.erb
-  end
-
 end
