@@ -9,10 +9,10 @@ class DislocationControlDecorator < Draper::Decorator
     [
       user.full_name,
       role.current_role.name,
-      [
+      source && [
         source.name,
         source.human_variant
-      ].join(', '),
+      ].join(', ') || 'Не указан',
       user.phone,
       h.link_to(user.email, "mailto:#{user.email}"),
     ].join('<br/>').html_safe
