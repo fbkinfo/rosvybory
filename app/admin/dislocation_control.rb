@@ -9,7 +9,9 @@ ActiveAdmin.register DislocationControl do
   index do
     column :number, -> (uic) { uic.number_and_region }
     7.times do |i|
-      column :"participant_#{i}", -> (uic) { uic.human_participant(i) }
+      column :"participant_#{i}" do |uic|
+        uic.human_participant i, (can? :view_user_contacts, uic.participant(i).try(:user))
+      end
     end
     column :others do |uic|
       if uic.participants_count > 7
