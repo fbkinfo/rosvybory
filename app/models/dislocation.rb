@@ -8,12 +8,24 @@ class Dislocation < User
     Arel::Nodes::SqlLiteral.new("(select number from uics where uics.id = uic_id)")
   end
 
+  ransacker :current_role_adm_region, {:formatter => :to_i.to_proc} do
+    Arel::Nodes::SqlLiteral.new("coalesce((select (case when kind = #{Region.mun_region_value} then regions.parent_id else regions.id end) from regions where regions.id = user_current_roles.region_id), users.adm_region_id)")
+  end
+
+  ransacker :current_role_region do
+    Arel::Nodes::SqlLiteral.new("user_current_roles.region_id")
+  end
+
   ransacker :current_role_nomination_source_id do
     Arel::Nodes::SqlLiteral.new("user_current_roles.nomination_source_id")
   end
 
   ransacker :user_current_role_got_docs do
     Arel::Nodes::SqlLiteral.new('user_current_roles.got_docs')
+  end
+
+  def self.ransackable_attributes(auth_object = nil)
+    column_names + ["current_role_uic", 'current_role_nomination_source_id', 'user_current_role_got_docs', 'current_role_adm_region', 'current_role_region']
   end
 
   # возвращает пользователей и их текущие роли (один пользователь может быть 1 и больше раз)
@@ -27,11 +39,6 @@ class Dislocation < User
 
   def self.with_role(role_slug)
     joins(:user_roles => :role).where(:roles => {:slug => role_slug})
-  end
-
-
-  def self.ransackable_attributes(auth_object = nil)
-    column_names + ["current_role_uic", 'current_role_nomination_source_id', 'user_current_role_got_docs']
   end
 
 

@@ -19,6 +19,6 @@ class DislocationControlDecorator < Draper::Decorator
   end
 
   def number_and_region
-    [number, region.name].join(', ')
+    uic?? [name, region.name].join(', ') : name
   end
 end
