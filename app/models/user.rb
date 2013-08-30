@@ -152,7 +152,7 @@ class User < ActiveRecord::Base
   private
 
     def send_sms_with_password
-      SmsService.send_message(phone, "Вход в РосВыборы: bit.ly/rosvybory, пароль: #{self.password}")
+      SmsService.send_message(phone, "Вход в базу наблюдателей: bit.ly/rosvybory, пароль: #{self.password}")
     end
 
     def generate_password
