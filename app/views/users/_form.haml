@@ -35,5 +35,10 @@
 
   = f.actions do
     = f.submit "Утвердить"
+    - unless f.object.new_record?
+      %br
+      %br
+      =label_tag 'send_password', "Выслать новый пароль по СМС"
+      =check_box_tag 'send_password'
 :javascript
   initUserForm();

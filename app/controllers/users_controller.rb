@@ -22,6 +22,7 @@ class UsersController < ApplicationController
     authorize! :update, @user
     @user.valid_roles = Role.accessible_by(current_ability, :assign_users)
     if @user.update( params[:dislocation] ? dislocate_params : user_params )
+      @user.send_reset_password_instructions if params[:send_password]
       render json: {status: :ok}, :content_type => 'text/html'
     else
       render (params[:dislocation] ? "dislocate" : "edit"), layout: false
