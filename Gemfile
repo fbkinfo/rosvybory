@@ -31,6 +31,7 @@ gem 'unicorn'
 gem 'foreman', require: false
 gem 'foreman-export-initscript', require: false
 
+gem 'awesome_nested_set'
 gem 'cancan'
 gem 'draper'
 gem 'enumerize'
