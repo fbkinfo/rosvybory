@@ -249,7 +249,7 @@ class UserApp < ActiveRecord::Base
 
   def check_uic_belongs_to_region
     return true unless uic.present?
-    uic.split(',').each do |uic_number|
+    uic.to_s.split(',').each do |uic_number|
       tmp_uic = Uic.find_by( number: uic_number )
       if !tmp_uic.present?
         errors.add(:uic, "УИК №#{uic_number} не найден")

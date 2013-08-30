@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
   validate :roles_assignable, :if => :valid_roles
 
   after_create :mark_user_app_state
-  after_create :send_sms_with_password, :if => :send_invitation?
+  after_create :send_sms_with_password, :if => :may_login?
 
   accepts_nested_attributes_for :user_current_roles, allow_destroy: true
 
@@ -88,9 +88,11 @@ class User < ActiveRecord::Base
 
   # override Devise password recovery
   def send_reset_password_instructions
-    generate_password
-    save(validate: false)
-    send_sms_with_password
+    if may_login?
+      generate_password
+      save(validate: false)
+      send_sms_with_password
+    end
   end
 
   def update_from_user_app(apps)
@@ -127,7 +129,8 @@ class User < ActiveRecord::Base
     logger.debug "User@#{__LINE__}#update_from_user_app #{app.current_roles.inspect} #{common_roles.inspect}" if logger.debug?
     if common_roles.present?
       app.user_app_current_roles.each do |ua_role|
-        if common_roles.include? ua_role.current_role
+        if common_roles.include? ua_role.current_role && user_current_roles.none? {|ucr| ucr.current_role == ua_role.current_role}
+          # TODO move this to user_current_role#from_user_app_current_role ?
           ucr = user_current_roles.find_or_initialize_by(current_role_id: ua_role.current_role.id)
           if apps.size == 1
             if ua_role.current_role.must_have_uic?
@@ -148,10 +151,14 @@ class User < ActiveRecord::Base
     self
   end
 
+  def may_login?
+    (%w{tc mc cc federal_repr} & roles.map{ |e| e.slug }).any?
+  end
+
   private
 
     def send_sms_with_password
-      SmsService.send_message(phone, "Вход в РосВыборы: bit.ly/rosvybory, пароль: #{self.password}")
+      SmsService.send_message(phone, "Вход в базу наблюдателей: bit.ly/rosvybory, пароль: #{self.password}")
     end
 
     def generate_password
@@ -166,13 +173,9 @@ class User < ActiveRecord::Base
       end
     end
 
-  def send_invitation?
-    (%w{tc mc cc federal_repr} & roles.map{ |e| e.slug }).any?
-  end
-
-  def mark_user_app_state
-    if user_app.present?
-      user_app.approve!
+    def mark_user_app_state
+      if user_app.present?
+        user_app.approve!
+      end
     end
-  end
 end

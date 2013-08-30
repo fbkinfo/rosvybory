@@ -5,9 +5,8 @@ class UserCurrentRole < ActiveRecord::Base
   belongs_to :uic, :inverse_of => :user_current_roles
   belongs_to :user, inverse_of: :user_current_roles
 
-  validates :current_role, presence: true
-  validates :nomination_source, presence: true
-  validates :uic, presence: true
+  validates :current_role, :nomination_source, :uic, presence: true
+  validates_uniqueness_of :current_role_id, :scope => :user_id
   validate :validate_legitimacy
 
   delegate :number, :to => :uic, :prefix => true, :allow_nil => true
