@@ -40,7 +40,9 @@ ActiveAdmin.register Dislocation do
       text = NominationSource.find_by(:id => ns_id).try(:name) || ns_id
       inplace_helper[dislocation, text, name: :nomination_source_id, value: ns_id, source: nses]
     end
-    column :user_current_role_got_docs, &:human_got_docs
+    column :user_current_role_got_docs do |dislocation|
+      I18n.t ( dislocation.user_current_role_got_docs == true ).to_s
+    end
     column "Ошибки расстановки", class: 'dislocation_errors_column' do |user|
       errors = user.check_dislocation_for_errors
       if errors
@@ -58,7 +60,7 @@ ActiveAdmin.register Dislocation do
   filter :phone
   filter :current_role_uic, as: :numeric
   filter :current_role_nomination_source_id, as: :select, collection: proc { NominationSource.order(:name) }, :input_html => {:style => "width: 230px;"}
-  filter :got_docs, as: :select
+  filter :user_current_role_got_docs, as: :select
   # filter :dislocation_errors, as: :something
 
   collection_action :inplace, :method => :post do
