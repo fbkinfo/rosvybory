@@ -56,6 +56,8 @@ GEM
       activesupport (>= 3.0.0)
     arel (4.0.0)
     atomic (1.1.13)
+    awesome_nested_set (2.1.6)
+      activerecord (>= 3.0.0)
     bcrypt-ruby (3.1.1)
     bourbon (3.1.8)
       sass (>= 3.2.0)
@@ -340,6 +342,7 @@ PLATFORMS
 
 DEPENDENCIES
   activeadmin!
+  awesome_nested_set
   cancan
   capistrano
   capistrano_colors
