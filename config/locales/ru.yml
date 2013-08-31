@@ -455,6 +455,13 @@ ru:
         ip: "IP"
         organisation: "Орг."
         current_roles: "Текущие статусы"
+
+  dislocation:
+    errors:
+      one: "%{count} ошибка"
+      few: "%{count} ошибки"
+      many: "%{count} ошибок"
+      other: "%{count} ошибок"
   user_app:
     status:
       observer: "Член избирательной комисии / наблюдатель на участке"

@@ -11,4 +11,4 @@
           %li= error
 
   .cell_with_errors
-    = link_to "Ошибки (#{errors.size})", "#errors_details_#{user.duid}", :target => '_blank', :class => 'view_errors_link'
+    = link_to I18n.t('dislocation.errors', :count => errors.size), "#errors_details_#{user.duid}", :target => '_blank', :class => 'view_errors_link'
