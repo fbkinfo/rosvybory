@@ -1,5 +1,6 @@
 class Uic < ActiveRecord::Base
   extend Enumerize
+  include AdmRegionDelegation
 
   belongs_to :parent, :class_name => 'Uic'
   belongs_to :region
@@ -9,7 +10,6 @@ class Uic < ActiveRecord::Base
 
   enumerize :kind, in: {tic: 1, uic: 2}, default: :uic, scope: true, predicates: true
 
-  delegate :adm_region, :to => :region, :allow_nil => true
   delegate :name, :to => :adm_region, :prefix => true, :allow_nil => true
   delegate :name, :to => :region, :prefix => true, :allow_nil => true
 
@@ -17,12 +17,6 @@ class Uic < ActiveRecord::Base
   validates :number, presence: true, uniqueness: true, :if => :uic?
 
   before_save :cache_name
-
-  ransacker :adm_region_id do
-    rt = Region.arel_table
-    subselect = rt.project(rt[:adm_region_id]).where(rt[:id].eq(arel_table[:region_id]))
-    Arel::SqlLiteral.new("(#{subselect.to_sql})")
-  end
 
   # TODO по идее это должно быть можно получить из enumirize'а ?
   class <<self
