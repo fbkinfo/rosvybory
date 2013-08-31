@@ -2,7 +2,7 @@ class Region < ActiveRecord::Base
   extend Enumerize
   acts_as_nested_set
 
-  belongs_to :adm_region, class_name: 'Region'
+  belongs_to :adm_region, class_name: 'Region'  # cached closest adm_region
   belongs_to :parent, class_name: 'Region'
   default_scope -> { order(:name) }
 
