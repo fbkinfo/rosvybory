@@ -161,7 +161,7 @@ ActiveAdmin.register UserApp do
     end
     column :uic
 
-    column :full_name, :sortable => false
+    column :full_name
     column :phone_formatted, :sortable => false do |user_app|
       status_tag(user_app.phone_formatted, user_app.phone_verified? ? :ok : :error)
     end
