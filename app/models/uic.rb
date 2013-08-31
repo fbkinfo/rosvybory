@@ -9,10 +9,18 @@ class Uic < ActiveRecord::Base
 
   enumerize :kind, in: {tic: 1, uic: 2}, default: :uic, scope: true, predicates: true
 
+  delegate :adm_region, :to => :region, :allow_nil => true
+  delegate :name, :to => :adm_region, :prefix => true, :allow_nil => true
+  delegate :name, :to => :region, :prefix => true, :allow_nil => true
+
   validates :region_id, presence: true
   validates :number, presence: true, uniqueness: true, :if => :uic?
 
   before_save :cache_name
+
+  ransacker :adm_region_id do
+    Arel::Nodes::SqlLiteral.new("(select regions.adm_region_id from regions where regions.id = uics.region_id)")
+  end
 
   # TODO по идее это должно быть можно получить из enumirize'а ?
   class <<self
