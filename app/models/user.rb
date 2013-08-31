@@ -18,7 +18,7 @@ class User < ActiveRecord::Base
 
   belongs_to :region
   belongs_to :adm_region, class_name: "Region"
-  # belongs_to :mobile_group future stub
+  belongs_to :mobile_group
   belongs_to :organisation
   belongs_to :user_app
 
@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
   validate :roles_assignable, :if => :valid_roles
 
   after_create :mark_user_app_state
-  after_create :send_sms_with_password, :if => :send_invitation?
+  after_create :send_sms_with_password, :if => :may_login?
 
   accepts_nested_attributes_for :user_current_roles, allow_destroy: true
 
@@ -88,9 +88,11 @@ class User < ActiveRecord::Base
 
   # override Devise password recovery
   def send_reset_password_instructions
-    generate_password
-    save(validate: false)
-    send_sms_with_password
+    if may_login?
+      generate_password
+      save(validate: false)
+      send_sms_with_password
+    end
   end
 
   def update_from_user_app(apps)
@@ -132,14 +134,13 @@ class User < ActiveRecord::Base
           ucr = user_current_roles.find_or_initialize_by(current_role_id: ua_role.current_role.id)
           if apps.size == 1
             if ua_role.current_role.must_have_uic?
-              ucr.uic = Uic.find_by(number: ua_role.value) || Uic.find_by(number: app.uic)
+              ucr.uic = Uic.uics.find_by(number: ua_role.value) || Uic.find_by(number: app.uic)
             elsif ua_role.current_role.must_have_tic?
-              ucr.region = Region.find_by(name: ua_role.value)
-              unless ucr.region
+              unless ucr.uic = Uic.tics.find_by(name: ua_role.value)
                 if region.try(:has_tic?)#для районов с ТИКами
-                  ucr.region = region
+                  ucr.uic = region.uics.tics.first
                 elsif adm_region.try(:has_tic?) #для округов с ТИКами
-                  ucr.region = adm_region
+                  ucr.uic = adm_region.uics.tics.first
                 end
               end
             end
@@ -148,6 +149,10 @@ class User < ActiveRecord::Base
       end   # app.user_app_current_roles.each
     end   # if common_roles.present?
     self
+  end
+
+  def may_login?
+    (%w{tc mc cc federal_repr} & roles.map{ |e| e.slug }).any?
   end
 
   private
@@ -168,13 +173,9 @@ class User < ActiveRecord::Base
       end
     end
 
-  def send_invitation?
-    (%w{tc mc cc federal_repr} & roles.map{ |e| e.slug }).any?
-  end
-
-  def mark_user_app_state
-    if user_app.present?
-      user_app.approve!
+    def mark_user_app_state
+      if user_app.present?
+        user_app.approve!
+      end
     end
-  end
 end
