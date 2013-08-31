@@ -18,12 +18,13 @@ ActiveAdmin.register DislocationControl do
     end
   end
 
+  filter :kind, :as => :select, :collection => [['ТИК', 1], ['УИК', 2]]
   filter :number
   filter :region, :input_html => {:style => "width: 220px;"}
 
   controller do
     def scoped_collection
-      DislocationControl.joins(:region).includes(:user_current_roles, :region)
+      DislocationControl.includes(:user_current_roles)
     end
   end
 end

@@ -325,6 +325,7 @@ ru:
         current_role_nomination_source_id: Источник выдвижения
         current_role_uic: УИК
       dislocation_control:
+        kind: Тип
         number: УИК №
         participant_0: Участник №1
         participant_1: Участник №2
