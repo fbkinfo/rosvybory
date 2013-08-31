@@ -44,13 +44,8 @@ ActiveAdmin.register Dislocation do
     column :user_current_role_got_docs do |dislocation|
       I18n.t ( dislocation.user_current_role_got_docs == true ).to_s
     end
-    column "Ошибки расстановки", class: 'dislocation_errors_column' do |user|
-      errors = user.check_dislocation_for_errors
-      if errors
-        render partial: 'cell_with_errors', locals: { user: user, errors: errors }
-      else
-        render partial: 'cell_no_errors'
-      end
+    column "Ошибки расстановки", class: 'dislocation_errors_column' do |dislocation|
+      render partial: 'cell_dislocation_errors', locals: { dislocation: dislocation }
     end
   end
 
@@ -88,13 +83,18 @@ ActiveAdmin.register Dislocation do
     normalized_errors = ucr.errors.keys.map {|k| errors_normalization[k] || k }
     fixable_errors = normalized_errors & editable_fields
     ucr.save(validate: false) if ucr.errors.present? && fixable_errors.blank? # save if user can't help it anyway
-    render :json => {
+    results = {
       :dislocation => ucr.as_json(:only => editable_fields + [:id]),
       :url => inplace_control_dislocation_path(ucr.id),
       :errors => fixable_errors,
       :message => ucr.errors.full_messages.join(' '),
       :selectable_uics => ucr.selectable_uics.map {|record| {:value => record.id, :text => record.try(:name)}}
     }
+    if fixable_errors.blank?
+      dislocation = Dislocation.with_current_roles.where('users.id' => user.id, 'user_current_roles.id' => ucr.id).first.decorate
+      results[:dislocation_errors] = render_to_string(partial: 'cell_dislocation_errors', locals: { dislocation: dislocation })
+    end
+    render :json => results
   end
 
   controller do

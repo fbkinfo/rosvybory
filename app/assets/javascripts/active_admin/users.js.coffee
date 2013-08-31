@@ -2,7 +2,11 @@ $ ->
   bindDialogOnClick $("#index_table_users .edit_link"), "Редактирование пользователя"
 #  bindDialogOnClick $("#index_table_users .view_link"), "Просмотр пользователя"
   bindDialogOnClick $("#index_table_dislocations .edit_link"), "Редактирование расстановки"
-  bindDialogOnClick $("#index_table_dislocations .view_errors_link"), "Просмотр ошибок расстановки"
+
+  $('body.control_dislocations').on 'click', '#index_table_dislocations .view_errors_link', () ->
+    dialog_id_posfix_current = $(this).closest("tr").attr("id")
+    openDialog dialog_id_posfix_current, $(this).attr("href"), "Просмотр ошибок расстановки"
+    false
 
   $('.collection_selection').click () ->
     $('#all-pages-container').remove()

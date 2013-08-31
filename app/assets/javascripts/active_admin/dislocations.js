@@ -12,18 +12,17 @@ $(function() {
     success: function(response, value) {
       var $input = $(this),
           $row = $input.closest('tr');
-      $row.find('.dislocation_errors .message').remove();
+      $row.find('.dislocation_errors_column .message').remove();
       setTimeout(function() {
         var $inplaces = $row.find('.inplace');
-        if (response.selectable_uics.length && response.selectable_uics.length > 0) {
-          $row.find('.current_role_uic .inplace').editable('option', 'source', response.selectable_uics);
-        }
+        $row.find('.current_role_uic .inplace').editable('option', 'source', response.selectable_uics);
         if (response.errors.length > 0) {
           $inplaces.data('dislocation', response.dislocation).addClass('unsaved')
             .filter('[data-name='+ response.errors[0] +']').editable('show');
-          $row.find('.dislocation_errors').append($('<div>', {class: 'message'}).text(response.message));
+          $row.find('.dislocation_errors_column').append($('<div>', {class: 'message'}).text(response.message));
         } else {
           $inplaces.removeClass('unsaved').removeData('dislocation').data('url', response.url);
+          $row.find('.dislocation_errors_column').html(response.dislocation_errors);
         };
       }, 44);
     }
