@@ -18,7 +18,7 @@ class User < ActiveRecord::Base
 
   belongs_to :region
   belongs_to :adm_region, class_name: "Region"
-  # belongs_to :mobile_group future stub
+  belongs_to :mobile_group
   belongs_to :organisation
   belongs_to :user_app
 
@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
   validate :roles_assignable, :if => :valid_roles
 
   after_create :mark_user_app_state
-  after_create :send_sms_with_password, :if => :send_invitation?
+  after_create :send_sms_with_password, :if => :may_login?
 
   accepts_nested_attributes_for :user_current_roles, allow_destroy: true
 
@@ -41,13 +41,6 @@ class User < ActiveRecord::Base
 
   def full_name
     [last_name, first_name, patronymic].join ' '
-  end
-
-  def full_name=(name)
-    split = name.split(' ', 3)
-    self.last_name = split[0]
-    self.first_name = split[1]
-    self.patronymic = split[2]
   end
 
   class << self
@@ -95,52 +88,77 @@ class User < ActiveRecord::Base
 
   # override Devise password recovery
   def send_reset_password_instructions
-    generate_password
-    save(validate: false)
-    send_sms_with_password
+    if may_login?
+      generate_password
+      save(validate: false)
+      send_sms_with_password
+    end
   end
 
-  def update_from_user_app(app)
-    #TODO refactor
-    self.last_name = app.last_name
-    self.first_name = app.first_name
-    self.patronymic = app.patronymic
-    self.email = app.email
-    self.region = app.region
-    self.adm_region_id = app.adm_region_id
-    self.phone = Verification.normalize_phone_number(app.phone)
-    self.organisation = app.organisation
-    self.year_born = app.year_born
-    self.user_app = app
-    generate_password
-
-    if app.can_be_observer || app.user_app_current_roles.present?
-      add_role :observer
-      app.user_app_current_roles.each do |ua_role|
-        if ua_role.current_role
-          ucr = user_current_roles.find_or_initialize_by(current_role_id: ua_role.current_role.id)
-          if ua_role.current_role.must_have_uic?
-            ucr.uic = Uic.find_by(number: ua_role.value) || Uic.find_by(number: app.uic)
-          elsif ua_role.current_role.must_have_tic?
-            ucr.region = Region.find_by(name: ua_role.value)
-            unless ucr.region
-              if region.try(:has_tic?)#для районов с ТИКами
-                ucr.region = region
-              elsif adm_region.try(:has_tic?) #для округов с ТИКами
-                ucr.region = adm_region
-              end
-            end
-          end
-        end
+  def update_from_user_app(apps)
+    apps = Array.wrap apps
+    app = apps.first
+    unless apps.size > 1
+      #TODO refactor
+      self.last_name = app.last_name
+      self.first_name = app.first_name
+      self.patronymic = app.patronymic
+      self.year_born = app.year_born
+      self.email = app.email
+      self.phone = Verification.normalize_phone_number(app.phone)
+      self.user_app = app
+      generate_password
+    end
+    if apps.map(&:adm_region_id).uniq.size == 1
+      self.adm_region_id = app.adm_region_id
+      if apps.map(&:region_id).uniq.size == 1
+        self.region = app.region
       end
     end
+    if apps.map(&:organisation_id).uniq.size == 1
+      self.organisation = app.organisation
+    end
+
+    if apps.map(&:can_be_observer).uniq == [true]
+      self.add_role :observer
+    end
+    common_roles =
+        apps[1..-1].inject(app.user_app_current_roles.map(&:current_role)) do |list, app|
+      list & app.user_app_current_roles.map(&:current_role)
+    end
+    logger.debug "User@#{__LINE__}#update_from_user_app #{app.current_roles.inspect} #{common_roles.inspect}" if logger.debug?
+    if common_roles.present?
+      app.user_app_current_roles.each do |ua_role|
+        if common_roles.include? ua_role.current_role && user_current_roles.none? {|ucr| ucr.current_role == ua_role.current_role}
+          # TODO move this to user_current_role#from_user_app_current_role ?
+          ucr = user_current_roles.find_or_initialize_by(current_role_id: ua_role.current_role.id)
+          if apps.size == 1
+            if ua_role.current_role.must_have_uic?
+              ucr.uic = Uic.uics.find_by(number: ua_role.value) || Uic.find_by(number: app.uic)
+            elsif ua_role.current_role.must_have_tic?
+              unless ucr.uic = Uic.tics.find_by(name: ua_role.value)
+                if region.try(:has_tic?)#для районов с ТИКами
+                  ucr.uic = region.uics.tics.first
+                elsif adm_region.try(:has_tic?) #для округов с ТИКами
+                  ucr.uic = adm_region.uics.tics.first
+                end
+              end
+            end
+          end   # if apps.size == 1
+        end   # if common_roles.include? ua_role.current_role
+      end   # app.user_app_current_roles.each
+    end   # if common_roles.present?
     self
+  end
+
+  def may_login?
+    (%w{tc mc cc federal_repr} & roles.map{ |e| e.slug }).any?
   end
 
   private
 
     def send_sms_with_password
-      SmsService.send_message(phone, "Вход в РосВыборы: bit.ly/rosvybory, пароль: #{self.password}")
+      SmsService.send_message(phone, "Вход в базу наблюдателей: bit.ly/rosvybory, пароль: #{self.password}")
     end
 
     def generate_password
@@ -155,13 +173,9 @@ class User < ActiveRecord::Base
       end
     end
 
-  def send_invitation?
-    (%w{tc mc cc federal_repr} & roles.map{ |e| e.slug }).any?
-  end
-
-  def mark_user_app_state
-    if user_app.present?
-      user_app.approve!
+    def mark_user_app_state
+      if user_app.present?
+        user_app.approve!
+      end
     end
-  end
 end

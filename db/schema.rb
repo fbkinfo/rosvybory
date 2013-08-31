@@ -11,7 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130828121339) do
+ActiveRecord::Schema.define(version: 20130830191309) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -44,6 +47,17 @@ ActiveRecord::Schema.define(version: 20130828121339) do
     t.datetime "updated_at"
   end
 
+  create_table "mobile_groups", force: true do |t|
+    t.integer  "organisation_id"
+    t.string   "name"
+    t.integer  "adm_region_id"
+    t.integer  "region_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "mobile_groups", ["organisation_id"], name: "index_mobile_groups_on_organisation_id", using: :btree
+
   create_table "nomination_sources", force: true do |t|
     t.string   "name"
     t.string   "variant"
@@ -64,6 +78,8 @@ ActiveRecord::Schema.define(version: 20130828121339) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "has_tic",    default: false
+    t.integer  "lft"
+    t.integer  "rgt"
   end
 
   add_index "regions", ["name"], name: "index_regions_on_name", unique: true, using: :btree
@@ -83,14 +99,18 @@ ActiveRecord::Schema.define(version: 20130828121339) do
 
   create_table "uics", force: true do |t|
     t.integer  "region_id",                    null: false
-    t.integer  "number",                       null: false
+    t.integer  "number"
     t.boolean  "is_temporary", default: false, null: false
     t.string   "has_koib",     default: "f",   null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "kind"
+    t.string   "name"
+    t.integer  "parent_id"
   end
 
   add_index "uics", ["number"], name: "index_uics_on_number", unique: true, using: :btree
+  add_index "uics", ["parent_id"], name: "index_uics_on_parent_id", using: :btree
   add_index "uics", ["region_id"], name: "index_uics_on_region_id", using: :btree
 
   create_table "user_app_current_roles", force: true do |t|
@@ -143,13 +163,14 @@ ActiveRecord::Schema.define(version: 20130828121339) do
   add_index "user_apps", ["region_id"], name: "index_user_apps_on_region_id", using: :btree
 
   create_table "user_current_roles", force: true do |t|
-    t.integer  "user_id",              null: false
-    t.integer  "current_role_id",      null: false
+    t.integer  "user_id",                              null: false
+    t.integer  "current_role_id",                      null: false
     t.integer  "uic_id"
     t.integer  "region_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "nomination_source_id"
+    t.boolean  "got_docs",             default: false
   end
 
   add_index "user_current_roles", ["current_role_id"], name: "index_user_current_roles_on_current_role_id", using: :btree
@@ -170,7 +191,7 @@ ActiveRecord::Schema.define(version: 20130828121339) do
 
   create_table "users", force: true do |t|
     t.string   "email"
-    t.string   "encrypted_password",     default: "",    null: false
+    t.string   "encrypted_password",     default: "", null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -196,7 +217,6 @@ ActiveRecord::Schema.define(version: 20130828121339) do
     t.string   "first_name"
     t.string   "patronymic"
     t.text     "address"
-    t.boolean  "got_docs",               default: false
   end
 
   add_index "users", ["adm_region_id"], name: "index_users_on_adm_region_id", using: :btree

@@ -7,7 +7,7 @@ class ConfirmationMailer < ActionMailer::Base
 
   def email_confirmation(user)
   	@user = user
-    mail(to: user['email'], subject: 'Росвыборы: подтверждение адреса электронной почты')
+    mail(to: user['email'], subject: 'База наблюдателей: подтверждение адреса электронной почты')
   end
 
 end

@@ -1,0 +1,12 @@
+.dislocation_errors_column .cell_with_errors {
+    background-color: #fcc;
+    padding: 10px;
+    color: #955;
+    text-align: center;
+}
+.dislocation_errors_column .cell_no_errors {
+    background-color: #cfc;
+    padding: 10px;
+    color: #595;
+    text-align: center;
+}
