@@ -29,7 +29,6 @@ ActiveAdmin.register User do
         row :uic
         row :user_current_roles
         row :roles, &:human_roles
-        row :got_docs, &:human_got_docs
         row :experience_count
         row :previous_statuses, &:human_previous_statuses
         row :can_be_coord_region
@@ -96,7 +95,6 @@ ActiveAdmin.register User do
     column :social_accounts, &:human_social_accounts
     column :extra
     column :year_born
-    column :got_docs, &:human_got_docs
 
   end
 
@@ -106,14 +104,16 @@ ActiveAdmin.register User do
   filter :roles, :input_html => {:style => "width: 230px;"}
   filter :user_current_roles_current_role_id, label: 'Роль наблюдателя', as: :select, collection: proc { CurrentRole.all }, :input_html => {:style => "width: 230px;"}
   filter :user_app_uic_matcher, as: :string, label: '№ УИК'
-  filter :user_app_last_name, as: :string, label: 'Фамилия'
-  filter :email, label: 'Почта'
+  filter :last_name
+  filter :first_name
+  filter :patronymic
+  filter :phone
+  filter :email
   filter :user_app_created_at, as: :date_range, label: 'Дата подачи заявки'
   filter :created_at, label: 'Дата создания'
   filter :user_app_experience_count, :as => :numeric, label: 'Опыт'
   filter :user_app_has_car, as: :boolean, label: 'Автомобиль'
   filter :user_app_has_video, as: :boolean, label: 'Видеосъёмка'
-  filter :got_docs
 
   form :partial => 'form'
 
@@ -152,7 +152,7 @@ ActiveAdmin.register User do
     end
 
     def scoped_collection
-      resource_class.includes(:region).includes(:roles) # prevent N+1 queries
+      resource_class.includes(:adm_region, :region, :roles) # prevent N+1 queries
     end
 
     def update

@@ -15,6 +15,7 @@ class Ability
 
     can :read, Region
     can :read, Organisation
+    can :read, Uic
     can :read, ActiveAdmin::Page, :name => "Dashboard"
 
     can :read, User, :id => user.id
@@ -31,13 +32,15 @@ class Ability
       can :crud, User, :organisation_id => user.organisation_id
       can :change_adm_region, User, :organisation_id => user.organisation_id
       can :change_region, User, :organisation_id => user.organisation_id
-
+      can :view_user_contacts, User, :organisation_id => user.organisation_id
       # TODO волонтёров своего НО в координаторском формате без участников МГ и КЦ
       # TODO волонтёров своего НО во формате "Расстановка с контактами" без участников МГ и КЦ
       # TODO всю базу волонтёров в форматах "Расстановка с ФИО" и "Обезличенная расстановка" без участников МГ и КЦ
       can :import, UserApp
       can :view_dislocation, User
+      can :crud, MobileGroup, :organisation_id => user.organisation_id
 
+      can :contribute_to, Organisation, :id => user.organisation_id
       can :assign_users, Role, :slug => [:observer, :mobile, :callcenter, :mc, :cc, :tc]
 
       can [:create, :read], ActiveAdmin::Comment
@@ -53,6 +56,7 @@ class Ability
           # ТК с заданным районом может просматривать:
           # карточки волонтёров своего района
           can :crud, User, :region_id => user.region_id, :organisation_id => user.organisation_id
+          can :view_user_contacts, User, :region_id => user.region_id, :organisation_id => user.organisation_id
           # TODO волонтёров своего района в координаторском формате без участников МГ и КЦ
           # TODO волонтёров своего района во формате "Расстановка с контактами" без участников МГ и КЦ
           # TODO волонтёров своего округа во формате "Расстановка с ФИО" без участников МГ и КЦ
@@ -65,11 +69,14 @@ class Ability
           # карточки волонтёров своего округа
           can :crud, User, :adm_region_id => user.adm_region_id, :organisation_id => user.organisation_id
           can :change_region, User, :adm_region_id => user.adm_region_id, :organisation_id => user.organisation_id
+          can :view_user_contacts, User, :adm_region_id => user.adm_region_id, :organisation_id => user.organisation_id
           # TODO волонтёров своего округа в координаторском формате без участников МГ и КЦ
           # TODO волонтёров своего округа во формате "Расстановка с контактами" без участников МГ и КЦ
           # TODO всю базу волонтёров в форматах "Расстановка с ФИО" и "Обезличенная расстановка" без участников МГ и КЦ
         end
         can :assign_users, Role, :slug => [:observer, :mobile, :callcenter, :mc, :cc]
+        can :crud, MobileGroup, :organisation_id => user.organisation_id
+        can :contribute_to, Organisation, :id => user.organisation_id
       end
 
       can :import, UserApp
@@ -86,6 +93,9 @@ class Ability
 
       # TODO всех участников МГ в координаторском формате
       # TODO всех участников МГ в форматах "Сводка МГ с контактами", "Сводка МГ с ФИО" и "Обезличенная сводка МГ"
+
+      can :crud, MobileGroup, :organisation_id => user.organisation_id
+      can :contribute_to, Organisation, :id => user.organisation_id
 
       can [:create, :read], ActiveAdmin::Comment
     end

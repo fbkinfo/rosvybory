@@ -212,6 +212,15 @@ class UserApp < ActiveRecord::Base
     [last_name, first_name, patronymic].compact.join(' ')
   end
 
+  def can_not_be_approved?
+    return :valid unless valid?
+    return :approved if state_name == :approved
+    return :email_missing unless email.present?
+    return :email if UserApp.where('id != ?', id || 0).where('email = ?', email).count > 0
+    return :phone if UserApp.where('id != ?', id || 0).where('phone = ?', phone).count > 0
+    false
+  end
+
   # Разбивает содержимое поля uic на отдельные номера:
   # '1234,1235,1236' => '(1234),(1235),(1236)''
   #
@@ -240,7 +249,7 @@ class UserApp < ActiveRecord::Base
 
   def check_uic_belongs_to_region
     return true unless uic.present?
-    uic.split(',').each do |uic_number|
+    uic.to_s.split(',').each do |uic_number|
       tmp_uic = Uic.find_by( number: uic_number )
       if !tmp_uic.present?
         errors.add(:uic, "УИК №#{uic_number} не найден")

@@ -2,6 +2,7 @@ $ ->
   bindDialogOnClick $("#index_table_users .edit_link"), "Редактирование пользователя"
 #  bindDialogOnClick $("#index_table_users .view_link"), "Просмотр пользователя"
   bindDialogOnClick $("#index_table_dislocations .edit_link"), "Редактирование расстановки"
+  bindDialogOnClick $("#index_table_dislocations .view_errors_link"), "Просмотр ошибок расстановки"
 
   $('.collection_selection').click () ->
     $('#all-pages-container').remove()
