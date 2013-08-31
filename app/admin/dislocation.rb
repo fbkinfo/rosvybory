@@ -32,12 +32,11 @@ ActiveAdmin.register Dislocation do
     column :phone
     column :adm_region, &:coalesced_adm_region_name
     column :region, &:coalesced_mun_region_name
-    column :current_role_uic, sortable: "user_current_roles.uic_id" do |dislocation|
-      region = dislocation.coalesced_region
-      inplace_helper[dislocation, :uic, region.uics_with_nested_regions.order(:name)]
-    end
     column :current_role_id do |dislocation|
       inplace_helper[dislocation, :current_role, CurrentRole.all]
+    end
+    column :current_role_uic, sortable: "user_current_roles.uic_id" do |dislocation|
+      inplace_helper[dislocation, :uic, dislocation.user_current_role.selectable_uics]
     end
     column :current_role_nomination_source_id do |dislocation|
       inplace_helper[dislocation, :nomination_source, NominationSource.all]
@@ -93,7 +92,8 @@ ActiveAdmin.register Dislocation do
       :dislocation => ucr.as_json(:only => editable_fields + [:id]),
       :url => inplace_control_dislocation_path(ucr.id),
       :errors => fixable_errors,
-      :message => ucr.errors.full_messages.join(' ')
+      :message => ucr.errors.full_messages.join(' '),
+      :selectable_uics => ucr.selectable_uics.map {|record| {:value => record.id, :text => record.try(:name)}}
     }
   end
 
