@@ -138,7 +138,7 @@ class ExcelUserAppRow
   end
 
   def adm_region=(v)
-    @user_app.adm_region = Region.adm_regions.find_by(name: normalize_adm_region(v))
+    @user_app.adm_region = Region.adm_regions.find_by(name: normalize_adm_region(v).to_s)
   end
 
   def experience_count=(v)
