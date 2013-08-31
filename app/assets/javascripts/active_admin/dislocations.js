@@ -22,6 +22,7 @@ $(function() {
           $row.find('.dislocation_errors_column').append($('<div>', {class: 'message'}).text(response.message));
         } else {
           $inplaces.removeClass('unsaved').removeData('dislocation').data('url', response.url);
+          $row.find('.dislocation_errors_column').html(response.dislocation_errors);
         };
       }, 44);
     }
