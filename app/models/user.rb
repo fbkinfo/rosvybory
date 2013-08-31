@@ -149,7 +149,7 @@ class User < ActiveRecord::Base
   end
 
   def may_login?
-    (%w{tc mc cc federal_repr} & roles.map{ |e| e.slug }).any?
+    (%w{admin tc mc cc federal_repr} & roles.map{ |e| e.slug }).any?
   end
 
   private

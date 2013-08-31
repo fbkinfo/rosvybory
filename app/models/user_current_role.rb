@@ -18,6 +18,24 @@ class UserCurrentRole < ActiveRecord::Base
 
   delegate :priority, :to => :current_role, :prefix => true
 
+  def coalesced_region
+    @coalesced_region ||= region || user.try(:region) || user.try(:adm_region)
+  end
+
+  # it's better to move it to UserCurrentRole decorator
+  def selectable_uics
+    reg = coalesced_region
+    return [] unless reg
+    uics = reg.uics_with_nested_regions.order(:name)
+    if current_role.try(:must_have_tic?)
+      uics.tics
+    elsif current_role.try(:must_have_uic?)
+      uics.uics
+    else
+      uics
+    end
+  end
+
   private
 
   def validate_tic_uic

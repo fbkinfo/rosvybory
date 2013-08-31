@@ -30,12 +30,16 @@
 #user_last_name_input, #user_first_name_input, #user_patronymic_input {
   float: left;
   width: 30%;
+  @include box-sizing(border-box);
   label {
     float: none !important;
   }
   input {
     width: 100% !important;
   }
+}
+#user_address_input {
+  clear: left;
 }
 .control_dislocations {
   .unsaved {
