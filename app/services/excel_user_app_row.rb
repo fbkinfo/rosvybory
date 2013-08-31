@@ -154,7 +154,7 @@ class ExcelUserAppRow
   end
 
   def region=(v)
-    @user_app.region = Region.find_by(name: v)
+    @user_app.region = Region.find_by(name: v.to_s)
   end
 
   def organisation=(org)
