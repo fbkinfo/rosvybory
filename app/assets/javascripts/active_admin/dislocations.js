@@ -1,7 +1,7 @@
 $(function() {
   $.fn.editable.defaults.mode = 'inline';
 
-  $('.control_dislocations .inplace').editable({emptytext: '&nbsp;&nbsp;&nbsp;',
+  $('.control_dislocations .inplace').editable({emptytext: 'изменить',
     highlight: false,
     send: 'always',
     params: function(params) {

@@ -6,6 +6,7 @@ role :app, "staff4.navalny.ru"
 role :db,  "staff4.navalny.ru", :primary => true
 
 set :rails_env, 'production'
+set :branch, 'master'
 
 namespace :deploy do
   task :start do

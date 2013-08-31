@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130829194229) do
+ActiveRecord::Schema.define(version: 20130830191309) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -78,6 +78,8 @@ ActiveRecord::Schema.define(version: 20130829194229) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "has_tic",    default: false
+    t.integer  "lft"
+    t.integer  "rgt"
   end
 
   add_index "regions", ["name"], name: "index_regions_on_name", unique: true, using: :btree
@@ -97,14 +99,18 @@ ActiveRecord::Schema.define(version: 20130829194229) do
 
   create_table "uics", force: true do |t|
     t.integer  "region_id",                    null: false
-    t.integer  "number",                       null: false
+    t.integer  "number"
     t.boolean  "is_temporary", default: false, null: false
     t.string   "has_koib",     default: "f",   null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "kind"
+    t.string   "name"
+    t.integer  "parent_id"
   end
 
   add_index "uics", ["number"], name: "index_uics_on_number", unique: true, using: :btree
+  add_index "uics", ["parent_id"], name: "index_uics_on_parent_id", using: :btree
   add_index "uics", ["region_id"], name: "index_uics_on_region_id", using: :btree
 
   create_table "user_app_current_roles", force: true do |t|

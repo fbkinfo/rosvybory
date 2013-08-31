@@ -9,7 +9,9 @@ ActiveAdmin.register DislocationControl do
   index do
     column :number, -> (uic) { uic.number_and_region }
     7.times do |i|
-      column :"participant_#{i}", -> (uic) { uic.human_participant(i) }
+      column :"participant_#{i}" do |uic|
+        uic.human_participant i, (can? :view_user_contacts, uic.participant(i).try(:user))
+      end
     end
     column :others do |uic|
       if uic.participants_count > 7
@@ -19,11 +21,12 @@ ActiveAdmin.register DislocationControl do
   end
 
   filter :number
-  filter :region, :input_html => {:style => "width: 220px;"}
+  filter :region_parent_id, as: :select, collection: Region.adm_regions,  :input_html => {:style => "width: 220px;"}
+  filter :region, as: :select, collection: Region.mun_regions,  :input_html => {:style => "width: 220px;"}
 
   controller do
-    def scoped_collection
-      DislocationControl.joins(:region).includes(:user_current_roles, :region)
-    end
+#    def scoped_collection
+#      DislocationControl.joins(:region).includes(:user_current_roles, :region)
+#    end
   end
 end
