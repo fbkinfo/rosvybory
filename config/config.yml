@@ -1,9 +1,7 @@
-
 smsru_api_id: 2b5874c4-0e10-d614-95d4-3f6cf1a92a99
 smsru_from: "79037701262"
 captcha_enabled: false
 
 production:
-  # изменить для продакшена
   smsru_api_id: be793542-49bc-0864-adc7-1dd4c1196bc1
-  smsru_from: "Rosvybory"
+  smsru_from: NABLUDATELI

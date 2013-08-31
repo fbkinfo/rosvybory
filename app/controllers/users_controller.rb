@@ -22,6 +22,7 @@ class UsersController < ApplicationController
     authorize! :update, @user
     @user.valid_roles = Role.accessible_by(current_ability, :assign_users)
     if @user.update( params[:dislocation] ? dislocate_params : user_params )
+      @user.send_reset_password_instructions if params[:send_password]
       render json: {status: :ok}, :content_type => 'text/html'
     else
       render (params[:dislocation] ? "dislocate" : "edit"), layout: false
@@ -33,12 +34,24 @@ class UsersController < ApplicationController
   #/users/group_new
   def group_new
     @apps = UserApp.where id: params[:collection_selection]
-    @apps = @apps.where %q(state != ?), 'approved'
-    gon.user_app_ids = @apps.pluck(:id)
+    @apps, @rejected = @apps.inject([[], []]) do |pair, app|
+      if reason = app.can_not_be_approved?
+        pair.last << [app, reason]
+      else
+        pair.first << app
+      end
+      pair
+    end
+    logger.debug "UsersController@#{__LINE__}#group_new #{@apps.inspect} #{@rejected.inspect}" if logger.debug?
+    gon.user_app_ids = @apps.to_a.map(&:id)
     gon.regions = regions_hash
     case @apps.count
     when 0
-      render text: "Заявки уже обработаны"
+      if @rejected.present?
+        render partial: 'rejected', layout: false
+      else
+        render text: "Заявки уже обработаны"
+      end
     when 1
       @app = @apps.first
       gon.user_app_id = @app.id
@@ -97,7 +110,14 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     authorize! :create, @user
     @user.valid_roles = Role.accessible_by(current_ability, :assign_users)
-    if @user.save
+    begin
+      # @user.save may raise exception in after_create
+      user_save_result = @user.save
+    rescue Exception => e
+      @user.errors.add :base, e.to_s
+      user_save_result = false
+    end
+    if user_save_result
       render json: {status: :ok}, :content_type => 'text/html'
     else
       render "new", layout: false
@@ -112,7 +132,6 @@ class UsersController < ApplicationController
 
   def accessible_fields_dislocate
     [
-        :got_docs,
         :year_born,
         :place_of_birth,
         :passport,
@@ -132,6 +151,7 @@ class UsersController < ApplicationController
             :uic_id,
             :uic_number,
             :user_id,
+            :got_docs,
         ],
     ]
   end
