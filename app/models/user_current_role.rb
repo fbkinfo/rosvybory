@@ -1,4 +1,6 @@
 class UserCurrentRole < ActiveRecord::Base
+  include AdmRegionDelegation
+
   belongs_to :current_role
   belongs_to :nomination_source
   belongs_to :region    # a.k.a adm_region_id
