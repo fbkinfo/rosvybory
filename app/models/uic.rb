@@ -19,7 +19,9 @@ class Uic < ActiveRecord::Base
   before_save :cache_name
 
   ransacker :adm_region_id do
-    Arel::Nodes::SqlLiteral.new("(select regions.adm_region_id from regions where regions.id = uics.region_id)")
+    rt = Region.arel_table
+    subselect = rt.project(rt[:adm_region_id]).where(rt[:id].eq(arel_table[:region_id]))
+    Arel::SqlLiteral.new("(#{subselect.to_sql})")
   end
 
   # TODO по идее это должно быть можно получить из enumirize'а ?
