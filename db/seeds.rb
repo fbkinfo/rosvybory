@@ -191,9 +191,19 @@ organisations.each do |name|
   Organisation.create name: name
 end
 
-NominationSource.create :name => 'ЛДПР', :variant => 'parliament'
-NominationSource.create :name => 'КПРФ', :variant => 'parliament'
-NominationSource.create :name => 'РПР-Парнас', :variant => 'party'
+NominationSource.create :name => 'ЕР', :variant => 'parliament'
+
+NominationSource.create :name => 'КПРФ', :variant => 'party'
+NominationSource.create :name => 'СР', :variant => 'party'
+NominationSource.create :name => 'ЛДПР', :variant => 'party'
 NominationSource.create :name => 'Яблоко', :variant => 'party'
+NominationSource.create :name => 'РПР-Парнас', :variant => 'party'
+
 NominationSource.create :name => 'Навальный', :variant => 'candidate'
+NominationSource.create :name => 'Митрохин', :variant => 'candidate'
+NominationSource.create :name => 'Мельников', :variant => 'candidate'
+NominationSource.create :name => 'Дегтярёв', :variant => 'candidate'
 NominationSource.create :name => 'Левичев', :variant => 'candidate'
+NominationSource.create :name => 'Собянин', :variant => 'candidate'
+
+NominationSource.create :name => 'СМИ', :variant => 'media'

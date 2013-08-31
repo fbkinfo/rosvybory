@@ -1,6 +1,9 @@
 class UsersController < ApplicationController
 
-  before_filter :expose_current_roles, only: [:new, :edit, :dislocate]
+  include UserAppsHelper
+
+  before_filter :expose_current_roles,
+      only: [:new, :edit, :group_new, :dislocate]
   before_filter :set_user, only: [:edit, :update, :dislocate]
 
   def dislocate
@@ -19,11 +22,73 @@ class UsersController < ApplicationController
     authorize! :update, @user
     @user.valid_roles = Role.accessible_by(current_ability, :assign_users)
     if @user.update( params[:dislocation] ? dislocate_params : user_params )
+      @user.send_reset_password_instructions if params[:send_password]
       render json: {status: :ok}, :content_type => 'text/html'
     else
       render (params[:dislocation] ? "dislocate" : "edit"), layout: false
     end
   end
+
+  #TODO возможно стоит реализовать через обычные new и create
+  # для new идея хорошая, но нет времени сливать (ДК)
+  #/users/group_new
+  def group_new
+    @apps = UserApp.where id: params[:collection_selection]
+    @apps, @rejected = @apps.inject([[], []]) do |pair, app|
+      if reason = app.can_not_be_approved?
+        pair.last << [app, reason]
+      else
+        pair.first << app
+      end
+      pair
+    end
+    logger.debug "UsersController@#{__LINE__}#group_new #{@apps.inspect} #{@rejected.inspect}" if logger.debug?
+    gon.user_app_ids = @apps.to_a.map(&:id)
+    gon.regions = regions_hash
+    case @apps.count
+    when 0
+      if @rejected.present?
+        render partial: 'rejected', layout: false
+      else
+        render text: "Заявки уже обработаны"
+      end
+    when 1
+      @app = @apps.first
+      gon.user_app_id = @app.id
+      @user = User.new_from_app(@app)
+      authorize! :create, @user
+      render "new", layout: false
+    else
+      @user = User.new_from_app(@apps)
+      gon.user_app_id = @apps.first.id
+      authorize! :create, @user
+      render layout: false
+    end
+  end
+
+  # POST /users/group_create
+  def group_create
+    @apps = UserApp.where id: params[:apps]
+    @apps.each do |app|
+      user = User.new user_params
+      user.last_name = app.last_name
+      user.first_name = app.first_name
+      user.patronymic = app.patronymic
+      user.year_born = app.year_born
+      user.email = app.email
+      user.phone = Verification.normalize_phone_number(app.phone)
+      user.user_app = app
+      user.send :generate_password
+      user.adm_region_id ||= app.adm_region_id
+      user.region_id ||= app.region_id
+      user.organisation_id ||= app.organisation_id
+      user.save!
+      app.confirm_phone! unless app.phone_verified?
+      app.confirm_email! unless app.confirmed?
+   end
+    render json: {status: :ok}, :content_type => 'text/html'
+  end
+
 
 
   def new
@@ -32,6 +97,8 @@ class UsersController < ApplicationController
       render text: "Заявка уже обработана"
     else
       gon.user_app_id = @app.id
+      gon.user_app_ids = [@app.id]
+      gon.regions = regions_hash
       @user = User.new_from_app(@app)
       authorize! :create, @user
       render "new", layout: false
@@ -43,7 +110,14 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     authorize! :create, @user
     @user.valid_roles = Role.accessible_by(current_ability, :assign_users)
-    if @user.save
+    begin
+      # @user.save may raise exception in after_create
+      user_save_result = @user.save
+    rescue Exception => e
+      @user.errors.add :base, e.to_s
+      user_save_result = false
+    end
+    if user_save_result
       render json: {status: :ok}, :content_type => 'text/html'
     else
       render "new", layout: false
@@ -58,7 +132,6 @@ class UsersController < ApplicationController
 
   def accessible_fields_dislocate
     [
-        :got_docs,
         :year_born,
         :place_of_birth,
         :passport,
@@ -78,6 +151,7 @@ class UsersController < ApplicationController
             :uic_id,
             :uic_number,
             :user_id,
+            :got_docs,
         ],
     ]
   end

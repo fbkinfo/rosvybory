@@ -24,6 +24,8 @@ ru:
   'true': да
   formtastic:
     required: "обязательное поле"
+    'yes': да
+    'no': нет
   date:
     abbr_day_names:
     - Вс
@@ -316,11 +318,27 @@ ru:
       nomination_source:
         one: 'Источник выдвижения'
         other: 'Источники выдвижения'
+      dislocation_control:
+        one: 'Контроль расстановки'
+        other: 'Контроль расстановки'
     attributes:
       dislocation:
         current_role_id: Роль
         current_role_nomination_source_id: Источник выдвижения
         current_role_uic: УИК
+        user_current_role_got_docs: Документы выданы
+      dislocation_control:
+        number: УИК №
+        participant_0: Участник №1
+        participant_1: Участник №2
+        participant_2: Участник №3
+        participant_3: Участник №4
+        participant_4: Участник №5
+        participant_5: Участник №6
+        participant_6: Участник №7
+        region_parent_id: Адм.округ
+        region: Район
+        others: ""
       nomination_source:
         variant: Тип
         name: Название
@@ -337,6 +355,7 @@ ru:
         adm_region_id: Адм регион
         region: Регион/ТИК
         uic: УИК
+        got_docs: Документы выданы
       user_current_roles:
         region: ТИК
       organisation:
@@ -360,6 +379,9 @@ ru:
         current_password: Текущий пароль
         password: Пароль
         password_confirmation: Пароль (подтверждение)
+        last_name: Фамилия
+        first_name: Имя
+        patronymic: Отчество
         full_name: ФИО
         user_app_created_at: Дата заполнения заявки
         uic: № УИК
@@ -381,7 +403,7 @@ ru:
         work: Место работы
         work_position: Должность
         address: Адрес прописки
-        got_docs: Докуметы выданы
+        got_docs: Документы выданы
       region:
         kind: Тип
         name: Название
@@ -430,7 +452,7 @@ ru:
         social_accounts: "Соц. аккаунты"
         year_born: "Год рождения"
         sex_male: "Пол"
-        ip: "ip"
+        ip: "IP"
         organisation: "Орг."
         current_roles: "Текущие статусы"
   user_app:
@@ -453,6 +475,12 @@ ru:
       prg_reserve: "ПРГ в резерве"
       no_status: ""
   user_apps:
+    rejected:
+      valid: 'Заявка содержит ошибки'
+      approved: 'Заявка уже подтверждена'
+      email_missing: 'Отсутствует email'
+      email: 'Уже есть заявка с таким email-ом'
+      phone: 'Уже есть заявка с таким телефоном'
     send_group_sms:
       messages_sent: 'Сообщения отправлены'
     send_group_email:
@@ -468,6 +496,9 @@ ru:
       labels:
         new_group_sms: "Отправить SMS"
         new_group_email: "Отправить почту"
+        group_accept: "Принять"
     edit_model: "Редактирование %{model}"
+    menu:
+      dictionaries: Справочники
     scopes:
       with_current_roles: Все

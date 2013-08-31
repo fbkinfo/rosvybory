@@ -1,0 +1,12 @@
+%h3 Отклонённые заявки
+.panel_contents
+  .attributes_table
+    %table
+      %tbody
+      %tr
+        %th Заявитель
+        %th Причина отказа
+      - @rejected.each do |app, reason|
+        %tr
+          %td= app.full_name
+          %td= t(reason, scope: 'user_apps.rejected')

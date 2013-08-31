@@ -17,6 +17,13 @@ GIT
       ransack (>= 1.0.0)
       sass-rails (>= 3.2.0)
 
+GIT
+  remote: git://github.com/stiff/sms_ru.git
+  revision: 889293a39d184eb8aeecb3c59d8897b5addd8f83
+  specs:
+    sms_ru (0.5.0)
+      parseconfig (~> 1.0.2)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -49,6 +56,8 @@ GEM
       activesupport (>= 3.0.0)
     arel (4.0.0)
     atomic (1.1.13)
+    awesome_nested_set (2.1.6)
+      activerecord (>= 3.0.0)
     bcrypt-ruby (3.1.1)
     bourbon (3.1.8)
       sass (>= 3.2.0)
@@ -284,8 +293,6 @@ GEM
       rack-protection (~> 1.4)
       tilt (~> 1.3, >= 1.3.4)
     slop (3.4.6)
-    sms_ru (0.5.0)
-      parseconfig (~> 1.0.2)
     spreadsheet (0.8.8)
       ruby-ole (>= 1.0)
     sprockets (2.10.0)
@@ -325,6 +332,8 @@ GEM
       rack (>= 1.0.0)
     warden (1.2.3)
       rack (>= 1.0)
+    x-editable-rails (1.2.0)
+      railties
     xpath (2.0.0)
       nokogiri (~> 1.3)
 
@@ -333,6 +342,7 @@ PLATFORMS
 
 DEPENDENCIES
   activeadmin!
+  awesome_nested_set
   cancan
   capistrano
   capistrano_colors
@@ -375,9 +385,10 @@ DEPENDENCIES
   sass-rails (~> 4.0.0)
   select2-rails
   shoulda-matchers
-  sms_ru
+  sms_ru!
   state_machine
   therubyracer
   twitter-bootstrap-rails
   uglifier (>= 1.3.0)
   unicorn
+  x-editable-rails

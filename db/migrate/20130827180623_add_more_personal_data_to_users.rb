@@ -10,11 +10,12 @@ class AddMorePersonalDataToUsers < ActiveRecord::Migration
     User.reset_column_information
 
     User.find_each do |user|
-      user.update(
+      if user.user_app
+        user.update_columns
               last_name: user.user_app.last_name,
               first_name: user.user_app.first_name,
               patronymic: user.user_app.patronymic
-      ) if user.user_app
+      end
     end
   end
 end

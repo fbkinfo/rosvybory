@@ -7,6 +7,11 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
+gem 'twitter-bootstrap-rails'
+gem 'formtastic', '2.3.0.rc2'
+gem 'formtastic-bootstrap'#, github: 'mjbellantoni/formtastic-bootstrap'
+gem 'x-editable-rails'
+gem 'select2-rails'
 
 # Use postgresql as the database for Active Record
 gem 'pg'
@@ -20,24 +25,22 @@ gem 'sass-rails', '~> 4.0.0'
 gem "less-rails"
 gem 'haml-rails'
 
-gem 'twitter-bootstrap-rails'
-gem 'formtastic', '2.3.0.rc2'
-gem 'formtastic-bootstrap'#, github: 'mjbellantoni/formtastic-bootstrap'
-gem 'select2-rails'
 gem 'honeybadger'
 gem 'therubyracer', platforms: :ruby
 gem 'unicorn'
-gem 'cancan'
-gem 'state_machine'
-gem 'draper'
 gem 'foreman', require: false
 gem 'foreman-export-initscript', require: false
+
+gem 'awesome_nested_set'
+gem 'cancan'
+gem 'draper'
+gem 'enumerize'
+gem 'state_machine'
 
 gem 'activeadmin',         github: 'gregbell/active_admin', branch: 'rails4'
 gem 'ransack', "~> 1.0.0"
 gem 'inherited_resources', "~> 1.4.1"
-gem 'enumerize'
-gem 'sms_ru'
+gem 'sms_ru', github: 'stiff/sms_ru'
 gem "recaptcha", :require => "recaptcha/rails"
 gem 'gon'
 gem 'cocoon'

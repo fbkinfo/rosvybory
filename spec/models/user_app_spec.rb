@@ -1,6 +1,9 @@
 require 'spec_helper'
 
 describe UserApp do
+
+  subject { create :user_app, skip_phone_verification: true }
+
   it { should belong_to :region }
   it { should belong_to :adm_region }
 
@@ -68,4 +71,25 @@ describe UserApp do
       end
     end
   end
+
+  it 'should respond_to :full_name' do
+    subject.full_name.should ==
+        [subject.last_name, subject.first_name, subject.patronymic].join(' ')
+  end
+
+  it 'should respond_to :can_not_be_approved?' do
+    logger.debug "Rspec UserApp@#{__LINE__}#should respond_to :can_not_be_approved?"
+    subject.can_not_be_approved?.should be_false
+    object = build(:user_app, skip_phone_verification: true, first_name: '')
+    object.can_not_be_approved?.should == :valid
+    object = build(:user_app, skip_phone_verification: true, email: '')
+    object.imported!
+    object.can_not_be_approved?.should == :email_missing
+    object = build(:user_app, skip_phone_verification: true, email: subject.email)
+    object.can_not_be_approved?.should == :email
+    object = build(:user_app, skip_phone_verification: true, phone: subject.phone)
+    subject.approve
+    object.can_not_be_approved?.should == :phone
+  end
+
 end

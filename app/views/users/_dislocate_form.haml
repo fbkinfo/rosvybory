@@ -12,9 +12,10 @@
 
 = semantic_form_for @user, url: user_path(@user, dislocation: true), builder: ::Formtastic::FormBuilder, remote: true do |f|
   = f.inputs do
-    = f.input :full_name
+    = f.input :last_name
+    = f.input :first_name
+    = f.input :patronymic
     = f.input :address, :input_html => {:rows => 2}
-    = f.input :got_docs
   = f.inputs "Расстановка наблюдателя", "data-role" => "observer-roles", class: "hidden" do
     = f.semantic_fields_for :user_current_roles do |fc|
       = render 'user_current_role_fields', :f => fc
