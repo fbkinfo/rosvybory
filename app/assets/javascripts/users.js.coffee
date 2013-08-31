@@ -1,6 +1,6 @@
-
-uicRoles = ["psg", "prg", "observer", "journalist"]
-regionRoles = ["psg_tic", "prg_tic"]
+# TODO replace with must_have_tic?/uic?
+# uicRoles = ["psg", "prg", "observer", "journalist"]
+# ticRoles = ["psg_tic", "prg_tic"]
 
 updateRoleFields = ->
 #  $(".user-current-role").change ->
@@ -9,20 +9,21 @@ updateRoleFields = ->
     $el = $(element)
     role = gon.current_roles[$el.find("[data-role=current-role]").val()]
     $uic = $el.find("[data-role=uic]").parent()
-    $region = $el.find("[data-role=region-select]").parent()
 
-    if ($.inArray(role, uicRoles) != -1)
-      $uic.show()
-    else
-      $uic.find("select").select2('val', '');
-      $uic.hide()
+    # TODO reload uics list
 
+    # TODO убрать лишнее
+    # if ($.inArray(role, uicRoles) != -1)
+    #   $uic.show()
+    #   $tic.hide()
+    # else
+    #   $tic.show()
+    #   $uic.hide()
 
-    if ($.inArray(role, regionRoles) != -1)
-      $region.show()
-    else
-      $region.find("select").select2('val', '');
-      $region.hide()
+    # FIXME зачем?
+    # if ($.inArray(role, ticRoles) != -1)
+    # else
+    #   $region.find("select").select2('val', '');
 
 
 checkForObserverRole = ->
