@@ -44,8 +44,8 @@ ActiveAdmin.register Dislocation do
     column :user_current_role_got_docs do |dislocation|
       I18n.t ( dislocation.user_current_role_got_docs == true ).to_s
     end
-    column "Ошибки расстановки", class: 'dislocation_errors_column' do |user|
-      render partial: 'cell_dislocation_errors', locals: { user: user, errors: user.check_dislocation_for_errors }
+    column "Ошибки расстановки", class: 'dislocation_errors_column' do |dislocation|
+      render partial: 'cell_dislocation_errors', locals: { dislocation: dislocation }
     end
   end
 
