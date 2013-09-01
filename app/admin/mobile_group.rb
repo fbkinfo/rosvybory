@@ -6,7 +6,7 @@ ActiveAdmin.register MobileGroup do
   filter :region, :as => :select, :collection => proc { Region.mun_regions.accessible_by(current_ability) }, :input_html => {:style => "width: 230px;"}
   filter :name
 
-  index do
+  index :download_links => false do
     selectable_column
     column :organisation, &:organisation_name
     column :adm_region, &:adm_region_name

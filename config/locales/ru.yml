@@ -321,6 +321,9 @@ ru:
       dislocation_control:
         one: 'Контроль расстановки'
         other: 'Контроль расстановки'
+      uic:
+        one: УИК
+        other: Избирательные комиссии
     attributes:
       dislocation:
         current_role_id: Роль
@@ -456,6 +459,13 @@ ru:
         ip: "IP"
         organisation: "Орг."
         current_roles: "Текущие статусы"
+
+  dislocation:
+    errors:
+      one: "%{count} ошибка"
+      few: "%{count} ошибки"
+      many: "%{count} ошибок"
+      other: "%{count} ошибок"
   user_app:
     status:
       observer: "Член избирательной комисии / наблюдатель на участке"
@@ -495,6 +505,7 @@ ru:
   active_admin:
     batch_actions:
       labels:
+        give_out_docs: Выдать документы
         new_group_sms: "Отправить SMS"
         new_group_email: "Отправить почту"
         group_accept: "Принять"
@@ -503,3 +514,13 @@ ru:
       dictionaries: Справочники
     scopes:
       with_current_roles: Все
+  views:
+    pagination:
+      first: "&laquo; В начало"
+      last: "В конец &raquo;"
+      previous: "&lsaquo; Назад"
+      next: "Вперед &rsaquo;"
+      truncate: "..."
+      actions:
+        pagination_on: "Показать по страницам"
+        pagination_off: "Показать всё"

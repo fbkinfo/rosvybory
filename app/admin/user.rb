@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ActiveAdmin.register User do
   decorate_with UserDecorator
 
@@ -61,7 +62,7 @@ ActiveAdmin.register User do
     end
   end
 
-  index do
+  index :download_links => false do
     selectable_column
     actions(defaults: false) do |resource|
       links = ''.html_safe
@@ -104,9 +105,7 @@ ActiveAdmin.register User do
   filter :roles, :input_html => {:style => "width: 230px;"}
   filter :user_current_roles_current_role_id, label: 'Роль наблюдателя', as: :select, collection: proc { CurrentRole.all }, :input_html => {:style => "width: 230px;"}
   filter :user_app_uic_matcher, as: :string, label: '№ УИК'
-  filter :last_name
-  filter :first_name
-  filter :patronymic
+  filter :full_name
   filter :phone
   filter :email
   filter :user_app_created_at, as: :date_range, label: 'Дата подачи заявки'
@@ -126,6 +125,13 @@ ActiveAdmin.register User do
 
   action_item(only: [:show]) do
     link_to "Сменить пароль", edit_password_control_user_path(current_user) if user == current_user
+  end
+
+  # TODO(sinopalnikov): move common code to app/admin/concerns
+  action_item(only: [:index]) do
+    _show_all = params[:show_all] && params[:show_all].to_sym == :true
+    _label = I18n.t('views.pagination.actions.pagination_' + (_show_all ? 'on' : 'off'))
+    link_to _label, control_users_path(:format => nil, :show_all => (_show_all ? :false : :true))
   end
 
   controller do
@@ -153,6 +159,10 @@ ActiveAdmin.register User do
 
     def scoped_collection
       resource_class.includes(:adm_region, :region, :roles) # prevent N+1 queries
+    end
+
+    def apply_pagination(chain)
+      return super.per(params[:show_all] && params[:show_all].to_sym == :true ? 1000000 : nil)
     end
 
     def update

@@ -1,6 +1,6 @@
-
-uicRoles = ["psg", "prg", "observer", "journalist"]
-regionRoles = ["psg_tic", "prg_tic"]
+# TODO replace with must_have_tic?/uic?
+# uicRoles = ["psg", "prg", "observer", "journalist"]
+# ticRoles = ["psg_tic", "prg_tic"]
 
 updateRoleFields = ->
 #  $(".user-current-role").change ->
@@ -9,20 +9,21 @@ updateRoleFields = ->
     $el = $(element)
     role = gon.current_roles[$el.find("[data-role=current-role]").val()]
     $uic = $el.find("[data-role=uic]").parent()
-    $region = $el.find("[data-role=region-select]").parent()
 
-    if ($.inArray(role, uicRoles) != -1)
-      $uic.show()
-    else
-      $uic.find("select").select2('val', '');
-      $uic.hide()
+    # TODO reload uics list
 
+    # TODO убрать лишнее
+    # if ($.inArray(role, uicRoles) != -1)
+    #   $uic.show()
+    #   $tic.hide()
+    # else
+    #   $tic.show()
+    #   $uic.hide()
 
-    if ($.inArray(role, regionRoles) != -1)
-      $region.show()
-    else
-      $region.find("select").select2('val', '');
-      $region.hide()
+    # FIXME зачем?
+    # if ($.inArray(role, ticRoles) != -1)
+    # else
+    #   $region.find("select").select2('val', '');
 
 
 checkForObserverRole = ->
@@ -73,11 +74,7 @@ initRoles = ->
     try
       response = $.parseJSON(xhr.responseText)
       if response.status == "ok"
-        $dialog.dialog('close');
-        if gon.user_app_ids
-          $("body").trigger "app-status-change", [id, "approved"] for id in gon.user_app_ids
-        else
-          $("body").trigger "app-status-change", [gon.user_app_id, "approved"] if gon.user_app_id
+        window.location.reload()
       else
         $dialog.html(xhr.responseText)
     catch err
@@ -89,15 +86,6 @@ initRoles = ->
   ).bind "ajax:error", (evt, xhr, status, error) ->
     alert "Произошла ошибка! Перезагрузите страницу и попробуйте ещё раз"
     $(this).closest('.ui-dialog-content').html(xhr.responseText)
-
-  $form.find("#user_adm_region_id").on "change", (e) ->
-    chosen_val = $(@).val()
-    $el = $form.find("#user_region_id")
-    $el.empty(); # remove old options
-    $el.append $("<option></option>").attr("value", "")
-    $.each gon.regions[chosen_val], (index, region) ->
-      $el.append $("<option></option>").attr("value", region.id).text(region.name)
-    $el.select2("val", "")
 
   selectify($("select.select2"))
 
