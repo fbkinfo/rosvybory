@@ -20,7 +20,7 @@ ActiveAdmin.register DislocationControl do
     end
   end
 
-  filter :kind, :as => :select, :collection => [['ТИК', 1], ['УИК', 2]]
+  filter :kind, :as => :select, :collection => proc { Uic.kind.values.map {|k| [Uic.human_kind(k), Uic.send("#{k}_value")]} }
   filter :number
   filter :region_parent_id, as: :select, collection: Region.adm_regions,  :input_html => {:style => "width: 220px;"}
   filter :region, as: :select, collection: Region.mun_regions,  :input_html => {:style => "width: 220px;"}
