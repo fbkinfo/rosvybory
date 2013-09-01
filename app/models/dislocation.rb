@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Dislocation < User
 
   belongs_to :nomination_source, foreign_key: :user_current_role_nomination_source_id

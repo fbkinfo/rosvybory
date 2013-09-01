@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 ActiveAdmin.register User do
   decorate_with UserDecorator
 

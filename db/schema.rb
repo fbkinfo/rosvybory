@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130830191309) do
+ActiveRecord::Schema.define(version: 20130901100509) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,6 +38,62 @@ ActiveRecord::Schema.define(version: 20130830191309) do
   end
 
   add_index "blacklists", ["phone"], name: "index_blacklists_on_phone", unique: true, using: :btree
+
+  create_table "call_center_operators", force: true do |t|
+    t.string   "first_name"
+    t.string   "last_name"
+    t.integer  "comp_number"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "call_center_phone_calls", force: true do |t|
+    t.string   "status"
+    t.string   "number"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "call_center_reporters", force: true do |t|
+    t.integer  "adm_region_id"
+    t.integer  "mobile_group_id"
+    t.string   "phone"
+    t.string   "first_name"
+    t.string   "patronymic"
+    t.string   "last_name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "call_center_reports", force: true do |t|
+    t.text     "text"
+    t.string   "url"
+    t.integer  "reportable_id"
+    t.string   "reportable_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "call_center_reports", ["reportable_id", "reportable_type"], name: "index_call_center_reports_on_reportable_id_and_reportable_type", using: :btree
+
+  create_table "call_center_violation_categories", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "call_center_violation_types", force: true do |t|
+    t.string   "name"
+    t.integer  "violation_category_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "call_center_violations", force: true do |t|
+    t.integer  "violation_type_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "current_roles", force: true do |t|
     t.string   "name",                   null: false
@@ -84,6 +140,16 @@ ActiveRecord::Schema.define(version: 20130830191309) do
 
   add_index "regions", ["name"], name: "index_regions_on_name", unique: true, using: :btree
   add_index "regions", ["parent_id"], name: "index_regions_on_parent_id", using: :btree
+
+  create_table "reports_reports", force: true do |t|
+    t.integer  "parent_report_id"
+    t.integer  "child_report_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "reports_reports", ["child_report_id"], name: "index_reports_reports_on_child_report_id", using: :btree
+  add_index "reports_reports", ["parent_report_id"], name: "index_reports_reports_on_parent_report_id", using: :btree
 
   create_table "roles", force: true do |t|
     t.string   "name",       null: false
