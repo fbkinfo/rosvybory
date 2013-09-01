@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class User < ActiveRecord::Base
   include FullNameFormable
 
@@ -46,7 +48,7 @@ class User < ActiveRecord::Base
     end
 
     def send_reset_password_instructions(attributes={})
-      attributes["phone"] = Verification.normalize_phone_number(attributes["phone"])
+      attributes["phone"] = Verification.nwormalize_phone_number(attributes["phone"])
       super
     end
 
