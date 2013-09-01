@@ -20,7 +20,7 @@ class UserDecorator < Draper::Decorator
   end
 
   def organisation_with_user_id
-    "#{organisation.name}-#{id}" if organisation
+    "#{organisation.name}-#{model.id}" if organisation
   end
 
   def human_got_docs

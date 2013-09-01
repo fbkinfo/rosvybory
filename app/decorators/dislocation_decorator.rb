@@ -5,11 +5,19 @@ class DislocationDecorator < UserDecorator
 
   # primary key - user_current_role.id for existing dislocations, user.id for new
   def pk
-    user_current_role_id || id
+    user_current_role_id || user_id
+  end
+
+  def id
+    user_current_role_id
+  end
+
+  def user_id
+    model.id
   end
 
   def coalesced_adm_region
-    coalesced_region.try(:closest_adm_region)
+    coalesced_region.try(:adm_region)
   end
 
   def coalesced_mun_region_name
