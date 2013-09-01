@@ -1,5 +1,6 @@
 class Uic < ActiveRecord::Base
   extend Enumerize
+  include AdmRegionDelegation
 
   belongs_to :parent, :class_name => 'Uic'
   belongs_to :region
@@ -8,6 +9,9 @@ class Uic < ActiveRecord::Base
   has_many :user_current_roles, :inverse_of => :uic
 
   enumerize :kind, in: {tic: 1, uic: 2}, default: :uic, scope: true, predicates: true
+
+  delegate :name, :to => :adm_region, :prefix => true, :allow_nil => true
+  delegate :name, :to => :region, :prefix => true, :allow_nil => true
 
   validates :region_id, presence: true
   validates :number, presence: true, uniqueness: true, :if => :uic?

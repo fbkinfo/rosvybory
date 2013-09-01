@@ -1,0 +1,15 @@
+
+- errors = dislocation.check_dislocation_for_errors
+- if errors.blank?
+  .cell_no_errors
+    &nbsp;OK
+- else
+  .errors_details{style:'display:none;visibility:hidden'}
+    %div{id: "errors_details_"+dislocation.duid}
+      Некорректная расстановка:
+      %ul
+        - errors.each do |error|
+          %li= error
+
+  .cell_with_errors
+    = link_to I18n.t('dislocation.errors', :count => errors.size), "#errors_details_#{dislocation.duid}", :target => '_blank', :class => 'view_errors_link'
