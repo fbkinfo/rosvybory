@@ -6,7 +6,7 @@ ActiveAdmin.register DislocationControl do
 
   config.sort_order = 'kind_asc'
 
-  index do
+  index :download_links => false do
     column :number, -> (uic) { uic.number_and_region }
     7.times do |i|
       column :"participant_#{i}" do |uic|
@@ -21,7 +21,7 @@ ActiveAdmin.register DislocationControl do
   end
 
   filter :number
-  filter :region_parent_id, as: :select, collection: Region.adm_regions,  :input_html => {:style => "width: 220px;"}
+  filter :region_adm_region_id, as: :select, collection: Region.adm_regions,  :input_html => {:style => "width: 220px;"}
   filter :region, as: :select, collection: Region.mun_regions,  :input_html => {:style => "width: 220px;"}
 
   controller do
