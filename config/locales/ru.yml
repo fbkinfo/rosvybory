@@ -513,3 +513,13 @@ ru:
       dictionaries: Справочники
     scopes:
       with_current_roles: Все
+  views:
+    pagination:
+      first: "&laquo; В начало"
+      last: "В конец &raquo;"
+      previous: "&lsaquo; Назад"
+      next: "Вперед &rsaquo;"
+      truncate: "..."
+      actions:
+        pagination_on: "Показать по страницам"
+        pagination_off: "Показать всё"
