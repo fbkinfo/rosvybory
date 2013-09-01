@@ -1,5 +1,6 @@
 ActiveAdmin.register MobileGroup do
   menu :if => proc{ can? :crud, MobileGroup }, :priority => 30
+  batch_action :destroy, false
 
   filter :organisation, label: 'Организация', as: :select, collection: proc { Organisation.order(:name).accessible_by(current_ability, :contribute_to) }, :input_html => {:style => "width: 230px;"}
   filter :adm_region, :as => :select, :collection => proc { Region.adm_regions.accessible_by(current_ability) }, :input_html => {:style => "width: 230px;"}

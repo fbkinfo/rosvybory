@@ -2,6 +2,7 @@ ActiveAdmin.register Uic do
   menu :parent => I18n.t('active_admin.menu.dictionaries'), :if => proc{ can? :crud, NominationSource }
 
   actions :all, :except => [:new]
+  batch_action :destroy, false
 
   filter :kind, :as => :select, :input_html => {:style => "width: 230px;"}
   filter :adm_region_id, :as => :select, :collection => proc { Region.adm_regions }, :input_html => {:style => "width: 230px;"}
