@@ -322,15 +322,12 @@ ru:
       dislocation_control:
         one: 'Контроль расстановки'
         other: 'Контроль расстановки'
-<<<<<<< HEAD
       uic:
         one: УИК
         other: Избирательные комиссии
-=======
       call_center/reporter:
         one: Звонящий
         other: Звонящие
->>>>>>> CallCenter. Закончена вёрстка страницы оператора.
     attributes:
       dislocation:
         current_role_id: Роль
