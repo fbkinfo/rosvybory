@@ -3,6 +3,7 @@ ActiveAdmin.register DislocationControl do
 
   actions :index
   menu :if => proc{ can? :view_dislocation, User }, :priority => 20
+  batch_action :destroy, false
 
   config.sort_order = 'kind_asc'
 
