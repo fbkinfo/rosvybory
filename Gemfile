@@ -39,6 +39,8 @@ gem 'enumerize'
 gem 'state_machine'
 
 gem 'activeadmin',         github: 'gregbell/active_admin', branch: 'rails4'
+# gem 'activeadmin-axlsx'   # breaks app for no good reason
+gem 'axlsx'
 gem 'ransack', "~> 1.0.0"
 gem 'inherited_resources', "~> 1.4.1"
 gem 'sms_ru', github: 'stiff/sms_ru'
