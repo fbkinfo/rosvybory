@@ -144,7 +144,7 @@ ActiveAdmin.register User do
           column :adm_region
           column :region
           column :full_name
-          column :phone
+          column :phone do |user| " #{user.phone}" end # prevent excel treating phone as number or date
           column :email
           column :uic
 
