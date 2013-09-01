@@ -1,4 +1,6 @@
 class UserApp < ActiveRecord::Base
+  include FullNameFormable
+
   serialize :social_accounts, HashWithIndifferentAccess
   belongs_to :region
   belongs_to :adm_region, class_name: "Region"
@@ -206,10 +208,6 @@ class UserApp < ActiveRecord::Base
 
   def imported!
     @imported = true
-  end
-
-  def full_name
-    [last_name, first_name, patronymic].compact.join(' ')
   end
 
   def can_not_be_approved?
