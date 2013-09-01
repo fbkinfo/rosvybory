@@ -9,6 +9,7 @@ class CreateCallCenterReporters < ActiveRecord::Migration
       t.string   :first_name
       t.string   :patronymic
       t.string   :last_name
+      t.string   :role
 
       t.timestamps
     end

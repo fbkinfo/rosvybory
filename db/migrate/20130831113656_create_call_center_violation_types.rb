@@ -38,6 +38,7 @@ class CreateCallCenterViolationTypes < ActiveRecord::Migration
           CallCenter::ViolationType.create(name: violation_name, violation_category_id: vc.id)
       end
 
+      vc = CallCenter::ViolationCategory.find_by_name "2. Нарушения при голосовании"
       [ "2.2. Есть агитационные материалы на участке",
         "2.3. Нет сводного плаката",
         "2.4. У наблюдателей нет возможности видеть места выдачи бюллетеней, избирательные ящики, кабинки для голосования",
@@ -53,7 +54,7 @@ class CreateCallCenterViolationTypes < ActiveRecord::Migration
           CallCenter::ViolationType.create(name: violation_name, violation_category_id: vc.id)
       end
 
-      vc = CallCenter::ViolationCategory.find_by_name "2. Нарушения при голосовании"
+      vc = CallCenter::ViolationCategory.find_by_name "3. Нарушения при подсчете"
       [ "3.6. Не оглашались данные подсчета по каждой книге избирателей",
         "3.7. Наблюдателю отказали в возможности удостоверится в правильности подсчетов по спискам",
         "3.8. Не объявлялось количество заявлений на голосование вне помещения перед вскрытием каждого переносного ящика",
