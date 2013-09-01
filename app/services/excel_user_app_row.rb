@@ -1,25 +1,28 @@
 class ExcelUserAppRow
   COLUMNS = {
-    uid: 0,           #нет прямого поля
-    created_at: 1,
-    adm_region: 2,
-    region: 3,
-    last_name: 4,
-    first_name: 5,
-    patronymic: 6,
-    phone: 7,
-    email: 8,
-    uic: 9,
+      uid: 0, #нет прямого поля
+      created_at: 1,
+      adm_region: 2,
+      region: 3,
+      last_name: 4,
+      first_name: 5,
+      patronymic: 6,
+      phone: 7,
+      email: 8,
+      uic: 9,
 
-    current_roles: 10, #инициализия этого поля требует уже инициализированных полей uic, region и adm_region, поэтому в этом хеше оно должно идти после них.
-    experience_count: 11,
-    previous_statuses: 12,
-    can_be_reserv: 13,   #нет прямого поля
-    can_be_coord_region: 14, #нет прямого поля
+      current_roles: 10, #инициализия этого поля требует уже инициализированных полей uic, region и adm_region, поэтому в этом хеше оно должно идти после них.
+      experience_count: 11,
+      previous_statuses: 12,
+      can_be_reserv: 13, #нет прямого поля
+      can_be_coord_region: 14, #нет прямого поля
 
-    has_car: 15,
-    social_accounts: 16,
-    extra: 17
+      has_car: 15,
+      social_accounts: 16,
+      extra: 17,
+      desired_status: 18,
+      legal_status: 19,
+      has_video: 20
   }.freeze
 
   TRUTH = %w{1 1.0 да есть}.freeze
@@ -83,10 +86,10 @@ class ExcelUserAppRow
 
   def current_roles=(v)
     roles_by_name = {
-      "РЗ" => 'reserve',
-      "УПРГ" => 'prg',
-      "ТПСГ" => 'psg_tic',
-      "ТПРГ" => 'prg_tic'
+        "РЗ" => 'reserve',
+        "УПРГ" => 'prg',
+        "ТПСГ" => 'psg_tic',
+        "ТПРГ" => 'prg_tic'
     }
     role = CurrentRole.where(:slug => roles_by_name[v]).first
     if role && !@user_app.user_app_current_roles.where(:current_role_id => role.id).first
@@ -94,7 +97,7 @@ class ExcelUserAppRow
       if role.must_have_uic?
         value = "#{@user_app.uic}"
       elsif role.must_have_tic?
-        if region.try(:has_tic?)#для районов с ТИКами
+        if region.try(:has_tic?) #для районов с ТИКами
           value = region.name
         elsif adm_region.try(:has_tic?) #для округов с ТИКами
           value = adm_region.name
@@ -106,11 +109,11 @@ class ExcelUserAppRow
 
   def previous_statuses=(v)
     statuses_by_name = {
-      "ОК" => UserApp::STATUS_COORD,
-      "ПРГ" => UserApp::STATUS_PRG,
-      "МГ" => UserApp::STATUS_MOBILE,
-      "ТИК" => UserApp::STATUS_TIC_PSG,
-      "ДК" => UserApp::STATUS_DELEGATE
+        "ОК" => UserApp::STATUS_COORD,
+        "ПРГ" => UserApp::STATUS_PRG,
+        "МГ" => UserApp::STATUS_MOBILE,
+        "ТИК" => UserApp::STATUS_TIC_PSG,
+        "ДК" => UserApp::STATUS_DELEGATE
     }
     if status_value = statuses_by_name[v]
       @user_app.previous_statuses |= status_value
@@ -127,6 +130,26 @@ class ExcelUserAppRow
 
   def has_car=(v)
     @user_app.has_car = TRUTH.include?(v.to_s)
+  end
+
+  def desired_status=(v)
+    #status_map = {
+    #    "наблюдатель" => UserApp::STATUS_OBSERVER,
+    #    "псг" => UserApp::STATUS_OBSERVER
+    #    "сми",
+    #    "МГ",
+    #    "КЦ"
+    #}
+
+    #@user_app.desired_statuses = UserApp.all_statuses.select { |status| status}
+  end
+
+  def legal_status=(v)
+    @user_app.legal_status = LEGAL_STATUS_YES if TRUTH.include?(v.to_s)
+  end
+
+  def has_video=(v)
+    @user_app.has_video = TRUTH.include?(v.to_s)
   end
 
   def can_be_coord_region=(v)
@@ -204,9 +227,9 @@ class ExcelUserAppRow
   end
 
   private
-    def normalize_adm_region(name)
-      downcased = name.to_s.mb_chars.downcase
-      case downcased
+  def normalize_adm_region(name)
+    downcased = name.to_s.mb_chars.downcase
+    case downcased
       when "цао"
         "Центральный АО"
       when "юао"
@@ -233,7 +256,7 @@ class ExcelUserAppRow
         "Троицкий АО"
       else
         name
-      end
     end
+  end
 
 end
