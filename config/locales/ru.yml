@@ -331,6 +331,7 @@ ru:
         current_role_uic: УИК
         user_current_role_got_docs: Документы выданы
       dislocation_control:
+        kind: Тип
         number: УИК №
         participant_0: Участник №1
         participant_1: Участник №2
