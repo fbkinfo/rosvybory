@@ -12,7 +12,7 @@ module UserAppsHelper
     statuses = []
     UserApp.all_statuses.each do |st, st_name|
       if st & status > 0
-        statuses << t("user_app.status.#{st_name}")
+        statuses << I18n.t("user_app.status.#{st_name}")
       end
     end
     statuses.join(", ")
