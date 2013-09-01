@@ -11,10 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130831054421) do
-
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+ActiveRecord::Schema.define(version: 20130831164236) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -77,7 +74,7 @@ ActiveRecord::Schema.define(version: 20130831054421) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "has_tic",    default: false
+    t.boolean  "has_tic",       default: false
     t.integer  "lft"
     t.integer  "rgt"
     t.integer  "adm_region_id"
@@ -132,14 +129,14 @@ ActiveRecord::Schema.define(version: 20130831054421) do
     t.string   "phone"
     t.string   "email"
     t.string   "uic"
-    t.integer  "current_statuses",   default: 0
-    t.integer  "experience_count",   default: 0
-    t.integer  "previous_statuses",  default: 0
+    t.integer  "current_statuses",               default: 0
+    t.integer  "experience_count",               default: 0
+    t.integer  "previous_statuses",              default: 0
     t.boolean  "has_car"
     t.text     "social_accounts"
     t.text     "extra"
     t.integer  "legal_status"
-    t.integer  "desired_statuses",   default: 0
+    t.integer  "desired_statuses",               default: 0
     t.string   "app_code"
     t.integer  "app_status"
     t.datetime "created_at"
@@ -150,13 +147,14 @@ ActiveRecord::Schema.define(version: 20130831054421) do
     t.boolean  "sex_male"
     t.text     "useragent"
     t.integer  "adm_region_id"
-    t.string   "state",              default: "pending", null: false
-    t.boolean  "phone_verified",     default: false,     null: false
+    t.string   "state",                          default: "pending", null: false
+    t.boolean  "phone_verified",                 default: false,     null: false
     t.boolean  "has_video"
     t.string   "forwarded_for"
     t.integer  "organisation_id"
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
+    t.string   "full_name",          limit: 767
   end
 
   add_index "user_apps", ["adm_region_id"], name: "index_user_apps_on_adm_region_id", using: :btree
@@ -192,11 +190,11 @@ ActiveRecord::Schema.define(version: 20130831054421) do
 
   create_table "users", force: true do |t|
     t.string   "email"
-    t.string   "encrypted_password",     default: "", null: false
+    t.string   "encrypted_password",                 default: "", null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0
+    t.integer  "sign_in_count",                      default: 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -218,6 +216,7 @@ ActiveRecord::Schema.define(version: 20130831054421) do
     t.string   "first_name"
     t.string   "patronymic"
     t.text     "address"
+    t.string   "full_name",              limit: 767
   end
 
   add_index "users", ["adm_region_id"], name: "index_users_on_adm_region_id", using: :btree
