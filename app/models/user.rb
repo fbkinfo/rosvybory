@@ -42,6 +42,20 @@ class User < ActiveRecord::Base
 
   delegate :created_at, to: :user_app, allow_nil: true, prefix: true
 
+<<<<<<< HEAD
+=======
+
+  def full_name
+    [last_name, first_name, patronymic].join ' '
+  end
+
+  scope :finder, lambda { |q| where("full_name like :q", q: "%#{q}%") }
+
+  def as_json(options)
+    { id: id, text: full_name }
+  end
+
+>>>>>>> add search at back end.
   class << self
     def new_from_app(app)
       new.update_from_user_app(app)
