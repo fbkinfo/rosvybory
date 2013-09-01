@@ -79,6 +79,16 @@ ActiveAdmin.register Dislocation do
     redirect_to collection_path, :notice => "#{ids.size} records updated!"
   end
 
+  batch_action :new_group_email do |selection|
+    user_ids = UserCurrentRole.where(:id => selection).pluck('distinct(user_id)')
+    redirect_to new_group_email_path(:collection_selection => user_ids)
+  end
+
+  batch_action :new_group_sms do |selection|
+    user_ids = UserCurrentRole.where(:id => selection).pluck('distinct(user_id)')
+    redirect_to new_group_sms_path(:collection_selection => user_ids)
+  end
+
   collection_action :inplace, :method => :post do
     # TODO bug? routed to member action
   end
