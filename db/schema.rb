@@ -13,9 +13,6 @@
 
 ActiveRecord::Schema.define(version: 20130901100509) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
     t.text     "body"
@@ -64,7 +61,6 @@ ActiveRecord::Schema.define(version: 20130901100509) do
     t.string   "first_name"
     t.string   "patronymic"
     t.string   "last_name"
-    t.string   "role"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

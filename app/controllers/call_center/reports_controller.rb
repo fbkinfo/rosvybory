@@ -1,15 +1,13 @@
-# encoding: utf-8
-
 class CallCenter::ReportsController < ApplicationController
   layout "call_center"
 
   def new
+    @dislocation = Dislocation.find_by phone: params[:phone]
     @report = CallCenter::Report.new
-    @report.reporter = CallCenter::Reporter.new
-    @uic_reports = [
-      {time: 1.minute.ago, violation: nil, text: "в ТИК алтуфьевский нарушения правил приема протоколов из уик - все рассосались по комнатам в управе и никого невозможно найти несколько часов"},
-      {time: 2.hours.ago, violation: "Вброс", text: "не заполнялась увеличенная форма протокола. Предс и секретарь и др члены комиссии уединились и колдуют над цифрами протокола. При этом происходят телефонные переговоры (с ТИК?). Наблюдатели собираются подавать жалобу в ТИК."},
-      {time: 1.days.ago, violation: "Вброс", text: "В УИКе не дали возможности видеть отметки в бюллетенях. Не допустили к участию в подсчете голосов. Подал жалобу в ТИК. В ТИКе жалобу приняли, но волокитят с рассмотрением. Отказываются дать ответ."}]
+    @report.reporter = new_reporter_from(@dislocation) if @dislocation
+    
+    logger.debug "<< " + @dislocation.inspect
+    @uic = (@dislocation && @dislocation.current_roles.present?) ? Uic.find_by(number: @dislocation.current_roles.first.uic) : nil
   end
 
   def create
@@ -19,9 +17,19 @@ class CallCenter::ReportsController < ApplicationController
   def update
   end
 
+
   private
-    def report_params
-      params.require(:call_center_report).permit(reporter_attributes: [:phone, :dislocation,
-        :uic, :role, { report: [:text, violation: [:violation_type] ] }, :parent_report_ids ])
-    end
+
+  def report_params
+    params.require(:call_center_report).permit(reporter_attributes: [:phone, :dislocation, :uic, :role, { report: [:text, violation: [:violation_type] ] }, :parent_report_ids ])
+  end
+
+  def new_reporter_from(dislocation)
+    CallCenter::Reporter.new \
+      uic: dislocation.current_roles.first.try(:num),
+      phone: dislocation.phone,
+      first_name: dislocation.first_name,
+      last_name: dislocation.last_name,
+      patronymic: dislocation.patronymic
+  end
 end

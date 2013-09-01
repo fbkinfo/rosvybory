@@ -1,20 +1,4 @@
-#uic-feed.panel
-  h2 На участке №34
-  - if @uic_reports.empty?
-    p.notice Зафиксированных обращений пока нет
-  - else
-    ul.reports
-      - @uic_reports.each do |report|
-        li.report class=(report[:violation] ? "violation" : "message")
-          p.header
-            span.type
-            span.time
-              = l report[:time], format: :time_only
-            - if report[:violation]
-              | &nbsp;—&nbsp;
-              span.violation = report[:violation]
-          .text = raw report[:text]
-          = button_to "Связать с сообщением", "#", class: "bind-with-current-report"
+= render @uic if @uic
 
 = semantic_form_for @report do |form|
   #reporter.panel
