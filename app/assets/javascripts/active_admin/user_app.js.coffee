@@ -7,14 +7,6 @@ $ ->
 
   bindDialogOnClick $(".accept_link"), "Утверждение заявки"
 
-
-  $("body").on "app-status-change", (event, app_id, status) ->
-#    if current_scope does not include status
-
-    $(".accept_link[data-user-app-id=#{app_id}]").remove() #прячем линк на действие - для страницы просмотра заявки
-    $row = $("#user_app_"+app_id)
-    $row.fadeOut()
-
   $(document).on 'paste', 'table.many-new input', (e) ->
     txt = e.originalEvent.clipboardData.getData('text/plain')
     rows = txt.split("\n")
