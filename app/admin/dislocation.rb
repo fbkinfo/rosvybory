@@ -7,7 +7,7 @@ ActiveAdmin.register Dislocation do
 
   #scope :with_current_roles, :default => true
 
-  index do
+  index :download_links => false do
     inplace_helper = proc do |dislocation, field, collection|
       field_value_id = dislocation.send("user_current_role_#{field}_id")
       text = field.to_s.classify.constantize.find_by(:id => field_value_id).try(:name) || field_value_id
