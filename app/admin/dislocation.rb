@@ -42,7 +42,16 @@ ActiveAdmin.register Dislocation do
       inplace_helper[dislocation, :nomination_source, NominationSource.all]
     end
     column :user_current_role_got_docs do |dislocation|
-      I18n.t ( dislocation.user_current_role_got_docs == true ).to_s
+      content_tag(:span, I18n.t(dislocation.user_current_role.got_docs?.to_s), :class => 'inplace', :data => {
+          pk: dislocation.pk,
+          name: 'got_docs',
+          type: :select,
+          source: [{value: 0, text: I18n.t('false')}, {text: I18n.t('true'), value: 1}],
+          url: inplace_control_dislocation_path(dislocation.user_current_role_id),
+          # trick to reduce number of clicks: invert value
+          value: dislocation.user_current_role.got_docs?? 0 : 1,
+          savenochange: true
+        })
     end
     column "Ошибки расстановки", class: 'dislocation_errors_column' do |dislocation|
       render partial: 'cell_dislocation_errors', locals: { dislocation: dislocation }
@@ -72,7 +81,7 @@ ActiveAdmin.register Dislocation do
       user = User.accessible_by(current_ability).find(params[:pk])
       [user, user.user_current_roles.build]
     end
-    editable_fields = [:uic_id, :current_role_id, :nomination_source_id]
+    editable_fields = [:got_docs, :uic_id, :current_role_id, :nomination_source_id]
     errors_normalization = {
       :uic_number => :uic_id,
       :uic => :uic_id,
