@@ -1,6 +1,4 @@
 class ExcelUserAppRow
-  include UserAppsHelper
-
   COLUMNS = {
       uid: 0, #нет прямого поля
       created_at: 1,
@@ -22,7 +20,7 @@ class ExcelUserAppRow
       has_car: 15,
       social_accounts: 16,
       extra: 17,
-      desired_status: 18,
+      desired_statuses: 18,
       legal_status: 19,
       has_video: 20
   }.freeze
@@ -45,7 +43,8 @@ class ExcelUserAppRow
 
   attr_reader :user_app, :user
   attr_accessor :uid # lost after save, but is used to detect organisation
-  attr_accessor :created_at, :adm_region, :region, :has_car, :current_roles, :experience_count, :previous_statuses, :can_be_coord_region, :can_be_reserv, :social_accounts, :uic
+  attr_accessor :created_at, :adm_region, :region, :has_car, :current_roles, :experience_count, :previous_statuses,
+                :can_be_coord_region, :can_be_reserv, :social_accounts, :uic, :has_video, :legal_status, :desired_statuses
   attr_accessor :first_name, :last_name, :patronymic, :email, :extra, :phone
 
   delegate :organisation, :persisted?, :new_record?, :to => :user_app, :allow_nil => true
@@ -59,10 +58,8 @@ class ExcelUserAppRow
       a.sex_male = true if a.sex_male.nil?
       a.has_video = false if a.has_video.nil?
       a.has_car = false if a.has_car.nil?
-      a.legal_status ||= UserApp::LEGAL_STATUS_NO
     end
     @user_app.imported!
-    @user_app.can_be_observer = true
 
     local_only = phone.blank?
 
@@ -134,11 +131,7 @@ class ExcelUserAppRow
     @user_app.has_car = TRUTH.include?(v.to_s)
   end
 
-  def desired_status
-    status_human_readable(@user_app.desired_statuses) if @user_app.desired_statuses != UserApp::NO_STATUS
-  end
-
-  def desired_status=(v)
+  def desired_statuses=(v)
     statuses_map = {
         'Наблюдатель' => UserApp::STATUS_OBSERVER,
         'ПСГ' => UserApp::STATUS_PSG,
@@ -148,19 +141,11 @@ class ExcelUserAppRow
     }
 
     status = statuses_map[v.strip]
-    @user_app.desired_statuses = status if status
-  end
-
-  def legal_status
-    I18n.t @user_app.legal_status != UserApp::LEGAL_STATUS_NO.to_s
+    @user_app.desired_statuses = status || UserApp::STATUS_OBSERVER
   end
 
   def legal_status=(v)
-    @user_app.legal_status = UserApp::LEGAL_STATUS_YES if TRUTH.include?(v.to_s)
-  end
-
-  def has_video
-    I18n.t @user_app.has_video.to_s
+    @user_app.legal_status = TRUTH.include?(v.to_s) ? UserApp::LEGAL_STATUS_YES : UserApp::LEGAL_STATUS_NO
   end
 
   def has_video=(v)
@@ -229,6 +214,7 @@ class ExcelUserAppRow
   def save
     @user_app.skip_phone_verification = true
     @user_app.skip_email_confirmation = true
+    @user_app.desired_statuses = UserApp::STATUS_OBSERVER if UserApp::NO_STATUS
     success = @user_app.save
     if success
       @user_app.confirm!
