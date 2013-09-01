@@ -80,7 +80,7 @@ ActiveAdmin.register User do
     column :full_name
     column :phone
     column :email
-    column :uic
+    column :uic, :sortable => 'user_apps.uic'
 
     column :current_roles, &:human_current_roles
     column :roles, &:human_roles
