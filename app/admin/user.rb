@@ -62,7 +62,7 @@ ActiveAdmin.register User do
     end
   end
 
-  index :download_links => false do
+  index :download_links => [:xlsx] do
     selectable_column
     actions(defaults: false) do |resource|
       links = ''.html_safe
@@ -96,7 +96,6 @@ ActiveAdmin.register User do
     column :social_accounts, &:human_social_accounts
     column :extra
     column :year_born
-
   end
 
   filter :adm_region, :as => :select, :collection => proc { Region.adm_regions.all }, :input_html => {:style => "width: 230px;"}
@@ -135,6 +134,42 @@ ActiveAdmin.register User do
   end
 
   controller do
+
+    def index
+      if request.format.symbol == :xlsx
+        xr = XlsxRenderer.new(User)
+        xr.iterate collection do
+          column "НО + id", &:organisation_with_user_id
+          column :created_at
+          column :adm_region
+          column :region
+          column :full_name
+          column :phone
+          column :email
+          column :uic
+
+          column :current_roles, &:human_current_roles
+          column :roles, &:human_roles
+          column :user_current_roles
+          column :experience_count
+          column :previous_statuses, &:human_previous_statuses
+          column :can_be_coord_region
+          column :can_be_caller
+          column :can_be_mobile
+          column :has_car, &:human_has_car
+          column :legal_status, &:human_legal_status
+          column :has_video, &:human_has_video
+          column :social_accounts, &:human_social_accounts
+          column :extra
+          column :year_born
+        end
+
+        send_data xr.data, :filename => 'users.xlsx'
+      else
+        super
+      end
+    end
+
     def permitted_params
       params.permit!
     end
