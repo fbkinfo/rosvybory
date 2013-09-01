@@ -9,7 +9,7 @@ class Dislocation < User
   end
 
   ransacker :current_role_adm_region, {:formatter => :to_i.to_proc} do
-    Arel::Nodes::SqlLiteral.new("coalesce((select (case when kind = #{Region.mun_region_value} then regions.parent_id else regions.id end) from regions where regions.id = user_current_roles.region_id), users.adm_region_id)")
+    Arel::Nodes::SqlLiteral.new("coalesce((select regions.adm_region_id from regions where regions.id = user_current_roles.region_id), users.adm_region_id)")
   end
 
   ransacker :current_role_region do

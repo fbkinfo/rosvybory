@@ -321,6 +321,9 @@ ru:
       dislocation_control:
         one: 'Контроль расстановки'
         other: 'Контроль расстановки'
+      uic:
+        one: УИК
+        other: Избирательные комиссии
     attributes:
       dislocation:
         current_role_id: Роль
