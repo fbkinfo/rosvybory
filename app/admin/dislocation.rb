@@ -5,8 +5,6 @@ ActiveAdmin.register Dislocation do
   actions :all, :except => [:new]
   menu :if => proc{ can? :view_dislocation, User }, :priority => 20
 
-  #scope :with_current_roles, :default => true
-
   index :download_links => false do
     inplace_helper = proc do |dislocation, field, collection|
       field_value_id = dislocation.send("user_current_role_#{field}_id")
@@ -34,7 +32,7 @@ ActiveAdmin.register Dislocation do
     column :adm_region, &:coalesced_adm_region_name
     column :region, &:coalesced_mun_region_name
     column :current_role_id do |dislocation|
-      inplace_helper[dislocation, :current_role, CurrentRole.all]
+      inplace_helper[dislocation, :current_role, CurrentRole.dislocatable]
     end
     column :current_role_uic, sortable: "user_current_roles.uic_id" do |dislocation|
       inplace_helper[dislocation, :uic, dislocation.user_current_role.selectable_uics]

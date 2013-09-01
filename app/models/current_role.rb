@@ -26,6 +26,8 @@ class CurrentRole < ActiveRecord::Base
 
   default_scope -> { order(CurrentRole.arel_table[:position].asc) }
 
+  scope :dislocatable, -> { where.not(:slug => :reserve) }
+
   def must_have_tic?
     ['psg_tic', 'prg_tic'].include? slug
   end
