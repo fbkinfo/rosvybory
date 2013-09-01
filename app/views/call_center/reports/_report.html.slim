@@ -1,15 +1,31 @@
-= render @uic if @uic
+#uic-feed.panel
+  h2 На участке №34
+  - if @uic_reports.empty?
+    p.notice Зафиксированных обращений пока нет
+  - else
+    ul.reports
+      - @uic_reports.each do |report|
+        li.report class=(report[:violation] ? "violation" : "message")
+          p.header
+            span.type
+            span.time
+              = l report[:time], format: :time_only
+            - if report[:violation]
+              | &nbsp;—&nbsp;
+              span.violation = report[:violation]
+          .text = raw report[:text]
+          = button_to "Связать с сообщением", "#", class: "bind-with-current-report"
 
 = semantic_form_for @report do |form|
   #reporter.panel
     h2 Звонящий
     = form.fields_for :reporter do |ff|
       = ff.input :phone
-      = ff.input :dislocation, as: :select, collection: Dislocation.all
+      = ff.input :dislocation, as: :select, collection: Dislocation.all, label: t("activerecord.attributes.call_center/reporter.dislocation")
       .input
         label Кампания
         = text_field_tag :campaign, "Выборы мэра Москвы"
-      .input
+      .input#call_center_report_reporter_uic_kind_input
         label Расположение
         select.uic-kind
           option value="УИК" УИК
