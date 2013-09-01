@@ -22,7 +22,7 @@
         = render 'xls_fields', :f => uaf
 
   %div
-    = link_to_add_association 'Добавить заявку', f, :user_apps, :partial => 'xls_fields', :data => {:association_insertion_node => 'table.many-new tbody tr:last', :association_insertion_method => 'after'}
+    = link_to_add_association 'Добавить заявку', f, :user_apps, :partial => 'xls_fields', :data => {:association_insertion_node => 'table.many-new tbody', :association_insertion_method => 'append'}
 
   .actions
     = f.submit 'Загрузить'
