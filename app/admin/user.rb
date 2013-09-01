@@ -62,7 +62,7 @@ ActiveAdmin.register User do
     end
   end
 
-  index do
+  index :download_links => false do
     selectable_column
     actions(defaults: false) do |resource|
       links = ''.html_safe
