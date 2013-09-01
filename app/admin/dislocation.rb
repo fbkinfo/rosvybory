@@ -4,6 +4,7 @@ ActiveAdmin.register Dislocation do
 
   actions :all, :except => [:new]
   menu :if => proc{ can? :view_dislocation, User }, :priority => 20
+  batch_action :destroy, false
 
   #scope :with_current_roles, :default => true
 
