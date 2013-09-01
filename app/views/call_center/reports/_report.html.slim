@@ -4,14 +4,12 @@
   #reporter.panel
     h2 Звонящий
     = form.fields_for :reporter do |ff|
-      = ff.input :phone, input_html: { value: params[:phone_number] }
-      / missed relation?
-      /= ff.input :dislocation, as: :hidden, input_html: { class: 'select2 ajax', data: { source: call_center_dislocations_path } }
-
+      = ff.input :phone
+      = ff.input :dislocation, as: :select, collection: Dislocation.all
       .input
         label Кампания
         = text_field_tag :campaign, "Выборы мэра Москвы"
-      .input#call_center_report_reporter_uic_kind_input
+      .input
         label Расположение
         select.uic-kind
           option value="УИК" УИК
@@ -22,8 +20,7 @@
   #report.panel
     h2 Сообщение
     = form.fields_for :report do |ff|
-      .input
-        = ff.text_area :text
+      = ff.input :text
       = ff.fields_for :violation do |fff|
         = fff.input :violation_type, as: :select, collection: option_groups_from_collection_for_select(CallCenter::ViolationCategory.all, :violation_types, :name, :id, :name, 3), label: t("activerecord.attributes.call_center/report.violation_type"), input_html: { class: 'select2' }, include_blank: false
 
