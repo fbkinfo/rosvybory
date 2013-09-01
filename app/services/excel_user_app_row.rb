@@ -141,6 +141,8 @@ class ExcelUserAppRow
   def desired_status=(v)
     statuses_map = {
         'Наблюдатель' => UserApp::STATUS_OBSERVER,
+        'ПСГ' => UserApp::STATUS_PSG,
+        'СМИ' => UserApp::STATUS_JOURNALIST,
         'МГ' => UserApp::STATUS_MOBILE,
         'КЦ' => UserApp::STATUS_CALLER
     }
