@@ -139,14 +139,13 @@ class ExcelUserAppRow
   end
 
   def desired_status=(v)
-    val = v.strip.mb_chars.downcase
     statuses_map = {
-        'наблюдатель' => UserApp::STATUS_OBSERVER,
-        'мг' => UserApp::STATUS_MOBILE,
-        'кц' => UserApp::STATUS_CALLER
+        'Наблюдатель' => UserApp::STATUS_OBSERVER,
+        'МГ' => UserApp::STATUS_MOBILE,
+        'КЦ' => UserApp::STATUS_CALLER
     }
 
-    status = statuses_map[val]
+    status = statuses_map[v.strip]
     @user_app.desired_statuses = status if status
   end
 
