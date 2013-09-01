@@ -128,7 +128,7 @@ ActiveAdmin.register UserApp do
   action_item(only: [:index]) do
     _show_all = params[:show_all] && params[:show_all].to_sym == :true
     _label = I18n.t('views.pagination.actions.pagination_' + (_show_all ? 'on' : 'off'))
-    link_to _label, control_users_path(:format => nil, :show_all => (_show_all ? :false : :true))
+    link_to _label, control_user_apps_path(:format => nil, :show_all => (_show_all ? :false : :true))
   end
 
   config.sort_order = "id_desc"
