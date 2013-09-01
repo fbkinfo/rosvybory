@@ -6,7 +6,7 @@ ActiveAdmin.register DislocationControl do
 
   config.sort_order = 'kind_asc'
 
-  index do
+  index :download_links => false do
     column :number, -> (uic) { uic.number_and_region }
     7.times do |i|
       column :"participant_#{i}" do |uic|
