@@ -2,6 +2,7 @@ class Region < ActiveRecord::Base
   extend Enumerize
   acts_as_nested_set
 
+  belongs_to :adm_region, class_name: 'Region'  # cached closest adm_region
   belongs_to :parent, class_name: 'Region'
   default_scope -> { order(:name) }
 
@@ -19,11 +20,9 @@ class Region < ActiveRecord::Base
 
   has_many :subsubregions, :through => :regions, :source => :regions
 
-  def self.mun_region_value; 3; end
+  before_save :cache_adm_region_id
 
-  def closest_adm_region
-    adm_region?? self : parent.try(:closest_adm_region)
-  end
+  def self.mun_region_value; 3; end
 
   def subregions_with_tics
     if has_tic?
@@ -40,4 +39,9 @@ class Region < ActiveRecord::Base
   def to_s
     name
   end
+
+  private
+    def cache_adm_region_id
+      self.adm_region = adm_region?? self : parent.try(:adm_region)
+    end
 end

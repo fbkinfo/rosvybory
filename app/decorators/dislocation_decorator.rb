@@ -17,7 +17,7 @@ class DislocationDecorator < UserDecorator
   end
 
   def coalesced_adm_region
-    coalesced_region.try(:closest_adm_region)
+    coalesced_region.try(:adm_region)
   end
 
   def coalesced_mun_region_name
