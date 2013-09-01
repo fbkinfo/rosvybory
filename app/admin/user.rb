@@ -193,7 +193,7 @@ ActiveAdmin.register User do
     end
 
     def scoped_collection
-      resource_class.includes(:adm_region, :region, :roles) # prevent N+1 queries
+      resource_class.includes(:adm_region, :region, :roles, :user_app, :organisation) # prevent N+1 queries
     end
 
     def apply_pagination(chain)
