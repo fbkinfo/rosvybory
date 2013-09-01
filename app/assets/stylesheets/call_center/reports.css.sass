@@ -1,0 +1,60 @@
+.panel
+  padding: 20px
+  background-color: white
+  box-shadow: rgba(0,0,0,0.3) 1px 1px 3px
+  margin-bottom: 20px
+  h2
+    font-size: 20px
+    font-weight: bold
+    margin-top: 0
+    padding-bottom: 0.62em
+    border-bottom: #eee solid thin
+
+#uic-feed
+  float: right
+  margin-left: 20px
+  width: 240px
+  ul.reports
+    list-style: none
+    padding: 0 0 0 20px
+    li.report
+      font-size: 11px
+      margin-bottom: 20px
+      .type
+        display: inline-block
+        width: 15px
+        height: 15px
+        background: image-url("call-center/report-types.png")
+        margin-left: -21px
+        margin-right: 4px
+        position: relative
+        top: 4px
+      &.message
+        .type
+          background-position: 0 0
+      &.violation
+        .type
+          background-position: 0 -15px
+      .header
+        font-weight: bold
+      .bind-with-current-report
+        display: inline-block
+        margin-top: 5px
+        padding: 7px 14px
+        color: white
+        font-size: 13px
+        font-weight: bold
+        text-decoration: none
+        border-radius: 5px
+        background: #627d4d /* Old browsers */
+        background: -moz-linear-gradient(top,  #627d4d 0%, #1f3b08 100%) /* FF3.6+ */
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#627d4d), color-stop(100%,#1f3b08)) /* Chrome,Safari4+ */
+        background: -webkit-linear-gradient(top,  #627d4d 0%,#1f3b08 100%) /* Chrome10+,Safari5.1+ */
+        background: -o-linear-gradient(top,  #627d4d 0%,#1f3b08 100%) /* Opera 11.10+ */
+        background: -ms-linear-gradient(top,  #627d4d 0%,#1f3b08 100%) /* IE10+ */
+        background: linear-gradient(to bottom,  #627d4d 0%,#1f3b08 100%) /* W3C */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#627d4d', endColorstr='#1f3b08',GradientType=0 ) /* IE6-9 */
+
+
+#reporter, #report
+  width: 460px
