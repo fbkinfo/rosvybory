@@ -77,7 +77,7 @@
                 Мужской
               - else
                 Женский
-          - %w[phone_verified has_video ip].each do |field|
+          - %w[phone_verified has_video].each do |field|
             %tr.row
               %th= UserApp.human_attribute_name(field)
               %td= t(user_app.send(field).to_s)
