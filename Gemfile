@@ -27,6 +27,7 @@ gem 'haml-rails'
 
 gem 'honeybadger'
 gem 'therubyracer', platforms: :ruby
+gem 'rvm'
 gem 'unicorn'
 gem 'foreman', require: false
 gem 'foreman-export-initscript', require: false
