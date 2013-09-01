@@ -17,8 +17,8 @@
     = f.input :email
     = f.input :phone
     = f.input :password, as: :hidden if @user.new_record?
-    = f.input :adm_region, as: :select, collection: Region.adm_regions.pluck(:name, :id), input_html: {:style => "width: 220px;"} if f.object.new_record? || can?(:change_adm_region, f.object)
-    = f.input :region, as: :select, collection: f.object.user_app && f.object.user_app.adm_region ? f.object.user_app.adm_region.regions.pluck(:name, :id) : [], input_html: {:style => "width: 220px;"} if f.object.new_record? || can?(:change_region, f.object)
+    = f.input :adm_region, as: :select, collection: Region.adm_regions.pluck(:name, :id), input_html: {:style => "width: 220px;", data: {role: 'adm-region-select', regions: regions_hash}} if f.object.new_record? || can?(:change_adm_region, f.object)
+    = f.input :region, as: :select, collection: f.object.adm_region ? f.object.adm_region.regions.pluck(:name, :id) : [], input_html: {:style => "width: 220px;", data: {role: 'region-select'}} if f.object.new_record? || can?(:change_region, f.object)
     - if can?(:change_organisation, f.object)
       = f.input :organisation_id, as: :select, collection: Organisation.accessible_by(current_ability)
     - else

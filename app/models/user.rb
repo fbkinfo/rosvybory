@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  include FullNameFormable
+
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
@@ -37,11 +39,6 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :user_current_roles, allow_destroy: true
 
   delegate :created_at, to: :user_app, allow_nil: true, prefix: true
-
-
-  def full_name
-    [last_name, first_name, patronymic].join ' '
-  end
 
   class << self
     def new_from_app(app)
@@ -152,7 +149,7 @@ class User < ActiveRecord::Base
   end
 
   def may_login?
-    (%w{tc mc cc federal_repr} & roles.map{ |e| e.slug }).any?
+    (%w{admin tc mc cc federal_repr} & roles.map{ |e| e.slug }).any?
   end
 
   private
