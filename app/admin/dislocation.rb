@@ -22,11 +22,12 @@ ActiveAdmin.register Dislocation do
       content_tag(:span, text, :class => 'inplace', :data => data)
     end
 
+    selectable_column
     actions(defaults: false) do |resource|
       link_to(I18n.t('active_admin.edit'), dislocate_user_path(resource), class: "member_link edit_link")
     end
-    column "НО + id" do |user|
-      link_to user.organisation_with_user_id, [:control, user], :target => '_blank'
+    column "НО + id" do |dislocation|
+      link_to dislocation.organisation_with_user_id, control_user_path(dislocation.user_id), :target => '_blank'
     end
     column :full_name
     column :phone
@@ -67,6 +68,16 @@ ActiveAdmin.register Dislocation do
   filter :current_role_nomination_source_id, as: :select, collection: proc { NominationSource.order(:name) }, :input_html => {:style => "width: 230px;"}
   filter :user_current_role_got_docs, as: :select
   # filter :dislocation_errors, as: :something
+
+  batch_action :give_out_docs do |selection|
+    ids = selection.reject(&:blank?)
+    UserCurrentRole.find(ids).each do |ucr|
+      authorize! :view_dislocation, ucr.user
+      ucr.got_docs = true
+      ucr.save(:validate => false)
+    end
+    redirect_to collection_path, :notice => "#{ids.size} records updated!"
+  end
 
   collection_action :inplace, :method => :post do
     # TODO bug? routed to member action

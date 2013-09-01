@@ -501,6 +501,7 @@ ru:
   active_admin:
     batch_actions:
       labels:
+        give_out_docs: Выдать документы
         new_group_sms: "Отправить SMS"
         new_group_email: "Отправить почту"
         group_accept: "Принять"
