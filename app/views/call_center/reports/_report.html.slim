@@ -38,7 +38,8 @@
     = form.fields_for :report do |ff|
       = ff.input :text
       = ff.fields_for :violation do |fff|
-        = fff.input :violation_type, as: :select, collection: CallCenter::ViolationType.all
+        = fff.input :violation_type, as: :select,
+          collection: option_groups_from_collection_for_select(CallCenter::ViolationCategory.all, :violation_types, :name, :id, :name)
 
   = form.actions do |ff|
     = form.submit "Следующий звонок"
