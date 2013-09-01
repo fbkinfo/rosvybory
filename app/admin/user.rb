@@ -80,7 +80,7 @@ ActiveAdmin.register User do
     column :full_name
     column :phone
     column :email
-    column :uic
+    column :uic, :sortable => 'user_apps.uic'
 
     column :current_roles, &:human_current_roles
     column :roles, &:human_roles
@@ -144,7 +144,7 @@ ActiveAdmin.register User do
           column :adm_region
           column :region
           column :full_name
-          column :phone
+          column :phone do |user| " #{user.phone}" end # prevent excel treating phone as number or date
           column :email
           column :uic
 
@@ -193,7 +193,7 @@ ActiveAdmin.register User do
     end
 
     def scoped_collection
-      resource_class.includes(:adm_region, :region, :roles) # prevent N+1 queries
+      resource_class.includes(:adm_region, :region, :roles, :user_app, :organisation) # prevent N+1 queries
     end
 
     def apply_pagination(chain)
