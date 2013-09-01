@@ -22,11 +22,12 @@ ActiveAdmin.register Dislocation do
       content_tag(:span, text, :class => 'inplace', :data => data)
     end
 
+    selectable_column
     actions(defaults: false) do |resource|
       link_to(I18n.t('active_admin.edit'), dislocate_user_path(resource), class: "member_link edit_link")
     end
-    column "НО + id" do |user|
-      link_to user.organisation_with_user_id, [:control, user], :target => '_blank'
+    column "НО + id" do |dislocation|
+      link_to dislocation.organisation_with_user_id, control_user_path(dislocation.user_id), :target => '_blank'
     end
     column :full_name
     column :phone
@@ -42,7 +43,16 @@ ActiveAdmin.register Dislocation do
       inplace_helper[dislocation, :nomination_source, NominationSource.all]
     end
     column :user_current_role_got_docs do |dislocation|
-      I18n.t ( dislocation.user_current_role_got_docs == true ).to_s
+      content_tag(:span, I18n.t(dislocation.user_current_role.got_docs?.to_s), :class => 'inplace', :data => {
+          pk: dislocation.pk,
+          name: 'got_docs',
+          type: :select,
+          source: [{value: 0, text: I18n.t('false')}, {text: I18n.t('true'), value: 1}],
+          url: inplace_control_dislocation_path(dislocation.user_current_role_id),
+          # trick to reduce number of clicks: invert value
+          value: dislocation.user_current_role.got_docs?? 0 : 1,
+          savenochange: true
+        })
     end
     column "Ошибки расстановки", class: 'dislocation_errors_column' do |dislocation|
       render partial: 'cell_dislocation_errors', locals: { dislocation: dislocation }
@@ -59,6 +69,16 @@ ActiveAdmin.register Dislocation do
   filter :user_current_role_got_docs, as: :select
   # filter :dislocation_errors, as: :something
 
+  batch_action :give_out_docs do |selection|
+    ids = selection.reject(&:blank?)
+    UserCurrentRole.find(ids).each do |ucr|
+      authorize! :view_dislocation, ucr.user
+      ucr.got_docs = true
+      ucr.save(:validate => false)
+    end
+    redirect_to collection_path, :notice => "#{ids.size} records updated!"
+  end
+
   collection_action :inplace, :method => :post do
     # TODO bug? routed to member action
   end
@@ -72,7 +92,7 @@ ActiveAdmin.register Dislocation do
       user = User.accessible_by(current_ability).find(params[:pk])
       [user, user.user_current_roles.build]
     end
-    editable_fields = [:uic_id, :current_role_id, :nomination_source_id]
+    editable_fields = [:got_docs, :uic_id, :current_role_id, :nomination_source_id]
     errors_normalization = {
       :uic_number => :uic_id,
       :uic => :uic_id,
