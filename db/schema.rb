@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130830191309) do
+ActiveRecord::Schema.define(version: 20130831054421) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -80,6 +80,7 @@ ActiveRecord::Schema.define(version: 20130830191309) do
     t.boolean  "has_tic",    default: false
     t.integer  "lft"
     t.integer  "rgt"
+    t.integer  "adm_region_id"
   end
 
   add_index "regions", ["name"], name: "index_regions_on_name", unique: true, using: :btree
