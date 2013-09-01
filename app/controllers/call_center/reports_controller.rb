@@ -2,6 +2,7 @@ class CallCenter::ReportsController < ApplicationController
   layout "call_center"
 
   def new
+    @report = CallCenter::Report.new
     @uic_reports = [
       {time: 1.minute.ago, violation: nil, text: "в ТИК алтуфьевский нарушения правил приема протоколов из уик - все рассосались по комнатам в управе и никого невозможно найти несколько часов"},
       {time: 2.hours.ago, violation: "Вброс", text: "не заполнялась увеличенная форма протокола. Предс и секретарь и др члены комиссии уединились и колдуют над цифрами протокола. При этом происходят телефонные переговоры (с ТИК?). Наблюдатели собираются подавать жалобу в ТИК."},
