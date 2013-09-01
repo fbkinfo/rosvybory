@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class AddPersonalDataToUsers < ActiveRecord::Migration
   def change
     add_column :users, :year_born, :integer
