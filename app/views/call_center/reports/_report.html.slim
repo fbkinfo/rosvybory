@@ -22,7 +22,8 @@
     = form.fields_for :report do |ff|
       = ff.input :text
       = ff.fields_for :violation do |fff|
-        = fff.input :violation_type, as: :select, collection: option_groups_from_collection_for_select(CallCenter::ViolationCategory.all, :violation_types, :name, :id, :name, 3), label: t("activerecord.attributes.call_center/report.violation_type"), input_html: { class: 'select2' }, include_blank: false
+        = fff.input :violation_type, as: :select,
+          collection: option_groups_from_collection_for_select(CallCenter::ViolationCategory.all, :violation_types, :name, :id, :name)
 
   / its approach for sending related reports.
   - [1,2,3].each do |value|
