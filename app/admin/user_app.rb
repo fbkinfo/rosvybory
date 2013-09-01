@@ -83,9 +83,7 @@ ActiveAdmin.register UserApp do
   #filter :region, :as => :select, :collection => proc { option_groups_from_collection_for_select(Region.adm_regions, :regions, :name, :id, :name) }
 
 
-  filter   :last_name
-  filter   :first_name
-  filter   :patronymic
+  filter   :full_name
   filter   :sex_male, :as => :select, :collection => [['М', true], ['Ж', false]]
   filter   :phone
   filter   :email
