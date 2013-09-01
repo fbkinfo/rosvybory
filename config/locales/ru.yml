@@ -299,7 +299,7 @@ ru:
     models:
       dislocation:
         one: "Расстановка"
-        other: "Расстановки"
+        other: "Расстановка"
       region:
         one: "Округ/район"
         other: "Округа/районы"
