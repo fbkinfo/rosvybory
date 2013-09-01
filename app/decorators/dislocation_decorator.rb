@@ -21,7 +21,7 @@ class DislocationDecorator < UserDecorator
   end
 
   def coalesced_mun_region_name
-    coalesced_region.mun_region?? coalesced_region.name : nil
+    coalesced_region.try(:mun_region?)? coalesced_region.name : nil
   end
 
   def user_current_role_region
