@@ -185,6 +185,9 @@ ActiveAdmin.register User do
         if selected_batch_action
           selected_ids = params[:collection_selection]
           selected_ids ||= []
+          if params[:batch_action] == "destroy" && selected_ids.size > 1
+            redirect_to :back, :flash => { :error => 'Удаление более одного пользователя за раз отключено в целях безопасности!' }
+          end
           instance_exec selected_ids, &selected_batch_action.block
         else
           raise "Couldn't find batch action \"#{params[:batch_action]}\""
