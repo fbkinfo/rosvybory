@@ -60,8 +60,10 @@ ActiveAdmin.register Dislocation do
   end
 
   filter :organisation, label: 'Организация', as: :select, collection: proc { Organisation.order(:name) }, :input_html => {:style => "width: 230px;"}
-  filter :current_role_adm_region, :as => :select, :collection => proc { Region.adm_regions }, :input_html => {:style => "width: 230px;"}
-  filter :current_role_region, :as => :select, :collection => proc { Region.mun_regions }, :input_html => {:style => "width: 230px;"}
+  filter :current_role_adm_region, :as => :select, :collection => proc { Region.adm_regions },
+         :input_html => {:style => "width: 230px;"}, :label => I18n.t('activerecord.attributes.user.adm_region')
+  filter :current_role_region, :as => :select, :collection => proc { Region.mun_regions },
+         :input_html => {:style => "width: 230px;"}, :label => I18n.t('activerecord.attributes.user.region')
   filter :user_app_last_name, as: :string, label: 'Фамилия'
   filter :phone
   filter :current_role_uic, as: :numeric
