@@ -53,6 +53,8 @@ ActiveRecord::Schema.define(version: 20130901100509) do
   end
 
   create_table "call_center_reporters", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "uic"
     t.integer  "adm_region_id"
     t.integer  "mobile_group_id"
     t.string   "phone"
