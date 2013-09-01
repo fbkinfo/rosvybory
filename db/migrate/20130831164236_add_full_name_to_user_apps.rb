@@ -4,7 +4,7 @@ class AddFullNameToUserApps < ActiveRecord::Migration
 
     UserApp.reset_column_information
     UserApp.find_each do |user|
-      user.update_column full_name: [user.last_name, user.first_name, user.patronymic].join(' ')
+      user.update_attributes full_name: [user.last_name, user.first_name, user.patronymic].join(' ')
     end
 
   end
