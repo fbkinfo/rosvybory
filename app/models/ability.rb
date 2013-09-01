@@ -106,6 +106,10 @@ class Ability
       can [:create, :read], ActiveAdmin::Comment
     end
 
+    can :destroy, UserCurrentRole do |ucr|
+      ucr.user && can?(:view_user_contacts, ucr.user)
+    end
+
     # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)
