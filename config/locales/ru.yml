@@ -434,6 +434,7 @@ ru:
         was_coord: "Координатор"
         was_lawyer: "Юрист с опытом работы на избирательных кампаниях"
         desired_statuses: "Готов стать"
+        desired_status: Готов стать
         previous_statuses: "Есть опыт"
         created_at: "Создано"
         updated_at: "Изменено"

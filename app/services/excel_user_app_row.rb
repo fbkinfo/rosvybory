@@ -1,4 +1,6 @@
 class ExcelUserAppRow
+  include UserAppsHelper
+
   COLUMNS = {
       uid: 0, #нет прямого поля
       created_at: 1,
@@ -132,20 +134,32 @@ class ExcelUserAppRow
     @user_app.has_car = TRUTH.include?(v.to_s)
   end
 
-  def desired_status=(v)
-    #status_map = {
-    #    "наблюдатель" => UserApp::STATUS_OBSERVER,
-    #    "псг" => UserApp::STATUS_OBSERVER
-    #    "сми",
-    #    "МГ",
-    #    "КЦ"
-    #}
+  def desired_status
+    status_human_readable(@user_app.desired_statuses) if @user_app.desired_statuses != UserApp::NO_STATUS
+  end
 
-    #@user_app.desired_statuses = UserApp.all_statuses.select { |status| status}
+  def desired_status=(v)
+    val = v.strip.mb_chars.downcase
+    statuses_map = {
+        'наблюдатель' => UserApp::STATUS_OBSERVER,
+        'мг' => UserApp::STATUS_MOBILE,
+        'кц' => UserApp::STATUS_CALLER
+    }
+
+    status = statuses_map[val]
+    @user_app.desired_statuses = status if status
+  end
+
+  def legal_status
+    I18n.t @user_app.legal_status != UserApp::LEGAL_STATUS_NO.to_s
   end
 
   def legal_status=(v)
-    @user_app.legal_status = LEGAL_STATUS_YES if TRUTH.include?(v.to_s)
+    @user_app.legal_status = UserApp::LEGAL_STATUS_YES if TRUTH.include?(v.to_s)
+  end
+
+  def has_video
+    I18n.t @user_app.has_video.to_s
   end
 
   def has_video=(v)
