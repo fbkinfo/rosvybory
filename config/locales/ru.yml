@@ -322,9 +322,15 @@ ru:
       dislocation_control:
         one: 'Контроль расстановки'
         other: 'Контроль расстановки'
+<<<<<<< HEAD
       uic:
         one: УИК
         other: Избирательные комиссии
+=======
+      call_center/reporter:
+        one: Звонящий
+        other: Звонящие
+>>>>>>> CallCenter. Закончена вёрстка страницы оператора.
     attributes:
       dislocation:
         current_role_id: Роль
@@ -461,6 +467,12 @@ ru:
         ip: "IP"
         organisation: "Орг."
         current_roles: "Текущие статусы"
+      call_center/reporter:
+        uic: УИК
+        role: Роль
+        dislocation: Человек
+      call_center/report:
+        violation_type: Нарушение
 
   dislocation:
     errors:

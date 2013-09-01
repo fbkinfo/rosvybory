@@ -9,9 +9,7 @@ html
     .notice = notice
     .alert = alert
     #wrapper
-      header
-        = link_to "Панель оператора колл-центра", new_call_center_report_path, id: "logo"
       #content
         = yield
       footer
-        p.copyright Copyright &copy; 2013 Web Deli. Все права защищены.
+        = link_to "Панель оператора колл-центра", new_call_center_report_path, id: "logo"

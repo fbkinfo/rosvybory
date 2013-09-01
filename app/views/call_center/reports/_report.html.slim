@@ -14,34 +14,36 @@
               | &nbsp;—&nbsp;
               span.violation = report[:violation]
           .text = raw report[:text]
-          = link_to "Связать с сообщением", "#", class: "bind-with-current-report"
+          = button_to "Связать с сообщением", "#", class: "bind-with-current-report"
 
 = semantic_form_for @report do |form|
   #reporter.panel
     h2 Звонящий
     = form.fields_for :reporter do |ff|
       = ff.input :phone
-      = ff.input :dislocation, as: :select, collection: Dislocation.all
+      = ff.input :dislocation, as: :select, collection: Dislocation.all, label: t("activerecord.attributes.call_center/reporter.dislocation")
       .input
         label Кампания
         = text_field_tag :campaign, "Выборы мэра Москвы"
-      .input
+      .input#call_center_report_reporter_uic_kind_input
         label Расположение
         select.uic-kind
           option value="УИК" УИК
           option value="ТИК" ТИК
       = ff.input :uic, as: :select, collection: Uic.limit(50)
-      = ff.input :role, collection: Role.all
+      = ff.input :role, collection: Role.all, label: t("activerecord.attributes.call_center/reporter.role")
 
   #report.panel
     h2 Сообщение
     = form.fields_for :report do |ff|
-      = ff.input :text
+      .input
+        = ff.text_area :text
       = ff.fields_for :violation do |fff|
-        = fff.input :violation_type, as: :select,
-          collection: option_groups_from_collection_for_select(CallCenter::ViolationCategory.all, :violation_types, :name, :id, :name)
+        = fff.input :violation_type, as: :select, collection: option_groups_from_collection_for_select(CallCenter::ViolationCategory.all, :violation_types, :name, :id, :name), label: t("activerecord.attributes.call_center/report.violation_type")
 
   = form.actions do |ff|
     = form.submit "Следующий звонок"
-    button id="redirect-to-jurist" К юристу
-    button id="redirect-to-mobile-group-dispatcher" К дисп. МГ
+    .redirect
+      p Перенаправить
+      button id="redirect-to-jurist" К юристу
+      button id="redirect-to-mobile-group-dispatcher" К дисп. МГ

@@ -10,6 +10,26 @@
     padding-bottom: 0.62em
     border-bottom: #eee solid thin
 
+input[type="submit"], button
+  display: inline-block
+  padding: 1em  1.62em
+  color: white
+  font-size: 14px
+  font-weight: bold
+  border: none
+  border-radius: 5px
+  cursor: pointer
+  box-shadow: rgba(0,0,0,0.8) 1px 1px 2px
+  text-decoration: none
+  &:active
+    position: relative
+    left: 2px
+    top: 2px
+    box-shadow: rgba(0,0,0,0.6) 1px 1px 3px inset
+
+#uic-feed, #reporter
+  margin-top: 11px
+
 #uic-feed
   float: right
   margin-left: 20px
@@ -38,23 +58,138 @@
       .header
         font-weight: bold
       .bind-with-current-report
-        display: inline-block
         margin-top: 5px
-        padding: 7px 14px
-        color: white
-        font-size: 13px
-        font-weight: bold
-        text-decoration: none
-        border-radius: 5px
-        background: #627d4d /* Old browsers */
-        background: -moz-linear-gradient(top,  #627d4d 0%, #1f3b08 100%) /* FF3.6+ */
-        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#627d4d), color-stop(100%,#1f3b08)) /* Chrome,Safari4+ */
-        background: -webkit-linear-gradient(top,  #627d4d 0%,#1f3b08 100%) /* Chrome10+,Safari5.1+ */
-        background: -o-linear-gradient(top,  #627d4d 0%,#1f3b08 100%) /* Opera 11.10+ */
-        background: -ms-linear-gradient(top,  #627d4d 0%,#1f3b08 100%) /* IE10+ */
-        background: linear-gradient(to bottom,  #627d4d 0%,#1f3b08 100%) /* W3C */
-        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#627d4d', endColorstr='#1f3b08',GradientType=0 ) /* IE6-9 */
+        padding: 0.62em 1em
+        font-size: 11px
+        &:hover
+          background: #70b0e0 /* Old browsers */
+          background: -moz-linear-gradient(top,  #70b0e0 0%, #88bfe8 100%) /* FF3.6+ */
+          background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#70b0e0), color-stop(100%,#88bfe8)) /* Chrome,Safari4+ */
+          background: -webkit-linear-gradient(top,  #70b0e0 0%,#88bfe8 100%) /* Chrome10+,Safari5.1+ */
+          background: -o-linear-gradient(top,  #70b0e0 0%,#88bfe8 100%) /* Opera 11.10+ */
+          background: -ms-linear-gradient(top,  #70b0e0 0%,#88bfe8 100%) /* IE10+ */
+          background: linear-gradient(to bottom,  #70b0e0 0%,#88bfe8 100%) /* W3C */
+          filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#70b0e0', endColorstr='#88bfe8',GradientType=0 ) /* IE6-9 */
+        &, &:active
+          background: #a9e4f7 /* Old browsers */
+          background: -moz-linear-gradient(top,  #a9e4f7 0%, #0fb4e7 100%) /* FF3.6+ */
+          background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#a9e4f7), color-stop(100%,#0fb4e7)) /* Chrome,Safari4+ */
+          background: -webkit-linear-gradient(top,  #a9e4f7 0%,#0fb4e7 100%) /* Chrome10+,Safari5.1+ */
+          background: -o-linear-gradient(top,  #a9e4f7 0%,#0fb4e7 100%) /* Opera 11.10+ */
+          background: -ms-linear-gradient(top,  #a9e4f7 0%,#0fb4e7 100%) /* IE10+ */
+          background: linear-gradient(to bottom,  #a9e4f7 0%,#0fb4e7 100%) /* W3C */
+          filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a9e4f7', endColorstr='#0fb4e7',GradientType=0 ) /* IE6-9 */
+
 
 
 #reporter, #report
   width: 460px
+
+form#new_call_center_report
+  float: left
+  input[type="text"], label
+    font-size: 14px
+    height: 24px
+  input[type="text"]
+    border: #eee solid thin
+  .input
+    margin-bottom: 11px
+    > *
+      display: inline-block
+      &:first-child
+        margin-right: 20px
+    label
+      width: 115px
+  .form-actions
+    border: none
+    padding: 0
+    input[type="submit"]
+      &:hover
+        background: #75890c /* Old browsers */
+        background: -moz-linear-gradient(top,  #75890c 0%, #a4b357 100%) /* FF3.6+ */
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#75890c), color-stop(100%,#a4b357)) /* Chrome,Safari4+ */
+        background: -webkit-linear-gradient(top,  #75890c 0%,#a4b357 100%) /* Chrome10+,Safari5.1+ */
+        background: -o-linear-gradient(top,  #75890c 0%,#a4b357 100%) /* Opera 11.10+ */
+        background: -ms-linear-gradient(top,  #75890c 0%,#a4b357 100%) /* IE10+ */
+        background: linear-gradient(to bottom,  #75890c 0%,#a4b357 100%) /* W3C */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#75890c', endColorstr='#a4b357',GradientType=0 ) /* IE6-9 */
+      &, &:active
+        background: #a4b357 /* Old browsers */
+        background: -moz-linear-gradient(top,  #a4b357 0%, #75890c 100%) /* FF3.6+ */
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#a4b357), color-stop(100%,#75890c)) /* Chrome,Safari4+ */
+        background: -webkit-linear-gradient(top,  #a4b357 0%,#75890c 100%) /* Chrome10+,Safari5.1+ */
+        background: -o-linear-gradient(top,  #a4b357 0%,#75890c 100%) /* Opera 11.10+ */
+        background: -ms-linear-gradient(top,  #a4b357 0%,#75890c 100%) /* IE10+ */
+        background: linear-gradient(to bottom,  #a4b357 0%,#75890c 100%) /* W3C */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a4b357', endColorstr='#75890c',GradientType=0 ) /* IE6-9 */
+    .redirect
+      float: right
+      position: relative
+      padding-bottom: 1.62em
+      button
+        &:hover
+          background: #3f4c6b /* Old browsers */
+          background: -moz-linear-gradient(top,  #3f4c6b 0%, #606c88 100%) /* FF3.6+ */
+          background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#3f4c6b), color-stop(100%,#606c88)) /* Chrome,Safari4+ */
+          background: -webkit-linear-gradient(top,  #3f4c6b 0%,#606c88 100%) /* Chrome10+,Safari5.1+ */
+          background: -o-linear-gradient(top,  #3f4c6b 0%,#606c88 100%) /* Opera 11.10+ */
+          background: -ms-linear-gradient(top,  #3f4c6b 0%,#606c88 100%) /* IE10+ */
+          background: linear-gradient(to bottom,  #3f4c6b 0%,#606c88 100%) /* W3C */
+          filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3f4c6b', endColorstr='#606c88',GradientType=0 ) /* IE6-9 */
+        &, &:active
+          background: #606c88 /* Old browsers */
+          background: -moz-linear-gradient(top,  #606c88 0%, #3f4c6b 100%) /* FF3.6+ */
+          background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#606c88), color-stop(100%,#3f4c6b)) /* Chrome,Safari4+ */
+          background: -webkit-linear-gradient(top,  #606c88 0%,#3f4c6b 100%) /* Chrome10+,Safari5.1+ */
+          background: -o-linear-gradient(top,  #606c88 0%,#3f4c6b 100%) /* Opera 11.10+ */
+          background: -ms-linear-gradient(top,  #606c88 0%,#3f4c6b 100%) /* IE10+ */
+          background: linear-gradient(to bottom,  #606c88 0%,#3f4c6b 100%) /* W3C */
+          filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#606c88', endColorstr='#3f4c6b',GradientType=0 ) /* IE6-9 */
+      p
+        position: absolute
+        bottom: 0
+        margin: 0
+        text-align: center
+        width: 100%
+        font-size: 13px
+        color: #999
+
+#reporter
+  position: relative
+  #call_center_report_reporter_phone_input
+    position: absolute
+    top: 18px
+    right: 180px
+    height: 30px
+    label
+      display: none
+      position: absolute
+      left: -27px
+      top: 2px
+      display: inline-block
+      width: 19px
+      height: 25px
+      background: image-url("call-center/phone-icon.png")
+      text-indent: -9999px
+  #call_center_report_reporter_uic_kind_input, #call_center_report_reporter_uic_input
+    display: inline-block
+  #call_center_report_reporter_uic_input
+    label
+      display: none
+  #call_center_report_reporter_role_input, #call_center_report_reporter_dislocation_input
+    select
+      width: 324px
+  #campaign
+    width: 317px
+
+#report
+  textarea
+    width: 99%
+    height: 6em
+    border: #ccc solid thin
+    box-shadow: rgba(0,0,0,0.3) 1px 1px 2px inset
+    display: block
+    resize: vertical
+  #call_center_report_report_violation_violation_type_input
+    select
+      width: 324px

@@ -6,11 +6,21 @@ body
   width: 800px
   margin: auto
 
-header
-  padding: 20px 0 30px 0
+#content
+  &:after
+    content: ""
+    display: block
+    clear: both
+
+footer
+  margin-top: 40px
+  padding: 20px 0
+  &:before
+    content: ""
+    display: block
+    border-top: #ccc solid thin
+    border-bottom: white solid thin
+    margin-bottom: 20px
   a
-    font-size: 30px
-    font-weight: bold
-    color: white
-    text-shadow: rgba(0,0,0,0.62) 1px 1px 3px
+    color: #999
     text-decoration: none
