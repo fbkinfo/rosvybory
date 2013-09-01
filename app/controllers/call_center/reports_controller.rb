@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class CallCenter::ReportsController < ApplicationController
   layout "call_center"
 

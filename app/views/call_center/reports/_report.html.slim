@@ -21,7 +21,7 @@
     h2 Звонящий
     = form.fields_for :reporter do |ff|
       = ff.input :phone, input_html: { value: params[:phone_number] }
-      = ff.input :dislocation, as: :hidden, input_html: { class: 'select2 ajax' }, data: { source: '' }
+      = ff.input :dislocation, as: :hidden, input_html: { class: 'select2 ajax', data: { source: call_center_dislocations_path } }
 
       .input
         label Кампания

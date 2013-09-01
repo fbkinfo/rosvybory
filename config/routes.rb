@@ -29,5 +29,6 @@ Rosvibory::Application.routes.draw do
 
   namespace :call_center do
     resources :reports
+    resources :dislocations
   end
 end
