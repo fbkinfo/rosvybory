@@ -1,0 +1,17 @@
+doctype html
+html
+  head
+    title Панель оператора колл-центра
+    = stylesheet_link_tag    "call_center", :media => "all", "data-turbolinks-track" => true
+    = javascript_include_tag "call_center", "data-turbolinks-track" => true
+    = csrf_meta_tags
+  body
+    .notice = notice
+    .alert = alert
+    #wrapper
+      header
+        = link_to "Панель оператора колл-центра", new_call_center_report_path, id: "logo"
+      #content
+        = yield
+      footer
+        p.copyright Copyright &copy; 2013 Web Deli. Все права защищены.

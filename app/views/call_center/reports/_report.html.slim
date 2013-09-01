@@ -1,0 +1,61 @@
+#uic-feed.panel
+  h2 На участке №34
+  - if @uic_reports.empty?
+    p.notice Зафиксированных обращений пока нет
+  - else
+    ul.reports
+      - @uic_reports.each do |report|
+        li.report class=(report[:violation] ? "violation" : "message")
+          p.header
+            span.type
+            span.time
+              = l report[:time], format: :time_only
+            - if report[:violation]
+              | &nbsp;—&nbsp;
+              span.violation = report[:violation]
+          .text = raw report[:text]
+          = link_to "Связать с сообщением", "#", class: "bind-with-current-report"
+
+#reporter.panel
+  h2 Звонящий
+  = form_tag do
+    .field
+      = text_field_tag :phone, "+7(985)123-45-67"
+    .field
+      label ФИО
+      select
+        option value="1" Грищенков Анатолий Владимирович
+        option value="2" Иванченко Геннадий Александрович
+        option value="2" Пузейко Вера Григорьевна
+    .field
+      label Кампания
+      = text_field_tag :campaign, "Выборы мэра Москвы"
+    .field
+      label Расположение
+      select
+        option value="1" УИК
+        option value="2" ТИК
+      select
+        - (1..50).to_a.each do |n|
+          option value=n = n
+    .field
+      label Роль
+      select
+        option value="1" Наблюдатель
+        option value="2" Член с ПСГ
+
+#report.panel
+  h2 Сообщение
+  = form_tag do
+    .field
+      textarea
+    .field
+      label Нарушение
+      select
+        option value="1" Вброс
+        option value="2" Карусель
+
+#actions
+  button id="next-call" Следующий звонок
+  button id="redirect-to-jurist" К юристу
+  button id="redirect-to-mobile-group-dispatcher" К дисп. МГ
