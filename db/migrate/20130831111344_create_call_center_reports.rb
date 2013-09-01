@@ -4,6 +4,7 @@ class CreateCallCenterReports < ActiveRecord::Migration
       t.text :text
       t.string :url
       t.references :reportable, polymorphic: true, index: true
+      t.references :reporter
 
       t.timestamps
     end
