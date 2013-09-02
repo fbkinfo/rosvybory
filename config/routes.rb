@@ -30,6 +30,7 @@ Rosvibory::Application.routes.draw do
   namespace :call_center do
     resources :reports
     get 'dislocations' => 'search#dislocations'
+    get 'current_user' => 'search#current_user'
     get 'uics' => 'search#uics'
   end
 end
