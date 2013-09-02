@@ -1,0 +1,20 @@
+- uic_reports = Reporter.include(:report).where(uic: uic.number).map(&:report)
+- violation = report.reportable.kind_of?(CallCenter::Violation) ? report.reportable : nil
+#uic.panel
+  h2 На участке №34
+  - if uic_reports.empty?
+    p.notice Зафиксированных обращений пока нет
+  - else
+    ul.reports
+      - uic_reports.each do |report|
+        - report
+        li.report class=(violation ? "violation" : "message")
+          p.header
+            span.type
+            span.time
+              = l report.created_at, format: :time_only
+            - if violation
+              | &nbsp;—&nbsp;
+              span.violation = violation.violation_type.name
+          .text = raw report.text
+          = button_to "Связать с сообщением", "#", class: "bind-with-current-report"

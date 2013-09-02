@@ -1,0 +1,37 @@
+= render @uic if @uic
+
+= semantic_form_for @report do |form|
+  #reporter.panel
+    h2 Звонящий
+    = form.fields_for :reporter do |ff|
+      = ff.input :phone
+      = ff.input :dislocation, as: :hidden, input_html: { class: 'select2 ajax', data: { source: call_center_dislocations_path } }
+      .input
+        label Кампания
+        = text_field_tag :campaign, "Выборы мэра Москвы"
+      .input#call_center_report_reporter_uic_kind_input
+        label Расположение
+        select.uic-kind
+          option value="УИК" УИК
+          option value="ТИК" ТИК
+      = ff.input :uic, as: :hidden, input_html: { class: 'select2 ajax uic', data: { source: call_center_uics_path } }
+      = ff.input :role, collection: Role.all, label: t("activerecord.attributes.call_center/reporter.role")
+
+  #report.panel
+    h2 Сообщение
+    = form.fields_for :report do |ff|
+      = ff.text_area :text
+      = ff.fields_for :violation do |fff|
+        = fff.input :violation_type, as: :select,
+          collection: option_groups_from_collection_for_select(CallCenter::ViolationCategory.all, :violation_types, :name, :id, :name)
+
+  / its approach for sending related reports.
+  - [1,2,3].each do |value|
+    = hidden_field_tag 'call_center_report[parent_report_ids][]', value
+
+  = form.actions do
+    = form.submit "Следующий звонок"
+    .redirect
+      p Перенаправить
+      button id="redirect-to-jurist" К юристу
+      button id="redirect-to-mobile-group-dispatcher" К дисп. МГ

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class User < ActiveRecord::Base
   include FullNameFormable
 
@@ -39,6 +41,12 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :user_current_roles, allow_destroy: true
 
   delegate :created_at, to: :user_app, allow_nil: true, prefix: true
+
+  scope :finder, lambda { |q| where("full_name like :q", q: "%#{q}%") }
+
+  def as_json(options)
+    { id: id, text: full_name }
+  end
 
   class << self
     def new_from_app(app)
