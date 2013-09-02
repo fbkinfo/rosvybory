@@ -1,6 +1,6 @@
 class DislocationControl < Uic
 
-  ransacker :attackers do
+  ransacker :participants_count do
     Arel::Nodes::SqlLiteral.new("(select count(1) from user_current_roles where user_current_roles.uic_id = uics.id)")
   end
 
