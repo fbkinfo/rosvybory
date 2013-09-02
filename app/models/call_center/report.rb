@@ -5,4 +5,5 @@ class CallCenter::Report < ActiveRecord::Base
                                             join_table: "reports_reports", association_foreign_key: "parent_report_id"
 
   belongs_to :reporter
+  accepts_nested_attributes_for :reporter
 end
