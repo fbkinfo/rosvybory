@@ -4,7 +4,7 @@ ActiveAdmin::Event.subscribe ActiveAdmin::Resource::RegisterEvent do |resource|
   resource.add_action_item(only: [:index]) do
     show_all = params[:show_all] == 'true'
     label = I18n.t('views.pagination.actions.pagination_' + (show_all ? 'on' : 'off'))
-    link_to label, control_users_path(params.except(:commit, :format).merge(:show_all => !show_all))
+    link_to label, params.except(:commit, :format).merge(:show_all => !show_all)
   end
 
   resource.controller.class_eval do
