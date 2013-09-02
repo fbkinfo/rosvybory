@@ -76,6 +76,7 @@ class ExcelUserAppRow
 
   def dirty_source_val(val, mapping)
     cleaned_val = val.to_s.mb_chars.strip.downcase
+    # чтобы можно было отдавать в mapping значения с любым case'ом
     mapping.to_a.find { |k, _| k.mb_chars.downcase == cleaned_val }.try(:last)
   end
 
