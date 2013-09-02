@@ -1,6 +1,6 @@
 - uic_reports = Reporter.include(:report).where(uic: uic.number).map(&:report)
 - violation = report.reportable.kind_of?(CallCenter::Violation) ? report.reportable : nil
-#uic-feed.panel
+#uic.panel
   h2 На участке №34
   - if uic_reports.empty?
     p.notice Зафиксированных обращений пока нет
