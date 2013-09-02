@@ -1,2 +1,0 @@
-module CallCenter::ReportsHelper
-end
