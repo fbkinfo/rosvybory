@@ -2,14 +2,14 @@ ActiveAdmin::Event.subscribe ActiveAdmin::Resource::RegisterEvent do |resource|
 
   # TODO move this into PaginatedCollection rendering
   resource.add_action_item(only: [:index]) do
-    _show_all = params[:show_all] && params[:show_all].to_sym == :true
-    _label = I18n.t('views.pagination.actions.pagination_' + (_show_all ? 'on' : 'off'))
-    link_to _label, control_users_path(params.except(:commit, :format).merge(:show_all => !_show_all))
+    show_all = params[:show_all] == 'true'
+    label = I18n.t('views.pagination.actions.pagination_' + (show_all ? 'on' : 'off'))
+    link_to label, control_users_path(params.except(:commit, :format).merge(:show_all => !show_all))
   end
 
   resource.controller.class_eval do
     def apply_pagination(chain)
-      super.per(params[:show_all] && params[:show_all].to_sym == :true ? 1000000 : nil)
+      params[:show_all] == 'true' ? super : super.per(1000000)
     end
   end
 end
