@@ -535,6 +535,9 @@ ru:
       actions:
         pagination_on: "Показать по страницам"
         pagination_off: "Показать всё"
-    messages:
-      empty_list_of:
-        reports: Зафиксированных обращений нет 
+    call_center:
+      uic:
+        no_reports: Зафиксированных обращений нет 
+        no_uic:
+          header: УИК не определён
+          notice: "Как только введёте номер УИК в форме, он здесь появится"
