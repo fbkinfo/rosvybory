@@ -5,9 +5,8 @@
 # Из столбца "Компетенции" необходимо рассматривать только значения "ЮР" и "АС", т.к. других компетенций у нас пока не заведено.
 # Утилита должна выводить для каждой строки, которую не удалось распознать/сохранить, номер строки и хоть какое-то описание причины проблем (понадобится впоследствии, когда будем наворачивать на утилиту web-интерфейс).
 
-require 'roo'
-
 class ExternalAppsImporter
+  include SpreadsheetParser
 
   attr_accessor :organisation
 
@@ -17,9 +16,8 @@ class ExternalAppsImporter
   end
 
   def import
-    spreadsheet = open_spreadsheet
-    (2..spreadsheet.last_row).each do |i|
-      if (attrs = attributes_from_row(spreadsheet.row(i)))
+    spreadsheet_rows(@file_path, @file_type).drop(1).each do |row|
+      if (attrs = attributes_from_row(row))
         if (model = build(attrs))
           if block_given?
             yield attrs, model
@@ -54,20 +52,7 @@ class ExternalAppsImporter
     if row.all?(&:blank?)
       nil
     else
-      Hash[ExcelUserAppRow.columns.map{|name, i| [name, row[i]] }]
-    end
-  end
-
-  def open_spreadsheet
-    case @file_type.downcase
-    when '.csv'
-      Roo::Csv.new(@file_path, nil, :ignore)
-    when '.xls'
-      Roo::Excel.new(@file_path, nil, :ignore)
-    when '.xlsx'
-      Roo::Excelx.new(@file_path, nil, :ignore)
-    else
-      raise "Unknown file type: #{@file_path}"
+      Hash[ExcelUserAppRow.columns.map { |name, i| [name, row[i]] }]
     end
   end
 
