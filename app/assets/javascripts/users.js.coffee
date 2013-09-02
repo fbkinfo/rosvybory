@@ -49,6 +49,13 @@ initRoles = ->
   checkForObserverRole()
   updateRoleFields()
 
+activatePrintButton = ->
+  button = $('#print-button')
+  print_url = button.data('print-url')
+  $('#print-button').click (e) ->
+      window.open(print_url, '_blank')
+      e.preventDefault()
+
 @initUserForm = ->
   if gon.user_app_id
     $(".verify_link").on("ajax:success", (e, data, status, xhr) ->
@@ -89,4 +96,5 @@ initRoles = ->
 
   selectify($("select.select2"))
 
+  activatePrintButton()
   initRoles()
