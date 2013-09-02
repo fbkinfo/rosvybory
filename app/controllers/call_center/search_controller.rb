@@ -7,6 +7,10 @@ class CallCenter::SearchController < ApplicationController
     respond_with @users
   end
 
+  def current_user
+    respond_with User.find(params[:id])
+  end
+
   def uics
     @uics = Uic.where(number: params[:q])
     respond_with @uics
