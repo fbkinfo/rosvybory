@@ -5,7 +5,7 @@
     h2 Звонящий
     = form.fields_for :reporter do |ff|
       = ff.input :phone
-      = ff.input :dislocation, as: :hidden, input_html: { class: 'select2 ajax', data: { source: call_center_dislocations_path }, value: @dislocation.id }
+      = ff.input :user_id, as: :hidden, input_html: { class: 'select2 ajax', data: { source: call_center_dislocations_path }, value: @dislocation.try(:id) }
       .input
         label Кампания
         = text_field_tag :campaign, "Выборы мэра Москвы"

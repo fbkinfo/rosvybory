@@ -17,8 +17,7 @@ $ ->
           results: data
       options.initSelection = (element, callback) ->
           id = $(element).val()
-          console.log id
-          if id isnt ""
+          if id isnt "" && !!parseInt(id)
             $.ajax("/call_center/current_user/",
               data:
                 id: id
