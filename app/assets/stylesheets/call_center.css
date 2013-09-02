@@ -5,5 +5,9 @@
  */
 
 .select2 {
-  width: 300px;
+  width: 320px;
+}
+
+.select2.uic {
+  width: 250px;
 }

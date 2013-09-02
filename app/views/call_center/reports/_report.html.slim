@@ -21,7 +21,8 @@
     h2 Звонящий
     = form.fields_for :reporter do |ff|
       = ff.input :phone, input_html: { value: params[:phone_number] }
-      = ff.input :dislocation, as: :hidden, input_html: { class: 'select2 ajax', data: { source: call_center_dislocations_path } }
+      / missed relation?
+      /= ff.input :dislocation, as: :hidden, input_html: { class: 'select2 ajax', data: { source: call_center_dislocations_path } }
 
       .input
         label Кампания
@@ -31,7 +32,7 @@
         select.uic-kind
           option value="УИК" УИК
           option value="ТИК" ТИК
-      = ff.input :uic, as: :hidden, input_html: { class: 'select2 ajax', data: { source: call_center_uics_path } }
+      = ff.input :uic, as: :hidden, input_html: { class: 'select2 ajax uic', data: { source: call_center_uics_path } }
       = ff.input :role, collection: Role.all, label: t("activerecord.attributes.call_center/reporter.role")
 
   #report.panel
@@ -42,7 +43,11 @@
       = ff.fields_for :violation do |fff|
         = fff.input :violation_type, as: :select, collection: option_groups_from_collection_for_select(CallCenter::ViolationCategory.all, :violation_types, :name, :id, :name, 3), label: t("activerecord.attributes.call_center/report.violation_type"), input_html: { class: 'select2' }, include_blank: false
 
-  = form.actions do |ff|
+  / its approach for sending related reports.
+  - [1,2,3].each do |value|
+    = hidden_field_tag 'call_center_report[parent_report_ids][]', value
+
+  = form.actions do
     = form.submit "Следующий звонок"
     .redirect
       p Перенаправить
