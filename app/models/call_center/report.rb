@@ -6,4 +6,5 @@ class CallCenter::Report < ActiveRecord::Base
 
   belongs_to :reporter
   accepts_nested_attributes_for :reporter
+  belongs_to :reportable, polymorphic: true
 end

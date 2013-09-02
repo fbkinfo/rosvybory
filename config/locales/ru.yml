@@ -535,3 +535,6 @@ ru:
       actions:
         pagination_on: "Показать по страницам"
         pagination_off: "Показать всё"
+    messages:
+      empty_list_of:
+        reports: Зафиксированных обращений нет 
