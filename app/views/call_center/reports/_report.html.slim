@@ -31,7 +31,7 @@
         select.uic-kind
           option value="УИК" УИК
           option value="ТИК" ТИК
-      = ff.input :uik, as: :hidden, input_html: { class: 'select2 ajax', data: { source: call_center_uics_path } }
+      = ff.input :uic, as: :hidden, input_html: { class: 'select2 ajax', data: { source: call_center_uics_path } }
       = ff.input :role, collection: Role.all, label: t("activerecord.attributes.call_center/reporter.role")
 
   #report.panel
