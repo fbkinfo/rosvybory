@@ -36,6 +36,77 @@ ActiveRecord::Schema.define(version: 20130902133030) do
 
   add_index "blacklists", ["phone"], name: "index_blacklists_on_phone", unique: true, using: :btree
 
+  create_table "call_center_operators", force: true do |t|
+    t.string   "first_name"
+    t.string   "last_name"
+    t.integer  "comp_number"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "call_center_phone_calls", force: true do |t|
+    t.string   "status"
+    t.string   "number"
+    t.integer  "call_center_operator_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "call_center_reporters", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "uic"
+    t.integer  "adm_region_id"
+    t.integer  "mobile_group_id"
+    t.string   "phone"
+    t.string   "first_name"
+    t.string   "patronymic"
+    t.string   "last_name"
+    t.string   "role"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "call_center_reports", force: true do |t|
+    t.text     "text"
+    t.string   "url"
+    t.integer  "reportable_id"
+    t.string   "reportable_type"
+    t.integer  "reporter_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "call_center_reports", ["reportable_id", "reportable_type"], name: "index_call_center_reports_on_reportable_id_and_reportable_type", using: :btree
+
+  create_table "call_center_reports_relations", force: true do |t|
+    t.integer  "parent_report_id"
+    t.integer  "child_report_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "call_center_reports_relations", ["child_report_id"], name: "index_call_center_reports_relations_on_child_report_id", using: :btree
+  add_index "call_center_reports_relations", ["parent_report_id"], name: "index_call_center_reports_relations_on_parent_report_id", using: :btree
+
+  create_table "call_center_violation_categories", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "call_center_violation_types", force: true do |t|
+    t.string   "name"
+    t.integer  "violation_category_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "call_center_violations", force: true do |t|
+    t.integer  "violation_type_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "current_roles", force: true do |t|
     t.string   "name",                   null: false
     t.string   "slug",                   null: false

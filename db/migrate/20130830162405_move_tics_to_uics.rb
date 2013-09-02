@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class MoveTicsToUics < ActiveRecord::Migration
   def up
     add_column :uics, :kind, :integer
