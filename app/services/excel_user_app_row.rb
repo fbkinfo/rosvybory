@@ -106,13 +106,13 @@ class ExcelUserAppRow
 
   def previous_statuses=(v)
     statuses_by_name = {
-      "ОК" => UserApp::STATUS_COORD,
+      "ОК" => UserApp::STATUS_OBSERVER,
       "ПРГ" => UserApp::STATUS_PRG,
       "МГ" => UserApp::STATUS_MOBILE,
       "ТИК" => UserApp::STATUS_TIC_PSG,
       "ДК" => UserApp::STATUS_DELEGATE
     }
-    if status_value = statuses_by_name[v]
+    if status_value = statuses_by_name[v.to_s.strip.mb_chars.upcase.to_s]
       @user_app.previous_statuses |= status_value
     end
     self.experience_count = @experience_count if @experience_count
