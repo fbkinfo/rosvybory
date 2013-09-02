@@ -31,7 +31,7 @@ class Uic < ActiveRecord::Base
   end
 
   def as_json(options)
-    { id: id, text: full_name }
+    { id: id, text: name }
   end
 
   # Returns +true+ if Uic belongs to +other_region+
