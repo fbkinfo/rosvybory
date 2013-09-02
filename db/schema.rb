@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130902133030) do
+ActiveRecord::Schema.define(version: 20130902155954) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -57,16 +57,16 @@ ActiveRecord::Schema.define(version: 20130902133030) do
 
   create_table "call_center_reporters", force: true do |t|
     t.integer  "user_id"
-    t.integer  "uic"
+    t.integer  "uic_id"
     t.integer  "adm_region_id"
     t.integer  "mobile_group_id"
     t.string   "phone"
     t.string   "first_name"
     t.string   "patronymic"
     t.string   "last_name"
-    t.string   "role"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_current_role_id"
   end
 
   create_table "call_center_reports", force: true do |t|
