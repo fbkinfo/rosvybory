@@ -3,7 +3,7 @@ class CallCenter::SearchController < ApplicationController
   respond_to :json
 
   def dislocations
-    @users = User.finder(params[:q]).limit(40)
+    @users = User.finder(params[:q]).limit(10)
     respond_with @users
   end
 
