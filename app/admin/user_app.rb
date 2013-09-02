@@ -122,10 +122,6 @@ ActiveAdmin.register UserApp do
   #  end
   #end
 
- sidebar :help, :only => :index do
-    "Need help? Email us at help@example.com"
-  end
-
   config.sort_order = "id_desc"
   controller do
     def scoped_collection
