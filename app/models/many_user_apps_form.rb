@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class ManyUserAppsForm
   include ActiveModel::Conversion
   extend ActiveModel::Naming

@@ -26,4 +26,10 @@ Rosvibory::Application.routes.draw do
   get 'new_group_email' => 'user_apps#new_group_email'
   post 'send_group_sms' => 'user_apps#send_group_sms'
   get 'new_group_sms' => 'user_apps#new_group_sms'
+
+  namespace :call_center do
+    resources :reports
+    get 'dislocations' => 'search#dislocations'
+    get 'uics' => 'search#uics'
+  end
 end

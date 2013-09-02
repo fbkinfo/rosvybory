@@ -30,6 +30,10 @@ class Uic < ActiveRecord::Base
     end
   end
 
+  def as_json(options)
+    { id: id, text: full_name }
+  end
+
   # Returns +true+ if Uic belongs to +other_region+
   # which is a Region object of any kind (:city, :adm_region, :mun_region)
   def belongs_to_region?(other_region)
