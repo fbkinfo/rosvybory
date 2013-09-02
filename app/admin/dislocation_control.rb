@@ -8,7 +8,8 @@ ActiveAdmin.register DislocationControl do
   config.sort_order = 'kind_asc'
 
   index :download_links => false do
-    column :number, -> (uic) { uic.number_and_region }
+    column :number, &:number_and_region
+    column :participants_count
     7.times do |i|
       column :"participant_#{i}" do |uic|
         uic.human_participant i, (can? :view_user_contacts, uic.participant(i).try(:user))
@@ -25,6 +26,7 @@ ActiveAdmin.register DislocationControl do
   filter :number
   filter :region_adm_region_id, as: :select, collection: Region.adm_regions,  :input_html => {:style => "width: 220px;"}
   filter :region, as: :select, collection: Region.mun_regions,  :input_html => {:style => "width: 220px;"}
+  filter :participants_count, as: :numeric_range, :label => 'Количество наблюдателей'
 
   controller do
     def scoped_collection
