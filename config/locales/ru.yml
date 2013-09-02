@@ -533,8 +533,8 @@ ru:
       next: "Вперед &rsaquo;"
       truncate: "..."
       actions:
-        pagination_on: "Показать по страницам"
-        pagination_off: "Показать всё"
+        pagination_on: "Показать по 30 записей"
+        pagination_off: "Показать по 200 записей"
     call_center:
       uic:
         no_reports: Зафиксированных обращений нет 
