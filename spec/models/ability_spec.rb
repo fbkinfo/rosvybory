@@ -90,20 +90,21 @@ describe User do
         # can
         should be_able_to(:read, Region.new)
         should be_able_to(:read, Organisation.new)
-        should be_able_to(:crud, User.new(adm_region: first_adm_region, organisation: first_organisation))
-        should be_able_to(:crud, UserApp.new(adm_region: first_adm_region, organisation: first_organisation))
-        should be_able_to(:approve, UserApp.new(adm_region: first_adm_region, organisation: first_organisation))
-        should be_able_to(:reject, UserApp.new(adm_region: first_adm_region, organisation: first_organisation))
+        should be_able_to(:crud, User.new(adm_region: first_adm_region))
+        should be_able_to(:crud, UserApp.new(adm_region: first_adm_region))
+        should be_able_to(:approve, UserApp.new(adm_region: first_adm_region))
+        should be_able_to(:reject, UserApp.new(adm_region: first_adm_region))
         should be_able_to(:change_region, user)
         should be_able_to(:read, UserApp)
         should be_able_to(:import, UserApp)
         should be_able_to(:view_dislocation, User)
         should be_able_to(:crud, MobileGroup)
 
-        should be_able_to(:crud, User.new(adm_region: first_adm_region))
-        should be_able_to(:crud, UserApp.new(adm_region: first_adm_region))
+        #проверяем с чужим НО
         should be_able_to(:crud, User.new(adm_region: first_adm_region, organisation: second_organisation))
         should be_able_to(:crud, UserApp.new(adm_region: first_adm_region, organisation: second_organisation))
+        should be_able_to(:approve, UserApp.new(adm_region: first_adm_region, organisation: second_organisation))
+        should be_able_to(:reject, UserApp.new(adm_region: first_adm_region, organisation: second_organisation))
         should be_able_to(:view_user_contacts, User.new(adm_region: first_adm_region, organisation: second_organisation))
 
         # cannot
