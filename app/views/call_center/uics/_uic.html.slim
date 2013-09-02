@@ -2,7 +2,7 @@
 #uic.panel
   h2 На участке №#{uic.number}
   - if uic_reports.empty?
-    p.notice = I18n.t "views.messages.empty_list_of.reports"
+    p.notice = t "views.messages.empty_list_of.reports"
   - else
     ul.reports
       - uic_reports.each do |report|
