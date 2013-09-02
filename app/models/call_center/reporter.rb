@@ -1,4 +1,6 @@
 class CallCenter::Reporter < ActiveRecord::Base
-  belongs_to :dislocation, foreign_key: "user_id", class_name: "Dislocation"
   has_one :report
+  belongs_to :dislocation, foreign_key: "user_id", class_name: "Dislocation"
+  belongs_to :user_current_role
+  belongs_to :uic
 end
