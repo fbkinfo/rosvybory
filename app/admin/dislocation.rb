@@ -131,13 +131,6 @@ ActiveAdmin.register Dislocation do
     render :json => results
   end
 
-  # TODO(sinopalnikov): move common code to app/admin/concerns
-  action_item(only: [:index]) do
-    _show_all = params[:show_all] && params[:show_all].to_sym == :true
-    _label = I18n.t('views.pagination.actions.pagination_' + (_show_all ? 'on' : 'off'))
-    link_to _label, control_dislocations_path(:format => nil, :show_all => (_show_all ? :false : :true))
-  end
-
   controller do
     def scoped_collection
       Dislocation.with_current_roles.with_role :observer
@@ -148,10 +141,6 @@ ActiveAdmin.register Dislocation do
       authorize! :destroy, ucr
       ucr.destroy
       redirect_to :back
-    end
-
-    def apply_pagination(chain)
-      return super.per(params[:show_all] && params[:show_all].to_sym == :true ? 1000000 : nil)
     end
   end
 
