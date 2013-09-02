@@ -50,6 +50,10 @@ gem 'cocoon'
 
 gem 'roo' #import from excel
 
+gem 'rails-i18n'
+gem 'wkhtmltopdf-binary'
+gem 'wicked_pdf'
+
 group :development do
   gem 'capistrano'
   gem 'capistrano_colors'
