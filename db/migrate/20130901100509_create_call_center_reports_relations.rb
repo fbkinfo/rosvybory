@@ -1,6 +1,6 @@
-class CreateCallReportsReports < ActiveRecord::Migration
+class CreateCallCenterReportsRelations < ActiveRecord::Migration
   def change
-    create_table :reports_reports do |t|
+    create_table :call_center_reports_relations do |t|
       t.references :parent_report, index: true
       t.references :child_report, index: true
       t.timestamps

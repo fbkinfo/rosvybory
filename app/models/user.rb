@@ -42,10 +42,6 @@ class User < ActiveRecord::Base
 
   delegate :created_at, to: :user_app, allow_nil: true, prefix: true
 
-  def full_name
-    [last_name, first_name, patronymic].join ' '
-  end
-
   scope :finder, lambda { |q| where("full_name like :q", q: "%#{q}%") }
 
   def as_json(options)
@@ -58,7 +54,7 @@ class User < ActiveRecord::Base
     end
 
     def send_reset_password_instructions(attributes={})
-      attributes["phone"] = Verification.nwormalize_phone_number(attributes["phone"])
+      attributes["phone"] = Verification.normalize_phone_number(attributes["phone"])
       super
     end
 
