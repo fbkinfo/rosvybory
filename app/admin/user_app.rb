@@ -132,10 +132,6 @@ ActiveAdmin.register UserApp do
       resource_class.includes(:region).includes(:adm_region).includes(:organisation) # prevents N+1 queries to your database
     end
 
-    def apply_pagination(chain)
-      return super.per(params[:show_all] && params[:show_all].to_sym == :true ? 1000000 : nil)
-    end
-
     def permitted_params
       params.permit!
     end

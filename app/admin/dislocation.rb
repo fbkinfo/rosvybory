@@ -142,10 +142,6 @@ ActiveAdmin.register Dislocation do
       ucr.destroy
       redirect_to :back
     end
-
-    def apply_pagination(chain)
-      return super.per(params[:show_all] && params[:show_all].to_sym == :true ? 1000000 : nil)
-    end
   end
 
 end

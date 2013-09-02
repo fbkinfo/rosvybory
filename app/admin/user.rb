@@ -192,10 +192,6 @@ ActiveAdmin.register User do
       resource_class.includes(:adm_region, :region, :roles, :user_app, :organisation) # prevent N+1 queries
     end
 
-    def apply_pagination(chain)
-      return super.per(params[:show_all] && params[:show_all].to_sym == :true ? 1000000 : nil)
-    end
-
     def update
       if params[:user] && params[:user][:current_password]
         @user = User.find(current_user.id)
