@@ -74,23 +74,29 @@ class ExcelUserAppRow
     end
   end
 
+  def dirty_source_val(val, mapping)
+    cleaned_val = val.to_s.mb_chars.strip.downcase
+    mapping.to_a.find { |k, _| k.mb_chars.downcase == cleaned_val }.try(:last)
+  end
+
   def uid=(v)
     orgs_by_name = {
-        "ГН" => "Гражданин Наблюдатель",
-        "ГЛС" => "Голос",
-        "СНР" => "Сонар"
+        'ГН' => 'Гражданин Наблюдатель',
+        'ГЛС' => 'Голос',
+        'СНР' => 'Сонар'
     }
-    self.organisation = Organisation.where(name: orgs_by_name[v.to_s.split('-')[0]]).first
+    name = dirty_source_val(v.to_s.strip.split('-')[0], orgs_by_name)
+    self.organisation = Organisation.where(name: name).first
   end
 
   def current_roles=(v)
     roles_by_name = {
-        "РЗ" => 'reserve',
-        "УПРГ" => 'prg',
-        "ТПСГ" => 'psg_tic',
-        "ТПРГ" => 'prg_tic'
+        'РЗ' => 'reserve',
+        'УПРГ' => 'prg',
+        'ТПСГ' => 'psg_tic',
+        'ТПРГ' => 'prg_tic'
     }
-    role = CurrentRole.where(:slug => roles_by_name[v]).first
+    role = CurrentRole.where(:slug => dirty_source_val(v, roles_by_name)).first
     if role && !@user_app.user_app_current_roles.where(:current_role_id => role.id).first
       value = nil
       if role.must_have_uic?
@@ -108,13 +114,13 @@ class ExcelUserAppRow
 
   def previous_statuses=(v)
     statuses_by_name = {
-        "ОК" => UserApp::STATUS_COORD,
-        "ПРГ" => UserApp::STATUS_PRG,
-        "МГ" => UserApp::STATUS_MOBILE,
-        "ТИК" => UserApp::STATUS_TIC_PSG,
-        "ДК" => UserApp::STATUS_DELEGATE
+        'ОК' => UserApp::STATUS_COORD,
+        'ПРГ' => UserApp::STATUS_PRG,
+        'МГ' => UserApp::STATUS_MOBILE,
+        'ТИК' => UserApp::STATUS_TIC_PSG,
+        'ДК' => UserApp::STATUS_DELEGATE
     }
-    if status_value = statuses_by_name[v]
+    if (status_value = dirty_source_val(v, statuses_by_name))
       @user_app.previous_statuses |= status_value
     end
     self.experience_count = @experience_count if @experience_count
@@ -132,15 +138,14 @@ class ExcelUserAppRow
   end
 
   def desired_statuses=(v)
-    statuses_map = {
+    statuses_by_name = {
         'Наблюдатель' => UserApp::STATUS_OBSERVER,
         'ПСГ' => UserApp::STATUS_PSG,
         'СМИ' => UserApp::STATUS_JOURNALIST,
         'МГ' => UserApp::STATUS_MOBILE,
         'КЦ' => UserApp::STATUS_CALLER
     }
-
-    status = statuses_map[v.strip]
+    status = dirty_source_val(v, statuses_by_name)
     @user_app.desired_statuses = status || UserApp::STATUS_OBSERVER
   end
 
@@ -228,36 +233,23 @@ class ExcelUserAppRow
   end
 
   private
+
   def normalize_adm_region(name)
-    downcased = name.to_s.mb_chars.downcase
-    case downcased
-      when "цао"
-        "Центральный АО"
-      when "юао"
-        "Южный АО"
-      when "сао"
-        "Северный АО"
-      when "свао"
-        "Северо-Восточный АО"
-      when "вао"
-        "Восточный АО"
-      when "ювао"
-        "Юго-Восточный АО"
-      when "юзао"
-        "Юго-Западный АО"
-      when "зао"
-        "Западный АО"
-      when "сзао"
-        "Северо-Западный АО"
-      when "зелао"
-        "Зеленоградский АО"
-      when "нао"
-        "Новомосковский АО"
-      when "тао"
-        "Троицкий АО"
-      else
-        name
-    end
+    adm_region_map = {
+        'цао' => 'Центральный АО',
+        'юао' => 'Южный АО',
+        'сао' => 'Северный АО',
+        'свао' => 'Северо-Восточный АО',
+        'вао' => 'Восточный АО',
+        'ювао' => 'Юго-Восточный АО',
+        'юзао' => 'Юго-Западный АО',
+        'зао' => 'Западный АО',
+        'сзао' => 'Северо-Западный АО',
+        'зелао' => 'Зеленоградский АО',
+        'нао' => 'Новомосковский АО',
+        'тао' => 'Троицкий АО'
+    }
+    dirty_source_val(name, adm_region_map) || name
   end
 
 end
