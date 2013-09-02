@@ -11,10 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130901100509) do
-
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+ActiveRecord::Schema.define(version: 20130902101754) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -170,10 +167,10 @@ ActiveRecord::Schema.define(version: 20130901100509) do
   add_index "roles", ["slug"], name: "index_roles_on_slug", unique: true, using: :btree
 
   create_table "uics", force: true do |t|
-    t.integer  "region_id",                    null: false
+    t.integer  "region_id",                          null: false
     t.integer  "number"
-    t.boolean  "is_temporary", default: false, null: false
-    t.string   "has_koib",     default: "f",   null: false
+    t.boolean  "is_temporary",       default: false, null: false
+    t.string   "has_koib",           default: "f",   null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "kind"

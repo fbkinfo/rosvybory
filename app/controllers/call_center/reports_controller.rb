@@ -6,7 +6,6 @@ class CallCenter::ReportsController < ApplicationController
     @report = CallCenter::Report.new
     @report.reporter = new_reporter_from(@dislocation) if @dislocation
     
-    logger.debug "<< " + @dislocation.inspect
     @uic = (@dislocation && @dislocation.current_roles.present?) ? Uic.find_by(number: @dislocation.current_roles.first.uic) : nil
   end
 
