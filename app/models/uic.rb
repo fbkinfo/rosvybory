@@ -40,6 +40,10 @@ class Uic < ActiveRecord::Base
     self.class.human_kind(kind)
   end
 
+  def update_participants_count!
+    update_column :participants_count, user_current_roles.joins(:current_role).merge(CurrentRole.dislocatable).count
+  end
+
   private
     def cache_name
       self.name = "#{human_kind} #{uic?? number : region.try(:name)}"
