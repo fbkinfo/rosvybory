@@ -15,6 +15,15 @@ $ ->
 
         results: (data, page) ->
           results: data
+      options.initSelection = (element, callback) ->
+          id = $(element).val()
+          if id isnt "" && !!parseInt(id)
+            $.ajax("/call_center/current_user/",
+              data:
+                id: id
+              dataType: "json"
+            ).done (data) ->
+              callback data
 
       options.dropdownCssClass = "bigdrop"
     select.select2 options

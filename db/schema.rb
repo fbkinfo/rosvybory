@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20130902133030) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
     t.text     "body"

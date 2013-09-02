@@ -5,12 +5,13 @@ class CallCenter::ReportsController < ApplicationController
     @dislocation = Dislocation.find_by phone: params[:phone]
     @report = CallCenter::Report.new
     @report.reporter = new_reporter_from(@dislocation)
-    
     @uic = (@dislocation && @dislocation.current_roles.present?) ? Uic.find_by(number: @dislocation.current_roles.first.uic) : nil
   end
 
   def create
-    @report = CallCenter::Report.create(report_params)
+    report = CallCenter::Report.create(report_params)
+
+    redirect_to new_call_center_report_path
   end
 
   def update
@@ -20,7 +21,7 @@ class CallCenter::ReportsController < ApplicationController
   private
 
   def report_params
-    params.require(:call_center_report).permit(reporter_attributes: [:phone, :dislocation, :uic, :role, { report: [:text, violation: [:violation_type] ] }, :parent_report_ids ])
+    params.require(:call_center_report).permit(reporter_attributes: [:phone, :uic, :user_id, :role, { report: [:text, violation: [:violation_type] ] }, :parent_report_ids ])
   end
 
   def new_reporter_from(dislocation)
