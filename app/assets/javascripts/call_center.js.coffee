@@ -1,6 +1,6 @@
 //= require jquery
 //= require select2
-$ ->
+jQuery ->
   $(".select2").each (i, e) ->
     select = $(e)
     options = {}
@@ -12,17 +12,18 @@ $ ->
           q: term
           page: page
           per: 10
-
         results: (data, page) ->
           results: data
+      
       options.initSelection = (element, callback) ->
-          id = $(element).val()
-          if id isnt "" && !!parseInt(id)
-            $.ajax("/call_center/current_user/",
-              data:
-                id: id
-              dataType: "json"
-            ).done (data) ->
+        id = $(element).val()
+        if id isnt "" && !!parseInt(id)
+          $.ajax
+            url: select.data("init-source")
+            dataType: "json"
+            data:
+              id: id
+            success: (data)->
               callback data
 
       options.dropdownCssClass = "bigdrop"
