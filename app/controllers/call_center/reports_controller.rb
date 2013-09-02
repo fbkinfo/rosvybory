@@ -3,19 +3,13 @@ class CallCenter::ReportsController < ApplicationController
 
   def new
     @dislocation = Dislocation.find_by phone: params[:phone]
-    @report = CallCenter::Report.new
-    @report.reporter = new_reporter_from(@dislocation)
-    
-    @uic = (@dislocation && @dislocation.current_roles.present?) ? Uic.find_by(number: @dislocation.current_roles.first.uic) : nil
+    @report = CallCenter::Report.new reporter: new_reporter_from(@dislocation)
+    @uic = @report.reporter.try(:uic)
   end
 
   def create
     @report = CallCenter::Report.create(report_params)
   end
-
-  def update
-  end
-
 
   private
 
@@ -26,11 +20,12 @@ class CallCenter::ReportsController < ApplicationController
   def new_reporter_from(dislocation)
     CallCenter::Reporter.new.tap do |reporter|
       if dislocation
-        reporter.uic        = dislocation.current_roles.first.try(:num),
-        reporter.phone      = dislocation.phone,
-        reporter.first_name = dislocation.first_name,
-        reporter.last_name  = dislocation.last_name,
+        reporter.uic        = dislocation.user_current_roles.first.try(:uic)
+        reporter.phone      = dislocation.phone
+        reporter.first_name = dislocation.first_name
+        reporter.last_name  = dislocation.last_name
         reporter.patronymic = dislocation.patronymic
+        reporter.user_current_role = dislocation.user_current_roles.first
       end
     end
   end
