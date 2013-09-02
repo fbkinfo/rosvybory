@@ -9,7 +9,7 @@ ActiveAdmin::Event.subscribe ActiveAdmin::Resource::RegisterEvent do |resource|
 
   resource.controller.class_eval do
     def apply_pagination(chain)
-      params[:show_all] == 'true' ? super.per(1000000) : super
+      params[:show_all] == 'true' ? super.per(200) : super
     end
   end
 end
