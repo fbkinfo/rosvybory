@@ -8,7 +8,8 @@ ActiveAdmin.register DislocationControl do
   config.sort_order = 'kind_asc'
 
   index :download_links => false do
-    column :number, -> (uic) { uic.number_and_region }
+    column :number, &:number_and_region
+    column :participants_count
     7.times do |i|
       column :"participant_#{i}" do |uic|
         uic.human_participant i, (can? :view_user_contacts, uic.participant(i).try(:user))
