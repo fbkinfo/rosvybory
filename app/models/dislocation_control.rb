@@ -15,7 +15,4 @@ class DislocationControl < Uic
     end
   end
 
-  def participants_count
-    participants.size
-  end
 end

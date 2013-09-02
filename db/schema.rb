@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130831164236) do
+ActiveRecord::Schema.define(version: 20130902101754) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -105,6 +105,7 @@ ActiveRecord::Schema.define(version: 20130831164236) do
     t.integer  "kind"
     t.string   "name"
     t.integer  "parent_id"
+    t.integer  "participants_count"
   end
 
   add_index "uics", ["number"], name: "index_uics_on_number", unique: true, using: :btree

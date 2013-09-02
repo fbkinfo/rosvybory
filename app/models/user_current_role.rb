@@ -14,6 +14,9 @@ class UserCurrentRole < ActiveRecord::Base
 
   delegate :number, :to => :uic, :prefix => true, :allow_nil => true
 
+  after_save :update_uic_participants_count
+  after_destroy :update_uic_participants_count
+
   def uic_number=(number)
     self.uic = number.presence && Uic.find_by_number(number)
   end
@@ -56,4 +59,10 @@ class UserCurrentRole < ActiveRecord::Base
       end
     end
   end
+
+    def update_uic_participants_count
+      Uic.find_by(:id => uic_id_was).try(:update_participants_count!) if uic_id_changed?
+      uic.try(:update_participants_count!)
+    end
+
 end
