@@ -16,6 +16,7 @@ ActiveAdmin.register User do
   #при добавлении нового группового действия - обратить внимание на флажок "Применить ко всем страницам", если нужен для этого действия - реализовывать обработку
   batch_action :new_group_email
   batch_action :new_group_sms
+  batch_action :destroy, false
 
   show do |user|
     if can? :crud, user #вид для админа
@@ -69,7 +70,8 @@ ActiveAdmin.register User do
       links << link_to(I18n.t('active_admin.view'), resource_path(resource), class: "member_link view_link")
       links << '<br/> <br/>'.html_safe
       links << link_to(I18n.t('active_admin.edit'), edit_user_path(resource.id), class: "member_link edit_link")
-      #links << link_to(I18n.t('active_admin.delete'), resource_path(resource), class: "member_link delete_link", method: :delete, data: { confirm: "Вы уверены? Удаление пользователя нельзя будет отменить" })
+      links << '<br/> <br/>'.html_safe
+      links << link_to(I18n.t('active_admin.delete'), resource_path(resource), class: "member_link delete_link", method: :delete, data: { confirm: "Вы уверены? Удаление пользователя нельзя будет отменить" })
       links
     end
 
@@ -185,9 +187,6 @@ ActiveAdmin.register User do
         if selected_batch_action
           selected_ids = params[:collection_selection]
           selected_ids ||= []
-          if params[:batch_action] == "destroy" && selected_ids.size > 1
-            redirect_to :back, :flash => { :error => 'Удаление более одного пользователя за раз отключено в целях безопасности!' }
-          end
           instance_exec selected_ids, &selected_batch_action.block
         else
           raise "Couldn't find batch action \"#{params[:batch_action]}\""
