@@ -5,7 +5,7 @@
     h2 Звонящий
     = form.fields_for :reporter do |ff|
       = ff.input :phone
-      = ff.input :user_id, as: :hidden, input_html: { class: 'select2 ajax', data: { source: call_center_dislocations_path }, value: @dislocation.try(:id) }
+      = ff.input :user_id, as: :hidden, label: "Звонящий", input_html: { class: 'select2 ajax', data: { source: call_center_dislocations_path, "init-source" => call_center_dislocation_path(@dislocation) }, value: @dislocation.try(:id) }
       .input
         label Кампания
         = text_field_tag :campaign, "Выборы мэра Москвы"
@@ -14,15 +14,15 @@
         select.uic-kind
           option value="УИК" УИК
           option value="ТИК" ТИК
-      = ff.input :uic, as: :hidden, input_html: { class: 'select2 ajax uic', data: { source: call_center_search_uics_path } }
-      = ff.input :user_current_role, member_label: Proc.new{ |r| r.current_role.name }
+      = ff.input :uic, as: :hidden, input_html: { class: 'select2 ajax uic', data: { source: call_center_uics_path, "init-source" => call_center_uic_path(@uic) } }, value: @uic.try(:id)
+      = ff.input :user_current_role, member_label: Proc.new{ |r| r.current_role.name }, label: "Роль"
 
   #report.panel
     h2 Сообщение
     = form.fields_for :report do |ff|
       = ff.text_area :text
       = ff.fields_for :violation do |fff|
-        = fff.input :violation_type, as: :select,
+        = fff.input :violation_type, as: :select, label: "Нарушение",
           collection: option_groups_from_collection_for_select(CallCenter::ViolationCategory.all, :violation_types, :name, :id, :name)
 
   / its approach for sending related reports.
