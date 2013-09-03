@@ -42,6 +42,9 @@
     %fieldset
       = f.label :file
       = f.file_field :file
+
+      = label_tag :replace_existing
+      = check_box_tag :replace_existing
     %h2 Или скопируйте строки из Excel
   - elsif @many_apps.fail_count > 0
     %h2 Эти данные не удалось сохранить
