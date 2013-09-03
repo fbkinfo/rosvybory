@@ -191,7 +191,7 @@ class ExcelUserAppRow
   def save
     @user_app.skip_phone_verification = true
     @user_app.skip_email_confirmation = true
-    success = @user_app.save
+    success =  (!@user_app.user && @user_app.save)
     if success
       @user_app.confirm!
       @user = @user_app.user || User.new
