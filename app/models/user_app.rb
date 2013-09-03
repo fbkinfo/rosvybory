@@ -95,9 +95,7 @@ class UserApp < ActiveRecord::Base
       STATUS_CALLER => "caller",
       STATUS_COORD_REGION => "coord_region",
       STATUS_COORD_MOBILE => "coord_mobile",
-      STATUS_COORD_CALLER => "coord_caller",
-      STATUS_PSG => "psg",
-      STATUS_JOURNALIST => "journalist"
+      STATUS_COORD_CALLER => "coord_caller"
     }
   end
 

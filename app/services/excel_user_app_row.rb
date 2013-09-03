@@ -141,13 +141,15 @@ class ExcelUserAppRow
   def desired_statuses=(v)
     statuses_by_name = {
         'Наблюдатель' => UserApp::STATUS_OBSERVER,
-        'ПСГ' => UserApp::STATUS_PSG,
-        'СМИ' => UserApp::STATUS_JOURNALIST,
+        'ПСГ' => UserApp::STATUS_OBSERVER,
         'МГ' => UserApp::STATUS_MOBILE,
         'КЦ' => UserApp::STATUS_CALLER
     }
-    status = dirty_source_val(v, statuses_by_name)
-    @user_app.desired_statuses = status || UserApp::STATUS_OBSERVER
+    @user_app.desired_statuses = UserApp::STATUS_OBSERVER
+    v.split(',').each do |role|
+      status = dirty_source_val(role, statuses_by_name)
+      @user_app.desired_statuses |= status
+    end
   end
 
   def legal_status=(v)
@@ -220,7 +222,7 @@ class ExcelUserAppRow
   def save
     @user_app.skip_phone_verification = true
     @user_app.skip_email_confirmation = true
-    @user_app.desired_statuses = UserApp::STATUS_OBSERVER if UserApp::NO_STATUS
+    @user_app.legal_status = UserApp::LEGAL_STATUS_NO unless @user_app.legal_status
     success = @user_app.save
     if success
       @user_app.confirm!
