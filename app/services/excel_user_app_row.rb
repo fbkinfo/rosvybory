@@ -49,9 +49,9 @@ class ExcelUserAppRow
 
   delegate :organisation, :persisted?, :new_record?, :to => :user_app, :allow_nil => true
 
-  def initialize(attrs)
+  def initialize(attrs, replace_existing = false)
     phone = Verification.normalize_phone_number(attrs[:phone])
-
+    @replace_existing = replace_existing
     @user_app = UserApp.find_or_initialize_by(phone: phone) do |a|
       a.ip ||= '127.0.0.1'
       a.year_born ||= 1913
