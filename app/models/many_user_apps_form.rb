@@ -16,7 +16,7 @@ class ManyUserAppsForm
   def   initialize(organisation, params = {})
     @organisation = organisation || Organisation.where(name: "РосВыборы").first_or_create
     @user_apps = []
-    self.ignore_existing = (params[:ignore_existing] == "1")
+    self.ignore_existing = (params[:ignore_existing] != "0")
     params.each do |k, v|
       send "#{k}=", v
     end
