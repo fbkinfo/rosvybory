@@ -17,6 +17,7 @@ Rosvibory::Application.routes.draw do
     end
     member do
       get :dislocate
+      get :letter
       get :direct_login
     end
   end
