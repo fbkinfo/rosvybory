@@ -5,6 +5,7 @@ class ManyUserAppsForm
   extend ActiveModel::Naming
 
   attr_accessor :user_apps
+  attr_accessor :replace_existing
 
   class <<self
     def reflect_on_association(assoc)
@@ -49,7 +50,7 @@ class ManyUserAppsForm
   end
 
   def build_user_app(attrs = {})
-    ExcelUserAppRow.new(attrs).tap do |euar|
+    ExcelUserAppRow.new(attrs, replace_existing).tap do |euar|
       euar.organisation = @organisation unless euar.organisation
       @user_apps << euar
     end
