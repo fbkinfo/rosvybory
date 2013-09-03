@@ -14,14 +14,20 @@ ActiveAdmin.register User do
     end
   end if Role.table_exists?
 
+  scope 'Телефон в черном списке' do |items|
+    items.where('EXISTS (SELECT * FROM blacklists WHERE phone=users.phone)')
+  end
+
   #при добавлении нового группового действия - обратить внимание на флажок "Применить ко всем страницам", если нужен для этого действия - реализовывать обработку
   batch_action :new_group_email
   batch_action :new_group_sms
   batch_action :destroy, false
 
   show do |user|
+    h3 'Внимание! Телефон пользователя занесён в чёрный список!' if user.blacklisted
     if can? :crud, user #вид для админа
       attributes_table do
+        row :blacklist_info if user.blacklisted
         row :organisation, &:organisation_with_user_id
         row :user_app_created_at
         row :full_name

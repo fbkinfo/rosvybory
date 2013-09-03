@@ -13,6 +13,10 @@ ActiveAdmin.register UserApp do
     end
   end
 
+  scope 'Телефон в черном списке' do |items|
+    items.where('EXISTS (SELECT * FROM blacklists WHERE phone=user_apps.phone)')
+  end
+
   batch_action :group_accept
 
   action_item :only => [:index] do

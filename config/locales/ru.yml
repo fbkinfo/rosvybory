@@ -431,6 +431,7 @@ ru:
         work_position: Должность
         address: Адрес прописки
         got_docs: Документы выданы
+        blacklist_info: Данные из черного списка
       region:
         kind: Тип
         name: Название

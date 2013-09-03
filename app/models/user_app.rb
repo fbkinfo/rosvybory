@@ -230,6 +230,10 @@ class UserApp < ActiveRecord::Base
     Arel::Nodes::NamedFunction.new( 'regexp_replace', [ parent.table[:uic], '[0-9]+', '(\\&)', 'g' ] )
   end
 
+  def blacklisted
+    Blacklist.find_by_phone(phone)
+  end
+
   private
 
   def set_phone_verified_status

@@ -1,3 +1,8 @@
+-if @user.blacklisted
+  %h3
+    Внимание! Телефон занесён в чёрный список!
+  %pre
+    =@user.decorate.blacklist_info
 
 - unless @user.user_app.phone_verified && @user.user_app.confirmed?
   .unverified
