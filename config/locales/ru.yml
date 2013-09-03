@@ -334,6 +334,18 @@ ru:
       call_center/phone_call:
         one:   Звонок
         other: Звонки
+      call_center/operator:
+        one:   Оператор
+        other: Операторы
+      call_center/violation:
+        one:   Нарушение
+        other: Нарушения
+      call_center/violation_category:
+        one:   Категория нарушений
+        other: Категории нарушений
+      call_center/violation_type:
+        one:   Тип нарушения
+        other: Типы нарушения
     attributes:
       dislocation:
         current_role_id: Роль
