@@ -67,11 +67,24 @@ form#new_call_center_report
         background: -ms-linear-gradient(top,  #a4b357 0%,#75890c 100%) /* IE10+ */
         background: linear-gradient(to bottom,  #a4b357 0%,#75890c 100%) /* W3C */
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a4b357', endColorstr='#75890c',GradientType=0 ) /* IE6-9 */
-    .redirect
-      float: right
+    p.notice
+      position: absolute
+      bottom: 0
+      margin: 0
+      text-align: center
+      width: 100%
+      font-size: 13px
+      color: #999
+      white-space: nowrap
+    .submit, .redirect
       position: relative
       padding-bottom: 1.62em
+    .submit
+      float: left
+    .redirect
+      float: right
       button
+        margin-left: 9px
         &:hover
           background: #3f4c6b /* Old browsers */
           background: -moz-linear-gradient(top,  #3f4c6b 0%, #606c88 100%) /* FF3.6+ */
@@ -90,21 +103,13 @@ form#new_call_center_report
           background: -ms-linear-gradient(top,  #606c88 0%,#3f4c6b 100%) /* IE10+ */
           background: linear-gradient(to bottom,  #606c88 0%,#3f4c6b 100%) /* W3C */
           filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#606c88', endColorstr='#3f4c6b',GradientType=0 ) /* IE6-9 */
-      p
-        position: absolute
-        bottom: 0
-        margin: 0
-        text-align: center
-        width: 100%
-        font-size: 13px
-        color: #999
 
 #reporter
   position: relative
   #call_center_report_reporter_attributes_phone_input
     position: absolute
     top: 19px
-    right: 135px
+    right: 20px
     height: 30px
     label
       position: absolute
@@ -117,8 +122,13 @@ form#new_call_center_report
       text-indent: -9999px
     input[type="tel"]
       font-size: 18px
-  #call_center_report_reporter_attributes_uic_id_input
+      width: 200px
+  #call_center_report_reporter_uic_kind_input, #call_center_report_reporter_attributes_uic_id_input
     display: inline-block
+  #call_center_report_reporter_attributes_uic_id_input
+    margin-left: 12px
+    label
+      display: none
   #call_center_report_reporter_role_input, #call_center_report_reporter_dislocation_input
     select
       width: 324px
