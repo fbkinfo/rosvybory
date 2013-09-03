@@ -1,7 +1,8 @@
 - uic = uic(@user, UserApp.all_statuses[UserApp::STATUS_PSG]).try(:number)
 - uic ||= 'УКАЖИТЕ НОМЕР УИК'
-%div{style: 'margin-left: 15mm; margin-top: 30mm; margin-right: 15mm; font: 10pt Helvetica; line-height: 160%'}
+%div{style: 'margin-left: 5mm; margin-top: 40mm; margin-right: 5mm; font: 10pt Helvetica; line-height: 160%'}
   = render 'letter_header', uic: uic
+  %br
   %br
   %br
   %div{style: 'text-align: center; font: 15pt Helvetica;'}
@@ -30,7 +31,7 @@
   = render 'letter_signature', signer: 'Ермолаев А. Г.'
 
 %div{style: 'display:block; clear:both; page-break-after:always;'}
-%div{style: 'margin-left: 15mm; margin-top: 30mm; margin-right: 15mm; font: 10pt Helvetica; line-height: 160%'}
+%div{style: 'margin-left: 5mm; margin-top: 40mm; margin-right: 5mm; font: 10pt Helvetica; line-height: 160%'}
   %div
     %div= 'Зарегистрированному кандидату'
     %div= 'на должность Мэра Москвы'
