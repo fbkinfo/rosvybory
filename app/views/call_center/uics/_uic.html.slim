@@ -6,7 +6,7 @@
     - uic_reports = CallCenter::Report.includes(:reporter).where call_center_reporters: {uic_id: uic.id}
     h2 На участке №#{uic.number}
     - if uic_reports.empty?
-      p.notice = t "views.messages.uic.no_reports"
+      p.notice = t "views.call_center.uic.no_reports"
     - else
       ul.reports
         - uic_reports.each do |report|
