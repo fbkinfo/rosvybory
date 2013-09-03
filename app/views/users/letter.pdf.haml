@@ -1,0 +1,8 @@
+%html
+  %head
+    %meta{'http-equiv' => 'Content-Type', 'content' => 'text/html; charset=UTF-8'}
+  %body
+    - if can_print_letter?(@user, UserApp::STATUS_OBSERVER)
+      = render 'letter_observer'
+    - if can_print_letter?(@user, UserApp::STATUS_PSG)
+      = render 'letter_psg'

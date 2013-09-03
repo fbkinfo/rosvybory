@@ -88,5 +88,4 @@ initRoles = ->
     $(this).closest('.ui-dialog-content').html(xhr.responseText)
 
   selectify($("select.select2"))
-
   initRoles()
