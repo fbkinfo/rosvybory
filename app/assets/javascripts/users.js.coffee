@@ -74,11 +74,7 @@ initRoles = ->
     try
       response = $.parseJSON(xhr.responseText)
       if response.status == "ok"
-        $dialog.dialog('close');
-        if gon.user_app_ids
-          $("body").trigger "app-status-change", [id, "approved"] for id in gon.user_app_ids
-        else
-          $("body").trigger "app-status-change", [gon.user_app_id, "approved"] if gon.user_app_id
+        window.location.reload()
       else
         $dialog.html(xhr.responseText)
     catch err
@@ -92,5 +88,4 @@ initRoles = ->
     $(this).closest('.ui-dialog-content').html(xhr.responseText)
 
   selectify($("select.select2"))
-
   initRoles()

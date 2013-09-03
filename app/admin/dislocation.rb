@@ -4,8 +4,7 @@ ActiveAdmin.register Dislocation do
 
   actions :all, :except => [:new]
   menu :if => proc{ can? :view_dislocation, User }, :priority => 20
-
-  #scope :with_current_roles, :default => true
+  batch_action :destroy, false
 
   index :download_links => false do
     inplace_helper = proc do |dislocation, field, collection|
@@ -24,7 +23,10 @@ ActiveAdmin.register Dislocation do
 
     selectable_column
     actions(defaults: false) do |resource|
-      link_to(I18n.t('active_admin.edit'), dislocate_user_path(resource), class: "member_link edit_link")
+      ''.html_safe.tap do |buffer|
+        buffer << link_to(I18n.t('active_admin.edit'), dislocate_user_path(resource), class: "member_link edit_link")
+        buffer << tag(:br) + link_to(I18n.t('active_admin.delete'), control_dislocation_path(resource.id), method: :delete, class: "member_link destroy_link", confirm: 'Удалить данную расстановку пользователя?') if resource.user_current_role.id.present? && can?(:destroy, resource.user_current_role)
+      end
     end
     column "НО + id" do |dislocation|
       link_to dislocation.organisation_with_user_id, control_user_path(dislocation.user_id), :target => '_blank'
@@ -34,7 +36,7 @@ ActiveAdmin.register Dislocation do
     column :adm_region, &:coalesced_adm_region_name
     column :region, &:coalesced_mun_region_name
     column :current_role_id do |dislocation|
-      inplace_helper[dislocation, :current_role, CurrentRole.all]
+      inplace_helper[dislocation, :current_role, CurrentRole.dislocatable]
     end
     column :current_role_uic, sortable: "user_current_roles.uic_id" do |dislocation|
       inplace_helper[dislocation, :uic, dislocation.user_current_role.selectable_uics]
@@ -54,8 +56,11 @@ ActiveAdmin.register Dislocation do
           savenochange: true
         })
     end
-    column "Ошибки расстановки", class: 'dislocation_errors_column' do |dislocation|
+    column 'Ошибки расстановки', class: 'dislocation_errors_column' do |dislocation|
       render partial: 'cell_dislocation_errors', locals: { dislocation: dislocation }
+    end
+    column 'Документы', class: 'dislocation_letters_column' do |dislocation|
+      render partial: 'cell_dislocation_letters', locals: { dislocation: dislocation }
     end
   end
 
@@ -64,7 +69,7 @@ ActiveAdmin.register Dislocation do
          :input_html => {:style => "width: 230px;"}, :label => I18n.t('activerecord.attributes.user.adm_region')
   filter :current_role_region, :as => :select, :collection => proc { Region.mun_regions },
          :input_html => {:style => "width: 230px;"}, :label => I18n.t('activerecord.attributes.user.region')
-  filter :user_app_last_name, as: :string, label: 'Фамилия'
+  filter :full_name
   filter :phone
   filter :current_role_uic, as: :numeric
   filter :current_role_nomination_source_id, as: :select, collection: proc { NominationSource.order(:name) }, :input_html => {:style => "width: 230px;"}
@@ -126,14 +131,8 @@ ActiveAdmin.register Dislocation do
       dislocation = Dislocation.with_current_roles.where('users.id' => user.id, 'user_current_roles.id' => ucr.id).first.decorate
       results[:dislocation_errors] = render_to_string(partial: 'cell_dislocation_errors', locals: { dislocation: dislocation })
     end
+    results[:dislocation_letters] = render_to_string(partial: 'cell_dislocation_letters', locals: { dislocation: dislocation })
     render :json => results
-  end
-
-  # TODO(sinopalnikov): move common code to app/admin/concerns
-  action_item(only: [:index]) do
-    _show_all = params[:show_all] && params[:show_all].to_sym == :true
-    _label = I18n.t('views.pagination.actions.pagination_' + (_show_all ? 'on' : 'off'))
-    link_to _label, control_dislocations_path(:format => nil, :show_all => (_show_all ? :false : :true))
   end
 
   controller do
@@ -141,8 +140,11 @@ ActiveAdmin.register Dislocation do
       Dislocation.with_current_roles.with_role :observer
     end
 
-    def apply_pagination(chain)
-      return super.per(params[:show_all] && params[:show_all].to_sym == :true ? 1000000 : nil)
+    def destroy
+      ucr = UserCurrentRole.find(params[:id])
+      authorize! :destroy, ucr
+      ucr.destroy
+      redirect_to :back
     end
   end
 

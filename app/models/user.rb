@@ -1,4 +1,8 @@
+# encoding: utf-8
+
 class User < ActiveRecord::Base
+  include FullNameFormable
+
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
@@ -38,9 +42,8 @@ class User < ActiveRecord::Base
 
   delegate :created_at, to: :user_app, allow_nil: true, prefix: true
 
-
-  def full_name
-    [last_name, first_name, patronymic].join ' '
+  def as_json(options)
+    { id: id, text: full_name }
   end
 
   class << self
@@ -129,7 +132,7 @@ class User < ActiveRecord::Base
     logger.debug "User@#{__LINE__}#update_from_user_app #{app.current_roles.inspect} #{common_roles.inspect}" if logger.debug?
     if common_roles.present?
       app.user_app_current_roles.each do |ua_role|
-        if common_roles.include? ua_role.current_role && user_current_roles.none? {|ucr| ucr.current_role == ua_role.current_role}
+        if (common_roles.include? ua_role.current_role) && user_current_roles.none? {|ucr| ucr.current_role == ua_role.current_role}
           # TODO move this to user_current_role#from_user_app_current_role ?
           ucr = user_current_roles.find_or_initialize_by(current_role_id: ua_role.current_role.id)
           if apps.size == 1
@@ -154,6 +157,10 @@ class User < ActiveRecord::Base
   def may_login?
     (%w{admin tc mc cc federal_repr} & roles.map{ |e| e.slug }).any?
   end
+
+    def blacklisted
+      Blacklist.find_by_phone(phone)
+    end
 
   private
 

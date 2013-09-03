@@ -1,0 +1,145 @@
+.panel
+  padding: 20px
+  background-color: white
+  box-shadow: rgba(0,0,0,0.3) 1px 1px 3px
+  margin-bottom: 20px
+  h2
+    font-size: 20px
+    font-weight: bold
+    margin-top: 0
+    padding-bottom: 0.62em
+    border-bottom: #eee solid thin
+
+input[type="submit"], button
+  display: inline-block
+  padding: 1em  1.62em
+  color: white
+  font-size: 14px
+  font-weight: bold
+  border: none
+  border-radius: 5px
+  cursor: pointer
+  box-shadow: rgba(0,0,0,0.8) 1px 1px 2px
+  text-decoration: none
+  &:active
+    position: relative
+    left: 2px
+    top: 2px
+    box-shadow: rgba(0,0,0,0.6) 1px 1px 3px inset
+
+#reporter, #report
+  width: 460px
+
+form#new_call_center_report
+  float: left
+  input[type="text"], label
+    font-size: 14px
+  input[type="text"]
+    border: #eee solid thin
+    height: 24px
+  .input
+    margin-bottom: 11px
+    > *
+      display: inline-block
+      &:first-child
+        margin-right: 20px
+    label
+      width: 115px
+  .form-actions
+    border: none
+    padding: 0
+    input[type="submit"]
+      &:hover
+        background: #75890c /* Old browsers */
+        background: -moz-linear-gradient(top,  #75890c 0%, #a4b357 100%) /* FF3.6+ */
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#75890c), color-stop(100%,#a4b357)) /* Chrome,Safari4+ */
+        background: -webkit-linear-gradient(top,  #75890c 0%,#a4b357 100%) /* Chrome10+,Safari5.1+ */
+        background: -o-linear-gradient(top,  #75890c 0%,#a4b357 100%) /* Opera 11.10+ */
+        background: -ms-linear-gradient(top,  #75890c 0%,#a4b357 100%) /* IE10+ */
+        background: linear-gradient(to bottom,  #75890c 0%,#a4b357 100%) /* W3C */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#75890c', endColorstr='#a4b357',GradientType=0 ) /* IE6-9 */
+      &, &:active
+        background: #a4b357 /* Old browsers */
+        background: -moz-linear-gradient(top,  #a4b357 0%, #75890c 100%) /* FF3.6+ */
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#a4b357), color-stop(100%,#75890c)) /* Chrome,Safari4+ */
+        background: -webkit-linear-gradient(top,  #a4b357 0%,#75890c 100%) /* Chrome10+,Safari5.1+ */
+        background: -o-linear-gradient(top,  #a4b357 0%,#75890c 100%) /* Opera 11.10+ */
+        background: -ms-linear-gradient(top,  #a4b357 0%,#75890c 100%) /* IE10+ */
+        background: linear-gradient(to bottom,  #a4b357 0%,#75890c 100%) /* W3C */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a4b357', endColorstr='#75890c',GradientType=0 ) /* IE6-9 */
+    p.notice
+      position: absolute
+      bottom: 0
+      margin: 0
+      text-align: center
+      width: 100%
+      font-size: 13px
+      color: #999
+      white-space: nowrap
+    .submit, .redirect
+      position: relative
+      padding-bottom: 1.62em
+    .submit
+      float: left
+    .redirect
+      float: right
+      button
+        margin-left: 9px
+        &:hover
+          background: #3f4c6b /* Old browsers */
+          background: -moz-linear-gradient(top,  #3f4c6b 0%, #606c88 100%) /* FF3.6+ */
+          background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#3f4c6b), color-stop(100%,#606c88)) /* Chrome,Safari4+ */
+          background: -webkit-linear-gradient(top,  #3f4c6b 0%,#606c88 100%) /* Chrome10+,Safari5.1+ */
+          background: -o-linear-gradient(top,  #3f4c6b 0%,#606c88 100%) /* Opera 11.10+ */
+          background: -ms-linear-gradient(top,  #3f4c6b 0%,#606c88 100%) /* IE10+ */
+          background: linear-gradient(to bottom,  #3f4c6b 0%,#606c88 100%) /* W3C */
+          filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3f4c6b', endColorstr='#606c88',GradientType=0 ) /* IE6-9 */
+        &, &:active
+          background: #606c88 /* Old browsers */
+          background: -moz-linear-gradient(top,  #606c88 0%, #3f4c6b 100%) /* FF3.6+ */
+          background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#606c88), color-stop(100%,#3f4c6b)) /* Chrome,Safari4+ */
+          background: -webkit-linear-gradient(top,  #606c88 0%,#3f4c6b 100%) /* Chrome10+,Safari5.1+ */
+          background: -o-linear-gradient(top,  #606c88 0%,#3f4c6b 100%) /* Opera 11.10+ */
+          background: -ms-linear-gradient(top,  #606c88 0%,#3f4c6b 100%) /* IE10+ */
+          background: linear-gradient(to bottom,  #606c88 0%,#3f4c6b 100%) /* W3C */
+          filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#606c88', endColorstr='#3f4c6b',GradientType=0 ) /* IE6-9 */
+
+#reporter
+  position: relative
+  #call_center_report_reporter_attributes_phone_input
+    position: absolute
+    top: 19px
+    right: 20px
+    height: 30px
+    label
+      position: absolute
+      left: -27px
+      top: 2px
+      display: inline-block
+      width: 19px
+      height: 25px
+      background: image-url("call-center/phone-icon.png")
+      text-indent: -9999px
+    input[type="tel"]
+      font-size: 18px
+      width: 200px
+  #call_center_report_reporter_attributes_uic_id_input
+    display: inline-block
+  #call_center_report_reporter_role_input, #call_center_report_reporter_dislocation_input
+    select
+      width: 324px
+  #campaign
+    width: 317px
+
+#report
+  textarea
+    margin-bottom: 9px
+    width: 99%
+    height: 6em
+    border: #ccc solid thin
+    box-shadow: rgba(0,0,0,0.3) 1px 1px 2px inset
+    display: block
+    resize: vertical
+  #call_center_report_report_violation_violation_type_input
+    select
+      width: 324px

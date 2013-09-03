@@ -14,6 +14,10 @@ class UserDecorator < Draper::Decorator
     user_app.try(:decorate)
   end
 
+  def last_name_with_initials
+    "#{object.last_name} #{object.first_name.to_s.mb_chars.first.upcase}. #{object.patronymic.to_s.mb_chars.first.upcase}."
+  end
+
   def human_roles
     #user.roles.collect(&:short_name).to_sentence
     object.roles.pluck(:short_name).join("; ")
@@ -25,6 +29,10 @@ class UserDecorator < Draper::Decorator
 
   def human_got_docs
     yes_no object.got_docs
+  end
+
+  def blacklist_info
+    object.blacklisted.try(:info)
   end
 
 end

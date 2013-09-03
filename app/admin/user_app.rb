@@ -13,6 +13,10 @@ ActiveAdmin.register UserApp do
     end
   end
 
+  scope 'Телефон в черном списке' do |items|
+    items.where('EXISTS (SELECT * FROM blacklists WHERE phone=user_apps.phone)')
+  end
+
   batch_action :group_accept
 
   action_item :only => [:index] do
@@ -29,11 +33,8 @@ ActiveAdmin.register UserApp do
   collection_action :process_xls, :method => :post do
     authorize! :import, UserApp
     @many_apps = ManyUserAppsForm.new(current_user.organisation, params[:many_apps])
-    if @many_apps.save
-      redirect_to control_user_apps_path
-    else
-      render "control/user_apps/xls_import"
-    end
+    @many_apps.save
+    render "control/user_apps/xls_import"
   end
 
   member_action :reject, method: :post do
@@ -83,9 +84,7 @@ ActiveAdmin.register UserApp do
   #filter :region, :as => :select, :collection => proc { option_groups_from_collection_for_select(Region.adm_regions, :regions, :name, :id, :name) }
 
 
-  filter   :last_name
-  filter   :first_name
-  filter   :patronymic
+  filter   :full_name
   filter   :sex_male, :as => :select, :collection => [['М', true], ['Ж', false]]
   filter   :phone
   filter   :email
@@ -124,21 +123,10 @@ ActiveAdmin.register UserApp do
   #  end
   #end
 
-  # TODO(sinopalnikov): move common code to app/admin/concerns
-  action_item(only: [:index]) do
-    _show_all = params[:show_all] && params[:show_all].to_sym == :true
-    _label = I18n.t('views.pagination.actions.pagination_' + (_show_all ? 'on' : 'off'))
-    link_to _label, control_user_apps_path(:format => nil, :show_all => (_show_all ? :false : :true))
-  end
-
   config.sort_order = "id_desc"
   controller do
     def scoped_collection
       resource_class.includes(:region).includes(:adm_region).includes(:organisation) # prevents N+1 queries to your database
-    end
-
-    def apply_pagination(chain)
-      return super.per(params[:show_all] && params[:show_all].to_sym == :true ? 1000000 : nil)
     end
 
     def permitted_params
@@ -172,7 +160,7 @@ ActiveAdmin.register UserApp do
     end
     column :uic
 
-    column :full_name, :sortable => false
+    column :full_name
     column :phone_formatted, :sortable => false do |user_app|
       status_tag(user_app.phone_formatted, user_app.phone_verified? ? :ok : :error)
     end
