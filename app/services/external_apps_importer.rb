@@ -10,9 +10,10 @@ class ExternalAppsImporter
 
   attr_accessor :organisation
 
-  def initialize(file_path, file_type = File.extname(file_path))
+  def initialize(file_path, file_type = File.extname(file_path), update_existing = false)
     @file_path = file_path
     @file_type = file_type
+    @update_existing = update_existing
   end
 
   def import
@@ -30,7 +31,7 @@ class ExternalAppsImporter
   end
 
   def build(attrs)
-    model = ExcelUserAppRow.new(attrs)
+    model = ExcelUserAppRow.new(attrs, @update_existing)
     if model.minimally_valid?
       model.organisation ||= organisation
       model
