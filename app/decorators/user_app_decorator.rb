@@ -67,4 +67,8 @@ class UserAppDecorator < Draper::Decorator
     value ? "Да":"Нет"
   end
 
+  def blacklist_info
+    object.blacklisted.try(:info)
+  end
+
 end

@@ -27,4 +27,8 @@ class UserDecorator < Draper::Decorator
     yes_no object.got_docs
   end
 
+  def blacklist_info
+    object.blacklisted.try(:info)
+  end
+
 end

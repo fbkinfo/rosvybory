@@ -1,3 +1,9 @@
+-if user_app.blacklisted
+  .panel
+    %h3
+      Внимание! Телефон заявки занесён в чёрный список!
+    %pre
+      =user_app.blacklist_info
 .panel
   %h3
     Роль
