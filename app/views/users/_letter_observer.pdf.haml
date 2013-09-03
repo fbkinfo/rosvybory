@@ -1,7 +1,8 @@
 - uic = uic(@user, UserApp.all_statuses[UserApp::STATUS_OBSERVER]).try(:number)
 - uic ||= 'УКАЖИТЕ НОМЕР УИК'
-%div{style: 'margin-left: 15mm; margin-top: 30mm; margin-right: 15mm; font: 10pt Helvetica; line-height: 160%'}
+%div{style: 'margin-left: 5mm; margin-top: 40mm; margin-right: 5mm; font: 10pt Helvetica; line-height: 160%'}
   = render 'letter_header', uic: uic
+  %br
   %br
   %br
   %div{style: 'text-align: center; font: 15pt Helvetica;'}
@@ -29,10 +30,7 @@
   %br
   %br
   %br
-  %br
   = render 'letter_signature', signer: 'Ермолаев А. Г.'
-  %br
-  %br
   %br
   %br
   %br
