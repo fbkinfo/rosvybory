@@ -28,7 +28,6 @@ gem 'slim'
 
 gem 'honeybadger'
 gem 'therubyracer', platforms: :ruby
-gem 'rvm'
 gem 'unicorn'
 gem 'foreman', require: false
 gem 'foreman-export-initscript', require: false
@@ -50,6 +49,7 @@ gem 'gon'
 gem 'cocoon'
 
 gem 'roo' #import from excel
+gem 'rubyzip2'  #без этого roo почему-то ломает rake
 
 group :development do
   gem 'capistrano'
