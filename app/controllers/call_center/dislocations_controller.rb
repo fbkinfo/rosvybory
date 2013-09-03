@@ -2,7 +2,8 @@ class CallCenter::DislocationsController < ApplicationController
   respond_to :json
 
   def index
-    @users = User.finder(params[:q]).limit(10)
+    q = params[:q].mb_chars.downcase
+    @users = User.where("lower(full_name) like :q", q: "%#{q}%").limit(25)
     respond_with @users
   end
 

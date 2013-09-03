@@ -42,8 +42,6 @@ class User < ActiveRecord::Base
 
   delegate :created_at, to: :user_app, allow_nil: true, prefix: true
 
-  scope :finder, lambda { |q| where("full_name like :q", q: "%#{q}%") }
-
   def as_json(options)
     { id: id, text: full_name }
   end
