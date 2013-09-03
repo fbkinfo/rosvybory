@@ -13,6 +13,7 @@
     = f.input :first_name
     = f.input :patronymic
     = f.input :address, :input_html => {:rows => 2}
+    = f.input :year_born
     = f.input :roles, collection: (Role.accessible_by(current_ability, :assign_users) + f.object.roles).uniq, :input_html => {:style => "width: 300px;"}
     = f.input :email
     = f.input :phone
