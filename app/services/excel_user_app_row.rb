@@ -61,6 +61,7 @@ class ExcelUserAppRow
 
     local_only = phone.blank?
 
+    Rails.logger.info "User import - no valid phone in #{attrs[:uid]}" if phone.blank? && attrs[:uid].present?
     self.class.column_names.each do |k|
       v = attrs[k]
       v = v.strip if v.respond_to?(:strip)
