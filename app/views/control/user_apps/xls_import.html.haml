@@ -18,20 +18,21 @@
         %th= User.human_attribute_name(:extra)
     %tbody
       - @many_apps.user_apps.select(&:persisted?).each do |euar|
-        - user = euar.user.decorate
-        %tr
-          %td= user.organisation_with_user_id
-          %td= user.created_at && l(user.created_at)
-          %td= link_to user.full_name, [:control, euar.user]
-          %td= user.adm_region
-          %td= user.region
-          %td= user.phone
-          %td= user.email
-          %td= user.uic
-          %td= user.human_current_roles
-          %td= user.human_previous_statuses
-          %td= user.experience_count
-          %td= user.extra
+        -if euar.user
+          - user = euar.user.decorate
+          %tr
+            %td= user.organisation_with_user_id
+            %td= user.created_at && l(user.created_at)
+            %td= link_to user.full_name, [:control, euar.user]
+            %td= user.adm_region
+            %td= user.region
+            %td= user.phone
+            %td= user.email
+            %td= user.uic
+            %td= user.human_current_roles
+            %td= user.human_previous_statuses
+            %td= user.experience_count
+            %td= user.extra
 
 
 = form_for @many_apps, as: :many_apps, url: process_xls_control_user_apps_path, method: :post do |f|
