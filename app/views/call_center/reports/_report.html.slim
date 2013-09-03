@@ -14,7 +14,7 @@
         select.uic-kind
           option value="УИК" УИК
           option value="ТИК" ТИК
-      = ff.input :uic_id, as: :hidden, input_html: { class: 'select2 ajax uic', data: { source: call_center_uics_path, "init-source" => call_center_uic_path(@uic) } }, value: @uic.try(:id)
+      = ff.input :uic_id, as: :hidden, input_html: { class: 'select2 ajax uic', data: { source: call_center_uics_path, "init-source" => call_center_uic_path(@uic), "single-source" => call_center_uic_path(":id") } }, value: @uic.try(:id)
       = ff.input :user_current_role, member_label: Proc.new{ |r| r.current_role.name }, label: "Роль"
 
   #report.panel
