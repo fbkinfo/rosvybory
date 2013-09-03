@@ -43,8 +43,6 @@
       = f.label :file
       = f.file_field :file
 
-      = label_tag :replace_existing
-      = check_box_tag :replace_existing
     %h2 Или скопируйте строки из Excel
   - elsif @many_apps.fail_count > 0
     %h2 Эти данные не удалось сохранить
@@ -65,6 +63,10 @@
 
     .actions
       = f.submit 'Загрузить'
+
+      = f.label :update_existing, "Обновить данные существующих пользователей"
+      = f.check_box :update_existing
+
   - else
     .actions
       К списку
