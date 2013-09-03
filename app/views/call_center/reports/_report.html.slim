@@ -11,7 +11,7 @@
         = text_field_tag :campaign, "Выборы мэра Москвы"
       - data_hash = { source: call_center_uics_path, "init-source" => call_center_uic_path(@uic), "single-source" => call_center_uic_path(":id") }
       = ff.input :uic_id, as: :hidden, label: 'Расположение', input_html: { class: 'select2 ajax', data: data_hash }, value: @uic.try(:id)
-      = ff.input :user_current_role, member_label: Proc.new{ |r| r.current_role.name }, label: "Роль"
+      = ff.input :current_role, as: :select
 
   #report.panel
     h2 Сообщение
