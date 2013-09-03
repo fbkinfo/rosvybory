@@ -182,7 +182,7 @@ class User < ActiveRecord::Base
 
     def mark_user_app_state
       if user_app.present?
-        user_app.approve!
+        user_app.approve! unless user_app.approved?
       end
     end
 end
