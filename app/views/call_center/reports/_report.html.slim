@@ -26,8 +26,10 @@
     = hidden_field_tag 'call_center_report[parent_report_ids][]', value
 
   = form.actions do
-    = form.submit "Следующий звонок"
+    .submit
+      = form.submit "Сохранить"
+      p.notice И ждать следующий звонок
     .redirect
-      p Перенаправить
       button id="redirect-to-jurist" К юристу
       button id="redirect-to-mobile-group-dispatcher" К дисп. МГ
+      p.notice Перенаправить
