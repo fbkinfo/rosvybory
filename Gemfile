@@ -51,7 +51,6 @@ gem 'cocoon'
 gem 'roo' #import from excel
 gem 'rubyzip2'  #без этого roo почему-то ломает rake
 
-gem 'rails-i18n'
 gem 'wkhtmltopdf-binary'
 gem 'wicked_pdf'
 
