@@ -32,7 +32,6 @@
 
   = f.actions do
     = f.submit 'Сохранить'
-    - if letter_url(@user)
-      = f.submit 'Печать', :id => 'print-button', 'data-print-url' => letter_url(@user)
+
 :javascript
   initUserForm();
