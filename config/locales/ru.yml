@@ -328,6 +328,9 @@ ru:
       call_center/reporter:
         one: Звонящий
         other: Звонящие
+      call_center/report:
+        one:   Сообщение
+        other: Сообщения
     attributes:
       dislocation:
         current_role_id: Роль
@@ -469,6 +472,11 @@ ru:
         role: Роль
         dislocation: Человек
       call_center/report:
+        text: Текст
+        url: Ссылка
+        created_at: Создано
+        updated_at: Обновлено
+        reporter: Звонящий
         violation_type: Нарушение
 
   dislocation:
@@ -523,6 +531,7 @@ ru:
     edit_model: "Редактирование %{model}"
     menu:
       dictionaries: Справочники
+      call_center: Колл-центр
     scopes:
       with_current_roles: Все
   views:
@@ -537,7 +546,7 @@ ru:
         pagination_off: "Показать по 200 записей"
     call_center:
       uic:
-        no_reports: Зафиксированных обращений нет 
+        no_reports: Зафиксированных обращений нет
         no_uic:
           header: УИК не определён
           notice: "Как только введёте номер УИК в форме, он здесь появится"
