@@ -1,5 +1,5 @@
 ActiveAdmin.register CallCenter::PhoneCall do
-  menu parent: I18n.t('active_admin.menu.call_center'), label: 'Звонки'
+  menu parent: I18n.t('active_admin.menu.call_center')
   actions :all
 
   index do
