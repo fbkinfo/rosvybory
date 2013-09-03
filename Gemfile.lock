@@ -144,6 +144,10 @@ GEM
       activesupport (>= 3.1, < 4.1)
       haml (>= 3.1, < 4.1)
       railties (>= 3.1, < 4.1)
+    handlebars_assets (0.14.1)
+      execjs (>= 1.2.9)
+      sprockets (>= 2.0.3)
+      tilt
     has_scope (0.6.0.rc)
       actionpack (>= 3.2, < 5)
       activesupport (>= 3.2, < 5)
@@ -376,6 +380,7 @@ DEPENDENCIES
   guard
   guard-rspec
   haml-rails
+  handlebars_assets
   honeybadger
   inherited_resources (~> 1.4.1)
   jquery-rails
