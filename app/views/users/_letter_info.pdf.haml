@@ -2,14 +2,14 @@
   %span= 'Год и место рождения: '
   %span= @user.year_born && @user.year_born != 1913 ? @user.year_born : '_____'
   %span= ' г., '
-  %span= optional_string_info(@user.place_of_birth, 52)
+  %span= optional_string_info(@user.place_of_birth, 51)
 %div
   %span= 'Гражданство Российской Федерации, паспорт: '
-  %span= optional_string_info(@user.passport, 38)
+  %span= optional_string_info(@user.passport, 37)
 %div
   %span= 'Место работы или службы: '
-  %span= optional_string_info(@user.work, 56)
+  %span= optional_string_info(@user.work, 55)
 %div
   %span= 'Адрес места жительства: '
-  %span= optional_string_info(@user.address, 57)
+  %span= optional_string_info(@user.address, 56)
 %div= 'На государственной службе не нахожусь, муниципальным служащим не являюсь.'
