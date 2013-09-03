@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Dislocation < User
 
   belongs_to :nomination_source, foreign_key: :user_current_role_nomination_source_id
@@ -55,7 +57,7 @@ class Dislocation < User
   #   для этой роли наблюдателя нет.
   #
   DISLOCATION_RULES = {
-    'candidate'  => { 'psg' => 1 },
+    'candidate'  => { 'observer' => 1, 'psg' => 1 },
     'party'      => { 'observer' => 1, 'psg' => 0 },
     'parliament' => { 'observer' => 1, 'psg' => 1 }
   }

@@ -18,6 +18,7 @@ Rosvibory::Application.routes.draw do
     member do
       get :dislocate
       get :letter
+      get :direct_login
     end
   end
 
@@ -27,4 +28,8 @@ Rosvibory::Application.routes.draw do
   get 'new_group_email' => 'user_apps#new_group_email'
   post 'send_group_sms' => 'user_apps#send_group_sms'
   get 'new_group_sms' => 'user_apps#new_group_sms'
+
+  namespace :call_center do
+    resources :reports, :uics, :dislocations
+  end
 end
