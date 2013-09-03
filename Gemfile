@@ -12,6 +12,7 @@ gem 'formtastic', '2.3.0.rc2'
 gem 'formtastic-bootstrap'#, github: 'mjbellantoni/formtastic-bootstrap'
 gem 'x-editable-rails'
 gem 'select2-rails'
+gem 'handlebars_assets'
 
 # Use postgresql as the database for Active Record
 gem 'pg'
