@@ -52,8 +52,12 @@ gem 'cocoon'
 gem 'roo' #import from excel
 gem 'rubyzip2'  #без этого roo почему-то ломает rake
 
+# Генерация PDF
 gem 'wkhtmltopdf-binary'
 gem 'wicked_pdf'
+
+# Мониторинг и паниконагнетатель
+gem 'newrelic_rpm'
 
 group :development do
   gem 'capistrano'
