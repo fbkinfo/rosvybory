@@ -331,6 +331,9 @@ ru:
       call_center/report:
         one:   Сообщение
         other: Сообщения
+      call_center/phone_call:
+        one:   Звонок
+        other: Звонки
     attributes:
       dislocation:
         current_role_id: Роль
