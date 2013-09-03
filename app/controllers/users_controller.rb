@@ -10,8 +10,7 @@ class UsersController < ApplicationController
     authorize! :read, @user
     respond_to do |format|
       format.pdf do
-        template = "letter_#{params[:report] || 'observer'}"
-        render template: "users/#{template}", pdf: "#{template}.pdf", page_size: 'A4'
+        render pdf: 'letter.pdf', page_size: 'A4'
       end
     end
   end
