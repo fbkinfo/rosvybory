@@ -23,6 +23,7 @@ $(function() {
         } else {
           $inplaces.removeClass('unsaved').removeData('dislocation').data('url', response.url);
           $row.find('.dislocation_errors_column').html(response.dislocation_errors);
+          $row.find('.dislocation_letters_column').html(response.dislocation_letters);
         };
       }, 44);
     }

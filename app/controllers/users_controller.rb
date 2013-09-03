@@ -5,8 +5,17 @@ class UsersController < ApplicationController
   include UserAppsHelper
 
   before_filter :expose_current_roles,
-      only: [:new, :edit, :group_new, :dislocate]
-  before_filter :set_user, only: [:edit, :update, :dislocate, :direct_login]
+                only: [:new, :edit, :group_new, :dislocate]
+  before_filter :set_user, only: [:edit, :update, :dislocate, :letter, :direct_login]
+
+  def letter
+    authorize! :read, @user
+    respond_to do |format|
+      format.pdf do
+        render pdf: 'letter.pdf', page_size: 'A4'
+      end
+    end
+  end
 
   def dislocate
     authorize! :update, @user
@@ -29,7 +38,7 @@ class UsersController < ApplicationController
   def update
     authorize! :update, @user
     @user.valid_roles = Role.accessible_by(current_ability, :assign_users)
-    if @user.update( params[:dislocation] ? dislocate_params : user_params )
+    if @user.update(params[:dislocation] ? dislocate_params : user_params)
       @user.send_reset_password_instructions if params[:send_password]
       render json: {status: :ok}, :content_type => 'text/html'
     else
@@ -54,23 +63,23 @@ class UsersController < ApplicationController
     gon.user_app_ids = @apps.to_a.map(&:id)
     gon.regions = regions_hash
     case @apps.count
-    when 0
-      if @rejected.present?
-        render partial: 'rejected', layout: false
+      when 0
+        if @rejected.present?
+          render partial: 'rejected', layout: false
+        else
+          render text: "Заявки уже обработаны"
+        end
+      when 1
+        @app = @apps.first
+        gon.user_app_id = @app.id
+        @user = User.new_from_app(@app)
+        authorize! :create, @user
+        render "new", layout: false
       else
-        render text: "Заявки уже обработаны"
-      end
-    when 1
-      @app = @apps.first
-      gon.user_app_id = @app.id
-      @user = User.new_from_app(@app)
-      authorize! :create, @user
-      render "new", layout: false
-    else
-      @user = User.new_from_app(@apps)
-      gon.user_app_id = @apps.first.id
-      authorize! :create, @user
-      render layout: false
+        @user = User.new_from_app(@apps)
+        gon.user_app_id = @apps.first.id
+        authorize! :create, @user
+        render layout: false
     end
   end
 
@@ -93,10 +102,9 @@ class UsersController < ApplicationController
       user.save!
       app.confirm_phone! unless app.phone_verified?
       app.confirm_email! unless app.confirmed?
-   end
+    end
     render json: {status: :ok}, :content_type => 'text/html'
   end
-
 
 
   def new
@@ -166,13 +174,13 @@ class UsersController < ApplicationController
 
   def user_params
     accessible_fields = [
-      :adm_region_id,
-      :email,
-      :password,
-      :phone,
-      :region_id,
-      :user_app_id,
-      :role_ids => [],
+        :adm_region_id,
+        :email,
+        :password,
+        :phone,
+        :region_id,
+        :user_app_id,
+        :role_ids => [],
     ]
     if !@user.try(:persisted?)
       accessible_fields += [:organisation_id, :region_id, :adm_region_id]

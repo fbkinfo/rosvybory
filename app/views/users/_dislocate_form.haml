@@ -30,9 +30,8 @@
     -#= f.input :organisation, as: :select, collection: Organisation.accessible_by(current_ability)
     = render :partial => 'personal_data_inputs', locals: {f: f}
 
-
-
   = f.actions do
-    = f.submit "Сохранить"
+    = f.submit 'Сохранить'
+
 :javascript
   initUserForm();
