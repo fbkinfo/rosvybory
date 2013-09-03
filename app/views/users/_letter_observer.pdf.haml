@@ -15,7 +15,7 @@
   %span{style: 'white-space: normal;'}
     %b>= @user.full_name
   %span>= ", #{living(@user)} по адресу"
-  %b= " #{address(@user)}"
+  %b= " #{optional_string_info(@user.address)}"
   %span= 'направляется наблюдателем в участковую избирательную комиссию избирательного участка'
   %b= " №#{uic}"
   %span= 'от зарегистрированного кандидата на должность Мэра Москвы'

@@ -9,11 +9,6 @@ module UsersHelper
     ret
   end
 
-  def address(user)
-    addr = user.address.to_s.strip
-    addr.length > 0 ? addr : 'ACHTUNG!!!! ACHTUNG!!!! ACHTUNG!!!! Укажите адрес прописки!'
-  end
-
   def uic(user, slug)
     current_role = CurrentRole.where(slug: slug).first!
     user_current_role = user.user_current_roles.where(current_role: current_role).first
