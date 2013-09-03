@@ -27,7 +27,7 @@ module UsersHelper
 
   def letter_url(user)
     if [UserApp::STATUS_OBSERVER, UserApp::STATUS_PSG].select { |status| can_print_letter? user, status }.any?
-      letter_user_path(format: :pdf)
+      letter_user_path(user, format: :pdf)
     else
       nil
     end

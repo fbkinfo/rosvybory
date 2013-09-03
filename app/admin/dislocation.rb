@@ -56,8 +56,11 @@ ActiveAdmin.register Dislocation do
           savenochange: true
         })
     end
-    column "Ошибки расстановки", class: 'dislocation_errors_column' do |dislocation|
+    column 'Ошибки расстановки', class: 'dislocation_errors_column' do |dislocation|
       render partial: 'cell_dislocation_errors', locals: { dislocation: dislocation }
+    end
+    column 'Документы', class: 'dislocation_letters_column' do |dislocation|
+      render partial: 'cell_dislocation_letters', locals: { dislocation: dislocation }
     end
   end
 
@@ -128,6 +131,7 @@ ActiveAdmin.register Dislocation do
       dislocation = Dislocation.with_current_roles.where('users.id' => user.id, 'user_current_roles.id' => ucr.id).first.decorate
       results[:dislocation_errors] = render_to_string(partial: 'cell_dislocation_errors', locals: { dislocation: dislocation })
     end
+    results[:dislocation_letters] = render_to_string(partial: 'cell_dislocation_letters', locals: { dislocation: dislocation })
     render :json => results
   end
 
