@@ -45,9 +45,9 @@ class ExcelUserAppRow
 
   delegate :organisation, :persisted?, :new_record?, :to => :user_app, :allow_nil => true
 
-  def initialize(attrs)
+  def initialize(attrs, replace_existing = false)
     phone = Verification.normalize_phone_number(attrs[:phone])
-
+    @replace_existing = replace_existing
     @user_app = UserApp.find_or_initialize_by(phone: phone) do |a|
       a.ip ||= '127.0.0.1'
       a.year_born ||= 1913
@@ -191,7 +191,21 @@ class ExcelUserAppRow
   def save
     @user_app.skip_phone_verification = true
     @user_app.skip_email_confirmation = true
-    success =  (!@user_app.user && @user_app.save)
+    if @replace_existing.present? || !@user_app.user
+      success =  @user_app.save
+      if success
+        if @user_app.user
+          Rails.logger.info "User import - updating user #{@user_app.user.phone}"
+        else
+          Rails.logger.info "User import - creating user #{@user_app.phone}"
+        end
+      else
+        Rails.logger.info "User import - could not save user_app #{@user_app.phone}"
+      end
+    else
+      success = false
+      Rails.logger.info "User import - ignoring existing user #{@user_app.user.phone}"
+    end
     if success
       @user_app.confirm!
       @user = @user_app.user || User.new
