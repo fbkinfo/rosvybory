@@ -1,5 +1,5 @@
 class CallCenter::UicsController < ApplicationController
-  respond_to :json
+  respond_to :json, :html
 
   def index
     @uics = Uic.where(number: params[:q])

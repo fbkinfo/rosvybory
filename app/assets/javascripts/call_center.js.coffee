@@ -28,3 +28,11 @@ jQuery ->
 
       options.dropdownCssClass = "bigdrop"
     select.select2 options
+
+  $("#call_center_report_reporter_attributes_uic_id").on "change", ()->
+    select = $(this)
+    $.ajax
+      url: select.data("single-source").replace(":id", select.val())
+      dataType: "html"
+      success: (response)->
+        $("#uic").replaceWith $(response).find("#uic")
