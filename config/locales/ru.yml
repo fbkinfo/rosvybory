@@ -487,6 +487,7 @@ ru:
         uic: УИК
         role: Роль
         dislocation: Человек
+        current_role: Роль
       call_center/report:
         text: Текст
         url: Ссылка
