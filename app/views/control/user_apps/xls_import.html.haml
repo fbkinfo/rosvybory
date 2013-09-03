@@ -64,8 +64,8 @@
     .actions
       = f.submit 'Загрузить'
 
-      = f.label :update_existing, "Обновить данные существующих пользователей"
-      = f.check_box :update_existing
+      = f.label :ignore_existing, "Загрузить только новых"
+      = f.check_box :ignore_existing
 
   - else
     .actions
