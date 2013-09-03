@@ -115,7 +115,7 @@ class ExcelUserAppRow
 
   def previous_statuses=(v)
     statuses_by_name = {
-        'ОК' => UserApp::STATUS_COORD,
+        'ОК' => UserApp::STATUS_OBSERVER,
         'ПРГ' => UserApp::STATUS_PRG,
         'МГ' => UserApp::STATUS_MOBILE,
         'ТИК' => UserApp::STATUS_TIC_PSG,

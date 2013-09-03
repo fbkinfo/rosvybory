@@ -50,26 +50,26 @@ class Ability
       #ТК видит заявки своего адм. округа или района и только из своего НО
       if user.organisation
         if user.region
-          can :crud, UserApp, :region_id => user.region_id, :organisation_id => user.organisation_id
-          can :approve, UserApp, :region_id => user.region_id, :organisation_id => user.organisation_id
-          can :reject, UserApp, :region_id => user.region_id, :organisation_id => user.organisation_id
+          can :crud, UserApp, :region_id => user.region_id
+          can :approve, UserApp, :region_id => user.region_id
+          can :reject, UserApp, :region_id => user.region_id
           # ТК с заданным районом может просматривать:
           # карточки волонтёров своего района
-          can :crud, User, :region_id => user.region_id, :organisation_id => user.organisation_id
-          can :view_user_contacts, User, :region_id => user.region_id, :organisation_id => user.organisation_id
+          can :crud, User, :region_id => user.region_id
+          can :view_user_contacts, User, :region_id => user.region_id
           # TODO волонтёров своего района в координаторском формате без участников МГ и КЦ
           # TODO волонтёров своего района во формате "Расстановка с контактами" без участников МГ и КЦ
           # TODO волонтёров своего округа во формате "Расстановка с ФИО" без участников МГ и КЦ
           # TODO всю базу волонтёров в формате "Обезличенная расстановка" без участников МГ и КЦ
         elsif  user.adm_region
-          can :crud, UserApp, :adm_region_id    => user.adm_region_id, :organisation_id => user.organisation_id
-          can :approve, UserApp, :adm_region_id => user.adm_region_id, :organisation_id => user.organisation_id
-          can :reject, UserApp, :adm_region_id  => user.adm_region_id, :organisation_id => user.organisation_id
+          can :crud, UserApp, :adm_region_id    => user.adm_region_id
+          can :approve, UserApp, :adm_region_id => user.adm_region_id
+          can :reject, UserApp, :adm_region_id  => user.adm_region_id
           # ТК с незаданным райном может просматривать:
           # карточки волонтёров своего округа
-          can :crud, User, :adm_region_id => user.adm_region_id, :organisation_id => user.organisation_id
-          can :change_region, User, :adm_region_id => user.adm_region_id, :organisation_id => user.organisation_id
-          can :view_user_contacts, User, :adm_region_id => user.adm_region_id, :organisation_id => user.organisation_id
+          can :crud, User, :adm_region_id => user.adm_region_id
+          can :change_region, User, :adm_region_id => user.adm_region_id
+          can :view_user_contacts, User, :adm_region_id => user.adm_region_id
           # TODO волонтёров своего округа в координаторском формате без участников МГ и КЦ
           # TODO волонтёров своего округа во формате "Расстановка с контактами" без участников МГ и КЦ
           # TODO всю базу волонтёров в форматах "Расстановка с ФИО" и "Обезличенная расстановка" без участников МГ и КЦ
@@ -104,6 +104,10 @@ class Ability
       # TODO КК может просматривать только участников КЦ в координаторском формате и формате "Состав КЦ".
 
       can [:create, :read], ActiveAdmin::Comment
+    end
+
+    can :destroy, UserCurrentRole do |ucr|
+      ucr.user && can?(:view_user_contacts, ucr.user)
     end
 
     # Define abilities for the passed in user here. For example:

@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+# encoding: utf-8
+
 ActiveAdmin.register User do
   decorate_with UserDecorator
 
@@ -13,13 +14,20 @@ ActiveAdmin.register User do
     end
   end if Role.table_exists?
 
+  scope 'Телефон в черном списке' do |items|
+    items.where('EXISTS (SELECT * FROM blacklists WHERE phone=users.phone)')
+  end
+
   #при добавлении нового группового действия - обратить внимание на флажок "Применить ко всем страницам", если нужен для этого действия - реализовывать обработку
   batch_action :new_group_email
   batch_action :new_group_sms
+  batch_action :destroy, false
 
   show do |user|
+    h3 'Внимание! Телефон пользователя занесён в чёрный список!' if user.blacklisted
     if can? :crud, user #вид для админа
       attributes_table do
+        row :blacklist_info if user.blacklisted
         row :organisation, &:organisation_with_user_id
         row :user_app_created_at
         row :full_name
@@ -62,14 +70,15 @@ ActiveAdmin.register User do
     end
   end
 
-  index :download_links => false do
+  index :download_links => [:xlsx] do
     selectable_column
     actions(defaults: false) do |resource|
       links = ''.html_safe
       links << link_to(I18n.t('active_admin.view'), resource_path(resource), class: "member_link view_link")
       links << '<br/> <br/>'.html_safe
       links << link_to(I18n.t('active_admin.edit'), edit_user_path(resource.id), class: "member_link edit_link")
-      #links << link_to(I18n.t('active_admin.delete'), resource_path(resource), class: "member_link delete_link", method: :delete, data: { confirm: "Вы уверены? Удаление пользователя нельзя будет отменить" })
+      links << '<br/> <br/>'.html_safe
+      links << link_to(I18n.t('active_admin.delete'), resource_path(resource), class: "member_link delete_link", method: :delete, data: { confirm: "Вы уверены? Удаление пользователя нельзя будет отменить" })
       links
     end
 
@@ -80,7 +89,7 @@ ActiveAdmin.register User do
     column :full_name
     column :phone
     column :email
-    column :uic
+    column :uic, :sortable => 'user_apps.uic'
 
     column :current_roles, &:human_current_roles
     column :roles, &:human_roles
@@ -96,7 +105,6 @@ ActiveAdmin.register User do
     column :social_accounts, &:human_social_accounts
     column :extra
     column :year_born
-
   end
 
   filter :adm_region, :as => :select, :collection => proc { Region.adm_regions.all }, :input_html => {:style => "width: 230px;"}
@@ -105,9 +113,7 @@ ActiveAdmin.register User do
   filter :roles, :input_html => {:style => "width: 230px;"}
   filter :user_current_roles_current_role_id, label: 'Роль наблюдателя', as: :select, collection: proc { CurrentRole.all }, :input_html => {:style => "width: 230px;"}
   filter :user_app_uic_matcher, as: :string, label: '№ УИК'
-  filter :last_name
-  filter :first_name
-  filter :patronymic
+  filter :full_name
   filter :phone
   filter :email
   filter :user_app_created_at, as: :date_range, label: 'Дата подачи заявки'
@@ -129,14 +135,43 @@ ActiveAdmin.register User do
     link_to "Сменить пароль", edit_password_control_user_path(current_user) if user == current_user
   end
 
-  # TODO(sinopalnikov): move common code to app/admin/concerns
-  action_item(only: [:index]) do
-    _show_all = params[:show_all] && params[:show_all].to_sym == :true
-    _label = I18n.t('views.pagination.actions.pagination_' + (_show_all ? 'on' : 'off'))
-    link_to _label, control_users_path(:format => nil, :show_all => (_show_all ? :false : :true))
-  end
-
   controller do
+
+    def index
+      if request.format.symbol == :xlsx
+        xr = XlsxRenderer.new(User)
+        xr.iterate collection do
+          column "НО + id", &:organisation_with_user_id
+          column :created_at
+          column :adm_region
+          column :region
+          column :full_name
+          column :phone do |user| " #{user.phone}" end # prevent excel treating phone as number or date
+          column :email
+          column :uic
+
+          column :current_roles, &:human_current_roles
+          column :roles, &:human_roles
+          column :user_current_roles
+          column :experience_count
+          column :previous_statuses, &:human_previous_statuses
+          column :can_be_coord_region
+          column :can_be_caller
+          column :can_be_mobile
+          column :has_car, &:human_has_car
+          column :legal_status, &:human_legal_status
+          column :has_video, &:human_has_video
+          column :social_accounts, &:human_social_accounts
+          column :extra
+          column :year_born
+        end
+
+        send_data xr.data, :filename => 'users.xlsx'
+      else
+        super
+      end
+    end
+
     def permitted_params
       params.permit!
     end
@@ -160,11 +195,7 @@ ActiveAdmin.register User do
     end
 
     def scoped_collection
-      resource_class.includes(:adm_region, :region, :roles) # prevent N+1 queries
-    end
-
-    def apply_pagination(chain)
-      return super.per(params[:show_all] && params[:show_all].to_sym == :true ? 1000000 : nil)
+      resource_class.includes(:adm_region, :region, :roles, :user_app, :organisation) # prevent N+1 queries
     end
 
     def update

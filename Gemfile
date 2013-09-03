@@ -24,6 +24,7 @@ gem 'redis'
 gem 'sass-rails', '~> 4.0.0'
 gem "less-rails"
 gem 'haml-rails'
+gem 'slim'
 
 gem 'honeybadger'
 gem 'therubyracer', platforms: :ruby
@@ -38,6 +39,8 @@ gem 'enumerize'
 gem 'state_machine'
 
 gem 'activeadmin',         github: 'gregbell/active_admin', branch: 'rails4'
+# gem 'activeadmin-axlsx'   # breaks app for no good reason
+gem 'axlsx'
 gem 'ransack', "~> 1.0.0"
 gem 'inherited_resources', "~> 1.4.1"
 gem 'sms_ru', github: 'stiff/sms_ru'
@@ -46,6 +49,10 @@ gem 'gon'
 gem 'cocoon'
 
 gem 'roo' #import from excel
+gem 'rubyzip2'  #без этого roo почему-то ломает rake
+
+gem 'wkhtmltopdf-binary'
+gem 'wicked_pdf'
 
 group :development do
   gem 'capistrano'

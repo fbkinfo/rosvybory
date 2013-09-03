@@ -11,10 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130831054421) do
-
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+ActiveRecord::Schema.define(version: 20130903153558) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -35,9 +32,81 @@ ActiveRecord::Schema.define(version: 20130831054421) do
     t.string   "phone"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "info"
   end
 
   add_index "blacklists", ["phone"], name: "index_blacklists_on_phone", unique: true, using: :btree
+
+  create_table "call_center_operators", force: true do |t|
+    t.string   "first_name"
+    t.string   "last_name"
+    t.integer  "comp_number"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "call_center_phone_calls", force: true do |t|
+    t.string   "status"
+    t.string   "number"
+    t.integer  "call_center_operator_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "call_center_reporters", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "uic_id"
+    t.integer  "adm_region_id"
+    t.integer  "mobile_group_id"
+    t.string   "phone"
+    t.string   "first_name"
+    t.string   "patronymic"
+    t.string   "last_name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "current_role_id"
+  end
+
+  create_table "call_center_reports", force: true do |t|
+    t.text     "text"
+    t.string   "url"
+    t.integer  "reportable_id"
+    t.string   "reportable_type"
+    t.integer  "reporter_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "call_center_reports", ["reportable_id", "reportable_type"], name: "index_call_center_reports_on_reportable_id_and_reportable_type", using: :btree
+
+  create_table "call_center_reports_relations", force: true do |t|
+    t.integer  "parent_report_id"
+    t.integer  "child_report_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "call_center_reports_relations", ["child_report_id"], name: "index_call_center_reports_relations_on_child_report_id", using: :btree
+  add_index "call_center_reports_relations", ["parent_report_id"], name: "index_call_center_reports_relations_on_parent_report_id", using: :btree
+
+  create_table "call_center_violation_categories", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "call_center_violation_types", force: true do |t|
+    t.string   "name"
+    t.integer  "violation_category_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "call_center_violations", force: true do |t|
+    t.integer  "violation_type_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "current_roles", force: true do |t|
     t.string   "name",                   null: false
@@ -77,7 +146,7 @@ ActiveRecord::Schema.define(version: 20130831054421) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "has_tic",    default: false
+    t.boolean  "has_tic",       default: false
     t.integer  "lft"
     t.integer  "rgt"
     t.integer  "adm_region_id"
@@ -99,15 +168,16 @@ ActiveRecord::Schema.define(version: 20130831054421) do
   add_index "roles", ["slug"], name: "index_roles_on_slug", unique: true, using: :btree
 
   create_table "uics", force: true do |t|
-    t.integer  "region_id",                    null: false
+    t.integer  "region_id",                          null: false
     t.integer  "number"
-    t.boolean  "is_temporary", default: false, null: false
-    t.string   "has_koib",     default: "f",   null: false
+    t.boolean  "is_temporary",       default: false, null: false
+    t.string   "has_koib",           default: "f",   null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "kind"
     t.string   "name"
     t.integer  "parent_id"
+    t.integer  "participants_count"
   end
 
   add_index "uics", ["number"], name: "index_uics_on_number", unique: true, using: :btree
@@ -132,14 +202,14 @@ ActiveRecord::Schema.define(version: 20130831054421) do
     t.string   "phone"
     t.string   "email"
     t.string   "uic"
-    t.integer  "current_statuses",   default: 0
-    t.integer  "experience_count",   default: 0
-    t.integer  "previous_statuses",  default: 0
+    t.integer  "current_statuses",               default: 0
+    t.integer  "experience_count",               default: 0
+    t.integer  "previous_statuses",              default: 0
     t.boolean  "has_car"
     t.text     "social_accounts"
     t.text     "extra"
     t.integer  "legal_status"
-    t.integer  "desired_statuses",   default: 0
+    t.integer  "desired_statuses",               default: 0
     t.string   "app_code"
     t.integer  "app_status"
     t.datetime "created_at"
@@ -150,13 +220,14 @@ ActiveRecord::Schema.define(version: 20130831054421) do
     t.boolean  "sex_male"
     t.text     "useragent"
     t.integer  "adm_region_id"
-    t.string   "state",              default: "pending", null: false
-    t.boolean  "phone_verified",     default: false,     null: false
+    t.string   "state",                          default: "pending", null: false
+    t.boolean  "phone_verified",                 default: false,     null: false
     t.boolean  "has_video"
     t.string   "forwarded_for"
     t.integer  "organisation_id"
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
+    t.string   "full_name",          limit: 767
   end
 
   add_index "user_apps", ["adm_region_id"], name: "index_user_apps_on_adm_region_id", using: :btree
@@ -192,11 +263,11 @@ ActiveRecord::Schema.define(version: 20130831054421) do
 
   create_table "users", force: true do |t|
     t.string   "email"
-    t.string   "encrypted_password",     default: "", null: false
+    t.string   "encrypted_password",                 default: "", null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0
+    t.integer  "sign_in_count",                      default: 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -218,6 +289,7 @@ ActiveRecord::Schema.define(version: 20130831054421) do
     t.string   "first_name"
     t.string   "patronymic"
     t.text     "address"
+    t.string   "full_name",              limit: 767
   end
 
   add_index "users", ["adm_region_id"], name: "index_users_on_adm_region_id", using: :btree

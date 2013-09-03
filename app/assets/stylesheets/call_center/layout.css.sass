@@ -1,0 +1,29 @@
+body
+  background-color: #eee
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif
+
+#wrapper
+  width: 800px
+  margin: auto
+
+#content
+  &:after
+    content: ""
+    display: block
+    clear: both
+
+footer
+  margin-top: 40px
+  padding: 20px 0
+  &:before
+    content: ""
+    display: block
+    border-top: #ccc solid thin
+    border-bottom: white solid thin
+    margin-bottom: 20px
+  a
+    color: #999
+    text-decoration: none
+
+#uic, #reporter
+  margin-top: 11px

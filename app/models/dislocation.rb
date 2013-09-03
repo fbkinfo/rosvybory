@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class Dislocation < User
 
   belongs_to :nomination_source, foreign_key: :user_current_role_nomination_source_id
@@ -12,8 +14,8 @@ class Dislocation < User
     Arel::Nodes::SqlLiteral.new("coalesce((select regions.adm_region_id from regions where regions.id = user_current_roles.region_id), users.adm_region_id)")
   end
 
-  ransacker :current_role_region do
-    Arel::Nodes::SqlLiteral.new("user_current_roles.region_id")
+  ransacker :current_role_region, {:formatter => :to_i.to_proc} do
+    Arel::Nodes::SqlLiteral.new("coalesce(user_current_roles.region_id, users.region_id)")
   end
 
   ransacker :current_role_nomination_source_id do
@@ -25,11 +27,13 @@ class Dislocation < User
   end
 
   # возвращает пользователей и их текущие роли (один пользователь может быть 1 и больше раз)
+  # роли, которые не должны отображаться в расстановке игнорируются - если у пользователя только такие роли, то это выглядит так же, как если бы у него не было ни одной
   # каждая строка содержит все поля таблиц users и user_current_roles
   def self.with_current_roles
+    @@dislocatable_current_roles ||= CurrentRole.dislocatable.pluck(:id).join(',')
     @@select_fields ||= User.column_names.map(&User.arel_table.method(:[])) +
                         UserCurrentRole.column_names.map {|col| UserCurrentRole.arel_table[col].as("user_current_role_#{col}")}
-    joins("left join user_current_roles on user_current_roles.user_id = users.id").
+    joins("left join user_current_roles on user_current_roles.user_id = users.id AND user_current_roles.current_role_id IN (#{@@dislocatable_current_roles})").
       select(@@select_fields)
   end
 
@@ -53,7 +57,7 @@ class Dislocation < User
   #   для этой роли наблюдателя нет.
   #
   DISLOCATION_RULES = {
-    'candidate'  => { 'psg' => 1 },
+    'candidate'  => { 'observer' => 1, 'psg' => 1 },
     'party'      => { 'observer' => 1, 'psg' => 0 },
     'parliament' => { 'observer' => 1, 'psg' => 1 }
   }

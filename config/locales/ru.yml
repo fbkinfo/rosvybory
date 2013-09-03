@@ -280,6 +280,7 @@ ru:
       default: ! '%a, %d %b %Y, %H:%M:%S %z'
       long: ! '%d %B %Y, %H:%M'
       short: ! '%d %b, %H:%M'
+      time_only: '%H:%M'
     pm: вечера
   # remove these aliases after 'activemodel' and 'activerecord' namespaces are removed from Rails repository
   activemodel:
@@ -324,6 +325,27 @@ ru:
       uic:
         one: УИК
         other: Избирательные комиссии
+      call_center/reporter:
+        one: Звонящий
+        other: Звонящие
+      call_center/report:
+        one:   Сообщение
+        other: Сообщения
+      call_center/phone_call:
+        one:   Звонок
+        other: Звонки
+      call_center/operator:
+        one:   Оператор
+        other: Операторы
+      call_center/violation:
+        one:   Нарушение
+        other: Нарушения
+      call_center/violation_category:
+        one:   Категория нарушений
+        other: Категории нарушений
+      call_center/violation_type:
+        one:   Тип нарушения
+        other: Типы нарушения
     attributes:
       dislocation:
         current_role_id: Роль
@@ -331,6 +353,7 @@ ru:
         current_role_uic: УИК
         user_current_role_got_docs: Документы выданы
       dislocation_control:
+        kind: Тип
         number: УИК №
         participant_0: Участник №1
         participant_1: Участник №2
@@ -339,6 +362,7 @@ ru:
         participant_4: Участник №5
         participant_5: Участник №6
         participant_6: Участник №7
+        participants_count: Кол-во
         region_parent_id: Адм.округ
         region: Район
         others: ""
@@ -407,6 +431,7 @@ ru:
         work_position: Должность
         address: Адрес прописки
         got_docs: Документы выданы
+        blacklist_info: Данные из черного списка
       region:
         kind: Тип
         name: Название
@@ -461,6 +486,18 @@ ru:
         ip: "IP"
         organisation: "Орг."
         current_roles: "Текущие статусы"
+      call_center/reporter:
+        uic: УИК
+        role: Роль
+        dislocation: Человек
+        current_role: Роль
+      call_center/report:
+        text: Текст
+        url: Ссылка
+        created_at: Создано
+        updated_at: Обновлено
+        reporter: Звонящий
+        violation_type: Нарушение
 
   dislocation:
     errors:
@@ -514,6 +551,7 @@ ru:
     edit_model: "Редактирование %{model}"
     menu:
       dictionaries: Справочники
+      call_center: Колл-центр
     scopes:
       with_current_roles: Все
   views:
@@ -524,5 +562,11 @@ ru:
       next: "Вперед &rsaquo;"
       truncate: "..."
       actions:
-        pagination_on: "Показать по страницам"
-        pagination_off: "Показать всё"
+        pagination_on: "Показать по 30 записей"
+        pagination_off: "Показать по 200 записей"
+    call_center:
+      uic:
+        no_reports: Зафиксированных обращений нет
+        no_uic:
+          header: УИК не определён
+          notice: "Как только введёте номер УИК в форме, он здесь появится"

@@ -1,4 +1,6 @@
 class UserApp < ActiveRecord::Base
+  include FullNameFormable
+
   serialize :social_accounts, HashWithIndifferentAccess
   belongs_to :region
   belongs_to :adm_region, class_name: "Region"
@@ -210,10 +212,6 @@ class UserApp < ActiveRecord::Base
     @imported = true
   end
 
-  def full_name
-    [last_name, first_name, patronymic].compact.join(' ')
-  end
-
   def can_not_be_approved?
     return :valid unless valid?
     return :approved if state_name == :approved
@@ -232,6 +230,10 @@ class UserApp < ActiveRecord::Base
   #
   ransacker :uic_matcher, type: :string, formatter: ->(str){ '('+str+')' } do |parent|
     Arel::Nodes::NamedFunction.new( 'regexp_replace', [ parent.table[:uic], '[0-9]+', '(\\&)', 'g' ] )
+  end
+
+  def blacklisted
+    Blacklist.find_by_phone(phone)
   end
 
   private

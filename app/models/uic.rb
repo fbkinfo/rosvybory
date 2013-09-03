@@ -24,6 +24,14 @@ class Uic < ActiveRecord::Base
     def uic_value; 2; end
     def tics; where(:kind => tic_value); end
     def uics; where(:kind => uic_value); end
+
+    def human_kind(kind)
+      {'tic' => 'ТИК', 'uic' => 'УИК'}[kind]
+    end
+  end
+
+  def as_json(options)
+    { id: id, text: name }
   end
 
   # Returns +true+ if Uic belongs to +other_region+
@@ -33,7 +41,11 @@ class Uic < ActiveRecord::Base
   end
 
   def human_kind
-    {'tic' => 'ТИК', 'uic' => 'УИК'}[kind]
+    self.class.human_kind(kind)
+  end
+
+  def update_participants_count!
+    update_column :participants_count, user_current_roles.joins(:current_role).merge(CurrentRole.dislocatable).count
   end
 
   private

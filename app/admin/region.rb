@@ -1,6 +1,7 @@
 ActiveAdmin.register Region do
 
   menu :parent => I18n.t('active_admin.menu.dictionaries'), :if => proc{ can? :manage, Region }
+  batch_action :destroy, false
 
   index :download_links => false do
     column :id
