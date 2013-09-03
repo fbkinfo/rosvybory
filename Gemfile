@@ -24,10 +24,10 @@ gem 'redis'
 gem 'sass-rails', '~> 4.0.0'
 gem "less-rails"
 gem 'haml-rails'
+gem 'slim'
 
 gem 'honeybadger'
 gem 'therubyracer', platforms: :ruby
-gem 'rvm'
 gem 'unicorn'
 gem 'foreman', require: false
 gem 'foreman-export-initscript', require: false
@@ -49,6 +49,7 @@ gem 'gon'
 gem 'cocoon'
 
 gem 'roo' #import from excel
+gem 'rubyzip2'  #без этого roo почему-то ломает rake
 
 gem 'rails-i18n'
 gem 'wkhtmltopdf-binary'

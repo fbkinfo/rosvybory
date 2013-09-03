@@ -62,7 +62,7 @@ GEM
       htmlentities (~> 4.3.1)
       nokogiri (>= 1.4.1)
       rubyzip (>= 0.9.5)
-    bcrypt-ruby (3.1.1)
+    bcrypt-ruby (3.1.2)
     bourbon (3.1.8)
       sass (>= 3.2.0)
       thor
@@ -98,16 +98,15 @@ GEM
       railties (>= 3.2.6, < 5)
       warden (~> 1.2.3)
     diff-lcs (1.2.4)
-    dotenv (0.8.0)
+    dotenv (0.9.0)
     draper (1.2.1)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       request_store (~> 1.0.3)
-    enumerize (0.6.1)
+    enumerize (0.7.0)
       activesupport (>= 3.2)
     erubis (2.7.0)
-    execjs (1.4.0)
-      multi_json (~> 1.0)
+    execjs (2.0.1)
     factory_girl (4.2.0)
       activesupport (>= 3.0.0)
     factory_girl_rails (4.2.1)
@@ -170,14 +169,14 @@ GEM
     kgio (2.8.0)
     launchy (2.3.0)
       addressable (~> 2.3)
-    less (2.3.2)
+    less (2.3.3)
       commonjs (~> 0.2.6)
     less-rails (2.3.3)
       actionpack (>= 3.1)
       less (~> 2.3.1)
     letter_opener (1.1.2)
       launchy (~> 2.2)
-    libv8 (3.11.8.17)
+    libv8 (3.16.14.3)
     listen (1.3.0)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
@@ -187,7 +186,7 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     method_source (0.8.2)
-    mime-types (1.24)
+    mime-types (1.25)
     mini_portile (0.5.1)
     minitest (4.7.5)
     mono_logger (1.1.0)
@@ -282,8 +281,8 @@ GEM
       rspec-expectations (~> 2.14.0)
       rspec-mocks (~> 2.14.0)
     ruby-ole (1.2.11.7)
-    rubyzip (0.9.9)
-    rvm (1.11.3.8)
+    rubyzip (1.0.0)
+    rubyzip2 (2.0.2)
     rvm-capistrano (1.4.4)
       capistrano (>= 2.15.4)
     sass (3.2.10)
@@ -300,8 +299,11 @@ GEM
       rack (~> 1.4)
       rack-protection (~> 1.4)
       tilt (~> 1.3, >= 1.3.4)
+    slim (2.0.1)
+      temple (~> 0.6.6)
+      tilt (>= 1.3.3, < 2.1)
     slop (3.4.6)
-    spreadsheet (0.8.8)
+    spreadsheet (0.8.9)
       ruby-ole (>= 1.0)
     sprockets (2.10.0)
       hike (~> 1.2)
@@ -313,8 +315,9 @@ GEM
       activesupport (>= 3.0)
       sprockets (~> 2.8)
     state_machine (1.2.0)
-    therubyracer (0.11.4)
-      libv8 (~> 3.11.8.12)
+    temple (0.6.6)
+    therubyracer (0.12.0)
+      libv8 (~> 3.16.14.0)
       ref
     thor (0.18.1)
     thread_safe (0.1.2)
@@ -329,7 +332,7 @@ GEM
       rails (>= 3.1)
       railties (>= 3.1)
     tzinfo (0.3.37)
-    uglifier (2.1.2)
+    uglifier (2.2.1)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
     unicorn (4.6.3)
@@ -394,11 +397,12 @@ DEPENDENCIES
   resque_mailer
   roo
   rspec-rails
-  rvm
+  rubyzip2
   rvm-capistrano
   sass-rails (~> 4.0.0)
   select2-rails
   shoulda-matchers
+  slim
   sms_ru!
   state_machine
   therubyracer

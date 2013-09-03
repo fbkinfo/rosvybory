@@ -1,10 +1,12 @@
+# encoding: utf-8
+
 class UsersController < ApplicationController
 
   include UserAppsHelper
 
   before_filter :expose_current_roles,
                 only: [:new, :edit, :group_new, :dislocate]
-  before_filter :set_user, only: [:edit, :update, :dislocate, :letter]
+  before_filter :set_user, only: [:edit, :update, :dislocate, :letter, :direct_login]
 
   def letter
     authorize! :read, @user
@@ -19,6 +21,12 @@ class UsersController < ApplicationController
     authorize! :update, @user
     gon.user_id = @user.id
     render "dislocate", layout: false
+  end
+
+  def direct_login
+    raise CanCan::AccessDenied.new('Not authorized!', :direct_login, @user) unless current_user.has_role? :admin
+    sign_in @user
+    redirect_to "/control/users", notice: "Вы вошли в систему как #{@user.full_name}"
   end
 
   def edit

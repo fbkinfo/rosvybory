@@ -63,7 +63,10 @@ class UserAppsController < ApplicationController
   end
 
   def send_group_email
-    UserMailer.group_email(*params[:group_email].values).deliver
+    ge = params[:group_email]
+    ge[:emails].each do |single_email|
+      UserMailer.group_email(single_email, ge[:subject], ge[:body]).deliver
+    end if ge.is_a? Hash
     redirect_to '/control/users', notice: t('.messages_sent')
   end
 

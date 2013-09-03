@@ -1,0 +1,14 @@
+/*
+ *= require select2
+ *= require call_center/layout
+ *= require call_center/uic
+ *= require call_center/reports
+ */
+
+.select2 {
+  width: 320px;
+}
+
+.select2.uic {
+  width: 250px;
+}
