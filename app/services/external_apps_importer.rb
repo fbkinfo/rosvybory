@@ -17,7 +17,7 @@ class ExternalAppsImporter
   end
 
   def import
-    spreadsheet_rows(@file_path, @file_type).drop(1).each do |row|
+    spreadsheet_rows(@file_path, @file_type).each do |row|
       if (attrs = attributes_from_row(row))
         if (model = build(attrs))
           if block_given?
