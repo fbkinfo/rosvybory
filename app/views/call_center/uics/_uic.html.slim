@@ -4,7 +4,7 @@
     p.notice = t "views.call_center.uic.no_uic.notice"
   - else
     - uic_reports = CallCenter::Report.includes(:reporter).where call_center_reporters: {uic_id: uic.id}
-    h2 На участке №#{uic.number}
+    h2 На участке #{uic.name}
     - if uic_reports.empty?
       p.notice = t "views.call_center.uic.no_reports"
     - else
