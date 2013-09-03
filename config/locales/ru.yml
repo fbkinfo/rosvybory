@@ -484,7 +484,8 @@ ru:
         organisation: "Орг."
         current_roles: "Текущие статусы"
       call_center/reporter:
-        uic: УИК
+        user_id: Звонящий
+        uic_id: Расположение
         role: Роль
         dislocation: Человек
         current_role: Роль
