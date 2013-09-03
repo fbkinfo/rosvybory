@@ -160,6 +160,10 @@ class User < ActiveRecord::Base
     (%w{admin tc mc cc federal_repr} & roles.map{ |e| e.slug }).any?
   end
 
+    def blacklisted
+      Blacklist.find_by_phone(phone)
+    end
+
   private
 
     def send_sms_with_password
