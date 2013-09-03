@@ -5,7 +5,7 @@ class ManyUserAppsForm
   extend ActiveModel::Naming
 
   attr_accessor :user_apps
-  attr_accessor :update_existing
+  attr_accessor :ignore_existing
 
   class <<self
     def reflect_on_association(assoc)
@@ -16,7 +16,7 @@ class ManyUserAppsForm
   def   initialize(organisation, params = {})
     @organisation = organisation || Organisation.where(name: "РосВыборы").first_or_create
     @user_apps = []
-    self.update_existing = (params[:update_existing] == "1")
+    self.ignore_existing = (params[:ignore_existing] == "1")
     params.each do |k, v|
       send "#{k}=", v
     end
@@ -25,7 +25,7 @@ class ManyUserAppsForm
 
   def file=(value)
     ext = File.extname(value.original_filename)
-    eai = ExternalAppsImporter.new(value.tempfile.path, ext, update_existing)
+    eai = ExternalAppsImporter.new(value.tempfile.path, ext, !ignore_existing)
     eai.organisation = @organisation
     eai.import do |attrs, model|
       @user_apps << model
@@ -51,7 +51,7 @@ class ManyUserAppsForm
   end
 
   def build_user_app(attrs = {})
-    ExcelUserAppRow.new(attrs, update_existing).tap do |euar|
+    ExcelUserAppRow.new(attrs, !ignore_existing).tap do |euar|
       euar.organisation = @organisation unless euar.organisation
       @user_apps << euar
     end
