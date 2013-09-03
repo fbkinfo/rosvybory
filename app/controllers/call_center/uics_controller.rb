@@ -2,7 +2,8 @@ class CallCenter::UicsController < ApplicationController
   respond_to :json, :html
 
   def index
-    @uics = Uic.where("lower(name) like :q", q: params[:q].mb_chars.downcase)
+    q = params[:q].mb_chars.downcase
+    @uics = Uic.where("lower(name) like :q", q: "%#{q}%").limit(50)
     respond_with @uics
   end
 
