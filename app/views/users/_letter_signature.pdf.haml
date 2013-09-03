@@ -1,2 +1,4 @@
 %div{style: 'text-align: right;'}= "________________________________________&nbsp;&nbsp;&nbsp;&nbsp;#{signer}".html_safe
-%div{style: 'text-align: right; margin-right: 55mm; font: 7pt Helvetica;'}= '(подпись)'
+%div{style: 'text-align: right; font: 7pt Helvetica;'}
+  %span='(подпись)'
+  %span= (1..(55 + signer.length)).map { '&nbsp;' }.join.html_safe
