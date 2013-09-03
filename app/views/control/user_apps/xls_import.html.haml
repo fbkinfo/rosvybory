@@ -15,6 +15,9 @@
         %th= User.human_attribute_name(:current_roles)
         %th= User.human_attribute_name(:previous_statuses)
         %th= User.human_attribute_name(:experience_count)
+        %th= User.human_attribute_name(:legal_status)
+        %th= User.human_attribute_name(:has_video)
+        %th= User.human_attribute_name(:desired_statuses)
         %th= User.human_attribute_name(:extra)
     %tbody
       - @many_apps.user_apps.select(&:persisted?).each do |euar|
@@ -32,8 +35,10 @@
             %td= user.human_current_roles
             %td= user.human_previous_statuses
             %td= user.experience_count
+            %td= user.human_legal_status
+            %td= user.human_has_video
+            %td= euar.desired_statuses
             %td= user.extra
-
 
 = form_for @many_apps, as: :many_apps, url: process_xls_control_user_apps_path, method: :post do |f|
 

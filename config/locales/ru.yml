@@ -412,7 +412,8 @@ ru:
         full_name: ФИО
         user_app_created_at: Дата заполнения заявки
         uic: № УИК
-        current_roles: "Роли(Заявка)"
+        current_roles: Текущие роли
+        desired_statuses: В день выборов может быть
         user_current_roles: "Роли наблюдателя"
         experience_count: "Прежний опыт: количество раз"
         previous_statuses: "Прежний опыт: статусы"
