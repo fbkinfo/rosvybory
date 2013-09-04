@@ -1,33 +1,33 @@
 = render "call_center/uics/uic", uic: @uic
 
-= semantic_form_for @report do |form|
+= semantic_form_for @report do |f|
   #reporter.panel
     h2 Звонящий
-    = form.fields_for :reporter do |ff|
-      = ff.input :phone
-      = ff.input :user_id, as: :hidden, input_html: { class: 'select2 ajax', data: { source: call_center_dislocations_path, "init-source" => call_center_dislocation_path(@dislocation) }, value: @dislocation.try(:id) }
+    = f.fields_for :reporter do |ff|
+      = ff.input :phone, input_html: { data: { source: by_phone_call_center_dislocations_path } }
+      = ff.input :user_id, as: :hidden, input_html: { class: 'select2 ajax', data: { source: call_center_dislocations_path, "init-source" => call_center_dislocation_path(@dislocation), 'uic_by_user' => by_user_call_center_uics_path }, value: @dislocation.try(:id) }
       .input
         label Кампания
         = text_field_tag :campaign, "Выборы мэра Москвы"
       - data_hash = { source: call_center_uics_path, "init-source" => call_center_uic_path(@uic), "single-source" => call_center_uic_path(":id") }
       = ff.input :uic_id, as: :hidden, input_html: { class: 'select2 ajax', data: data_hash }, value: @uic.try(:id)
-      = ff.input :current_role, as: :select
+      = ff.input :current_role
+    = hidden_field_tag :phone_call_id, @report.phone_call.id
 
   #report.panel
     h2 Сообщение
-    = form.fields_for :report do |ff|
-      = ff.text_area :text
-      = ff.fields_for :violation do |fff|
-        = fff.input :violation_type, as: :select, label: t("activerecord.attributes.call_center/report.violation_type"),
-          collection: option_groups_from_collection_for_select(CallCenter::ViolationCategory.all, :violation_types, :name, :id, :name)
+    = f.text_area :text
+    = f.fields_for :violation do |ff|
+      = ff.input :violation_type, label: t("activerecord.attributes.call_center/report.violation_type"),
+        collection: option_groups_from_collection_for_select(CallCenter::ViolationCategory.all, :violation_types, :name, :id, :name)
 
   / its approach for sending related reports.
   - [1,2,3].each do |value|
     = hidden_field_tag 'call_center_report[parent_report_ids][]', value
 
-  = form.actions do
+  = f.actions do
     .submit
-      = form.submit "Сохранить"
+      = f.submit "Сохранить"
       p.notice И ждать следующий звонок
     .redirect
       button id="redirect-to-jurist" К юристу

@@ -63,7 +63,8 @@ class User < ActiveRecord::Base
   end
 
   def has_role?(role_name)
-    !!roles.exists?(slug: role_name)
+    @has_role_cache ||= {}
+    @has_role_cache[role_name] ||= roles.exists?(slug: role_name)
   end
 
   def add_role(role_name)
@@ -98,7 +99,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  def update_from_user_app(apps)
+  def update_from_user_app(apps, update_current_roles = true)
     apps = Array.wrap apps
     app = apps.first
     unless apps.size > 1
@@ -130,7 +131,7 @@ class User < ActiveRecord::Base
       list & app.user_app_current_roles.map(&:current_role)
     end
     logger.debug "User@#{__LINE__}#update_from_user_app #{app.current_roles.inspect} #{common_roles.inspect}" if logger.debug?
-    if common_roles.present?
+    if update_current_roles && common_roles.present?
       app.user_app_current_roles.each do |ua_role|
         if (common_roles.include? ua_role.current_role) && user_current_roles.none? {|ucr| ucr.current_role == ua_role.current_role}
           # TODO move this to user_current_role#from_user_app_current_role ?

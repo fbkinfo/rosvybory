@@ -56,6 +56,7 @@ class Ability
           # ТК с заданным районом может просматривать:
           # карточки волонтёров своего района
           can :crud, User, :region_id => user.region_id
+          can :view_dislocation, User, :region_id => user.region_id
           can :view_user_contacts, User, :region_id => user.region_id
           # TODO волонтёров своего района в координаторском формате без участников МГ и КЦ
           # TODO волонтёров своего района во формате "Расстановка с контактами" без участников МГ и КЦ
@@ -68,6 +69,7 @@ class Ability
           # ТК с незаданным райном может просматривать:
           # карточки волонтёров своего округа
           can :crud, User, :adm_region_id => user.adm_region_id
+          can :view_dislocation, User, :adm_region_id => user.adm_region_id
           can :change_region, User, :adm_region_id => user.adm_region_id
           can :view_user_contacts, User, :adm_region_id => user.adm_region_id
           # TODO волонтёров своего округа в координаторском формате без участников МГ и КЦ
@@ -80,7 +82,6 @@ class Ability
       end
 
       can :import, UserApp
-      can :view_dislocation, User
 
       can [:create, :read], ActiveAdmin::Comment
     end

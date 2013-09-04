@@ -37,10 +37,25 @@ ActiveAdmin.register UserApp do
     render "control/user_apps/xls_import"
   end
 
-  member_action :reject, method: :post do
-    resource.reject(false)
-    resource.save(validate: false)
-    render json: { success: true }
+  member_action :do_reject, method: :post do
+    if params[:reason].present?
+      resource.transaction do
+        resource.reject(false)
+        ActiveAdmin::Comment.find_for_resource_in_namespace(resource, active_admin_namespace.name).create do |comment|
+          comment.body = params[:reason].strip
+          comment.author = current_active_admin_user
+        end
+        resource.save(validate: false)
+      end
+      render json: { success: true, id: resource.id }
+    else
+      render :action => :reject, :layout => false if request.xhr?
+    end
+  end
+
+  member_action :reject, method: :get do
+    @user_app = resource
+    render :layout => false if request.xhr?
   end
 
   member_action :spam, method: :post do
@@ -59,7 +74,7 @@ ActiveAdmin.register UserApp do
   end
 
   action_item only: [:edit, :show] do
-    link_to('Отклонить', reject_control_user_app_path(user_app), method: :post, 'data-confirm' => 'Отклонить заявку?') unless resource.rejected?
+    link_to('Отклонить', reject_control_user_app_path(user_app), method: :post, class: 'reject_link') unless resource.rejected?
   end
 
   action_item only: [:edit, :show] do
@@ -78,8 +93,8 @@ ActiveAdmin.register UserApp do
   ## Filterable attributes on the index screen
 
   filter :created_at
-  filter :adm_region , :as => :select, :collection => proc { Region.adm_regions.all }, :input_html => {:style => "width: 220px;"}
-  filter :region, :as => :select, :collection => proc { Region.mun_regions.all }, :input_html => {:style => "width: 220px;"}
+  filter :adm_region , :as => :select, :collection => proc { Region.adm_regions.all }
+  filter :region, :as => :select, :collection => proc { Region.mun_regions.all }
   #так красиво разбивается по округам, но при фильтрации не устанавливает значение в текущее после перезагрузки страницы, это может сбить с толку
   #filter :region, :as => :select, :collection => proc { option_groups_from_collection_for_select(Region.adm_regions, :regions, :name, :id, :name) }
 
@@ -110,7 +125,7 @@ ActiveAdmin.register UserApp do
   #
   filter   :year_born, :as => :numeric_range
   #column(:sex_male) {|user_app| user_app.sex_male ? "М":"Ж"}
-  filter   :organisation, :input_html => {:style => "width: 220px;"}
+  filter   :organisation
   filter   :ip
   filter   :useragent
 
@@ -146,7 +161,7 @@ ActiveAdmin.register UserApp do
       links << link_to(I18n.t('active_admin.view'), resource_path(resource), class: "member_link view_link")
       links << link_to('Принять', new_user_path(user_app_id: resource.id), data: {"user-app-id" => resource.id}, class: "member_link view_link accept_link") unless resource.approved?
       links << '<br/> <br/>'.html_safe
-      links << link_to('Отклонить', reject_control_user_app_path(resource), method: :post, remote: true, data: {"user-app-id" => resource.id}, 'data-confirm' => 'Отклонить заявку?', class: "member_link view_link reject_link") unless resource.rejected?
+      links << link_to('Отклонить', reject_control_user_app_path(resource), method: :post, remote: true, data: {"user-app-id" => resource.id}, class: "member_link view_link reject_link") unless resource.rejected?
       links
     end
     column :created_at
