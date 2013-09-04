@@ -10,7 +10,7 @@
     - else
       ul.reports
         - uic_reports.each do |report|
-          - is_violation = report.reportable.kind_of? CallCenter::Violation
+          - is_violation = report.violation.present?
           li.report class=(is_violation ? "violation" : "message")
             p.header
               span.type
@@ -18,6 +18,6 @@
                 = l report.created_at, format: :time_only
               - if is_violation
                 | &nbsp;—&nbsp;
-                span.violation = report.reportable.violation_type.name
+                span.violation = report.violation.violation_type.name
             .text = raw report.text
             = button_to "Связать с сообщением", "#", class: "bind-with-current-report"
