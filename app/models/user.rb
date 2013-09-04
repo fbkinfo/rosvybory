@@ -47,15 +47,18 @@ class User < ActiveRecord::Base
   end
 
   def fix_broken_phone!
-    if phone[0] != '9' && phone[-1] == '0'
-      self.phone = '9'+phone[0..-2]
-      save!
-      if user_app
-        user_app.phone=phone
-        user_app.save!
-      end
-    end
 
+    if phone[-1] != '0' return
+    if phone[0] != '9'
+      self.phone = '9'+phone[0..-2]
+    elsif phone[0..1] == '99' ||  phone[0..1] == '95'
+      self.phone = '4'+phone[0..-2]
+    end
+    save!
+    if user_app
+      user_app.phone=phone
+      user_app.save!
+    end
   end
 
   class << self
