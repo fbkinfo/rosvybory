@@ -3,6 +3,6 @@
     %meta{'http-equiv' => 'Content-Type', 'content' => 'text/html; charset=UTF-8'}
   %body
     - if can_print_letter?(@user, UserApp::STATUS_OBSERVER)
-      = render 'observer'
-    - if can_print_letter?(@user, UserApp::STATUS_PSG)
-      = render 'psg'
+      = render 'users/letters/observer'
+    - elsif can_print_letter?(@user, UserApp::STATUS_PSG)
+      = render 'users/letters/psg'
