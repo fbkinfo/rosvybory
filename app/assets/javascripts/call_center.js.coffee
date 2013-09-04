@@ -35,7 +35,7 @@ jQuery ->
           per: 10
         results: (data, page) ->
           results: data
-      
+
       options.initSelection = (element, callback) ->
         id = $(element).val()
         if id isnt "" && !!parseInt(id)
@@ -82,3 +82,16 @@ jQuery ->
       dataType: "html"
       success: (response)->
         $("#uic").replaceWith $(response).find("#uic")
+
+  $('#call_center_report_reporter_attributes_phone').keyup ->
+    $.ajax
+      url: $(this).data('source')
+      data:
+        phone:  $(this).val()
+      dataType: "json"
+      success: (response) ->
+        select = $('#call_center_report_reporter_attributes_user_id')
+        if response
+          select.select2('val', response.id)
+        else
+          select.select2('val', '')
