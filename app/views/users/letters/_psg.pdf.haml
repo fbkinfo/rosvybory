@@ -28,7 +28,7 @@
   %br
   %br
   %br
-  = render 'letter_signature', signer: 'Ермолаев А. Г.'
+  = render 'signature', signer: 'Ермолаев А. Г.'
 
 %div{style: 'display:block; clear:both; page-break-after:always;'}
 %div{style: 'margin-left: 5mm; margin-top: 40mm; margin-right: 5mm; font: 10pt Helvetica; line-height: 160%'}
@@ -71,4 +71,4 @@
   %br
   %br
   %br
-  = render 'letter_signature', signer: @user.decorate.last_name_with_initials
+  = render 'signature', signer: @user.decorate.last_name_with_initials
