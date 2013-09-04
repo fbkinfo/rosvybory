@@ -1,53 +1,35 @@
-
-- if @many_apps.added_count > 0
-  %h2 Успешно загруженные пользователи (#{@many_apps.added_count})
-  %table
-    %thead
-      %tr
-        %th= User.human_attribute_name(:id)
-        %th= User.human_attribute_name(:created_at)
-        %th= User.human_attribute_name(:full_name)
-        %th= User.human_attribute_name(:adm_region)
-        %th= User.human_attribute_name(:region)
-        %th= User.human_attribute_name(:phone)
-        %th= User.human_attribute_name(:email)
-        %th= User.human_attribute_name(:uic)
-        %th= User.human_attribute_name(:current_roles)
-        %th= User.human_attribute_name(:previous_statuses)
-        %th= User.human_attribute_name(:experience_count)
-        %th= User.human_attribute_name(:extra)
-    %tbody
-      - @many_apps.user_apps.select(&:persisted?).each do |euar|
-        -if euar.user
-          - user = euar.user.decorate
-          %tr
-            %td= user.organisation_with_user_id
-            %td= user.created_at && l(user.created_at)
-            %td= link_to user.full_name, [:control, euar.user]
-            %td= user.adm_region
-            %td= user.region
-            %td= user.phone
-            %td= user.email
-            %td= user.uic
-            %td= user.human_current_roles
-            %td= user.human_previous_statuses
-            %td= user.experience_count
-            %td= user.extra
-
+- if @many_apps.results_count(:created) > 0
+  %h2 Успешно создано пользователей - #{@many_apps.results_count(:created)}
+  -#= render :partial => 'user_table', locals: {rows:  @many_apps.user_apps_with_status(:created)}
+  %br
+- if @many_apps.results_count(:updated) > 0
+  %h2 Успешно обновлёно пользователей - #{@many_apps.results_count(:updated)}
+  -#= render :partial => 'user_table', locals: {rows:  @many_apps.user_apps_with_status(:updated)}
+  %br
+- if @many_apps.results_count(:ignored) > 0
+  %h2 Пропущено пользователей - #{@many_apps.results_count(:ignored)}
+  -#= render :partial => 'user_table', locals: {rows:  @many_apps.user_apps_with_status(:ignored)}
+- failed_count = @many_apps.results_count(:failed)
+- if @many_apps.results_count(:failed) > 0
+  %h2 Не удалось импортировать записей - #{@many_apps.results_count(:failed)}
+  -@many_apps.user_apps_with_status(:failed).each do |row|
+    %br
+    = row.import_error
+  %br
+  %br
 
 = form_for @many_apps, as: :many_apps, url: process_xls_control_user_apps_path, method: :post do |f|
-
-  - if @many_apps.fail_count == 1 && @many_apps.added_count == 0
+  - if @many_apps.user_apps.count == 0
     %h2 Выберите файл
     %fieldset
       = f.label :file
       = f.file_field :file
 
     %h2 Или скопируйте строки из Excel
-  - elsif @many_apps.fail_count > 0
+  - elsif failed_count > 0
     %h2 Эти данные не удалось сохранить
 
-  - if @many_apps.fail_count > 0
+  - if failed_count > 0 || @many_apps.user_apps.count == 0
     %table.many-new
       %thead
         %tr
@@ -55,7 +37,7 @@
             %th
               = ExcelUserAppRow.human_attribute_name(i)
       %tbody
-        = f.fields_for :user_apps, f.object.user_apps.reject(&:persisted?) do |uaf|
+        = f.fields_for :user_apps, f.object.user_apps_with_status(:failed) do |uaf|
           = render 'xls_fields', :f => uaf
 
     %div

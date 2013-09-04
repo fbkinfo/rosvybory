@@ -35,15 +35,15 @@ class ManyUserAppsForm
 
   def save
     @user_apps.each &:save
-    fail_count == 0
+    results_count(:failed) == 0
   end
 
-  def added_count
-    @user_apps.count(&:persisted?)
+  def user_apps_with_status(status)
+    @user_apps.select{|x| x.import_status == status }
   end
 
-  def fail_count
-    @user_apps.size - added_count
+  def results_count(status)
+    user_apps_with_status(status).count
   end
 
   def persisted?
@@ -53,13 +53,12 @@ class ManyUserAppsForm
   def build_user_app(attrs = {})
     ExcelUserAppRow.new(attrs, !ignore_existing).tap do |euar|
       euar.organisation = @organisation unless euar.organisation
-      @user_apps << euar
     end
   end
 
   def user_apps_attributes=(attrs)
     attrs.each do |index, user_app_hash|
-      build_user_app user_app_hash unless user_app_hash.values.all?(&:blank?)
+      @user_apps << build_user_app(user_app_hash) unless user_app_hash.values.all?(&:blank?)
     end
   end
 end
