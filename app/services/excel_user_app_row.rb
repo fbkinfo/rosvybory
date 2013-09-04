@@ -83,26 +83,26 @@ class ExcelUserAppRow
   end
 
   def current_roles=(v)
-    #roles_by_name = {
-    #  "РЗ" => 'reserve',
-    #  "УПРГ" => 'prg',
-    #  "ТПСГ" => 'psg_tic',
-    #  "ТПРГ" => 'prg_tic'
-    #}
-    #role = CurrentRole.where(:slug => roles_by_name[v]).first
-    #if role && !@user_app.user_app_current_roles.where(:current_role_id => role.id).first
-    #  value = nil
-    #  if role.must_have_uic?
-    #    value = "#{@user_app.uic}"
-    #  elsif role.must_have_tic?
-    #    if region.try(:has_tic?)#для районов с ТИКами
-    #      value = region.name
-    #    elsif adm_region.try(:has_tic?) #для округов с ТИКами
-    #      value = adm_region.name
-    #    end
-    #  end
-    #  @user_app.user_app_current_roles.build(:current_role_id => role.id, value: value).keep = '1'
-    #end
+    roles_by_name = {
+      "РЗ" => 'reserve',
+      "УПРГ" => 'prg',
+      "ТПСГ" => 'psg_tic',
+      "ТПРГ" => 'prg_tic'
+    }
+    role = CurrentRole.where(:slug => roles_by_name[v]).first
+    if role && !@user_app.user_app_current_roles.where(:current_role_id => role.id).first
+      value = nil
+      if role.must_have_uic?
+        value = "#{@user_app.uic}"
+      elsif role.must_have_tic?
+        if region.try(:has_tic?)#для районов с ТИКами
+          value = region.name
+        elsif adm_region.try(:has_tic?) #для округов с ТИКами
+          value = adm_region.name
+        end
+      end
+      @user_app.user_app_current_roles.build(:current_role_id => role.id, value: value).keep = '1'
+    end
   end
 
   def previous_statuses=(v)
@@ -210,7 +210,7 @@ class ExcelUserAppRow
     if success
       @user_app.confirm!
       @user = @user_app.user || User.new
-      @user.update_from_user_app(@user_app)
+      @user.update_from_user_app(@user_app, false)
       if success = @user.save
         @user.update_column :created_at, created_at if created_at
       else
