@@ -6,7 +6,7 @@ ActiveAdmin.register CallCenter::Report do
     column :id
     column :text
     column :url do |report|
-      link_to(report.send(:url), report.url) unless report.url.empty?
+      report.url.blank? ? "" : link_to(report.url[0..50]+"…", report.url)
     end
     column :reporter do |report|
       r = report.reporter

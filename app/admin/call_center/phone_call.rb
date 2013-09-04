@@ -3,7 +3,7 @@ ActiveAdmin.register CallCenter::PhoneCall do
   actions :all
 
   index do
-    [:id, :status, :number, :call_center_operator_id, :created_at, :updated_at].each do |col|
+    [:id, :status, :number, :report, :created_at, :updated_at].each do |col|
       column col
     end
     default_actions

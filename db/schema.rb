@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130903153558) do
+ActiveRecord::Schema.define(version: 20130904120404) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(version: 20130903153558) do
   create_table "call_center_phone_calls", force: true do |t|
     t.string   "status"
     t.string   "number"
-    t.integer  "call_center_operator_id"
+    t.integer  "report_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -70,14 +70,11 @@ ActiveRecord::Schema.define(version: 20130903153558) do
   create_table "call_center_reports", force: true do |t|
     t.text     "text"
     t.string   "url"
-    t.integer  "reportable_id"
-    t.string   "reportable_type"
     t.integer  "reporter_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "violation_id"
   end
-
-  add_index "call_center_reports", ["reportable_id", "reportable_type"], name: "index_call_center_reports_on_reportable_id_and_reportable_type", using: :btree
 
   create_table "call_center_reports_relations", force: true do |t|
     t.integer  "parent_report_id"
