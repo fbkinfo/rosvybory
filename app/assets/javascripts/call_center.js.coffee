@@ -68,6 +68,23 @@ jQuery ->
           setCustomField "call_center_report[reporter_attributes][last_name]", null
           setCustomField "call_center_report[reporter_attributes][first_name]", null
           setCustomField "call_center_report[reporter_attributes][patronymic]", null
+        select.on "change", ->
+          select_uic = $('#call_center_report_reporter_attributes_uic_id')
+          $.ajax
+            url: select.data('uic-by-user')
+            data:
+              user_id:  select.val()
+            dataType: "json"
+            success: (response) ->
+              console.log response
+              if response
+                select_uic.select2('val', response.id)
+              else
+                select_uic.select2('val', '')
+            error: (msg) ->
+              console.log msg
+        select.on "select2-loaded", (e) ->
+          console.log "loaded (data property omitted for brevitiy)"
         $(document). on "click", "#unknown-user-will-be-saved", ()->
           select.select2 "open"
 
@@ -87,11 +104,12 @@ jQuery ->
     $.ajax
       url: $(this).data('source')
       data:
-        phone:  $(this).val()
+        phone: $(this).val()
       dataType: "json"
       success: (response) ->
         select = $('#call_center_report_reporter_attributes_user_id')
         if response
           select.select2('val', response.id)
+          select.trigger('change')
         else
           select.select2('val', '')
