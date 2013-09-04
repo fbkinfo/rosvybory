@@ -97,15 +97,17 @@ describe User do
         should be_able_to(:change_region, user)
         should be_able_to(:read, UserApp)
         should be_able_to(:import, UserApp)
-        should be_able_to(:view_dislocation, User)
         should be_able_to(:crud, MobileGroup)
 
         #проверяем с чужим НО
-        should be_able_to(:crud, User.new(adm_region: first_adm_region, organisation: second_organisation))
-        should be_able_to(:crud, UserApp.new(adm_region: first_adm_region, organisation: second_organisation))
-        should be_able_to(:approve, UserApp.new(adm_region: first_adm_region, organisation: second_organisation))
-        should be_able_to(:reject, UserApp.new(adm_region: first_adm_region, organisation: second_organisation))
-        should be_able_to(:view_user_contacts, User.new(adm_region: first_adm_region, organisation: second_organisation))
+        enemy_user = User.new(adm_region: first_adm_region, organisation: second_organisation)
+        should be_able_to(:crud, enemy_user)
+        should be_able_to(:view_dislocation, enemy_user)
+        should be_able_to(:view_user_contacts, enemy_user)
+        enemy_user_app = UserApp.new(adm_region: first_adm_region, organisation: second_organisation)
+        should be_able_to(:crud, enemy_user_app)
+        should be_able_to(:approve, enemy_user_app)
+        should be_able_to(:reject, enemy_user_app)
 
         # cannot
         should_not be_able_to(:manage, :all)
@@ -119,6 +121,7 @@ describe User do
         should_not be_able_to(:read, UserApp.new(adm_region: second_adm_region))
         should_not be_able_to(:crud, User.new(adm_region: second_adm_region, organisation: first_organisation))
         should_not be_able_to(:crud, User.new(adm_region: second_adm_region, organisation: second_organisation))
+        should_not be_able_to(:view_dislocation, User.new(adm_region: second_adm_region, organisation: first_organisation))
         should_not be_able_to(:view_user_contacts, User.new(adm_region: second_adm_region, organisation: first_organisation))
         should_not be_able_to(:crud, UserApp.new(adm_region: second_adm_region, organisation: first_organisation))
         should_not be_able_to(:crud, UserApp.new(adm_region: second_adm_region, organisation: second_organisation))
