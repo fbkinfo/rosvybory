@@ -1,7 +1,7 @@
 - uic = uic(@user, UserApp.all_statuses[UserApp::STATUS_PSG]).try(:number)
 - uic ||= 'УКАЖИТЕ НОМЕР УИК'
 %div{style: 'margin-left: 5mm; margin-top: 40mm; margin-right: 5mm; font: 10pt Helvetica; line-height: 160%'}
-  = render 'letter_header', uic: uic
+  = render 'header', uic: uic
   %br
   %br
   %br
@@ -10,7 +10,7 @@
     %p{style: 'text-align: center; font: bold 10pt Helvetica; line-height: 50%;'}= 'о назначении члена участковой избирательной комиссии'
     %p{style: 'text-align: center; font: bold 10pt Helvetica; line-height: 50%;'}= 'с правом совещательного голоса'
   %br
-  = render 'letter_date'
+  = render 'date'
   %br
   %br
   %br
@@ -21,7 +21,7 @@
   %br
   %span{style: 'white-space: normal;'}
     %b= @user.full_name
-  = render 'letter_info'
+  = render 'info'
   %br
   %p
     %span= 'Назначение данного гражданина членом участковой избирательной комиссии с правом совещательного голоса не противоречит подпунктам «а», «в» – «е» пункта 1 и пункту 21.1 статьи 29 Федерального закона от 12 июня 2002 года № 67-ФЗ «Об основных гарантиях избирательных прав и права на участие в референдуме граждан Российской Федерации».'
@@ -50,7 +50,7 @@
     %p{style: 'text-align: center; font: bold 10pt Helvetica; line-height: 50%;'}= 'о согласии на назначение членом участковой избирательной комиссии'
     %p{style: 'text-align: center; font: bold 10pt Helvetica; line-height: 50%;'}= 'с правом совещательного голоса'
   %br
-  = render 'letter_date'
+  = render 'date'
   %br
   %br
   %br
@@ -66,7 +66,7 @@
   %br
   %div= 'О себе сообщаю следующие сведения:'
   %br
-  = render 'letter_info'
+  = render 'info'
   %br
   %br
   %br

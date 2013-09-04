@@ -1,14 +1,14 @@
 - uic = uic(@user, UserApp.all_statuses[UserApp::STATUS_OBSERVER]).try(:number)
 - uic ||= 'УКАЖИТЕ НОМЕР УИК'
 %div{style: 'margin-left: 5mm; margin-top: 40mm; margin-right: 5mm; font: 10pt Helvetica; line-height: 160%'}
-  = render 'letter_header', uic: uic
+  = render 'header', uic: uic
   %br
   %br
   %br
   %div{style: 'text-align: center; font: 15pt Helvetica;'}
     %b= 'НАПРАВЛЕНИЕ'
   %br
-  = render 'letter_date'
+  = render 'date'
   %br
   %br
   %br
