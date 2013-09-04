@@ -163,7 +163,7 @@ class ExcelUserAppRow
   end
 
   def created_at=(v)
-    @user_app.created_at = v # convert to datetime
+    @user_app.created_at = v rescue nil # convert to datetime
     @created_at = @user_app.created_at
   end
 
