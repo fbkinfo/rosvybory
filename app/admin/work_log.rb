@@ -11,9 +11,14 @@ ActiveAdmin.register WorkLog do
     column :id
     column :user
     column :name
-    column :params
+    column :params do |work_log|
+      # render it on the client to save save cpu :)
+      content_tag(:div, '', :data => {json: work_log.params})
+    end
     column :state, :sortable => :state
-    column :results
+    column :results do |work_log|
+      content_tag(:div, '', :data => {json: work_log.results})
+    end
   end
 
 end
