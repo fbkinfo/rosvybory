@@ -9,7 +9,7 @@
 - if @many_apps.results_count(:ignored) > 0
   %h2 Пропущено пользователей - #{@many_apps.results_count(:ignored)}
   -#= render :partial => 'user_table', locals: {rows:  @many_apps.user_apps_with_status(:ignored)}
-
+- failed_count = @many_apps.results_count(:failed)
 - if @many_apps.results_count(:failed) > 0
   %h2 Не удалось импортировать записей - #{@many_apps.results_count(:failed)}
   -@many_apps.user_apps_with_status(:failed).each do |row|
@@ -19,7 +19,6 @@
   %br
 
 = form_for @many_apps, as: :many_apps, url: process_xls_control_user_apps_path, method: :post do |f|
-  -failed_userapps_count = @many_apps.user_apps.reject(&:persisted?).count
   - if @many_apps.user_apps.count == 0
     %h2 Выберите файл
     %fieldset
@@ -27,10 +26,10 @@
       = f.file_field :file
 
     %h2 Или скопируйте строки из Excel
-  - elsif failed_userapps_count > 0
+  - elsif failed_count > 0
     %h2 Эти данные не удалось сохранить
 
-  - if failed_userapps_count > 0 || @many_apps.user_apps.count == 0
+  - if failed_count > 0 || @many_apps.user_apps.count == 0
     %table.many-new
       %thead
         %tr
@@ -38,7 +37,7 @@
             %th
               = ExcelUserAppRow.human_attribute_name(i)
       %tbody
-        = f.fields_for :user_apps, f.object.user_apps.reject(&:persisted?) do |uaf|
+        = f.fields_for :user_apps, f.object.user_apps_with_status(:failed) do |uaf|
           = render 'xls_fields', :f => uaf
 
     %div
