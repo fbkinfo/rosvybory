@@ -97,11 +97,10 @@ ActiveAdmin.register Dislocation do
   end
 
   collection_action :inplace, :method => :post do
-    # TODO bug? routed to member action
+    raise 'A bug in ActiveAdmin routing which we relied on was fixed recently, now its time to fix the code.'
   end
 
   member_action :inplace, :method => :post do
-    # FIXME method requires urgent refactoring
     user, ucr = if params[:id].present?
       ucr = UserCurrentRole.find(params[:id])
       [User.accessible_by(current_ability).find(ucr.user_id), ucr] # TODO check security policy
