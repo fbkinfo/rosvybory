@@ -35,7 +35,7 @@ jQuery ->
           per: 10
         results: (data, page) ->
           results: data
-      
+
       options.initSelection = (element, callback) ->
         id = $(element).val()
         if id isnt "" && !!parseInt(id)
@@ -68,6 +68,24 @@ jQuery ->
           setCustomField "call_center_report[reporter_attributes][last_name]", null
           setCustomField "call_center_report[reporter_attributes][first_name]", null
           setCustomField "call_center_report[reporter_attributes][patronymic]", null
+        # autofill data on change
+        select.on "change", ->
+          select_uic = $('#call_center_report_reporter_attributes_uic_id')
+          select_role = $('#call_center_report_reporter_attributes_current_role_id')
+          $.ajax
+            url: select.data('uic-by-user')
+            data:
+              user_id:  select.val()
+            dataType: "json"
+            success: (response) ->
+              if response
+                select_uic.select2('val', response.uic.id) if response.uic
+                select_role.select2('val', response.role_id) if response.role_id
+              else
+                select_uic.select2('val', '')
+                select_role.select2('val', '')
+        select.on "select2-close", (e) ->
+          select.trigger('change')
         $(document). on "click", "#unknown-user-will-be-saved", ()->
           select.select2 "open"
 
@@ -82,3 +100,17 @@ jQuery ->
       dataType: "html"
       success: (response)->
         $("#uic").replaceWith $(response).find("#uic")
+
+  $('#call_center_report_reporter_attributes_phone').keyup ->
+    $.ajax
+      url: $(this).data('source')
+      data:
+        phone: $(this).val()
+      dataType: "json"
+      success: (response) ->
+        select = $('#call_center_report_reporter_attributes_user_id')
+        if response
+          select.select2('val', response.id)
+          select.trigger('change')
+        else
+          select.select2('val', '')
