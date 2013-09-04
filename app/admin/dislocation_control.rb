@@ -24,8 +24,8 @@ ActiveAdmin.register DislocationControl do
 
   filter :kind, :as => :select, :collection => proc { Uic.kind.values.map {|k| [Uic.human_kind(k), Uic.send("#{k}_value")]} }
   filter :number
-  filter :region_adm_region_id, as: :select, collection: Region.adm_regions,  :input_html => {:style => "width: 220px;"}
-  filter :region, as: :select, collection: Region.mun_regions,  :input_html => {:style => "width: 220px;"}
+  filter :region_adm_region_id, as: :select, collection: Region.adm_regions
+  filter :region, as: :select, collection: Region.mun_regions
   filter :participants_count, as: :numeric_range, :label => 'Количество наблюдателей'
 
   controller do

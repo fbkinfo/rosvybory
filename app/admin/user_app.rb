@@ -78,8 +78,8 @@ ActiveAdmin.register UserApp do
   ## Filterable attributes on the index screen
 
   filter :created_at
-  filter :adm_region , :as => :select, :collection => proc { Region.adm_regions.all }, :input_html => {:style => "width: 220px;"}
-  filter :region, :as => :select, :collection => proc { Region.mun_regions.all }, :input_html => {:style => "width: 220px;"}
+  filter :adm_region , :as => :select, :collection => proc { Region.adm_regions.all }
+  filter :region, :as => :select, :collection => proc { Region.mun_regions.all }
   #так красиво разбивается по округам, но при фильтрации не устанавливает значение в текущее после перезагрузки страницы, это может сбить с толку
   #filter :region, :as => :select, :collection => proc { option_groups_from_collection_for_select(Region.adm_regions, :regions, :name, :id, :name) }
 
@@ -110,7 +110,7 @@ ActiveAdmin.register UserApp do
   #
   filter   :year_born, :as => :numeric_range
   #column(:sex_male) {|user_app| user_app.sex_male ? "М":"Ж"}
-  filter   :organisation, :input_html => {:style => "width: 220px;"}
+  filter   :organisation
   filter   :ip
   filter   :useragent
 

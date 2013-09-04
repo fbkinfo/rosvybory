@@ -27,6 +27,12 @@
 //
 //   .status_tag { background: #6090DB; }
 
+.filter_form {
+  .select2 {
+    width: 100%;
+  }
+}
+
 #user_last_name_input, #user_first_name_input, #user_patronymic_input {
   float: left;
   width: 30%;
