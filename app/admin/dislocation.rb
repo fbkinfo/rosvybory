@@ -25,7 +25,7 @@ ActiveAdmin.register Dislocation do
     actions(defaults: false) do |resource|
       ''.html_safe.tap do |buffer|
         buffer << link_to(I18n.t('active_admin.edit'), dislocate_user_path(resource), class: "member_link edit_link")
-        buffer << tag(:br) + link_to(I18n.t('active_admin.delete'), control_dislocation_path(resource.id), method: :delete, class: "member_link destroy_link", confirm: 'Удалить данную расстановку пользователя?') if resource.user_current_role.id.present? && can?(:destroy, resource.user_current_role)
+        buffer << tag(:br) + link_to(I18n.t('active_admin.delete'), control_dislocation_path(resource.id), method: :delete, class: "member_link destroy_link", data: {confirm: 'Удалить данную расстановку пользователя?'}) if resource.user_current_role.id.present? && can?(:destroy, resource.user_current_role)
       end
     end
     column "НО + id" do |dislocation|
