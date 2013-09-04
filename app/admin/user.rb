@@ -25,7 +25,7 @@ ActiveAdmin.register User do
   #при добавлении нового группового действия - обратить внимание на флажок "Применить ко всем страницам", если нужен для этого действия - реализовывать обработку
   batch_action :new_group_email
   batch_action :new_group_sms
-  batch_action :destroy, false
+  #batch_action :destroy, false
 
   show do |user|
     h3 'Внимание! Телефон пользователя занесён в чёрный список!' if user.blacklisted
@@ -125,6 +125,8 @@ ActiveAdmin.register User do
   filter :user_app_experience_count, :as => :numeric, label: 'Опыт'
   filter :user_app_has_car, as: :boolean, label: 'Автомобиль'
   filter :user_app_has_video, as: :boolean, label: 'Видеосъёмка'
+
+  filter :year_born, as: :numeric_range
 
   form :partial => 'form'
 
