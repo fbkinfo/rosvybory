@@ -68,6 +68,7 @@ jQuery ->
           setCustomField "call_center_report[reporter_attributes][last_name]", null
           setCustomField "call_center_report[reporter_attributes][first_name]", null
           setCustomField "call_center_report[reporter_attributes][patronymic]", null
+        # autofill data on change
         select.on "change", ->
           select_uic = $('#call_center_report_reporter_attributes_uic_id')
           select_role = $('#call_center_report_reporter_attributes_current_role_id')
@@ -77,15 +78,12 @@ jQuery ->
               user_id:  select.val()
             dataType: "json"
             success: (response) ->
-              console.log response
               if response
                 select_uic.select2('val', response.uic.id) if response.uic
                 select_role.select2('val', response.role_id) if response.role_id
               else
                 select_uic.select2('val', '')
                 select_role.select2('val', '')
-            error: (msg) ->
-              console.log msg
         select.on "select2-close", (e) ->
           select.trigger('change')
         $(document). on "click", "#unknown-user-will-be-saved", ()->
