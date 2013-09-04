@@ -33,6 +33,7 @@ class UserCurrentRole < ActiveRecord::Base
     reg = coalesced_region
     return [] unless reg
     uics = reg.uics_with_nested_regions.order(:name)
+    uics = reg.adm_region.uics_with_nested_regions.order(:name) if uics.blank? && reg.adm_region
     if must_have_tic?
       uics.tics
     elsif must_have_uic?
