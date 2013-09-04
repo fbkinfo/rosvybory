@@ -78,12 +78,12 @@ jQuery ->
               user_id:  select.val()
             dataType: "json"
             success: (response) ->
-              if response
-                select_uic.select2('val', response.uic.id) if response.uic
-                select_role.select2('val', response.role_id) if response.role_id
+              if response.uic
+                select_uic.select2('val', response.uic.id, true)
               else
                 select_uic.select2('val', '')
-                select_role.select2('val', '')
+              select_role.select2('val', response.role_id)
+
         select.on "select2-close", (e) ->
           select.trigger('change')
         $(document). on "click", "#unknown-user-will-be-saved", ()->
@@ -111,6 +111,6 @@ jQuery ->
         select = $('#call_center_report_reporter_attributes_user_id')
         if response
           select.select2('val', response.id)
-          select.trigger('change')
         else
           select.select2('val', '')
+        select.trigger('change')
