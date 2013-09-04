@@ -31,6 +31,11 @@ class UserDecorator < Draper::Decorator
     yes_no object.got_docs
   end
 
+  def human_phone_number
+    /(\d{3})(\d{3})(\d{2})(\d{2})/ =~ object.phone
+    "+7 (#{$1}) #{$2}-#{$3}-#{$4}"
+  end
+
   def blacklist_info
     object.blacklisted.try(:info)
   end
