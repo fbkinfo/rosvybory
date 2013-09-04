@@ -17,8 +17,8 @@ module PaginatedCollectionExtension
   def page_entries_info_with_per_page_selection(options = {})
     content_tag(:span, 'Показывать по ') +
       content_tag(:select, options_for_select([['30'], ['200']], params[:per_page]), :class => 'per-page-selector') +
-      ' '.html_safe +
-      page_entries_info_without_per_page_selection(options)
+      ' ' +
+      page_entries_info_without_per_page_selection(options).html_safe
   end
 end
 ActiveAdmin::Views::PaginatedCollection.send :include, PaginatedCollectionExtension
