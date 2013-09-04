@@ -65,7 +65,7 @@ class UserAppsController < ApplicationController
   def send_group_email
     ge = params[:group_email]
     ge[:emails].each do |single_email|
-      UserMailer.group_email(single_email, ge[:subject], ge[:body]).deliver
+      UserMailer.group_email(single_email, ge[:subject], ge[:body]).deliver if single_email.present?
     end if ge.is_a? Hash
     redirect_to '/control/users', notice: t('.messages_sent')
   end
