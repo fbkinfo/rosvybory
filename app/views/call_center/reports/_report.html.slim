@@ -3,7 +3,7 @@
 = semantic_form_for @report do |f|
   #reporter.panel
     h2 Звонящий
-    = form.fields_for :reporter do |ff|
+    = f.fields_for :reporter do |ff|
       = ff.input :phone, input_html: { data: { source: by_phone_call_center_dislocations_path } }
       = ff.input :user_id, as: :hidden, input_html: { class: 'select2 ajax', data: { source: call_center_dislocations_path, "init-source" => call_center_dislocation_path(@dislocation), 'uic_by_user' => by_user_call_center_uics_path }, value: @dislocation.try(:id) }
       .input
