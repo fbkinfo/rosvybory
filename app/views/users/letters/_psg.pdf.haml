@@ -1,0 +1,7 @@
+- uic = uic(@user, UserApp.all_statuses[UserApp::STATUS_PSG]).try(:number)
+- uic ||= '_____'
+= render 'users/letters/psg_notification', uic: uic
+%div{style: 'display:block; clear:both; page-break-after:always;'}
+= render 'users/letters/psg_declaration', uic: uic
+%div{style: 'display:block; clear:both; page-break-after:always;'}
+= render 'users/letters/psg_declaration', uic: uic

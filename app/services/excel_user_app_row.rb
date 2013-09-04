@@ -201,7 +201,7 @@ class ExcelUserAppRow
           Rails.logger.info "User import - creating user #{@user_app.phone}"
         end
       else
-        Rails.logger.info "User import - could not save user_app #{@user_app.phone}"
+        Rails.logger.info "User import - could not save user_app #{@user_app.phone} #{@user_app.errors.full_messages.join("; ")}"
       end
     else
       success = false
@@ -213,6 +213,8 @@ class ExcelUserAppRow
       @user.update_from_user_app(@user_app)
       if success = @user.save
         @user.update_column :created_at, created_at if created_at
+      else
+        Rails.logger.info "User import error - could not save user #{@user.phone} #{@user.errors.full_messages.join("; ")}"
       end
     end
     success
