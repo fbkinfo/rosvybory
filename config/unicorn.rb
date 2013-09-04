@@ -26,7 +26,7 @@ require 'bundler/setup'
 
 worker_processes env == 'production' ? 4 : 2
 
-timeout 30
+timeout 60
 
 preload_app true
 
