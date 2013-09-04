@@ -25,9 +25,9 @@ ActiveAdmin.register User do
   #при добавлении нового группового действия - обратить внимание на флажок "Применить ко всем страницам", если нужен для этого действия - реализовывать обработку
   batch_action :new_group_email
   batch_action :new_group_sms
-  #batch_action :destroy, false
+  batch_action :destroy, false
 
-  batch_action :fix_phone do |selection|
+  batch_action :fix_phone, :if => proc{ can? :manage, :all } do |selection|
     User.find(selection).each do |user|
       user.fix_broken_phone!
     end
