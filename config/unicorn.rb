@@ -24,7 +24,7 @@ end
 ENV['BUNDLE_GEMFILE'] = File.expand_path('../Gemfile', File.dirname(__FILE__))
 require 'bundler/setup'
 
-worker_processes 2
+worker_processes 4
 
 timeout 30
 
