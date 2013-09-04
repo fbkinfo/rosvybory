@@ -285,7 +285,6 @@ GEM
       rspec-mocks (~> 2.14.0)
     ruby-ole (1.2.11.7)
     rubyzip (0.9.9)
-    rubyzip2 (2.0.2)
     rvm-capistrano (1.4.4)
       capistrano (>= 2.15.4)
     sass (3.2.10)
@@ -402,7 +401,6 @@ DEPENDENCIES
   roo
   rspec-rails
   rubyzip (~> 0.9.5)
-  rubyzip2
   rvm-capistrano
   sass-rails (~> 4.0.0)
   select2-rails
