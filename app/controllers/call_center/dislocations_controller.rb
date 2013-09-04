@@ -3,7 +3,7 @@ class CallCenter::DislocationsController < ApplicationController
 
   def index
     # Пришлось это сделать потому, когда меняешь значение select2, то он сюда идёт за человеком.
-    if params[:q].present?
+    if params[:q]
       q = params[:q].mb_chars.downcase
       @users = User.where("lower(full_name) like :q", q: "%#{q}%").limit(25)
       respond_with @users
