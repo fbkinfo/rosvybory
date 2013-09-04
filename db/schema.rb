@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130904120404) do
+ActiveRecord::Schema.define(version: 20130904142702) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(version: 20130904120404) do
     t.integer  "comp_number"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "patronymic"
   end
 
   create_table "call_center_phone_calls", force: true do |t|
@@ -51,6 +52,7 @@ ActiveRecord::Schema.define(version: 20130904120404) do
     t.integer  "report_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "operator_id"
   end
 
   create_table "call_center_reporters", force: true do |t|
