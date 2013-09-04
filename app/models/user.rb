@@ -63,7 +63,8 @@ class User < ActiveRecord::Base
   end
 
   def has_role?(role_name)
-    !!roles.exists?(slug: role_name)
+    @has_role_cache ||= {}
+    @has_role_cache[role_name] ||= roles.exists?(slug: role_name)
   end
 
   def add_role(role_name)
