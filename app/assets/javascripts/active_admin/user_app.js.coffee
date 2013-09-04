@@ -1,11 +1,21 @@
 $ ->
-  $("#index_table_user_apps .reject_link").on("ajax:success", (e, data, status, xhr) ->
-    $row = $(this).closest('tr')
-    $row.html('<td> Отклонено! Тут можно вставить ссылку на отмену действия </td>')
-  ).bind "ajax:error", (e, xhr, status, error) ->
-    alert xhr.responseText
-
   bindDialogOnClick $(".accept_link"), "Утверждение заявки"
+  bindDialogOnClick $(".reject_link"), "Отклонение заявки", null, () ->
+    $dialog = $(this)
+    $dialog.find('form').attr('data-remote', true).
+      on('ajax:success', (e, data) ->
+        $dialog.dialog('close')
+        if data.id
+          $row = $('#user_app_'+ data.id).closest('tr')
+          $row.find('td').html('<del>отклонено</del>')
+        true
+      )
+    $dialog.find('form :input:visible:first').change().focus()
+
+  $(document).on 'change keyup', '.reject-form #reason', () ->
+    $submit = $(this).closest('form').find(':submit')
+    $submit.attr('disabled', $(this).val().trim().length < 3)
+    true
 
   $(document).on 'paste', 'table.many-new input', (e) ->
     txt = e.originalEvent.clipboardData.getData('text/plain')
