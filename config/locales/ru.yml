@@ -345,7 +345,7 @@ ru:
         other: Категории нарушений
       call_center/violation_type:
         one:   Тип нарушения
-        other: Типы нарушения
+        other: Типы нарушений
     attributes:
       dislocation:
         current_role_id: Роль
@@ -483,20 +483,48 @@ ru:
         ip: "IP"
         organisation: "Орг."
         current_roles: "Текущие статусы"
+      call_center/operator:
+        full_name: ФИО
+        first_name: Имя
+        last_name: Фамилия
+        patronymic: Отчество
+        phone_calls_count: Звонков
+        completed_phone_calls_count: Завершенных звонков
+        started_phone_calls_count: Не завершенных звонков
+        reports_count: Записано сообщений
+        violations_count: Записано жалоб
+        last_phone_call: Последний звонок
       call_center/reporter:
         user_id: Звонящий
         uic_id: Расположение
         role: Роль
         dislocation: Человек
         current_role: Роль
+        full_name: ФИО
+        known: Зарегистрирован
+        phone: Телефон
       call_center/report:
+        uic: Участок
         text: Текст
         url: Ссылка
-        created_at: Создано
+        created_at: Время
         updated_at: Обновлено
-        reporter: Звонящий
-        violation_type: Нарушение
-
+        reporter: Позвонивший
+        current_role: Роль
+        violation: Нарушение
+      call_center/phone_call:
+        status: Статус
+        uic: Участок
+        reporter: Позвонивший
+        text: Сообщение
+      call_center/violation_type:
+        name: Название
+        reports_count: Сообщений
+        violations_count: Нарушений
+      call_center/violation_category:
+        name: Название
+        reports_count: Сообщений
+        violations_count: Нарушений
   dislocation:
     errors:
       one: "%{count} ошибка"
