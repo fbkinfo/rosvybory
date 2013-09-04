@@ -83,8 +83,6 @@ class ExcelUserAppRow
         send "#{k}=", v if v.present?
       end
     end
-  rescue
-    fail_with $!.to_s
   end
 
   def uid=(v)
