@@ -3,7 +3,7 @@
     h2 = t "views.call_center.uic.no_uic.header"
     p.notice = t "views.call_center.uic.no_uic.notice"
   - else
-    - uic_reports = CallCenter::Report.includes(:reporter).where call_center_reporters: {uic_id: uic.id}
+    - uic_reports = CallCenter::Report.joins(:reporter).where(call_center_reporters: {uic_id: uic.id}).order("created_at DESC")
     h2 На участке #{uic.name}
     - if uic_reports.empty?
       p.notice = t "views.call_center.uic.no_reports"
@@ -15,7 +15,12 @@
             p.header
               span.type
               span.time
-                = l report.created_at, format: :time_only
+                - if report.created_at >= Time.now.beginning_of_day
+                  = l report.created_at, format: :time_only
+                - elsif report.created_at >= 1.day.ago.beginning_of_day && report.created_at < 1.day.ago.end_of_day
+                  = "вчера " + l(report.created_at, format: :time_only)
+                - else
+                  = l report.created_at, format: :short
               - if is_violation
                 | &nbsp;—&nbsp;
                 span.violation = report.violation.violation_type.name
