@@ -64,15 +64,10 @@ class UserAppsController < ApplicationController
 
   def send_group_email
     ge = params[:group_email]
-    errors = ""
     ge[:emails].each do |single_email|
-      begin
-        UserMailer.group_email(single_email, ge[:subject], ge[:body]).deliver
-      rescue
-        errors += "#{single_email} : #{$!.to_s} ; "
-      end
+      UserMailer.group_email(single_email, ge[:subject], ge[:body]).deliver if single_email.present?
     end if ge.is_a? Hash
-    redirect_to '/control/users', notice: (errors.present? ? errors:  t('.messages_sent'))
+    redirect_to '/control/users', notice: t('.messages_sent')
   end
 
   def new_group_sms
