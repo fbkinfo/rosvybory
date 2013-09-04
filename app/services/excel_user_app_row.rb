@@ -53,7 +53,7 @@ class ExcelUserAppRow
   attr_accessor :created_at, :adm_region, :region, :has_car, :current_roles, :experience_count, :previous_statuses, :can_be_coord_region, :can_be_reserv, :social_accounts, :uic
   attr_accessor :first_name, :last_name, :patronymic, :email, :extra, :phone
 
-  delegate :organisation, :persisted?, :new_record?, :to => :user_app, :allow_nil => true
+  delegate :id, :organisation, :persisted?, :new_record?, :to => :user_app, :allow_nil => true
 
   def initialize(attrs, update_existing = false)
     phone = Verification.normalize_phone_number(attrs[:phone])
