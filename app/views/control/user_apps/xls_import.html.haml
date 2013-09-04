@@ -1,3 +1,14 @@
+- if @many_apps.results_count(:created) > 0
+  %h2 Успешно создано пользователей - #{@many_apps.results_count(:created)}
+  -#= render :partial => 'user_table', locals: {rows:  @many_apps.user_apps_with_status(:created)}
+  %br
+- if @many_apps.results_count(:updated) > 0
+  %h2 Успешно обновлёно пользователей - #{@many_apps.results_count(:updated)}
+  -#= render :partial => 'user_table', locals: {rows:  @many_apps.user_apps_with_status(:updated)}
+  %br
+- if @many_apps.results_count(:ignored) > 0
+  %h2 Пропущено пользователей - #{@many_apps.results_count(:ignored)}
+  -#= render :partial => 'user_table', locals: {rows:  @many_apps.user_apps_with_status(:ignored)}
 
 - if @many_apps.results_count(:failed) > 0
   %h2 Не удалось импортировать записей - #{@many_apps.results_count(:failed)}
@@ -5,19 +16,7 @@
     %br
     = row.import_error
   %br
-
-- if @many_apps.results_count(:created) > 0
-  %h2 Успешно созданно пользователей - #{@many_apps.results_count(:created)}
-  -#= render :partial => 'user_table', locals: {rows:  @many_apps.user_apps_with_status(:created)}
   %br
-- if @many_apps.results_count(:updated) > 0
-  %h2 Успешно обновлённо пользователей - #{@many_apps.results_count(:updated)}
-  -#= render :partial => 'user_table', locals: {rows:  @many_apps.user_apps_with_status(:updated)}
-  %br
-- if @many_apps.results_count(:ignored) > 0
-  %h2 Пропущено пользователей - #{@many_apps.results_count(:ignored)}
-  -#= render :partial => 'user_table', locals: {rows:  @many_apps.user_apps_with_status(:ignored)}
-
 
 = form_for @many_apps, as: :many_apps, url: process_xls_control_user_apps_path, method: :post do |f|
   -failed_userapps_count = @many_apps.user_apps.reject(&:persisted?).count
