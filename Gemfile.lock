@@ -284,7 +284,7 @@ GEM
       rspec-expectations (~> 2.14.0)
       rspec-mocks (~> 2.14.0)
     ruby-ole (1.2.11.7)
-    rubyzip (1.0.0)
+    rubyzip (0.9.9)
     rubyzip2 (2.0.2)
     rvm-capistrano (1.4.4)
       capistrano (>= 2.15.4)
@@ -401,6 +401,7 @@ DEPENDENCIES
   resque_mailer
   roo
   rspec-rails
+  rubyzip (~> 0.9.5)
   rubyzip2
   rvm-capistrano
   sass-rails (~> 4.0.0)
