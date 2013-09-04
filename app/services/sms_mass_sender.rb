@@ -1,11 +1,15 @@
 class SmsMassSender
- @queue = :mailer
+  @queue = :mailer
 
   def self.perform(*args)
-  	message = args[0]['message']
+    params = args[0]
 
-    args[0]['phones'].each do |phone|
-    	SmsService.send_message(phone, message)
+    results = {}
+    message = params['message']
+    params['phones'].each do |phone|
+      results[phone] = SmsService.send_message(phone, message)
     end
+
+    WorkLog.find_by(id: params['work_log_id']).try(:complete!, results.to_json)
   end
 end
