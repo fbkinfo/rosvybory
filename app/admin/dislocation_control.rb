@@ -33,7 +33,8 @@ ActiveAdmin.register DislocationControl do
     def apply_sorting(chain)
       op = params[:order]
       if op == 'name_desc' || op == 'name_asc'
-        chain.joins(:region).reorder("regions.name #{op == 'name_desc' ? 'desc' : 'asc'}, uics.name")
+        chain = chain.joins(:region).reorder("regions.name, uics.name")
+        op.ends_with?('_asc')? chain.reverse_order : chain  # hack: invert asc/desc. active admin adds _desc by default, which is not convenient
       else
         super
       end
