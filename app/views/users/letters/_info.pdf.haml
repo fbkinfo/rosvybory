@@ -10,6 +10,9 @@
   %span= 'Место работы или службы: '
   %span= "#{optional_string_info(@user.work, 35)}, #{optional_string_info(@user.work_position, 19)}"
 %div
+  %span= 'Номер телефона: '
+  %span= @user.decorate.human_phone_number
+%div
   %span= 'Адрес места жительства: '
   %span= optional_string_info(@user.address, 56)
 %div= 'На государственной службе не нахожусь, муниципальным служащим не являюсь.'
