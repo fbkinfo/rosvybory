@@ -47,7 +47,7 @@ class CallCenter::ReportsController < ApplicationController
         reporter.first_name = dislocation.first_name
         reporter.last_name  = dislocation.last_name
         reporter.patronymic = dislocation.patronymic
-        reporter.current_role = dislocation.user_current_roles.first.current_role
+        reporter.current_role = dislocation.user_current_roles.first.try(:current_role)
         reporter.mobile_group = dislocation.mobile_group
         reporter.adm_region = dislocation.adm_region
       end
