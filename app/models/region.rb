@@ -33,7 +33,7 @@ class Region < ActiveRecord::Base
   end
 
   def uics_with_nested_regions
-    Uic.where(:region_id => self_and_descendants)
+    Uic.where(:region_id => self_and_descendants.except(:order))
   end
 
   def to_s

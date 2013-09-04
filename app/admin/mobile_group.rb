@@ -18,9 +18,9 @@ ActiveAdmin.register MobileGroup do
 
   form do |f|
     f.inputs data: {role: 'user-fields-container'} do
-      f.input :organisation, as: :select, collection: Organisation.accessible_by(current_ability, :contribute_to), input_html: {style: "width: 220px;"}
-      f.input :adm_region, as: :select, collection: Region.adm_regions.pluck(:name, :id), input_html: {style: "width: 220px;", data: {role: 'adm-region-select', regions: regions_hash}}
-      f.input :region, as: :select, collection: f.object.adm_region ? f.object.adm_region.regions.pluck(:name, :id) : [], input_html: {style: "width: 220px;", data: {role: 'region-select'}}
+      f.input :organisation, as: :select, collection: Organisation.accessible_by(current_ability, :contribute_to)
+      f.input :adm_region, as: :select, collection: Region.adm_regions.pluck(:name, :id), input_html: {data: {role: 'adm-region-select', regions: regions_hash}}
+      f.input :region, as: :select, collection: f.object.adm_region ? f.object.adm_region.regions.pluck(:name, :id) : [], input_html: {data: {role: 'region-select'}}
       f.input :name
     end
     f.actions

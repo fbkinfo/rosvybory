@@ -14,6 +14,10 @@ ActiveAdmin.register User do
     end
   end if Role.table_exists?
 
+  scope 'Без ролей' do |items|
+    items.where('NOT EXISTS (SELECT * FROM "user_roles" WHERE user_id = "users".id)')
+  end
+
   scope 'Телефон в черном списке' do |items|
     items.where('EXISTS (SELECT * FROM blacklists WHERE phone=users.phone)')
   end
