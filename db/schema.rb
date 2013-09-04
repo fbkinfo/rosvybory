@@ -306,4 +306,14 @@ ActiveRecord::Schema.define(version: 20130903153558) do
     t.datetime "updated_at"
   end
 
+  create_table "work_logs", force: true do |t|
+    t.integer  "user_id"
+    t.string   "name"
+    t.text     "params"
+    t.string   "state",      default: "pending", null: false
+    t.text     "results"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
 end
