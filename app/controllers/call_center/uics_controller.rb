@@ -19,6 +19,10 @@ class CallCenter::UicsController < ApplicationController
   end
 
   def by_user
-    respond_with UserCurrentRole.where(user_id: params[:user_id]).first.try(:uic)
+    uc_role = UserCurrentRole.where(user_id: params[:user_id]).last
+    respond_with({
+      uic: uc_role.try(:uic),
+      role_id: uc_role.try(:current_role_id)
+    })
   end
 end
