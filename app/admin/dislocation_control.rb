@@ -8,7 +8,7 @@ ActiveAdmin.register DislocationControl do
   config.sort_order = 'kind_asc'
 
   index :download_links => false do
-    column :number, &:number_and_region
+    column :number, :sortable => :name, &:number_and_region
     column :participants_count
     7.times do |i|
       column :"participant_#{i}" do |uic|
@@ -29,6 +29,17 @@ ActiveAdmin.register DislocationControl do
   filter :participants_count, as: :numeric_range, :label => 'Количество наблюдателей'
 
   controller do
+
+    def apply_sorting(chain)
+      op = params[:order]
+      if op == 'name_desc' || op == 'name_asc'
+        chain = chain.joins(:region).reorder("regions.name, uics.name")
+        op.ends_with?('_asc')? chain.reverse_order : chain  # hack: invert asc/desc. active admin adds _desc by default, which is not convenient
+      else
+        super
+      end
+    end
+
     def scoped_collection
       DislocationControl.includes(:user_current_roles)
     end
