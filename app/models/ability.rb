@@ -10,6 +10,8 @@ class Ability
     alias_action :create, :read, :update, :destroy, :to => :crud
     alias_action :do_reject, :to => :reject   # help active admin to find the right ability in user_apps#reject
 
+    user ||= User.new # prevent undefined method has_role? for nil class, if there is no user at all
+
     if has_role?(user, :admin)
       can :manage, :all
     end
