@@ -84,16 +84,4 @@ module UserAppsHelper
     end
     regions
   end
-
-  def uics_hash
-    uics = {}
-    Region.all.each do |region|
-      uics[region.id] = []
-      Uic.where(region_id: region.id).each do |uic|
-        uics[region.id] << {id: uic.id, name: uic.name}
-      end
-    end
-    uics
-  end
-
 end
