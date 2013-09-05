@@ -185,6 +185,11 @@ ActiveAdmin.register UserApp do
 
     column :current_roles, :sortable => false, &:human_current_roles
     column :ip
+    column :user do |user_app|
+      if user_app.user
+        link_to(user_app.user.decorate.organisation_with_user_id, [:control, user_app.user])
+      end
+    end
   end   # index
 
   form do |f|
