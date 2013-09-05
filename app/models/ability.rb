@@ -8,6 +8,7 @@ class Ability
 
   def initialize(user)
     alias_action :create, :read, :update, :destroy, :to => :crud
+    alias_action :do_reject, :to => :reject   # help active admin to find the right ability in user_apps#reject
 
     if has_role?(user, :admin)
       can :manage, :all
