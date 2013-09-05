@@ -33,6 +33,7 @@ class Ability
       can [:crud, :approve, :reject, :import], UserApp
       can :contribute_to, Organisation
       can :crud, MobileGroup
+      can :dislocation_crud, Dislocation
       can :view_dislocation, Uic
 
       # Имеет полные права на просмотр, но не имеет возможность назначать права координаторов и администраторов.
@@ -59,6 +60,8 @@ class Ability
       # TODO всю базу волонтёров в форматах "Расстановка с ФИО" и "Обезличенная расстановка" без участников МГ и КЦ
       can :import, UserApp
       can :view_dislocation, User
+      can :dislocation_crud, Dislocation, :organisation_id => user.organisation_id
+      can :crud, UserCurrentRole, UserCurrentRole.joins(:user).where(:users => {:organisation_id => user.organisation_id})
       can :crud, MobileGroup, :organisation_id => user.organisation_id
 
       can :contribute_to, Organisation, :id => user.organisation_id
@@ -76,6 +79,11 @@ class Ability
           can :crud, UserApp, :region_id => user.region_id
           can :approve, UserApp, :region_id => user.region_id
           can :reject, UserApp, :region_id => user.region_id
+          # видит пользователей своего района без расстановок
+          # use custom action to prevent OR'ing with Users conditions
+          can :dislocation_crud, Dislocation, ["users.region_id = ? and user_current_roles.region_id is null", user.region_id] do |d|
+            (user.region || user.adm_region).try(:is_or_is_ancestor_of?, d.user_current_role_region)
+          end
           # волонтёров своего района во формате "Расстановка с контактами" без участников МГ и КЦ
           can :view_dislocation, User, :region_id => user.region_id
           can :view_dislocation, Uic, (user.region.has_tic?? user.region : user.adm_region).uics_with_nested_regions
@@ -91,6 +99,10 @@ class Ability
           can :approve, UserApp, :adm_region_id => user.adm_region_id
           can :reject, UserApp, :adm_region_id  => user.adm_region_id
           can :view_dislocation, Uic, user.adm_region.uics_with_nested_regions
+          # видит пользователей своего района без расстановок
+          can :dislocation_crud, Dislocation, ["users.adm_region_id = ? and user_current_roles.region_id is null", user.adm_region_id] do |d|
+            (user.region || user.adm_region).try(:is_or_is_ancestor_of?, d.user_current_role_region)
+          end
           # волонтёров своего округа во формате "Расстановка с контактами" без участников МГ и КЦ
           can :view_dislocation, User, :adm_region_id => user.adm_region_id
           can :view_user_contacts, User, :adm_region_id => user.adm_region_id
@@ -98,6 +110,12 @@ class Ability
           # TODO волонтёров своего округа в координаторском формате без участников МГ и КЦ
           # TODO всю базу волонтёров в форматах "Расстановка с ФИО" и "Обезличенная расстановка" без участников МГ и КЦ
         end
+
+        can :crud, UserCurrentRole, :region_id => user.region_id || user.adm_region_id
+        can :dislocation_crud, Dislocation, ["user_current_roles.region_id = ?", user.region_id || user.adm_region_id] do |d|
+          (user.region || user.adm_region).try(:is_or_is_ancestor_of?, d.user_current_role_region)
+        end
+
         can :assign_users, Role, :slug => [:observer, :mobile, :callcenter, :mc, :cc]
         can :crud, MobileGroup, :organisation_id => user.organisation_id
         can :contribute_to, Organisation, :id => user.organisation_id
