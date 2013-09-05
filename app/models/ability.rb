@@ -58,17 +58,19 @@ class Ability
           can :reject, UserApp, :region_id => user.region_id
           # волонтёров своего района во формате "Расстановка с контактами" без участников МГ и КЦ
           can :view_dislocation, User, :region_id => user.region_id
+          can :view_dislocation, Uic, (user.region.has_tic?? user.region : user.adm_region).uics_with_nested_regions
           can :view_user_contacts, User, :region_id => user.region_id
           # TODO волонтёров своего района в координаторском формате без участников МГ и КЦ
           # TODO волонтёров своего округа во формате "Расстановка с ФИО" без участников МГ и КЦ
           # TODO всю базу волонтёров в формате "Обезличенная расстановка" без участников МГ и КЦ
-        elsif  user.adm_region
+        elsif user.adm_region
           # ТК с незаданным райном может просматривать:
           # карточки волонтёров своего округа
           can :crud, User, :adm_region_id => user.adm_region_id
           can :crud, UserApp, :adm_region_id    => user.adm_region_id
           can :approve, UserApp, :adm_region_id => user.adm_region_id
           can :reject, UserApp, :adm_region_id  => user.adm_region_id
+          can :view_dislocation, Uic, user.adm_region.uics_with_nested_regions
           # волонтёров своего округа во формате "Расстановка с контактами" без участников МГ и КЦ
           can :view_dislocation, User, :adm_region_id => user.adm_region_id
           can :view_user_contacts, User, :adm_region_id => user.adm_region_id
