@@ -11,7 +11,9 @@ class Verification < ActiveRecord::Base
   after_create :send_sms
 
   def self.normalize_phone_number(phone_number)
-    phone_number && phone_number.to_s.gsub(/\D/, '').last(10)
+     if phone_number.present?
+       phone_number.to_s.split('.')[0].gsub(/\D/, '').last(10)
+     end
   end
 
   def send_sms

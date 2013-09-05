@@ -33,8 +33,8 @@ ActiveAdmin.register Dislocation do
     end
     column :full_name
     column :phone
-    column :adm_region, &:coalesced_adm_region_name
-    column :region, &:coalesced_mun_region_name
+    column :adm_region, &:user_current_role_adm_region_name
+    column :region, &:user_current_role_mun_region_name
     column :current_role_id do |dislocation|
       inplace_helper[dislocation, :current_role, CurrentRole.dislocatable]
     end
@@ -74,12 +74,13 @@ ActiveAdmin.register Dislocation do
   filter :current_role_uic, as: :numeric
   filter :current_role_nomination_source_id, as: :select, collection: proc { NominationSource.order(:name) }, :input_html => {:style => "width: 230px;"}
   filter :user_current_role_got_docs, as: :select
+  filter :dislocated, as: :select, collection: [['Есть', 'true'], ['Нет', 'false']], label: 'Расстановка'
   # filter :dislocation_errors, as: :something
 
   batch_action :give_out_docs do |selection|
     ids = selection.reject(&:blank?)
     UserCurrentRole.find(ids).each do |ucr|
-      authorize! :view_dislocation, ucr.user
+      authorize! :edit, ucr
       ucr.got_docs = true
       ucr.save(:validate => false)
     end
@@ -137,6 +138,10 @@ ActiveAdmin.register Dislocation do
   controller do
     def scoped_collection
       Dislocation.with_current_roles.with_role :observer
+    end
+
+    def apply_authorization_scope(collection)
+      collection.merge(Dislocation.accessible_by(current_ability, :dislocation_crud))
     end
 
     def destroy
