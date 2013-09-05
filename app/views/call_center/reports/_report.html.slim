@@ -5,7 +5,7 @@
     h2 Звонящий
     = f.fields_for :reporter do |ff|
       = ff.input :phone, input_html: { data: { source: by_phone_call_center_dislocations_path } }
-      = ff.input :user_id, as: :hidden, input_html: { class: 'select2 ajax', data: { source: call_center_dislocations_path, "init-source" => call_center_dislocation_path(@report.reporter.try(:dislocation)), 'uic_by_user' => by_user_call_center_uics_path }, value: @report.reporter.try(:dislocation).try(:id) }
+      = ff.input :user_id, as: :hidden, input_html: { class: 'select2 ajax', data: { source: call_center_dislocations_path, "init-source" => call_center_dislocation_path(@dislocation), 'uic_by_user' => by_user_call_center_uics_path }, value: @dislocation.try(:id) }
       .input
         label Кампания
         = text_field_tag :campaign, "Выборы мэра Москвы"

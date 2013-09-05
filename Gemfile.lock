@@ -45,10 +45,6 @@ GEM
       activesupport (= 4.0.0)
       arel (~> 4.0.0)
     activerecord-deprecated_finders (1.0.3)
-    activerecord-postgres-hstore (0.7.6)
-      activerecord (>= 3.1)
-      pg-hstore (>= 1.1.5)
-      rake
     activesupport (4.0.0)
       i18n (~> 0.6, >= 0.6.4)
       minitest (~> 4.2)
@@ -212,7 +208,6 @@ GEM
     orm_adapter (0.4.0)
     parseconfig (1.0.2)
     pg (0.16.0)
-    pg-hstore (1.2.0)
     polyamorous (0.6.3)
       activerecord (>= 3.0)
     polyglot (0.3.3)
@@ -363,7 +358,6 @@ PLATFORMS
 
 DEPENDENCIES
   activeadmin!
-  activerecord-postgres-hstore
   awesome_nested_set
   axlsx
   cancan

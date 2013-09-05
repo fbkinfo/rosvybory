@@ -16,7 +16,6 @@ gem 'handlebars_assets'
 
 # Use postgresql as the database for Active Record
 gem 'pg'
-gem 'activerecord-postgres-hstore'
 
 gem "resque"#, "~> 2.0.0.pre.1", github: "resque/resque"
 gem 'resque_mailer'
