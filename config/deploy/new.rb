@@ -1,9 +1,9 @@
 set :user, "dev"
 set :deploy_to, "/home/dev/production/rosvybory"
 
-role :web, "staff4.navalny.ru"
-role :app, "staff4.navalny.ru"
-role :db,  "staff4.navalny.ru", :primary => true
+role :web, "54.200.5.197"
+role :app, "54.200.5.197"
+role :db,  "54.200.5.197", :primary => true
 
 set :rails_env, 'production'
 set :branch, 'master'
