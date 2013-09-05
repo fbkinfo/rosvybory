@@ -7,7 +7,7 @@ class CallCenter::ReportsController < ApplicationController
     @dislocation = Dislocation.find_by phone: params[:phone]
     @report = CallCenter::Report.new\
       reporter: new_reporter_from(@dislocation),
-      phone_call: CallCenter::PhoneCall.create(number: params[:phone], status: "started"),
+      phone_call: CallCenter::PhoneCall.create(operator: current_user, number: params[:phone], status: "started"),
       violation: CallCenter::Violation.new
 
     @uic = @report.reporter.try(:uic)
