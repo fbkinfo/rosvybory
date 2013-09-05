@@ -21,6 +21,10 @@ class Ability
 
     can :read, User, :id => user.id
 
+    can :read, CallCenter::Report
+    can :read, CallCenter::ViolationCategory
+    can :read, CallCenter::ViolationType
+
     if has_role?(user, :federal_repr)
       #ФП видит заявки своего наблюдательного объединения
       can :crud, UserApp, :organisation_id => user.organisation_id
@@ -103,10 +107,13 @@ class Ability
       can [:create, :read], ActiveAdmin::Comment
     end
 
-    if has_role?(user, :cc)
-      # TODO КК может просматривать только участников КЦ в координаторском формате и формате "Состав КЦ".
+    if has_role?(user, :callcenter)
+      can :create, CallCenter::Report
+    end
 
+    if has_role?(user, :cc)
       can [:create, :read], ActiveAdmin::Comment
+      CallCenter.constants.each { |m| can(:crud, "CallCenter::#{m}".constantize) }
     end
 
     can :destroy, UserCurrentRole do |ucr|
