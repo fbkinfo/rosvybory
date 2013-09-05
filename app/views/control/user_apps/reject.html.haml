@@ -1,0 +1,11 @@
+
+%h1 Укажите причину
+
+%p Это поможет лучше скоординировать наши действия, и избавит от возможных ошибок.
+
+= form_tag do_reject_control_user_app_path(@user_app), :class => 'reject-form' do
+
+  = text_area_tag :reason, params[:reason], :placeholder => 'Хотя бы в 2х словах'
+
+  .actions
+    = submit_tag 'Отклонить'

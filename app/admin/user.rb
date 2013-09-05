@@ -14,6 +14,10 @@ ActiveAdmin.register User do
     end
   end if Role.table_exists?
 
+  scope 'Без ролей' do |items|
+    items.where('NOT EXISTS (SELECT * FROM "user_roles" WHERE user_id = "users".id)')
+  end
+
   scope 'Телефон в черном списке' do |items|
     items.where('EXISTS (SELECT * FROM blacklists WHERE phone=users.phone)')
   end
@@ -22,6 +26,13 @@ ActiveAdmin.register User do
   batch_action :new_group_email
   batch_action :new_group_sms
   batch_action :destroy, false
+
+  batch_action :fix_phone, :if => proc{ can? :manage, :all } do |selection|
+    User.find(selection).each do |user|
+      user.fix_broken_phone!
+    end
+    redirect_to :back
+  end
 
   show do |user|
     h3 'Внимание! Телефон пользователя занесён в чёрный список!' if user.blacklisted
@@ -107,11 +118,11 @@ ActiveAdmin.register User do
     column :year_born
   end
 
-  filter :adm_region, :as => :select, :collection => proc { Region.adm_regions.all }, :input_html => {:style => "width: 230px;"}
-  filter :region, :as => :select, :collection => proc { Region.mun_regions.all }, :input_html => {:style => "width: 230px;"}
-  filter :organisation, label: 'Организация', as: :select, collection: proc { Organisation.order(:name).all }, :input_html => {:style => "width: 230px;"}
-  filter :roles, :input_html => {:style => "width: 230px;"}
-  filter :user_current_roles_current_role_id, label: 'Роль наблюдателя', as: :select, collection: proc { CurrentRole.all }, :input_html => {:style => "width: 230px;"}
+  filter :adm_region, :as => :select, :collection => proc { Region.adm_regions }
+  filter :region, :as => :select, :collection => proc { Region.mun_regions }
+  filter :organisation, label: 'Организация', as: :select, collection: proc { Organisation.order(:name) }
+  filter :roles
+  filter :user_current_roles_current_role_id, label: 'Роль наблюдателя', as: :select, collection: proc { CurrentRole.all }
   filter :user_app_uic_matcher, as: :string, label: '№ УИК'
   filter :full_name
   filter :phone
@@ -121,6 +132,9 @@ ActiveAdmin.register User do
   filter :user_app_experience_count, :as => :numeric, label: 'Опыт'
   filter :user_app_has_car, as: :boolean, label: 'Автомобиль'
   filter :user_app_has_video, as: :boolean, label: 'Видеосъёмка'
+  filter :dislocated, as: :select, collection: [['Есть', 'true'], ['Нет', 'false']], label: 'Расстановка'
+
+  filter :year_born, as: :numeric_range
 
   form :partial => 'form'
 

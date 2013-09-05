@@ -12,6 +12,7 @@ gem 'formtastic', '2.3.0.rc2'
 gem 'formtastic-bootstrap'#, github: 'mjbellantoni/formtastic-bootstrap'
 gem 'x-editable-rails'
 gem 'select2-rails'
+gem 'handlebars_assets'
 
 # Use postgresql as the database for Active Record
 gem 'pg'
@@ -40,6 +41,7 @@ gem 'state_machine'
 
 gem 'activeadmin',         github: 'gregbell/active_admin', branch: 'rails4'
 # gem 'activeadmin-axlsx'   # breaks app for no good reason
+gem 'rubyzip', '~> 0.9.5'
 gem 'axlsx'
 gem 'ransack', "~> 1.0.0"
 gem 'inherited_resources', "~> 1.4.1"
@@ -49,10 +51,13 @@ gem 'gon'
 gem 'cocoon'
 
 gem 'roo' #import from excel
-gem 'rubyzip2'  #без этого roo почему-то ломает rake
 
+# Генерация PDF
 gem 'wkhtmltopdf-binary'
 gem 'wicked_pdf'
+
+# Мониторинг и паниконагнетатель
+gem 'newrelic_rpm'
 
 group :development do
   gem 'capistrano'

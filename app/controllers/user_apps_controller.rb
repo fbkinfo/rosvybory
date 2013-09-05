@@ -65,7 +65,7 @@ class UserAppsController < ApplicationController
   def send_group_email
     ge = params[:group_email]
     ge[:emails].each do |single_email|
-      UserMailer.group_email(single_email, ge[:subject], ge[:body]).deliver
+      UserMailer.group_email(single_email, ge[:subject], ge[:body]).deliver if single_email.present?
     end if ge.is_a? Hash
     redirect_to '/control/users', notice: t('.messages_sent')
   end
@@ -75,7 +75,12 @@ class UserAppsController < ApplicationController
   end
 
   def send_group_sms
-    Resque.enqueue(SmsMassSender, phones: params[:group_sms][:phones].delete_if{|i| i.empty?}, message: params[:group_sms][:message])
+    phones = params[:group_sms][:phones].reject(&:blank?).uniq
+    options = {phones: phones, message: params[:group_sms][:message]}
+    worklog = WorkLog.create  :user_id => current_user.id,
+                              :name => 'Sending SMS',
+                              :params => options.to_json
+    Resque.enqueue(SmsMassSender, options.merge(work_log_id: worklog.id))
     redirect_to '/control/users', notice: t('.messages_sent')
   end
   # PATCH/PUT /user_apps/1

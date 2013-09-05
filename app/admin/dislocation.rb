@@ -25,7 +25,7 @@ ActiveAdmin.register Dislocation do
     actions(defaults: false) do |resource|
       ''.html_safe.tap do |buffer|
         buffer << link_to(I18n.t('active_admin.edit'), dislocate_user_path(resource), class: "member_link edit_link")
-        buffer << tag(:br) + link_to(I18n.t('active_admin.delete'), control_dislocation_path(resource.id), method: :delete, class: "member_link destroy_link", confirm: 'Удалить данную расстановку пользователя?') if resource.user_current_role.id.present? && can?(:destroy, resource.user_current_role)
+        buffer << tag(:br) + link_to(I18n.t('active_admin.delete'), control_dislocation_path(resource.id), method: :delete, class: "member_link destroy_link", data: {confirm: 'Удалить данную расстановку пользователя?'}) if resource.user_current_role.id.present? && can?(:destroy, resource.user_current_role)
       end
     end
     column "НО + id" do |dislocation|
@@ -74,6 +74,7 @@ ActiveAdmin.register Dislocation do
   filter :current_role_uic, as: :numeric
   filter :current_role_nomination_source_id, as: :select, collection: proc { NominationSource.order(:name) }, :input_html => {:style => "width: 230px;"}
   filter :user_current_role_got_docs, as: :select
+  filter :dislocated, as: :select, collection: [['Есть', 'true'], ['Нет', 'false']], label: 'Расстановка'
   # filter :dislocation_errors, as: :something
 
   batch_action :give_out_docs do |selection|
@@ -97,11 +98,10 @@ ActiveAdmin.register Dislocation do
   end
 
   collection_action :inplace, :method => :post do
-    # TODO bug? routed to member action
+    raise 'A bug in ActiveAdmin routing which we relied on was fixed recently, now its time to fix the code.'
   end
 
   member_action :inplace, :method => :post do
-    # FIXME method requires urgent refactoring
     user, ucr = if params[:id].present?
       ucr = UserCurrentRole.find(params[:id])
       [User.accessible_by(current_ability).find(ucr.user_id), ucr] # TODO check security policy
@@ -137,7 +137,7 @@ ActiveAdmin.register Dislocation do
 
   controller do
     def scoped_collection
-      Dislocation.with_current_roles.with_role :observer
+      Dislocation.with_current_roles.merge(User.accessible_by(current_ability, :view_dislocation)).with_role :observer
     end
 
     def destroy

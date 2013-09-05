@@ -27,6 +27,12 @@
 //
 //   .status_tag { background: #6090DB; }
 
+.filter_form {
+  .select2 {
+    width: 100%;
+  }
+}
+
 #user_last_name_input, #user_first_name_input, #user_patronymic_input {
   float: left;
   width: 30%;
@@ -50,6 +56,18 @@
   }
   .current_role_id {
     white-space: nowrap;
+  }
+}
+
+.control_work_logs pre {
+  min-width: 190px;
+  max-width: 300px;
+  white-space: pre-wrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  &:hover {
+    text-overflow: none;
+    overflow: visible;
   }
 }
 
