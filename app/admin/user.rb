@@ -90,7 +90,11 @@ ActiveAdmin.register User do
     column :created_at
     column :adm_region
     column :region
-    column :full_name
+
+    column :full_name do |user|
+      ActiveAdminComments::full_name_with_comments_count(user)
+    end
+
     column :phone
     column :email
     column :uic, :sortable => 'user_apps.uic'
