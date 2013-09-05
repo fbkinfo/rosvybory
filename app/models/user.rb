@@ -58,7 +58,7 @@ class User < ActiveRecord::Base
   end
 
   def as_json(options)
-    { id: id, text: full_name }
+    { id: id, text: full_name, phone: phone }
   end
 
   def fix_broken_phone!
