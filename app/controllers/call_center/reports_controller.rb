@@ -1,6 +1,8 @@
 class CallCenter::ReportsController < ApplicationController
   layout "call_center"
 
+  before_filter :authenticate_operator, only: [:new, :create]
+
   def new
     @dislocation = Dislocation.find_by phone: params[:phone]
     @report = CallCenter::Report.new\
@@ -52,5 +54,9 @@ class CallCenter::ReportsController < ApplicationController
         reporter.adm_region = dislocation.adm_region
       end
     end
+  end
+
+  def authenticate_operator
+    redirect_to new_user_session_path unless can? :create, CallCenter::Report
   end
 end
