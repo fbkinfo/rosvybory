@@ -10,18 +10,38 @@ class Ability
     alias_action :create, :read, :update, :destroy, :to => :crud
     alias_action :do_reject, :to => :reject   # help active admin to find the right ability in user_apps#reject
 
-    if has_role?(user, :admin)
+    user ||= User.new # prevent undefined method has_role? for nil class, if there is no user at all
+
+    if user.has_role?(:admin)
       can :manage, :all
+    else
+      can :read, Region
+      can :read, Organisation
+      can :read, Uic
+      can :read, ActiveAdmin::Page, :name => "Dashboard"
+
+      can :read, CallCenter::Report
+      can :read, CallCenter::ViolationCategory
+      can :read, CallCenter::ViolationType
+
+      can :read, User, :id => user.id
     end
 
-    can :read, Region
-    can :read, Organisation
-    can :read, Uic
-    can :read, ActiveAdmin::Page, :name => "Dashboard"
+    if user.has_role? :db_operator
+      # Это люди работают в Штабе, обслуживают приходящих людей: заносят их в базу, назначают роли, делают расстановки
+      can [:crud, :view_dislocation, :change_adm_region, :change_region, :view_user_contacts], User
+      can [:crud, :approve, :reject, :import], UserApp
+      can :contribute_to, Organisation
+      can :crud, MobileGroup
+      can :view_dislocation, Uic
 
-    can :read, User, :id => user.id
+      # Имеет полные права на просмотр, но не имеет возможность назначать права координаторов и администраторов.
+      can :assign_users, Role, :slug => [:callcenter, :mobile, :observer, :other]
 
-    if has_role?(user, :federal_repr)
+      can [:create, :read], ActiveAdmin::Comment
+    end
+
+    if user.has_role?(:federal_repr)
       #ФП видит заявки своего наблюдательного объединения
       can :crud, UserApp, :organisation_id => user.organisation_id
       can :approve, UserApp, :organisation_id => user.organisation_id
@@ -47,7 +67,7 @@ class Ability
       can [:create, :read], ActiveAdmin::Comment
     end
 
-    if has_role?(user, :tc)
+    if user.has_role?(:tc)
       if user.organisation
         if user.region
           # ТК с заданным районом может просматривать:
@@ -88,11 +108,11 @@ class Ability
       can [:create, :read], ActiveAdmin::Comment
     end
 
-    if has_role?(user, :mc)
+    if user.has_role?(:mc)
       # КМ может просматривать:
 
       # карточки волонтёров участников МГ своего НО
-      #can :manage, User, :organisation_id => user.organisation_id, :mobile_group_id => user.mobile_group_id
+      #can :crud, User, :organisation_id => user.organisation_id, :mobile_group_id => user.mobile_group_id
 
       # TODO всех участников МГ в координаторском формате
       # TODO всех участников МГ в форматах "Сводка МГ с контактами", "Сводка МГ с ФИО" и "Обезличенная сводка МГ"
@@ -103,10 +123,14 @@ class Ability
       can [:create, :read], ActiveAdmin::Comment
     end
 
-    if has_role?(user, :cc)
-      # TODO КК может просматривать только участников КЦ в координаторском формате и формате "Состав КЦ".
+    if user.has_role?(:callcenter)
+      can :create, CallCenter::Report
+    end
 
+    if user.has_role?(:cc)
+      # TODO КК может просматривать только участников КЦ в координаторском формате и формате "Состав КЦ".
       can [:create, :read], ActiveAdmin::Comment
+      CallCenter.constants.each { |m| can(:crud, "CallCenter::#{m}".constantize) }
     end
 
     can :destroy, UserCurrentRole do |ucr|
@@ -141,8 +165,4 @@ class Ability
     # https://github.com/ryanb/cancan/wiki/Defining-Abilities
   end
 
-  private
-    def has_role? user, role_name
-      user.has_role? role_name
-    end
 end

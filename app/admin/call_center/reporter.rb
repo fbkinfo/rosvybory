@@ -1,5 +1,5 @@
 ActiveAdmin.register CallCenter::Reporter do
-  menu parent: I18n.t('active_admin.menu.call_center'), priority: 5
+  menu parent: I18n.t('active_admin.menu.call_center'), priority: 5, if: proc{ can? :read,  CallCenter::Reporter }
 
   scope "Зарегистрированные" do |items|
     items.where "user_id IS NOT NULL"
