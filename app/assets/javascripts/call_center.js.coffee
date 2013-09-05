@@ -68,7 +68,7 @@ jQuery ->
           setCustomField "call_center_report[reporter_attributes][last_name]", null
           setCustomField "call_center_report[reporter_attributes][first_name]", null
           setCustomField "call_center_report[reporter_attributes][patronymic]", null
-        # autofill data on change
+        # Autofill data on change
         select.on "change", (e)->
           $('#call_center_report_reporter_attributes_phone').val(e.added.phone) if e.added
           select_uic = $('#call_center_report_reporter_attributes_uic_id')
@@ -84,10 +84,6 @@ jQuery ->
               else
                 select_uic.select2('val', '')
               select_role.select2('val', response.role_id)
-            # error: (msg) ->
-            #   console.log "error + #{msg}"
-        select.on "select2-close", (e) ->
-          select.trigger('change')
         $(document). on "click", "#unknown-user-will-be-saved", ()->
           select.select2 "open"
 
@@ -103,6 +99,7 @@ jQuery ->
       success: (response)->
         $("#uic").replaceWith $(response).find("#uic")
 
+  # Autofill reporter fields, when his phone is updated
   $('#call_center_report_reporter_attributes_phone').keyup ->
     $.ajax
       url: $(this).data('source')
