@@ -1,5 +1,5 @@
 ActiveAdmin.register CallCenter::Operator do
-  menu parent: I18n.t('active_admin.menu.call_center'), priority: 42, if: proc{ can? :crud,  CallCenter::Operator }
+  menu parent: I18n.t('active_admin.menu.call_center'), priority: 42, if: proc{ can? :read,  CallCenter::Operator }
   actions :all
 
   config.sort_order = "last_name_asc"
