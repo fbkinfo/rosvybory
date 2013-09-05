@@ -42,8 +42,19 @@ class User < ActiveRecord::Base
 
   delegate :created_at, to: :user_app, allow_nil: true, prefix: true
 
-  ransacker :dislocated, :formatter => proc {|x| x == 'true' } do
-    UserCurrentRole.dislocatable.where(UserCurrentRole.arel_table[:user_id].eq(arel_table[:id])).exists
+  class ArelPgHack
+    def initialize(query)
+      @query = query
+    end
+    def eq(value)
+      value ? @query : @query.not
+    end
+  end
+
+  ransacker :dislocated, :type => :boolean do
+    # arel converts it to 1/0, but postgresql doesn't like comparison of boolean with 1/0 :(
+    # UserCurrentRole.dislocatable.where(UserCurrentRole.arel_table[:user_id].eq(arel_table[:id])).exists
+    ArelPgHack.new(UserCurrentRole.dislocatable.where(UserCurrentRole.arel_table[:user_id].eq(arel_table[:id])).exists)
   end
 
   def as_json(options)
