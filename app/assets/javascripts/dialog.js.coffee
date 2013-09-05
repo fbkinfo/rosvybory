@@ -15,8 +15,8 @@
     #
     #$("<div id='dialog_lalala'>хелло</div>").dialog(
     $dialog = $(url)
-    $dialog.dialog  title: title
-                    autoOpen: true
+    $dialog.dialog  title: title,
+                    autoOpen: true,
                     buttons: {
                       Ok: ()->
                         $(this).dialog( "close" )
@@ -25,10 +25,10 @@
   else
     # remote content
     $dialog = $("<div id='dialog_#{dialog_id_posfix}'>Загружаю...</div>").dialog(
-      autoOpen: false
-      height: 500
-      width: 600
-      title: title
+      autoOpen: false,
+      height: 500,
+      width: 600,
+      title: title,
       hide: {
         effect: "fadeOut",
         duration: 200
