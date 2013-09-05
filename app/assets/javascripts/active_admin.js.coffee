@@ -8,5 +8,5 @@
 #= require_tree ./active_admin
 #= require region_select
 #= require users
-
+#= require uic_select
 
