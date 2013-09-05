@@ -10,6 +10,9 @@ $ ->
     currentValue = region.val()
 
     uicSelect.empty() # remove old options
-    $.each (window.uics || {})[currentValue] || region.data('uics')[currentValue], (index, uic) ->
-      uicSelect.append $("<option></option>").attr("value", uic.id).text(uic.name)
-    uicSelect.select2("val", "")
+
+    $.getJSON('uics.json?', q: {region_id_eq: currentValue}, (uics, response)->
+      $.each uics, (index, uic) ->
+        uicSelect.append $("<option></option>").attr("value", uic.id).text(uic.text)
+      uicSelect.select2("val", "")
+    )
