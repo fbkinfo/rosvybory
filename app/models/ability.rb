@@ -107,6 +107,10 @@ class Ability
       can [:create, :read], ActiveAdmin::Comment
     end
 
+    if has_role?(user, :callcenter)
+      can :create, CallCenter::Report
+    end
+
     if has_role?(user, :cc)
       can [:create, :read], ActiveAdmin::Comment
       CallCenter.constants.each { |m| can(:crud, "CallCenter::#{m}".constantize) }
