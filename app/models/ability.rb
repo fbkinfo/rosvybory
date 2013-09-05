@@ -10,7 +10,7 @@ class Ability
     alias_action :create, :read, :update, :destroy, :to => :crud
     alias_action :do_reject, :to => :reject   # help active admin to find the right ability in user_apps#reject
 
-    if has_role?(user, :admin)
+    if user.has_role?(:admin)
       can :manage, :all
     end
 
@@ -21,7 +21,7 @@ class Ability
 
     can :read, User, :id => user.id
 
-    if has_role?(user, :federal_repr)
+    if user.has_role?(:federal_repr)
       #ФП видит заявки своего наблюдательного объединения
       can :crud, UserApp, :organisation_id => user.organisation_id
       can :approve, UserApp, :organisation_id => user.organisation_id
@@ -47,7 +47,7 @@ class Ability
       can [:create, :read], ActiveAdmin::Comment
     end
 
-    if has_role?(user, :tc)
+    if user.has_role?(:tc)
       if user.organisation
         if user.region
           # ТК с заданным районом может просматривать:
@@ -88,7 +88,7 @@ class Ability
       can [:create, :read], ActiveAdmin::Comment
     end
 
-    if has_role?(user, :mc)
+    if user.has_role?(:mc)
       # КМ может просматривать:
 
       # карточки волонтёров участников МГ своего НО
@@ -103,7 +103,7 @@ class Ability
       can [:create, :read], ActiveAdmin::Comment
     end
 
-    if has_role?(user, :cc)
+    if user.has_role?(:cc)
       # TODO КК может просматривать только участников КЦ в координаторском формате и формате "Состав КЦ".
 
       can [:create, :read], ActiveAdmin::Comment
@@ -141,8 +141,4 @@ class Ability
     # https://github.com/ryanb/cancan/wiki/Defining-Abilities
   end
 
-  private
-    def has_role? user, role_name
-      user.has_role? role_name
-    end
 end
