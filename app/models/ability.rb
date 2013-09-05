@@ -61,7 +61,7 @@ class Ability
       can :import, UserApp
       can :view_dislocation, User
       can :dislocation_crud, Dislocation, :organisation_id => user.organisation_id
-      can :crud, UserCurrentRole, UserCurrentRole.joins(:user).where(:users => {:organisation_id => user.organisation_id})
+      can :crud, UserCurrentRole, :user => {:organisation_id => user.organisation_id}
       can :crud, MobileGroup, :organisation_id => user.organisation_id
 
       can :contribute_to, Organisation, :id => user.organisation_id
