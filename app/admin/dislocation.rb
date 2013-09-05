@@ -33,8 +33,8 @@ ActiveAdmin.register Dislocation do
     end
     column :full_name
     column :phone
-    column :adm_region, &:coalesced_adm_region_name
-    column :region, &:coalesced_mun_region_name
+    column :adm_region, &:user_current_role_adm_region_name
+    column :region, &:user_current_role_mun_region_name
     column :current_role_id do |dislocation|
       inplace_helper[dislocation, :current_role, CurrentRole.dislocatable]
     end
