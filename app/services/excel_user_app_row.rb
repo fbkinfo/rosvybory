@@ -204,36 +204,39 @@ class ExcelUserAppRow
   end
 
   def save
-    @user_app.skip_phone_verification = true
-    @user_app.skip_email_confirmation = true
-    if @update_existing || !@user_app.user
-      success =  @user_app.save
-      if success
-        if @user_app.user
-          self.import_status = :updated
-          Rails.logger.info "User import - updating user #{@user_app.user.phone}"
+    success = true
+    @user_app.transaction do
+      @user_app.skip_phone_verification = true
+      @user_app.skip_email_confirmation = true
+      if @update_existing || !@user_app.user
+        if success = @user_app.save
+          if @user_app.user
+            self.import_status = :updated
+            Rails.logger.info "User import - updating user #{@user_app.user.phone}"
+          else
+            self.import_status = :created
+            Rails.logger.info "User import - creating user #{@user_app.phone}"
+          end
         else
-          self.import_status = :created
-          Rails.logger.info "User import - creating user #{@user_app.phone}"
+          Rails.logger.info "User import - could not save user_app #{@user_app.phone} #{@user_app.errors.full_messages.join('; ')}"
+          fail_with "Не удалось сохранить заявку с телефоном #{@user_app.phone}: #{@user_app.errors.full_messages.join('; ')}"
         end
       else
-        Rails.logger.info "User import - could not save user_app #{@user_app.phone} #{@user_app.errors.full_messages.join('; ')}"
-        fail_with "Не удалось сохранить заявку с телефоном #{@user_app.phone}: #{@user_app.errors.full_messages.join('; ')}"
+        success = false
+        self.import_status = :ignored
+        Rails.logger.info "User import - ignoring existing user #{@user_app.user.phone}"
       end
-    else
-      success = false
-      self.import_status = :ignored
-      Rails.logger.info "User import - ignoring existing user #{@user_app.user.phone}"
-    end
-    if success
-      @user_app.confirm!
-      @user = @user_app.user || User.new
-      @user.update_from_user_app(@user_app, false)
-      if success = @user.save
-        @user.update_column :created_at, created_at if created_at
-      else
-        Rails.logger.info "User import error - could not save user #{@user.phone} #{@user.errors.full_messages.join('; ')}"
-        fail_with "Не удалось сохранить пользователя с телефоном #{@user.phone}: #{@user.errors.full_messages.join('; ')}"
+      if success
+        @user_app.confirm!
+        @user = @user_app.user || User.new
+        @user.update_from_user_app(@user_app, false)
+        if success = @user.save
+          @user.update_column :created_at, created_at if created_at
+        else
+          Rails.logger.info "User import error - could not save user #{@user.phone} #{@user.errors.full_messages.join('; ')}"
+          fail_with "Не удалось сохранить пользователя с телефоном #{@user.phone}: #{@user.errors.full_messages.join('; ')}"
+          raise ActiveRecord::Rollback, @user.errors.full_messages.join('; ')
+        end
       end
     end
     success
