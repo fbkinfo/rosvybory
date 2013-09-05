@@ -42,8 +42,39 @@ class User < ActiveRecord::Base
 
   delegate :created_at, to: :user_app, allow_nil: true, prefix: true
 
+  class ArelPgHack
+    def initialize(query)
+      @query = query
+    end
+    def eq(value)
+      value ? @query : @query.not
+    end
+  end
+
+  ransacker :dislocated, :type => :boolean do
+    # arel converts it to 1/0, but postgresql doesn't like comparison of boolean with 1/0 :(
+    nonempty_ucrs = UserCurrentRole.where.not(:uic_id => nil).where.not(:current_role_id => nil).where.not(:nomination_source_id => nil)
+    query = nonempty_ucrs.dislocatable.where(UserCurrentRole.arel_table[:user_id].eq(arel_table[:id])).exists
+    ArelPgHack.new(query)
+  end
+
   def as_json(options)
-    { id: id, text: full_name }
+    { id: id, text: full_name, phone: phone }
+  end
+
+  def fix_broken_phone!
+
+    return if phone[-1] != '0'
+    if phone[0] != '9'
+      self.phone = '9'+phone[0..-2]
+    elsif phone[0..1] == '99' ||  phone[0..1] == '95'
+      self.phone = '4'+phone[0..-2]
+    end
+    save
+    if save && user_app
+      user_app.phone=phone
+      user_app.save
+    end
   end
 
   class << self

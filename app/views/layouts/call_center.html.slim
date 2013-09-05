@@ -13,3 +13,7 @@ html
         = yield
       footer
         = link_to "Панель оператора колл-центра", new_call_center_report_path, id: "logo"
+        nav
+          ul
+            li = link_to "Переход в админку", control_root_path
+            li = link_to "Выход", destroy_user_session_path, method: :delete

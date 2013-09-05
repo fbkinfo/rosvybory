@@ -412,7 +412,8 @@ ru:
         full_name: ФИО
         user_app_created_at: Дата заполнения заявки
         uic: № УИК
-        current_roles: "Роли(Заявка)"
+        current_roles: Текущие роли
+        desired_statuses: В день выборов может быть
         user_current_roles: "Роли наблюдателя"
         experience_count: "Прежний опыт: количество раз"
         previous_statuses: "Прежний опыт: статусы"
@@ -432,6 +433,7 @@ ru:
         address: Адрес прописки
         got_docs: Документы выданы
         blacklist_info: Данные из черного списка
+        user: "Заявка"
       region:
         kind: Тип
         name: Название
@@ -459,6 +461,7 @@ ru:
         was_coord: "Координатор"
         was_lawyer: "Юрист с опытом работы на избирательных кампаниях"
         desired_statuses: "Готов стать"
+        desired_status: Готов стать
         previous_statuses: "Есть опыт"
         created_at: "Создано"
         updated_at: "Изменено"
@@ -483,6 +486,7 @@ ru:
         ip: "IP"
         organisation: "Орг."
         current_roles: "Текущие статусы"
+        user: "Пользователь"
       call_center/operator:
         full_name: ФИО
         first_name: Имя
@@ -596,3 +600,6 @@ ru:
         no_uic:
           header: УИК не определён
           notice: "Как только введёте номер УИК в форме, он здесь появится"
+      reports:
+        new:
+          access_denied: "Доступ запрещён"
