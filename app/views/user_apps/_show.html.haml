@@ -4,6 +4,13 @@
       Внимание! Телефон заявки занесён в чёрный список!
     %pre
       =user_app.blacklist_info
+-if user_app.user
+  .panel
+    %h3
+      Пользователь
+    .panel_contents
+      =link_to(user_app.user.decorate.organisation_with_user_id, [:control, user_app.user])
+
 .panel
   %h3
     Роль
