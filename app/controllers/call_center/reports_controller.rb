@@ -30,13 +30,14 @@ class CallCenter::ReportsController < ApplicationController
       phone_call.save
     end
 
+    CallCenter::Violation.create_json_load
     redirect_to new_call_center_report_path
   end
 
   private
 
   def permitted_params
-    params.require(:call_center_report).permit :text, {violation_attributes: [:violation_type_id]}, :parent_report_ids, reporter_attributes: [:phone, :uic, :user_id, :role, :uic_id, :current_role_id, :last_name, :first_name, :patronymic]
+    params.require(:call_center_report).permit :text, {violation_attributes: [:violation_type_id]}, :parent_report_ids, reporter_attributes: [:phone, :user_id, :uic_id, :current_role_id, :last_name, :first_name, :patronymic]
   end
 
   def new_reporter_from(dislocation)
