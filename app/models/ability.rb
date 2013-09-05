@@ -8,6 +8,7 @@ class Ability
 
   def initialize(user)
     alias_action :create, :read, :update, :destroy, :to => :crud
+    alias_action :do_reject, :to => :reject   # help active admin to find the right ability in user_apps#reject
 
     if has_role?(user, :admin)
       can :manage, :all
@@ -47,33 +48,32 @@ class Ability
     end
 
     if has_role?(user, :tc)
-      #ТК видит заявки своего адм. округа или района и только из своего НО
       if user.organisation
         if user.region
-          can :crud, UserApp, :region_id => user.region_id
-          can :approve, UserApp, :region_id => user.region_id
-          can :reject, UserApp, :region_id => user.region_id
           # ТК с заданным районом может просматривать:
           # карточки волонтёров своего района
           can :crud, User, :region_id => user.region_id
+          can :crud, UserApp, :region_id => user.region_id
+          can :approve, UserApp, :region_id => user.region_id
+          can :reject, UserApp, :region_id => user.region_id
+          # волонтёров своего района во формате "Расстановка с контактами" без участников МГ и КЦ
           can :view_dislocation, User, :region_id => user.region_id
           can :view_user_contacts, User, :region_id => user.region_id
           # TODO волонтёров своего района в координаторском формате без участников МГ и КЦ
-          # TODO волонтёров своего района во формате "Расстановка с контактами" без участников МГ и КЦ
           # TODO волонтёров своего округа во формате "Расстановка с ФИО" без участников МГ и КЦ
           # TODO всю базу волонтёров в формате "Обезличенная расстановка" без участников МГ и КЦ
         elsif  user.adm_region
-          can :crud, UserApp, :adm_region_id    => user.adm_region_id
-          can :approve, UserApp, :adm_region_id => user.adm_region_id
-          can :reject, UserApp, :adm_region_id  => user.adm_region_id
           # ТК с незаданным райном может просматривать:
           # карточки волонтёров своего округа
           can :crud, User, :adm_region_id => user.adm_region_id
+          can :crud, UserApp, :adm_region_id    => user.adm_region_id
+          can :approve, UserApp, :adm_region_id => user.adm_region_id
+          can :reject, UserApp, :adm_region_id  => user.adm_region_id
+          # волонтёров своего округа во формате "Расстановка с контактами" без участников МГ и КЦ
           can :view_dislocation, User, :adm_region_id => user.adm_region_id
-          can :change_region, User, :adm_region_id => user.adm_region_id
           can :view_user_contacts, User, :adm_region_id => user.adm_region_id
+          can :change_region, User, :adm_region_id => user.adm_region_id
           # TODO волонтёров своего округа в координаторском формате без участников МГ и КЦ
-          # TODO волонтёров своего округа во формате "Расстановка с контактами" без участников МГ и КЦ
           # TODO всю базу волонтёров в форматах "Расстановка с ФИО" и "Обезличенная расстановка" без участников МГ и КЦ
         end
         can :assign_users, Role, :slug => [:observer, :mobile, :callcenter, :mc, :cc]

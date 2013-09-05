@@ -74,6 +74,7 @@ ActiveAdmin.register Dislocation do
   filter :current_role_uic, as: :numeric
   filter :current_role_nomination_source_id, as: :select, collection: proc { NominationSource.order(:name) }, :input_html => {:style => "width: 230px;"}
   filter :user_current_role_got_docs, as: :select
+  filter :dislocated, as: :select, collection: [['Есть', 'true'], ['Нет', 'false']], label: 'Расстановка'
   # filter :dislocation_errors, as: :something
 
   batch_action :give_out_docs do |selection|
@@ -136,7 +137,7 @@ ActiveAdmin.register Dislocation do
 
   controller do
     def scoped_collection
-      Dislocation.with_current_roles.with_role :observer
+      Dislocation.with_current_roles.merge(User.accessible_by(current_ability, :view_dislocation)).with_role :observer
     end
 
     def destroy
