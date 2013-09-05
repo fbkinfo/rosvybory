@@ -74,6 +74,7 @@ ActiveAdmin.register Dislocation do
   filter :current_role_uic, as: :numeric
   filter :current_role_nomination_source_id, as: :select, collection: proc { NominationSource.order(:name) }, :input_html => {:style => "width: 230px;"}
   filter :user_current_role_got_docs, as: :select
+  filter :dislocated, as: :select, collection: [['Есть', 'true'], ['Нет', 'false']], label: 'Расстановка'
   # filter :dislocation_errors, as: :something
 
   batch_action :give_out_docs do |selection|
