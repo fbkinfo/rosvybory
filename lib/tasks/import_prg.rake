@@ -17,7 +17,9 @@ require 'roo/excelx'
     puts "Inserting values..."
 
     ActiveRecord::Base.transaction do
-      rows.drop(1).each_with_index do |row, index|
+      index = 0
+      rows.drop(1).each do |row|
+        index += 1
         attrs = Hash[col_map.zip(row)]
 
         unless uic = Uic.find_by_number(attrs[:uik].to_i)
@@ -46,15 +48,18 @@ require 'roo/excelx'
         end
 
         unless user = User.find_by_phone(phone)
-          #puts "#{index}: Не найден пользователь с телефоном #{phone}"
+          puts "#{index}: Не найден пользователь с телефоном #{phone}"
           #p attrs
           next
         end
 
         if user.last_name.try(:strip) != attrs[:f].try(:strip) || user.first_name.try(:strip) != attrs[:i].try(:strip) || user.patronymic.try(:strip) != attrs[:o].try(:strip)
-          puts "#{index}: ФИО не совпадает с указанным в БД! #{user.full_name} != #{attrs[:f]} #{attrs[:i]} #{attrs[:o]}"
-          #p attrs
-          next
+
+          if user.email != attrs[:email]
+            puts "#{index}: Ни ФИО, ни email не совпадают с указанными в БД! #{user.full_name} != #{attrs[:f]} #{attrs[:i]} #{attrs[:o]} ; #{user.email} != #{attrs[:email]} "
+            #p attrs
+            next
+          end
         end
         prg_role = CurrentRole.where(slug: "prg").first!
         ucr = user.user_current_roles.find_by(current_role_id: prg_role.id)
