@@ -4,10 +4,12 @@ class CallCenter::ReportsController < ApplicationController
   before_filter :authenticate_operator, only: [:new, :create]
 
   def new
-    @dislocation = Dislocation.find_by phone: params[:phone]
+    phone_call = new_phone_call_from params
+    dislocation = Dislocation.find_by phone: phone_call.number
+
     @report = CallCenter::Report.new\
-      reporter: new_reporter_from(@dislocation),
-      phone_call: CallCenter::PhoneCall.create(operator: current_user, number: params[:phone], status: "started"),
+      reporter: new_reporter_from(dislocation),
+      phone_call: phone_call,
       violation: CallCenter::Violation.new
 
     @uic = @report.reporter.try(:uic)
@@ -35,7 +37,16 @@ class CallCenter::ReportsController < ApplicationController
     redirect_to new_call_center_report_path
   end
 
+  
   private
+
+  def new_phone_call_from(params)
+    CallCenter::PhoneCall.create \
+      operator: current_user,
+      number: params[:clid],
+      status: "started",
+      all_params: params
+  end
 
   def permitted_params
     params.require(:call_center_report).permit :text, {violation_attributes: [:violation_type_id]}, :parent_report_ids, reporter_attributes: [:phone, :uic, :user_id, :role, :uic_id, :current_role_id, :last_name, :first_name, :patronymic]
@@ -44,6 +55,7 @@ class CallCenter::ReportsController < ApplicationController
   def new_reporter_from(dislocation)
     CallCenter::Reporter.new.tap do |reporter|
       if dislocation
+        reporter.dislocation = dislocation
         reporter.uic        = dislocation.user_current_roles.first.try(:uic)
         reporter.phone      = dislocation.phone
         reporter.first_name = dislocation.first_name
