@@ -14,6 +14,7 @@ class UserCurrentRole < ActiveRecord::Base
 
   delegate :number, :to => :uic, :prefix => true, :allow_nil => true
 
+  before_save :set_region_from_user
   after_save :update_uic_participants_count
   after_destroy :update_uic_participants_count
 
@@ -26,16 +27,11 @@ class UserCurrentRole < ActiveRecord::Base
   delegate :priority, :to => :current_role, :prefix => true
   delegate :must_have_tic?, :must_have_uic?, :to => :current_role, :allow_nil => true
 
-  def coalesced_region
-    @coalesced_region ||= region || user.try(:region) || user.try(:adm_region)
-  end
-
   # it's better to move it to UserCurrentRole decorator
   def selectable_uics
-    reg = coalesced_region
-    return [] unless reg
-    uics = reg.uics_with_nested_regions.order(:name)
-    uics = reg.adm_region.uics_with_nested_regions.order(:name) if uics.blank? && reg.adm_region
+    return [] unless region
+    uics = region.uics_with_nested_regions.order(:name)
+    uics = region.adm_region.uics_with_nested_regions.order(:name) if uics.blank? && region.adm_region
     if must_have_tic?
       uics.tics
     elsif must_have_uic?
@@ -66,6 +62,10 @@ class UserCurrentRole < ActiveRecord::Base
     def update_uic_participants_count
       Uic.find_by(:id => uic_id_was).try(:update_participants_count!) if uic_id_changed?
       uic.try(:update_participants_count!)
+    end
+
+    def set_region_from_user
+      self.region ||= user.region if user
     end
 
 end
