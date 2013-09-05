@@ -40,23 +40,31 @@ require 'roo/excelx'
           next
         end
 
+        user = nil
+        email = attrs[:email].try(:strip)
         phone = Verification.normalize_phone_number(attrs[:phone])
         if phone.blank?
-          puts "#{index}: Не указан телефон"
+          #puts "#{index}: Не указан телефон, ищу по email и фамилии"
           #p attrs
-          next
+          user = User.find_by(email: email, last_name: attrs[:f].strip) if email.present?
+          unless user
+            puts "#{index}: Не найден пользователь с такими email и фамилией #{email} #{attrs[:f]}, телефон не указан"
+            next
+          end
+        else
+          unless user = User.find_by_phone(phone)
+            #puts "#{index}: Не найден пользователь с телефоном #{phone}"
+            user = User.find_by(email: email, last_name: attrs[:f].strip) if email.present?
+            unless user
+              puts "#{index}: Не найден пользователь с телефоном #{phone}, либо с email и фамилией: #{email} #{attrs[:f]}"
+              next
+            end
+          end
         end
 
-        unless user = User.find_by_phone(phone)
-          puts "#{index}: Не найден пользователь с телефоном #{phone}"
-          #p attrs
-          next
-        end
-
-        if user.last_name.try(:strip) != attrs[:f].try(:strip) || user.first_name.try(:strip) != attrs[:i].try(:strip) || user.patronymic.try(:strip) != attrs[:o].try(:strip)
-
-          if user.email != attrs[:email]
-            puts "#{index}: Ни ФИО, ни email не совпадают с указанными в БД! #{user.full_name} != #{attrs[:f]} #{attrs[:i]} #{attrs[:o]} ; #{user.email} != #{attrs[:email]} "
+        if user.last_name.try(:strip).try(:lowercase) != attrs[:f].try(:strip).try(:lowercase)
+          if user.email != email
+            puts "#{index}: Ни фамилия, ни email не совпадают с указанными в БД! #{user.last_name} != #{attrs[:f]} ; #{user.email} != #{email} "
             #p attrs
             next
           end
