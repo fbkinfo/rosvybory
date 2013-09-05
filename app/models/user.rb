@@ -53,8 +53,9 @@ class User < ActiveRecord::Base
 
   ransacker :dislocated, :type => :boolean do
     # arel converts it to 1/0, but postgresql doesn't like comparison of boolean with 1/0 :(
-    # UserCurrentRole.dislocatable.where(UserCurrentRole.arel_table[:user_id].eq(arel_table[:id])).exists
-    ArelPgHack.new(UserCurrentRole.dislocatable.where(UserCurrentRole.arel_table[:user_id].eq(arel_table[:id])).exists)
+    nonempty_ucrs = UserCurrentRole.where.not(:uic_id => nil).where.not(:current_role_id => nil).where.not(:nomination_source_id => nil)
+    query = nonempty_ucrs.dislocatable.where(UserCurrentRole.arel_table[:user_id].eq(arel_table[:id])).exists
+    ArelPgHack.new(query)
   end
 
   def as_json(options)
