@@ -58,6 +58,7 @@
     white-space: nowrap;
   }
 }
+
 .control_work_logs pre {
   min-width: 190px;
   max-width: 300px;
@@ -68,4 +69,8 @@
     text-overflow: none;
     overflow: visible;
   }
+}
+
+.many-new {
+  width: 150%;
 }
