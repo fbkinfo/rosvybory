@@ -71,4 +71,7 @@ class UserAppDecorator < Draper::Decorator
     object.blacklisted.try(:info)
   end
 
+  def comments
+    ActiveAdminComments::comments self
+  end
 end

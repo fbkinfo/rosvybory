@@ -36,4 +36,7 @@ class DislocationDecorator < UserDecorator
     end
   end
 
+  def comments
+    ActiveAdminComments::comments self
+  end
 end

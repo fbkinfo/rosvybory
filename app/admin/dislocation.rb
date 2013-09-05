@@ -31,7 +31,11 @@ ActiveAdmin.register Dislocation do
     column "НО + id" do |dislocation|
       link_to dislocation.organisation_with_user_id, control_user_path(dislocation.user_id), :target => '_blank'
     end
-    column :full_name
+
+    column :full_name do |dislocation|
+      ActiveAdminComments::full_name_with_comments_count(dislocation)
+    end
+
     column :phone
     column :adm_region, &:coalesced_adm_region_name
     column :region, &:coalesced_mun_region_name
