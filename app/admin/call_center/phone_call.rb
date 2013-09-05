@@ -1,5 +1,5 @@
 ActiveAdmin.register CallCenter::PhoneCall do
-  menu parent: I18n.t('active_admin.menu.call_center'), priority: 4
+  menu parent: I18n.t('active_admin.menu.call_center'), priority: 40, if: proc{ can? :crud,  CallCenter::PhoneCall }
 
   actions :index, :show
 

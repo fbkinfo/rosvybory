@@ -103,10 +103,14 @@ class Ability
       can [:create, :read], ActiveAdmin::Comment
     end
 
+    if has_role?(user, :callcenter)
+      CallCenter.constants.each { |m| can(:crud, "CallCenter::#{m}".constantize) }
+    end
+
     if has_role?(user, :cc)
       # TODO КК может просматривать только участников КЦ в координаторском формате и формате "Состав КЦ".
-
       can [:create, :read], ActiveAdmin::Comment
+      CallCenter.constants.each { |m| can(:crud, "CallCenter::#{m}".constantize) }
     end
 
     can :destroy, UserCurrentRole do |ucr|
