@@ -5,6 +5,9 @@
     .attributes_table
       %table
         %tbody
+          %tr.row
+            %th
+            %td= link_to("Ссылка на заявку", [:control, user_app])
           - %w[last_name first_name patronymic].each do |field|
             %tr.row
               %th= UserApp.human_attribute_name(field)
