@@ -433,6 +433,7 @@ ru:
         address: Адрес прописки
         got_docs: Документы выданы
         blacklist_info: Данные из черного списка
+        user: "Заявка"
       region:
         kind: Тип
         name: Название
@@ -485,6 +486,7 @@ ru:
         ip: "IP"
         organisation: "Орг."
         current_roles: "Текущие статусы"
+        user: "Пользователь"
       call_center/operator:
         full_name: ФИО
         first_name: Имя

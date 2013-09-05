@@ -39,6 +39,7 @@ ActiveAdmin.register User do
     if can? :crud, user #вид для админа
       attributes_table do
         row :blacklist_info if user.blacklisted
+        row :user_app
         row :organisation, &:organisation_with_user_id
         row :user_app_created_at
         row :full_name
