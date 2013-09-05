@@ -1,5 +1,5 @@
 ActiveAdmin.register CallCenter::Operator do
-  menu parent: I18n.t('active_admin.menu.call_center'), priority: 6
+  menu parent: I18n.t('active_admin.menu.call_center'), priority: 6, if: proc{ can? :read,  CallCenter::Operator }
   actions :all
 
   config.sort_order = "last_name_asc"
@@ -34,7 +34,7 @@ ActiveAdmin.register CallCenter::Operator do
   form do |f|
     f.inputs :last_name, :first_name, :patronymic
     f.actions
-  end 
+  end
 
   controller do
     def permitted_params
