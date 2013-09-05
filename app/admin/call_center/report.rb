@@ -1,5 +1,5 @@
 ActiveAdmin.register CallCenter::Report do
-  menu parent: I18n.t('active_admin.menu.call_center'), priority: 1, if: proc{ can? :crud,  CallCenter::Report }
+  menu parent: I18n.t('active_admin.menu.call_center'), priority: 1, if: proc{ can? :read,  CallCenter::Report }
   actions :index, :show
 
   scope 'Сообщения' do |items|
