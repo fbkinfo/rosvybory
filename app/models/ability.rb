@@ -21,6 +21,20 @@ class Ability
 
     can :read, User, :id => user.id
 
+    if user.has_role? :db_operator
+      # Это люди работают в Штабе, обслуживают приходящих людей: заносят их в базу, назначают роли, делают расстановки
+      can [:crud, :view_dislocation, :change_adm_region, :change_region, :view_user_contacts], User
+      can [:crud, :approve, :reject, :import], UserApp
+      can :contribute_to, Organisation
+      can :crud, MobileGroup
+      can :view_dislocation, Uic
+
+      # Имеет полные права на просмотр, но не имеет возможность назначать права координаторов и администраторов.
+      can :assign_users, Role, :slug => [:callcenter, :mobile, :observer, :other]
+
+      can [:create, :read], ActiveAdmin::Comment
+    end
+
     if user.has_role?(:federal_repr)
       #ФП видит заявки своего наблюдательного объединения
       can :crud, UserApp, :organisation_id => user.organisation_id
@@ -92,7 +106,7 @@ class Ability
       # КМ может просматривать:
 
       # карточки волонтёров участников МГ своего НО
-      #can :manage, User, :organisation_id => user.organisation_id, :mobile_group_id => user.mobile_group_id
+      #can :crud, User, :organisation_id => user.organisation_id, :mobile_group_id => user.mobile_group_id
 
       # TODO всех участников МГ в координаторском формате
       # TODO всех участников МГ в форматах "Сводка МГ с контактами", "Сводка МГ с ФИО" и "Обезличенная сводка МГ"
