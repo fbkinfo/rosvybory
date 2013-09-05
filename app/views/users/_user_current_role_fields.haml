@@ -3,9 +3,9 @@
     = f.input :current_role, include_blank: false, input_html: {"data-role" => "current-role", :style => "width: 350px;"}
     = f.input :nomination_source, input_html: {:style => "width: 350px;"}
 
-    = f.input :region, as: :select, :collection => option_groups_from_collection_for_select(Region.adm_regions, :subregions_with_tics, :name, :id, :name, f.object.region.try(:id)), :input_html => {"data-role" => "region-select", :style => "width: 220px;"}, :label => "Район"
+    = f.input :region, as: :select, :collection => option_groups_from_collection_for_select(Region.adm_regions, :subregions_with_tics, :name, :id, :name, f.object.region.try(:id)), :input_html => {:style => "width: 220px;", data: {role: 'region-select'}}, :label => "Район"
 
-    = f.input :uic_id, as: :select, :collection => f.object.selectable_uics, :label => raw("ТИК/УИК (<a href='http://www.wikiuiki.org/' target=\"_blank\">база</a>)."), input_html: {"data-role" => "uic", style: "width: 220px;"}
+    = f.input :uic_id, as: :select, :collection => options_from_collection_for_select(f.object.region ? Uic.where(region_id: f.object.region.id) : [], :id, :name), :input_html => {:style => "width: 220px;", data: {role: 'uic-select'}}, :label => raw("ТИК/УИК (<a href='http://www.wikiuiki.org/' target=\"_blank\">база</a>).")
     = f.input :got_docs
     = f.input :user_id, as: :hidden, input_html: {value: @user.id}
     = link_to_remove_association "удалить роль", f
