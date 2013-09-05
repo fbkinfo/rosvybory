@@ -42,8 +42,39 @@ class User < ActiveRecord::Base
 
   delegate :created_at, to: :user_app, allow_nil: true, prefix: true
 
+  class ArelPgHack
+    def initialize(query)
+      @query = query
+    end
+    def eq(value)
+      value ? @query : @query.not
+    end
+  end
+
+  ransacker :dislocated, :type => :boolean do
+    # arel converts it to 1/0, but postgresql doesn't like comparison of boolean with 1/0 :(
+    nonempty_ucrs = UserCurrentRole.where.not(:uic_id => nil).where.not(:current_role_id => nil).where.not(:nomination_source_id => nil)
+    query = nonempty_ucrs.dislocatable.where(UserCurrentRole.arel_table[:user_id].eq(arel_table[:id])).exists
+    ArelPgHack.new(query)
+  end
+
   def as_json(options)
-    { id: id, text: full_name }
+    { id: id, text: full_name, phone: phone }
+  end
+
+  def fix_broken_phone!
+
+    return if phone[-1] != '0'
+    if phone[0] != '9'
+      self.phone = '9'+phone[0..-2]
+    elsif phone[0..1] == '99' ||  phone[0..1] == '95'
+      self.phone = '4'+phone[0..-2]
+    end
+    save
+    if save && user_app
+      user_app.phone=phone
+      user_app.save
+    end
   end
 
   class << self
@@ -63,7 +94,8 @@ class User < ActiveRecord::Base
   end
 
   def has_role?(role_name)
-    !!roles.exists?(slug: role_name)
+    @has_role_cache ||= {}
+    @has_role_cache[role_name] ||= roles.exists?(slug: role_name)
   end
 
   def add_role(role_name)
@@ -98,7 +130,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  def update_from_user_app(apps)
+  def update_from_user_app(apps, update_current_roles = true)
     apps = Array.wrap apps
     app = apps.first
     unless apps.size > 1
@@ -130,7 +162,7 @@ class User < ActiveRecord::Base
       list & app.user_app_current_roles.map(&:current_role)
     end
     logger.debug "User@#{__LINE__}#update_from_user_app #{app.current_roles.inspect} #{common_roles.inspect}" if logger.debug?
-    if common_roles.present?
+    if update_current_roles && common_roles.present?
       app.user_app_current_roles.each do |ua_role|
         if (common_roles.include? ua_role.current_role) && user_current_roles.none? {|ucr| ucr.current_role == ua_role.current_role}
           # TODO move this to user_current_role#from_user_app_current_role ?

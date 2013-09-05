@@ -144,6 +144,10 @@ GEM
       activesupport (>= 3.1, < 4.1)
       haml (>= 3.1, < 4.1)
       railties (>= 3.1, < 4.1)
+    handlebars_assets (0.14.1)
+      execjs (>= 1.2.9)
+      sprockets (>= 2.0.3)
+      tilt
     has_scope (0.6.0.rc)
       actionpack (>= 3.2, < 5)
       activesupport (>= 3.2, < 5)
@@ -198,6 +202,7 @@ GEM
     net-ssh (2.6.8)
     net-ssh-gateway (1.2.0)
       net-ssh (>= 2.6.5)
+    newrelic_rpm (3.6.6.147)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
     orm_adapter (0.4.0)
@@ -279,8 +284,7 @@ GEM
       rspec-expectations (~> 2.14.0)
       rspec-mocks (~> 2.14.0)
     ruby-ole (1.2.11.7)
-    rubyzip (1.0.0)
-    rubyzip2 (2.0.2)
+    rubyzip (0.9.9)
     rvm-capistrano (1.4.4)
       capistrano (>= 2.15.4)
     sass (3.2.10)
@@ -376,6 +380,7 @@ DEPENDENCIES
   guard
   guard-rspec
   haml-rails
+  handlebars_assets
   honeybadger
   inherited_resources (~> 1.4.1)
   jquery-rails
@@ -383,6 +388,7 @@ DEPENDENCIES
   launchy
   less-rails
   letter_opener
+  newrelic_rpm
   pg
   pry-rails
   quiet_assets
@@ -394,7 +400,7 @@ DEPENDENCIES
   resque_mailer
   roo
   rspec-rails
-  rubyzip2
+  rubyzip (~> 0.9.5)
   rvm-capistrano
   sass-rails (~> 4.0.0)
   select2-rails

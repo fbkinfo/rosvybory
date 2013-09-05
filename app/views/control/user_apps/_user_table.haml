@@ -1,0 +1,37 @@
+%table
+  %thead
+    %tr
+      %th= User.human_attribute_name(:id)
+      %th= User.human_attribute_name(:created_at)
+      %th= User.human_attribute_name(:full_name)
+      %th= User.human_attribute_name(:adm_region)
+      %th= User.human_attribute_name(:region)
+      %th= User.human_attribute_name(:phone)
+      %th= User.human_attribute_name(:email)
+      %th= User.human_attribute_name(:uic)
+      %th= User.human_attribute_name(:current_roles)
+      %th= User.human_attribute_name(:previous_statuses)
+      %th= User.human_attribute_name(:experience_count)
+      %th= User.human_attribute_name(:legal_status)
+      %th= User.human_attribute_name(:has_video)
+      %th= User.human_attribute_name(:desired_statuses)
+      %th= User.human_attribute_name(:extra)
+  %tbody
+    - rows.each do |row|
+      - user = row.user_app.user.decorate
+      %tr
+        %td= user.organisation_with_user_id
+        %td= user.created_at && l(user.created_at)
+        %td= link_to user.full_name, [:control, row.user_app.user]
+        %td= user.adm_region
+        %td= user.region
+        %td= user.phone
+        %td= user.email
+        %td= user.uic
+        %td= user.human_current_roles
+        %td= user.human_previous_statuses
+        %td= user.experience_count
+        %td= user.human_legal_status
+        %td= user.human_has_video
+        %td= euar.desired_statuses
+        %td= user.extra

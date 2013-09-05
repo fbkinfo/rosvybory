@@ -17,6 +17,8 @@ class UserCurrentRole < ActiveRecord::Base
   after_save :update_uic_participants_count
   after_destroy :update_uic_participants_count
 
+  scope :dislocatable, proc { joins(:current_role).merge(CurrentRole.dislocatable) }
+
   def uic_number=(number)
     self.uic = number.presence && Uic.find_by_number(number)
   end
@@ -33,6 +35,7 @@ class UserCurrentRole < ActiveRecord::Base
     reg = coalesced_region
     return [] unless reg
     uics = reg.uics_with_nested_regions.order(:name)
+    uics = reg.adm_region.uics_with_nested_regions.order(:name) if uics.blank? && reg.adm_region
     if must_have_tic?
       uics.tics
     elsif must_have_uic?

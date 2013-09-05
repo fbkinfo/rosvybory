@@ -1,4 +1,5 @@
 class ExcelUserAppRow
+  extend Enumerize
   COLUMNS = {
       uid: 0, #нет прямого поля
       created_at: 1,
@@ -41,17 +42,26 @@ class ExcelUserAppRow
     end
   end
 
+  attr_accessor :import_status
+  enumerize :import_status, in: [:created , :updated, :ignored, :failed]
+  attr_accessor :import_error
+
+  def fail_with(error)
+    self.import_status = :failed
+    self.import_error = error
+  end
+
   attr_reader :user_app, :user
   attr_accessor :uid # lost after save, but is used to detect organisation
   attr_accessor :created_at, :adm_region, :region, :has_car, :current_roles, :experience_count, :previous_statuses,
                 :can_be_coord_region, :can_be_reserv, :social_accounts, :uic, :has_video, :legal_status, :desired_statuses
   attr_accessor :first_name, :last_name, :patronymic, :email, :extra, :phone
 
-  delegate :organisation, :persisted?, :new_record?, :to => :user_app, :allow_nil => true
+  delegate :id, :organisation, :persisted?, :new_record?, :to => :user_app, :allow_nil => true
 
-  def initialize(attrs, replace_existing = false)
+  def initialize(attrs, update_existing = false)
     phone = Verification.normalize_phone_number(attrs[:phone])
-    @replace_existing = replace_existing
+    @update_existing = update_existing
     @user_app = UserApp.find_or_initialize_by(phone: phone) do |a|
       a.ip ||= '127.0.0.1'
       a.year_born ||= 1913
@@ -61,7 +71,10 @@ class ExcelUserAppRow
     end
     @user_app.imported!
 
-    local_only = phone.blank?
+    if local_only = phone.blank?
+      Rails.logger.info "User import - no phone in #{attrs[:uid]}" if attrs[:uid].present?
+      fail_with "Поле с телефоном - пустое. Первый столбец - #{attrs[0]}"
+    end
 
     self.class.column_names.each do |k|
       v = attrs[k]
@@ -193,7 +206,7 @@ class ExcelUserAppRow
   end
 
   def created_at=(v)
-    @user_app.created_at = v # convert to datetime
+    @user_app.created_at = v rescue nil # convert to datetime
     @created_at = @user_app.created_at
   end
 
@@ -220,16 +233,40 @@ class ExcelUserAppRow
   end
 
   def save
-    @user_app.skip_phone_verification = true
-    @user_app.skip_email_confirmation = true
-    @user_app.legal_status = UserApp::LEGAL_STATUS_NO unless @user_app.legal_status
-    success = @user_app.save
-    if success
-      @user_app.confirm!
-      @user = @user_app.user || User.new
-      @user.update_from_user_app(@user_app)
-      if success = @user.save
-        @user.update_column :created_at, created_at if created_at
+    success = true
+    @user_app.transaction do
+      @user_app.skip_phone_verification = true
+      @user_app.skip_email_confirmation = true
+      @user_app.legal_status = UserApp::LEGAL_STATUS_NO unless @user_app.legal_status
+      if @update_existing || !@user_app.user
+        if success = @user_app.save
+          if @user_app.user
+            self.import_status = :updated
+            Rails.logger.info "User import - updating user #{@user_app.user.phone}"
+          else
+            self.import_status = :created
+            Rails.logger.info "User import - creating user #{@user_app.phone}"
+          end
+        else
+          Rails.logger.info "User import - could not save user_app #{@user_app.phone} #{@user_app.errors.full_messages.join('; ')}"
+          fail_with "Не удалось сохранить заявку с телефоном #{@user_app.phone}: #{@user_app.errors.full_messages.join('; ')}"
+        end
+      else
+        success = false
+        self.import_status = :ignored
+        Rails.logger.info "User import - ignoring existing user #{@user_app.user.phone}"
+      end
+      if success
+        @user_app.confirm!
+        @user = @user_app.user || User.new
+        @user.update_from_user_app(@user_app, false)
+        if success = @user.save
+          @user.update_column :created_at, created_at if created_at
+        else
+          Rails.logger.info "User import error - could not save user #{@user.phone} #{@user.errors.full_messages.join('; ')}"
+          fail_with "Не удалось сохранить пользователя с телефоном #{@user.phone}: #{@user.errors.full_messages.join('; ')}"
+          raise ActiveRecord::Rollback, @user.errors.full_messages.join('; ')
+        end
       end
     end
     success
