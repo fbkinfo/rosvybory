@@ -80,7 +80,7 @@ ActiveAdmin.register Dislocation do
   batch_action :give_out_docs do |selection|
     ids = selection.reject(&:blank?)
     UserCurrentRole.find(ids).each do |ucr|
-      authorize! :view_dislocation, ucr.user
+      authorize! :edit, ucr
       ucr.got_docs = true
       ucr.save(:validate => false)
     end
@@ -137,7 +137,11 @@ ActiveAdmin.register Dislocation do
 
   controller do
     def scoped_collection
-      Dislocation.with_current_roles.merge(User.accessible_by(current_ability, :view_dislocation)).with_role :observer
+      Dislocation.with_current_roles.with_role :observer
+    end
+
+    def apply_authorization_scope(collection)
+      collection.merge(Dislocation.accessible_by(current_ability, :dislocation_crud))
     end
 
     def destroy
