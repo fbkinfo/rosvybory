@@ -41,7 +41,7 @@ ActiveAdmin.register DislocationControl do
     end
 
     def scoped_collection
-      DislocationControl.includes(:user_current_roles)
+      DislocationControl.accessible_by(current_ability, :view_dislocation).includes(:user_current_roles)
     end
   end
 end
