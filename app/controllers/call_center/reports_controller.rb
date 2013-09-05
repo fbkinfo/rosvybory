@@ -57,6 +57,6 @@ class CallCenter::ReportsController < ApplicationController
   end
 
   def authenticate_operator
-    redirect_to root_path, notice: I18n.t("views.call_center.reports.new.access_denied") unless can? :create, CallCenter::Report
+    redirect_to new_user_session_path unless can? :create, CallCenter::Report
   end
 end
