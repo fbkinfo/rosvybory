@@ -9,7 +9,7 @@ class CallCenter::UicsController < ApplicationController
     elsif params[:id].present?
       respond_with Uic.find(params[:id])
     else
-      render nothing: true
+      respond_with Uic.none
     end
   end
 

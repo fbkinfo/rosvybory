@@ -10,16 +10,22 @@ class Ability
     alias_action :create, :read, :update, :destroy, :to => :crud
     alias_action :do_reject, :to => :reject   # help active admin to find the right ability in user_apps#reject
 
+    user ||= User.new # prevent undefined method has_role? for nil class, if there is no user at all
+
     if user.has_role?(:admin)
       can :manage, :all
+    else
+      can :read, Region
+      can :read, Organisation
+      can :read, Uic
+      can :read, ActiveAdmin::Page, :name => "Dashboard"
+
+      can :read, CallCenter::Report
+      can :read, CallCenter::ViolationCategory
+      can :read, CallCenter::ViolationType
+
+      can :read, User, :id => user.id
     end
-
-    can :read, Region
-    can :read, Organisation
-    can :read, Uic
-    can :read, ActiveAdmin::Page, :name => "Dashboard"
-
-    can :read, User, :id => user.id
 
     if user.has_role? :db_operator
       # Это люди работают в Штабе, обслуживают приходящих людей: заносят их в базу, назначают роли, делают расстановки
@@ -117,10 +123,14 @@ class Ability
       can [:create, :read], ActiveAdmin::Comment
     end
 
-    if user.has_role?(:cc)
-      # TODO КК может просматривать только участников КЦ в координаторском формате и формате "Состав КЦ".
+    if user.has_role?(user, :callcenter)
+      can :create, CallCenter::Report
+    end
 
+    if user.has_role?(user, :cc)
+      # TODO КК может просматривать только участников КЦ в координаторском формате и формате "Состав КЦ".
       can [:create, :read], ActiveAdmin::Comment
+      CallCenter.constants.each { |m| can(:crud, "CallCenter::#{m}".constantize) }
     end
 
     can :destroy, UserCurrentRole do |ucr|
