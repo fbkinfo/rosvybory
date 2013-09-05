@@ -125,6 +125,7 @@ ActiveAdmin.register User do
   filter :user_app_experience_count, :as => :numeric, label: 'Опыт'
   filter :user_app_has_car, as: :boolean, label: 'Автомобиль'
   filter :user_app_has_video, as: :boolean, label: 'Видеосъёмка'
+  filter :dislocated, as: :select, collection: [['Есть', 'true'], ['Нет', 'false']], label: 'Расстановка'
 
   form :partial => 'form'
 
