@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 module UserAppsHelper
 
   def legal_status_human_readable(status)
@@ -83,5 +84,4 @@ module UserAppsHelper
     end
     regions
   end
-
 end
