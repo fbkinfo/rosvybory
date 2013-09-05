@@ -1,5 +1,5 @@
 ActiveAdmin.register CallCenter::ViolationCategory do
-  menu parent: I18n.t('active_admin.menu.call_center'), priority: 2
+  menu parent: I18n.t('active_admin.menu.call_center'), priority: 24, if: proc{ can? :crud,  CallCenter::ViolationCategory }
   actions :index, :show
 
   config.sort_order = "name_asc"

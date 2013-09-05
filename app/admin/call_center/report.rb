@@ -1,5 +1,5 @@
 ActiveAdmin.register CallCenter::Report do
-  menu parent: I18n.t('active_admin.menu.call_center'), priority: 1
+  menu parent: I18n.t('active_admin.menu.call_center'), priority: 1, if: proc{ can? :crud,  CallCenter::Report }
   actions :index, :show
 
   scope 'Сообщения' do |items|
@@ -14,7 +14,7 @@ ActiveAdmin.register CallCenter::Report do
       link_to report.id, control_call_center_report_path(report)
     end
     column :violation do |report|
-      link_to report.violation.violation_type.name, control_call_center_violation_type_path(report.violation) if report.violation.present?
+      link_to report.violation.try(:violation_type).try(:name), control_call_center_violation_type_path(report.violation) if report.violation.present?
     end
     column :uic do |report|
       link_to report.reporter.uic.name, control_uic_path(report.reporter.uic) if report.reporter.uic.present?
