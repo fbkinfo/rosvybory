@@ -38,6 +38,7 @@ gem 'cancan'
 gem 'draper'
 gem 'enumerize'
 gem 'state_machine'
+gem 'jbuilder'
 
 gem 'activeadmin',         github: 'gregbell/active_admin', branch: 'rails4'
 # gem 'activeadmin-axlsx'   # breaks app for no good reason

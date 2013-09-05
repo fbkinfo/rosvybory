@@ -31,6 +31,7 @@ Rosvibory::Application.routes.draw do
 
   namespace :call_center do
     resources :reports
+    resources :violations, only: :index
 
     resources :uics do
       collection do
