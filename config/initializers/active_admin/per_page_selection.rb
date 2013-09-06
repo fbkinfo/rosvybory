@@ -7,7 +7,7 @@ ActiveAdmin::Event.subscribe ActiveAdmin::Resource::RegisterEvent do |resource|
       elsif params[:per_page] == '200'
         super.per(200)
       else
-        super.per(2)
+        super.per
       end
     end
 
