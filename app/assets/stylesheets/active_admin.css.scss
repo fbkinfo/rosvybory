@@ -71,6 +71,12 @@
   }
 }
 
+.control_dislocation_controls {
+  .participant_0, .participant_1, .participant_2, .participant_3, .participant_4, .participant_5, .participant_6, .participant_7 {
+    min-width: 160px;
+  }
+}
+
 .many-new {
   width: 150%;
 }
