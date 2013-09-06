@@ -16,6 +16,7 @@ class CallCenter::ReportsController < ApplicationController
   end
 
   def create
+    params[:call_center_report].delete(:violation_attributes) if params[:call_center_report][:violation_attributes][:violation_type_id].blank? # prevent creating empty violation, in case, if :violation_attributes key is presented
     report = CallCenter::Report.new permitted_params
     report.reporter.tap do |reporter|
       if reporter.dislocation.present?
@@ -49,7 +50,7 @@ class CallCenter::ReportsController < ApplicationController
   end
 
   def permitted_params
-    params.require(:call_center_report).permit :text, {violation_attributes: [:violation_type_id]}, :parent_report_ids, reporter_attributes: [:phone, :uic, :user_id, :role, :uic_id, :current_role_id, :last_name, :first_name, :patronymic]
+    params.require(:call_center_report).permit :text, :parent_report_ids, reporter_attributes: [:phone, :uic, :user_id, :role, :uic_id, :current_role_id, :last_name, :first_name, :patronymic], violation_attributes: [:violation_type_id]
   end
 
   def new_reporter_from(dislocation)
