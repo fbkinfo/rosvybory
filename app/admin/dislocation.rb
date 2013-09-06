@@ -31,11 +31,7 @@ ActiveAdmin.register Dislocation do
     column "НО + id" do |dislocation|
       link_to dislocation.organisation_with_user_id, control_user_path(dislocation.user_id), :target => '_blank'
     end
-
-    column :full_name do |dislocation|
-      render partial: 'users/comments_hint', locals: { object: dislocation }
-    end
-
+    column :full_name
     column :phone
     column :adm_region, &:user_current_role_adm_region_name
     column :region, &:user_current_role_mun_region_name
