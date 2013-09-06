@@ -25,4 +25,10 @@
                 | &nbsp;—&nbsp;
                 span.violation = report.violation.violation_type.name
             .text = raw report.text
-            = button_to "Связать с сообщением", "#", class: "bind-with-current-report"
+            .meta
+              p.reporter
+                span.label Позвонивший:
+                span.value = full_name_of report.reporter
+              p.operator
+                span.label Оператор:
+                span.value = full_name_of report.phone_call.operator

@@ -31,6 +31,9 @@ ActiveAdmin.register CallCenter::Report do
         [reporter.last_name, reporter.first_name, reporter.patronymic].join " "
       end
     end
+    column :phone do |report|
+      report.reporter.phone
+    end
     column :current_role do |report|
       report.reporter.current_role.try(:name)
     end
