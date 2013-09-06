@@ -33,7 +33,7 @@ ActiveAdmin.register Dislocation do
     end
 
     column :full_name do |dislocation|
-      ActiveAdminComments::full_name_with_comments_count(dislocation)
+      render partial: 'users/comments_hint', locals: { object: dislocation }
     end
 
     column :phone

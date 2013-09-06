@@ -192,7 +192,7 @@ ActiveAdmin.register UserApp do
     column :uic
 
     column :full_name do |user_app|
-      ActiveAdminComments::full_name_with_comments_count(user_app)
+      render partial: 'users/comments_hint', locals: { object: user_app }
     end
 
     column :phone_formatted, :sortable => false do |user_app|
