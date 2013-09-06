@@ -7,15 +7,15 @@ ActiveAdmin.register Dislocation do
   batch_action :destroy, false
 
   index :download_links => false do
-    inplace_helper = proc do |dislocation, field, collection|
+    inplace_helper = proc do |dislocation, field, collection, display_method = :name|
       field_value_id = dislocation.send("user_current_role_#{field}_id")
-      text = field.to_s.classify.constantize.find_by(:id => field_value_id).try(:name) || field_value_id
+      text = field.to_s.classify.constantize.find_by(:id => field_value_id).try(display_method) || field_value_id
       data = {
                 pk: dislocation.pk,
                 name: "#{field}_id",
                 value: field_value_id,
                 type: 'select',
-                source: collection.map {|record| {:value => record.id, :text => record.try(:name)}},
+                source: collection.map {|record| {:value => record.id, :text => record.try(display_method)}},
                 url: inplace_control_dislocation_path(dislocation.user_current_role_id)
               }
       content_tag(:span, text, :class => 'inplace', :data => data)
@@ -31,12 +31,16 @@ ActiveAdmin.register Dislocation do
     column "НО + id" do |dislocation|
       link_to dislocation.organisation_with_user_id, control_user_path(dislocation.user_id), :target => '_blank'
     end
-    column :full_name
+
+    column :full_name do |dislocation|
+      render partial: 'users/comments_hint', locals: { object: dislocation }
+    end
+
     column :phone
     column :adm_region, &:user_current_role_adm_region_name
     column :region, &:user_current_role_mun_region_name
     column :current_role_id do |dislocation|
-      inplace_helper[dislocation, :current_role, CurrentRole.dislocatable]
+      inplace_helper[dislocation, :current_role, CurrentRole.dislocatable, :short_name]
     end
     column :current_role_uic, sortable: "user_current_roles.uic_id" do |dislocation|
       inplace_helper[dislocation, :uic, dislocation.user_current_role.selectable_uics]

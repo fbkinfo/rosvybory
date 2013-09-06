@@ -1,4 +1,6 @@
 class DislocationDecorator < UserDecorator
+  include ActiveAdminComments
+
   delegate :name, :to => :user_current_role_adm_region, :prefix => true, :allow_nil => true
   delegate :name, :to => :user_current_role_region, :prefix => true, :allow_nil => true
 
