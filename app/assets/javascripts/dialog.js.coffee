@@ -22,14 +22,14 @@
   else
     # remote content
     $dialog = $("<div id='dialog_#{dialog_id_posfix}'>Загружаю...</div>").dialog(
-      autoOpen: false
-      height: 500
-      width: 600
-      title: title
+      autoOpen: false,
+      height: 500,
+      width: 600,
+      title: title,
       hide:
-        effect: "fadeOut"
-        duration: 200
-      close: ()-> $(this).remove()
+        effect: "fadeOut",
+        duration: 200,
+      close: () -> $(this).remove()
     )
     $dialog.load(url, onOpen).dialog('open');
 
