@@ -1,6 +1,6 @@
 $(function() {
 
-  $('input[value=][type="checkbox"]').attr("disabled", true).attr('title', 'Сначала заполните расстановку! А пока отправить смс или почту можно из списка пользователей');
+  $('input[value=][type="checkbox"]').attr("disabled", true).attr('title', 'Сначала заполните расстановку и перезагрузите страницу! А пока отправить смс или почту можно из списка пользователей');
 
   $.fn.editable.defaults.mode = 'inline';
 
