@@ -185,7 +185,7 @@ ru:
       user:
         attributes:
           current_password:
-            invalid: "Указан неверено!"
+            invalid: "Указан неверно!"
     template:
       body: ! 'Проблемы возникли со следующими полями:'
       header:
@@ -372,7 +372,7 @@ ru:
       nomination_source/variants:
         candidate: Кандидат
         party: Партия кандидата
-        parliament: Парламетская партия
+        parliament: Парламентская партия
         media: СМИ
       verification:
         phone_number: Телефон
@@ -441,7 +441,7 @@ ru:
         updated_at: Изменен
         has_tic: есть ТИК
       user_app:
-        can_be_observer: "Член избирательной комисии / наблюдатель на участке"
+        can_be_observer: "Член избирательной комиссии / наблюдатель на участке"
         can_be_mobile: "Участник мобильных групп"
         can_be_coord_region: "Координатор участковых комиссий"
         can_be_coord_mobile: "Координатор мобильных групп"
@@ -537,7 +537,7 @@ ru:
       other: "%{count} ошибок"
   user_app:
     status:
-      observer: "Член избирательной комисии / наблюдатель на участке"
+      observer: "Член избирательной комиссии / наблюдатель на участке"
       mobile: "Участник мобильных групп"
       coord_region: "Координатор участковых комиссий"
       coord_mobile: "Координатор мобильных групп"
