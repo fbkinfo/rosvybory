@@ -11,6 +11,10 @@ class UserAppsController < ApplicationController
   #def show
   #end
 
+  def closed
+
+  end
+
   # GET /user_apps/new
   def new
     @user_app = UserApp.new
