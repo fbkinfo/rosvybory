@@ -10,7 +10,7 @@ set :deploy_via, :remote_cache
 default_run_options[:pty] = true
 set :rvm_ruby_string, "2.0.0-p247@rosvybory"#:local
 
-set :stages, %w(production staging)
+set :stages, %w(production staging new)
 set :default_stage, "staging"
 require 'capistrano/ext/multistage'
 

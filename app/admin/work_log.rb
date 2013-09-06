@@ -9,6 +9,7 @@ ActiveAdmin.register WorkLog do
 
   index do
     column :id
+    column :created_at
     column :user
     column :name
     column :params do |work_log|

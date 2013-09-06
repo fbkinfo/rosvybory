@@ -25,7 +25,7 @@ ActiveAdmin.register Dislocation do
     actions(defaults: false) do |resource|
       ''.html_safe.tap do |buffer|
         buffer << link_to(I18n.t('active_admin.edit'), dislocate_user_path(resource), class: "member_link edit_link")
-        buffer << tag(:br) + link_to(I18n.t('active_admin.delete'), control_dislocation_path(resource.id), method: :delete, class: "member_link destroy_link", confirm: 'Удалить данную расстановку пользователя?') if resource.user_current_role.id.present? && can?(:destroy, resource.user_current_role)
+        buffer << tag(:br) + link_to(I18n.t('active_admin.delete'), control_dislocation_path(resource.id), method: :delete, class: "member_link destroy_link", data: {confirm: 'Удалить данную расстановку пользователя?'}) if resource.user_current_role.id.present? && can?(:destroy, resource.user_current_role)
       end
     end
     column "НО + id" do |dislocation|
@@ -37,8 +37,8 @@ ActiveAdmin.register Dislocation do
     end
 
     column :phone
-    column :adm_region, &:coalesced_adm_region_name
-    column :region, &:coalesced_mun_region_name
+    column :adm_region, &:user_current_role_adm_region_name
+    column :region, &:user_current_role_mun_region_name
     column :current_role_id do |dislocation|
       inplace_helper[dislocation, :current_role, CurrentRole.dislocatable]
     end
@@ -68,22 +68,22 @@ ActiveAdmin.register Dislocation do
     end
   end
 
-  filter :organisation, label: 'Организация', as: :select, collection: proc { Organisation.order(:name) }, :input_html => {:style => "width: 230px;"}
-  filter :current_role_adm_region, :as => :select, :collection => proc { Region.adm_regions },
-         :input_html => {:style => "width: 230px;"}, :label => I18n.t('activerecord.attributes.user.adm_region')
-  filter :current_role_region, :as => :select, :collection => proc { Region.mun_regions },
-         :input_html => {:style => "width: 230px;"}, :label => I18n.t('activerecord.attributes.user.region')
+  filter :organisation, label: 'Организация', as: :select, collection: proc { Organisation.order(:name) }
+  filter :current_role_adm_region, :as => :select, :collection => proc { Region.adm_regions }, :label => User.human_attribute_name(:adm_region)
+  filter :current_role_region, :as => :select, :collection => proc { Region.mun_regions }, :label => User.human_attribute_name(:region)
   filter :full_name
   filter :phone
   filter :current_role_uic, as: :numeric
-  filter :current_role_nomination_source_id, as: :select, collection: proc { NominationSource.order(:name) }, :input_html => {:style => "width: 230px;"}
+  filter :current_role_id, as: :select, collection: proc { CurrentRole.order(:name) }
+  filter :current_role_nomination_source_id, as: :select, collection: proc { NominationSource.order(:name) }
   filter :user_current_role_got_docs, as: :select
+  filter :dislocated, as: :select, collection: [['Есть', 'true'], ['Нет', 'false']], label: 'Расстановка'
   # filter :dislocation_errors, as: :something
 
   batch_action :give_out_docs do |selection|
     ids = selection.reject(&:blank?)
     UserCurrentRole.find(ids).each do |ucr|
-      authorize! :view_dislocation, ucr.user
+      authorize! :edit, ucr
       ucr.got_docs = true
       ucr.save(:validate => false)
     end
@@ -101,11 +101,10 @@ ActiveAdmin.register Dislocation do
   end
 
   collection_action :inplace, :method => :post do
-    # TODO bug? routed to member action
+    raise 'A bug in ActiveAdmin routing which we relied on was fixed recently, now its time to fix the code.'
   end
 
   member_action :inplace, :method => :post do
-    # FIXME method requires urgent refactoring
     user, ucr = if params[:id].present?
       ucr = UserCurrentRole.find(params[:id])
       [User.accessible_by(current_ability).find(ucr.user_id), ucr] # TODO check security policy
@@ -142,6 +141,10 @@ ActiveAdmin.register Dislocation do
   controller do
     def scoped_collection
       Dislocation.with_current_roles.with_role :observer
+    end
+
+    def apply_authorization_scope(collection)
+      collection.merge(Dislocation.accessible_by(current_ability, :dislocation_crud))
     end
 
     def destroy
