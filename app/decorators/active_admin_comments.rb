@@ -1,12 +1,12 @@
 module ActiveAdminComments
-  def self.comments(object)
-    entities = if object.is_a? Dislocation
-                 [object.user_id, object.user_app_id, object.user_id]
-               elsif object.is_a? User
-                 [object.id, object.user_app.id, object.id]
+  def comments
+    entities = if self.is_a? Dislocation
+                 [self.user_id, self.user_app_id, self.user_id]
+               elsif self.is_a? User
+                 [self.id, self.user_app.id, self.id]
                elsif object.is_a? UserApp
-                 user_id = object.user.try(:id)
-                 [user_id, object.id, user_id]
+                 user_id = self.user.try(:id)
+                 [user_id, self.id, user_id]
                else
                  [nil, nil, nil]
                end
@@ -16,9 +16,9 @@ module ActiveAdminComments
     ActiveAdmin::Comment.where(clause, *conditions.flatten).where(namespace: namespace).order(:updated_at)
   end
 
-  def self.full_name_with_comments_count(object)
-    count = comments(object).count
-    count > 0 ? "#{object.full_name} (#{count})" : object.full_name
+  def full_name_with_comments_count
+    count = comments.count
+    count > 0 ? "#{self.full_name} (#{count})" : self.full_name
   end
 
 end

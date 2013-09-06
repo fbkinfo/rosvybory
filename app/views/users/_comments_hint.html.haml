@@ -22,5 +22,5 @@
           = f.input :body, :label => false, :input_html => { :size => '80x8', style: 'width: 550px;' }
         = f.actions do
           = f.action :submit, :label => I18n.t('active_admin.comments.add')
-= link_to ActiveAdminComments::full_name_with_comments_count(object), "##{id}",
+= link_to object.full_name_with_comments_count, "##{id}",
           :target => '_blank', :class => 'view-full-name-details-link'

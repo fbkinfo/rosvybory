@@ -1,4 +1,6 @@
 class UserAppDecorator < Draper::Decorator
+  include ActiveAdminComments
+
   delegate_all
 
   def human_current_roles
@@ -71,7 +73,4 @@ class UserAppDecorator < Draper::Decorator
     object.blacklisted.try(:info)
   end
 
-  def comments
-    ActiveAdminComments::comments self
-  end
 end

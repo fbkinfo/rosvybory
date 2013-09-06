@@ -1,4 +1,6 @@
 class DislocationDecorator < UserDecorator
+  include ActiveAdminComments
+
   delegate :coalesced_region, :to => :user_current_role, :allow_nil => true
   delegate :name, :to => :coalesced_adm_region, :prefix => true, :allow_nil => true
   delegate :name, :to => :coalesced_region, :prefix => true, :allow_nil => true
@@ -36,7 +38,4 @@ class DislocationDecorator < UserDecorator
     end
   end
 
-  def comments
-    ActiveAdminComments::comments self
-  end
 end
