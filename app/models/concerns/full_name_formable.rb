@@ -20,7 +20,7 @@ module FullNameFormable
   end
 
   def update_full_name
-    write_attribute(:full_name, [self.last_name, self.first_name, self.patronymic].join(' '))
+    write_attribute(:full_name, [self.last_name, self.first_name, self.patronymic].compact.join(' '))
   end
 
 end
