@@ -7,8 +7,10 @@ class CallCenter::ReportsController < ApplicationController
     phone_call = new_phone_call_from params
     dislocation = Dislocation.find_by phone: phone_call.number
 
+    @phone_station_presented = params.has_key? :clid
+
     @report = CallCenter::Report.new\
-      reporter: new_reporter_from(dislocation),
+      reporter: new_reporter_from(dislocation, phone_call),
       phone_call: phone_call,
       violation: CallCenter::Violation.new
 
@@ -40,7 +42,7 @@ class CallCenter::ReportsController < ApplicationController
     redirect_to new_call_center_report_path
   end
 
-  
+
   private
 
   def new_phone_call_from(params)
@@ -55,12 +57,12 @@ class CallCenter::ReportsController < ApplicationController
     params.require(:call_center_report).permit :text, :parent_report_ids, reporter_attributes: [:phone, :uic, :user_id, :role, :uic_id, :current_role_id, :last_name, :first_name, :patronymic], violation_attributes: [:violation_type_id]
   end
 
-  def new_reporter_from(dislocation)
+  def new_reporter_from(dislocation, phone_call)
     CallCenter::Reporter.new.tap do |reporter|
+      reporter.phone = phone_call.number
       if dislocation
         reporter.dislocation = dislocation
         reporter.uic        = dislocation.user_current_roles.first.try(:uic)
-        reporter.phone      = dislocation.phone
         reporter.first_name = dislocation.first_name
         reporter.last_name  = dislocation.last_name
         reporter.patronymic = dislocation.patronymic

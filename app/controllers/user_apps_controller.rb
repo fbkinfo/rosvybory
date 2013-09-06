@@ -1,6 +1,5 @@
 class UserAppsController < ApplicationController
   before_action :set_user_app, only: [:show] #, :edit, :update, :destroy]
-  before_action :load_users_from_active_admin_batch
 
   ## GET /user_apps
   #def index
@@ -10,6 +9,10 @@ class UserAppsController < ApplicationController
   ## GET /user_apps/1
   #def show
   #end
+
+  def closed
+
+  end
 
   # GET /user_apps/new
   def new
@@ -58,26 +61,12 @@ class UserAppsController < ApplicationController
 
   end
 
-  def new_group_email
-    if @users.blank?
-      redirect_to :back, flash: {error: "Не выбран ни один получатель!"} and return
-    end
-    render layout: 'custom_layout'
-  end
-
   def send_group_email
     ge = params[:group_email]
     ge[:emails].each do |single_email|
       UserMailer.group_email(single_email, ge[:subject], ge[:body]).deliver if single_email.present?
     end if ge.is_a? Hash
     redirect_to '/control/users', notice: t('.messages_sent')
-  end
-
-  def new_group_sms
-    if @users.blank?
-      redirect_to :back, flash: {error: "Не выбран ни один получатель!"} and return
-    end
-    render layout: 'custom_layout'
   end
 
   def send_group_sms
@@ -132,14 +121,4 @@ class UserAppsController < ApplicationController
                                          UserApp.social_methods)
   end
 
-    def load_users_from_active_admin_batch
-      if params[:filters].present? && params[:all_pages] == '1'
-        filters = Rack::Utils.parse_nested_query(params[:filters])['q'].with_indifferent_access
-        filters.delete_if {|key, value| value.blank? }
-        @users = User.accessible_by(current_ability)
-        @users = @users.ransack(filters).result if filters.present?
-      else
-        @users = User.where(id: params[:collection_selection])
-      end
-    end
 end

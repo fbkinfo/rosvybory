@@ -15,6 +15,7 @@ body
 footer
   margin-top: 40px
   padding: 20px 0
+  height: 40px
   &:before
     content: ""
     display: block
@@ -22,14 +23,22 @@ footer
     border-bottom: white solid thin
     margin-bottom: 20px
   a
-    color: #999
+    color: #09c
     text-decoration: none
-  #logo
-    float: left
-  nav
+  .operator
     float: right
+    font-size: 11px
+    margin: 0
+    span
+      &:not(:first-child)
+        margin-left: 1ex
+      &.label
+        color: #999
+  nav
+    float: left
     ul
       margin: 0
+      padding: 0
       list-style: none
       li
         display: inline-block
