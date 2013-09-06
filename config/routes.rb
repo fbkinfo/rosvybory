@@ -3,8 +3,8 @@ Rosvibory::Application.routes.draw do
 
   ActiveAdmin.routes(self)
 
-  resources :user_apps, only: [:new, :create] do
-  end
+  #resources :user_apps, only: [:new, :create] do
+  #end
 
   resource :verifications do
     post :confirm
@@ -22,7 +22,8 @@ Rosvibory::Application.routes.draw do
     end
   end
 
-  root 'user_apps#new'
+  root 'user_apps#closed'
+
   get 'confirm_email' => 'user_apps#confirm_email'
   post 'send_group_email' => 'user_apps#send_group_email'
   get 'new_group_email' => 'user_apps#new_group_email'
