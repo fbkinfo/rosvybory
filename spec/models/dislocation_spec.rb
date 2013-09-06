@@ -7,5 +7,6 @@ describe Dislocation do
     d.id.should == 959
   end
 
+
 end
 

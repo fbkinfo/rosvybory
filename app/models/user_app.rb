@@ -264,4 +264,5 @@ class UserApp < ActiveRecord::Base
     true
   end
 
+
 end
