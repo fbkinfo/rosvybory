@@ -4,7 +4,7 @@
 # If 'url' starts with '#', url is treated as the element selector to show inline content
 # Otherwise, 'url' is treated as a remote url to load into dialog
 #
-@openDialog = (dialog_id_posfix, url, title, onOpen, buttons, height = 500, width = 600) ->
+@openDialog = (dialog_id_posfix, url, title, onOpen)->
 
   if getDialog(dialog_id_posfix).length != 0
     getDialog(dialog_id_posfix).dialog('close');
@@ -15,9 +15,12 @@
     #
     #$("<div id='dialog_lalala'>хелло</div>").dialog(
     $dialog = $(url)
-    buttons = buttons || { OK: () -> $(this).dialog( "close" ) }
-    params = {title: title, autoOpen: true, buttons: buttons, height: height, width: width}
-    $dialog.dialog(params)
+    $dialog.dialog  title: title,
+                    autoOpen: true,
+                    buttons: {
+                      Ok: ()->
+                        $(this).dialog( "close" )
+                    }
     onOpen.call($dialog) if onOpen
   else
     # remote content
@@ -26,10 +29,12 @@
       height: 500,
       width: 600,
       title: title,
-      hide:
+      hide: {
         effect: "fadeOut",
-        duration: 200,
-      close: () -> $(this).remove()
+        duration: 200
+      }
+      close: (ev, ui)->
+        $(this).remove()
     )
     $dialog.load(url, onOpen).dialog('open');
 

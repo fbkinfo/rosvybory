@@ -1,6 +1,4 @@
 class UserDecorator < Draper::Decorator
-  include ActiveAdminComments
-
   delegate_all
   delegate :can_be_caller, :can_be_coord_region, :can_be_mobile, :human_current_roles, :extra,
            :experience_count, :human_has_car, :human_has_video, :human_legal_status,
@@ -41,4 +39,5 @@ class UserDecorator < Draper::Decorator
   def blacklist_info
     object.blacklisted.try(:info)
   end
+
 end
