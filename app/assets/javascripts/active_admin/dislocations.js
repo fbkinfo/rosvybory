@@ -1,4 +1,7 @@
 $(function() {
+
+  $('input[value=][type="checkbox"]').attr("disabled", true).attr('title', 'Сначала заполните расстановку и перезагрузите страницу! А пока отправить смс или почту таким людям можно из списка пользователей');
+
   $.fn.editable.defaults.mode = 'inline';
 
   $('.control_dislocations .inplace').editable({emptytext: 'изменить',

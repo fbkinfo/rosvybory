@@ -64,15 +64,14 @@ ActiveAdmin.register Dislocation do
     end
   end
 
-  filter :organisation, label: 'Организация', as: :select, collection: proc { Organisation.order(:name) }, :input_html => {:style => "width: 230px;"}
-  filter :current_role_adm_region, :as => :select, :collection => proc { Region.adm_regions },
-         :input_html => {:style => "width: 230px;"}, :label => I18n.t('activerecord.attributes.user.adm_region')
-  filter :current_role_region, :as => :select, :collection => proc { Region.mun_regions },
-         :input_html => {:style => "width: 230px;"}, :label => I18n.t('activerecord.attributes.user.region')
+  filter :organisation, label: 'Организация', as: :select, collection: proc { Organisation.order(:name) }
+  filter :current_role_adm_region, :as => :select, :collection => proc { Region.adm_regions }, :label => User.human_attribute_name(:adm_region)
+  filter :current_role_region, :as => :select, :collection => proc { Region.mun_regions }, :label => User.human_attribute_name(:region)
   filter :full_name
   filter :phone
   filter :current_role_uic, as: :numeric
-  filter :current_role_nomination_source_id, as: :select, collection: proc { NominationSource.order(:name) }, :input_html => {:style => "width: 230px;"}
+  filter :current_role_id, as: :select, collection: proc { CurrentRole.order(:name) }
+  filter :current_role_nomination_source_id, as: :select, collection: proc { NominationSource.order(:name) }
   filter :user_current_role_got_docs, as: :select
   filter :dislocated, as: :select, collection: [['Есть', 'true'], ['Нет', 'false']], label: 'Расстановка'
   # filter :dislocation_errors, as: :something
