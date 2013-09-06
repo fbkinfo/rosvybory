@@ -4,7 +4,7 @@ ActiveAdmin.register UserApp do
 
   actions :all, :except => [:destroy, :new]
 
-  menu :if => proc{ can? :read, UserApp }
+  menu :if => proc { can? :read, UserApp }
 
   scope "Все", :all
   UserApp.state_machine.states.each do |state|
@@ -47,7 +47,7 @@ ActiveAdmin.register UserApp do
         end
         resource.save(validate: false)
       end
-      render json: { success: true, id: resource.id }
+      render json: {success: true, id: resource.id}
     else
       render :action => :reject, :layout => false if request.xhr?
     end
@@ -67,9 +67,9 @@ ActiveAdmin.register UserApp do
     begin
       resource.confirm_phone! unless resource.phone_verified?
       resource.confirm_email! unless resource.confirmed?
-      render json: { success: true }
+      render json: {success: true}
     rescue
-      render json: { error: $!.to_s }
+      render json: {error: $!.to_s}
     end
   end
 
@@ -82,7 +82,7 @@ ActiveAdmin.register UserApp do
   end
 
   action_item only: [:edit, :show] do
-    link_to('Принять', new_user_path(user_app_id: resource.id), data: {"user-app-id" => resource.id}, class: "member_link accept_link")  unless resource.approved?
+    link_to('Принять', new_user_path(user_app_id: resource.id), data: {"user-app-id" => resource.id}, class: "member_link accept_link") unless resource.approved?
   end
 
   #scope :all, :default => true
@@ -93,41 +93,41 @@ ActiveAdmin.register UserApp do
   ## Filterable attributes on the index screen
 
   filter :created_at
-  filter :adm_region , :as => :select, :collection => proc { Region.adm_regions.all }
+  filter :adm_region, :as => :select, :collection => proc { Region.adm_regions.all }
   filter :region, :as => :select, :collection => proc { Region.mun_regions.all }
   #так красиво разбивается по округам, но при фильтрации не устанавливает значение в текущее после перезагрузки страницы, это может сбить с толку
   #filter :region, :as => :select, :collection => proc { option_groups_from_collection_for_select(Region.adm_regions, :regions, :name, :id, :name) }
 
 
-  filter   :full_name
-  filter   :sex_male, :as => :select, :collection => [['М', true], ['Ж', false]]
-  filter   :phone
-  filter   :email
-  filter   :uic #, :as => :numeric_range
+  filter :full_name
+  filter :sex_male, :as => :select, :collection => [['М', true], ['Ж', false]]
+  filter :phone
+  filter :email
+  filter :uic #, :as => :numeric_range
 
 
-  filter   :experience_count
+  filter :experience_count
   #column(:previous_statuses) {|user_app| status_human_readable user_app.previous_statuses}
 
   #column("Согласен войти в резерв УИКов") {|user_app| user_app.can_be_prg_reserve ? "Да":"Нет"}
   #column(:can_be_coord_region) {|user_app| user_app.can_be_coord_region ? "Да":"Нет"}
   #
-  filter   :has_car
-  filter   :has_video
+  filter :has_car
+  filter :has_video
   #
   #column(:social_accounts) {|user_app| raw social_accounts_readable(user_app.social_accounts) }
-  filter   :extra
+  filter :extra
   #column(:legal_status) {|user_app| legal_status_human_readable user_app.legal_status}
 
   #column(:legal_status) {|user_app| user_app.legal_status & UserApp::LEGAL_STATUS_YES ? "Да":"Нет"}
   #column("Адвокатский статус") {|user_app| user_app.legal_status == UserApp::LEGAL_STATUS_LAWYER ? "Да":"Нет"}
   #column(:desired_statuses) {|user_app| status_human_readable user_app.desired_statuses}
   #
-  filter   :year_born, :as => :numeric_range
+  filter :year_born, :as => :numeric_range
   #column(:sex_male) {|user_app| user_app.sex_male ? "М":"Ж"}
-  filter   :organisation
-  filter   :ip
-  filter   :useragent
+  filter :organisation
+  filter :ip
+  filter :useragent
 
   #preserve_default_filters!
 
@@ -151,7 +151,7 @@ ActiveAdmin.register UserApp do
     rescue_from ActiveAdmin::AccessDenied do |exception|
       redirect_to '/control/dashboard', :notice => exception.message
     end
-  end   # controller
+  end # controller
 
   index do
     selectable_column
@@ -175,7 +175,10 @@ ActiveAdmin.register UserApp do
     end
     column :uic
 
-    column :full_name
+    column :full_name do |user_app|
+      render partial: 'users/comments_hint', locals: { object: user_app }
+    end
+
     column :phone_formatted, :sortable => false do |user_app|
       status_tag(user_app.phone_formatted, user_app.phone_verified? ? :ok : :error)
     end
@@ -195,9 +198,9 @@ ActiveAdmin.register UserApp do
   form do |f|
     user_app = f.object
     f.inputs "Роль" do
-      UserApp.future_statuses_methods.each do | method_name|
+      UserApp.future_statuses_methods.each do |method_name|
         f.input method_name, as: :boolean,
-            input_html: {checked: user_app.send(method_name) == 'Да'}
+                input_html: {checked: user_app.send(method_name) == 'Да'}
       end
       # f.input :desired_statuses, as: :radio
       f.input :adm_region
@@ -222,15 +225,15 @@ ActiveAdmin.register UserApp do
       f.input :has_car
       f.input :has_video
       f.input :legal_status, label: "Есть юридическое образование?", as: :radio,
-          collection: {"Да" => UserApp::LEGAL_STATUS_YES,
-                       "Нет" => UserApp::LEGAL_STATUS_NO,
-                       "Есть статус адвоката" => UserApp::LEGAL_STATUS_LAWYER}
+              collection: {"Да" => UserApp::LEGAL_STATUS_YES,
+                           "Нет" => UserApp::LEGAL_STATUS_NO,
+                           "Есть статус адвоката" => UserApp::LEGAL_STATUS_LAWYER}
     end
 
     f.inputs "Прежний опыт" do
       UserApp.previous_statuses_methods.each do |method_name|
         f.input method_name, :as => :boolean,
-            input_html: {checked: user_app.send(method_name) == 'Да'}
+                input_html: {checked: user_app.send(method_name) == 'Да'}
       end
       f.input :experience_count
     end
@@ -247,7 +250,7 @@ ActiveAdmin.register UserApp do
     end
 
     f.actions
-  end   # form
+  end # form
 
   csv do
     column :id
@@ -266,7 +269,7 @@ ActiveAdmin.register UserApp do
     column :experience_count
     column :previous_statuses
 
-    column("Согласен войти в резерв УИКов") {|user_app| nil}
+    column("Согласен войти в резерв УИКов") { |user_app| nil }
     column :can_be_coord_region
 
     column :has_car
@@ -275,8 +278,8 @@ ActiveAdmin.register UserApp do
     column :social_accounts
     column :extra
 
-    column("Юр.образование") {|user_app| user_app.object.legal_status & UserApp::LEGAL_STATUS_YES ? "Да":"Нет"}
-    column("Адвокатский статус") {|user_app| user_app.object.legal_status == UserApp::LEGAL_STATUS_LAWYER ? "Да":"Нет"}
+    column("Юр.образование") { |user_app| user_app.object.legal_status & UserApp::LEGAL_STATUS_YES ? "Да" : "Нет" }
+    column("Адвокатский статус") { |user_app| user_app.object.legal_status == UserApp::LEGAL_STATUS_LAWYER ? "Да" : "Нет" }
 
     column :desired_statuses
 
@@ -286,17 +289,17 @@ ActiveAdmin.register UserApp do
     column :ip
     column :useragent
 
-    UserApp.future_statuses_methods.each do | method_name|
-      column(method_name) {|user_app| user_app.send(method_name) ? "Да" : "Нет" }
+    UserApp.future_statuses_methods.each do |method_name|
+      column(method_name) { |user_app| user_app.send(method_name) ? "Да" : "Нет" }
     end
-    UserApp.previous_statuses_methods.each do | method_name|
-      column(method_name) {|user_app| user_app.send(method_name) ? "Да" : "Нет" }
+    UserApp.previous_statuses_methods.each do |method_name|
+      column(method_name) { |user_app| user_app.send(method_name) ? "Да" : "Нет" }
     end
-  end   # csv
+  end # csv
 
   show do |user_app|
     render 'user_apps/show', user_app: user_app
     active_admin_comments
-  end   # show
+  end # show
 
 end
