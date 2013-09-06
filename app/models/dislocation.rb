@@ -18,6 +18,10 @@ class Dislocation < User
     Arel::Nodes::SqlLiteral.new("coalesce(user_current_roles.region_id, users.region_id)")
   end
 
+  ransacker :current_role_id do
+    Arel::Nodes::SqlLiteral.new("user_current_roles.current_role_id")
+  end
+
   ransacker :current_role_nomination_source_id do
     Arel::Nodes::SqlLiteral.new("user_current_roles.nomination_source_id")
   end
