@@ -82,11 +82,11 @@ class Ability
           # видит пользователей своего района без расстановок
           # use custom action to prevent OR'ing with Users conditions
           can :dislocation_crud, Dislocation, ["users.region_id = ? and user_current_roles.region_id is null", user.region_id] do |d|
-            true #TODO переделать на hash condition
+            d.region_id == user.region_id
           end
           # видит пользователей с расстановками в своем районе
           can :dislocation_crud, Dislocation, ["user_current_roles.region_id = ?", user.region_id] do |d|
-            true #TODO переделать на hash condition
+            d.user_current_role.region_id == user.region_id
           end
 
           # волонтёров своего района во формате "Расстановка с контактами" без участников МГ и КЦ
@@ -106,12 +106,12 @@ class Ability
           can :view_dislocation, Uic, user.adm_region.uics_with_nested_regions
           # видит пользователей своего района без расстановок
           can :dislocation_crud, Dislocation, ["users.adm_region_id = ? and user_current_roles.region_id is null", user.adm_region_id] do |d|
-            true #TODO переделать на hash condition
+            user.adm_region.try(:is_or_is_ancestor_of?, d.region)
           end
 
           #Видит всех пользователей с расстановками в своем округе
           #TODO Тут без кешированного adm_region плохо
-          can :dislocation_crud, Dislocation, ["user_current_roles.region_id IS NOT NULL"] do |d|
+          can :dislocation_crud, Dislocation, ["(select regions.adm_region_id from regions where regions.id = user_current_roles.region_id) = ?", user.adm_region_id] do |d|
             user.adm_region.try(:is_or_is_ancestor_of?, d.user_current_role_region)
           end
 
