@@ -98,11 +98,7 @@ ActiveAdmin.register User do
     column :created_at
     column :adm_region
     column :region
-
-    column :full_name do |user|
-      render partial: 'users/comments_hint', locals: { object: user }
-    end
-
+    column :full_name
     column :phone
     column :email
     column :uic, :sortable => 'user_apps.uic'
