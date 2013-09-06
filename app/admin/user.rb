@@ -96,8 +96,8 @@ ActiveAdmin.register User do
 
     column "НО + id", &:organisation_with_user_id
     column :created_at
-    column :adm_region
-    column :region
+    column :adm_region, :sortable => :adm_region_id
+    column :region, :sortable => :region_id
     column :full_name
     column :phone
     column :email
