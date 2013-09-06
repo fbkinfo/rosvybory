@@ -35,6 +35,7 @@ class CallCenter::ReportsController < ApplicationController
       phone_call.save
     end
 
+    CallCenter::Violation.create_json_load
     redirect_to new_call_center_report_path
   end
 
