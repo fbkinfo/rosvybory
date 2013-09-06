@@ -1,19 +1,3 @@
-module ActiveAdmin
-  module Comments
-    module Views
-      class Comments
-
-        def build_comments_with_connected
-          @comments = @resource.comments if @resource.respond_to? :comments
-          build_comments_without_connected
-        end
-
-        alias_method_chain :build_comments, :connected
-      end
-    end
-  end
-end
-
 # -*- encoding : utf-8 -*-
 ActiveAdmin.register UserApp do
   decorate_with UserAppDecorator
