@@ -51,6 +51,8 @@ class User < ActiveRecord::Base
     end
   end
 
+  ransacker :phone, :formatter => proc {|s| Verification.normalize_phone_number(s) }
+
   ransacker :dislocated, :type => :boolean do
     # arel converts it to 1/0, but postgresql doesn't like comparison of boolean with 1/0 :(
     nonempty_ucrs = UserCurrentRole.where.not(:uic_id => nil).where.not(:current_role_id => nil).where.not(:nomination_source_id => nil)
