@@ -34,6 +34,12 @@
       button id="redirect-to-mobile-group-dispatcher" К дисп. МГ
       p.notice Перенаправить
 
+<XML ID="WEBAGENTXMLID">
+  <WEBAGENTAUTOMATION>
+    <XMLCMD CMD="SETNOTREADY" CAUSE="CALLCOMPLETEPENDING" TIMEOUT="INFINITE" />
+  </WEBAGENTAUTOMATION>
+</XML>
+
 script id="notice-save-unknown-reporter-template" type="text/x-handlebars-template"
   .notice-save-unknown-reporter
     p Человека в базе нет. Его ФИО сохранится из введённого Вами текста.
