@@ -13,6 +13,9 @@ ActiveAdmin::Event.subscribe ActiveAdmin::Resource::RegisterEvent do |resource|
 
     def batch_action
       if bypass_pagination?
+        if params[:filters].present?
+          params[:q] = Rack::Utils.parse_nested_query(params[:filters])['q'].with_indifferent_access
+        end
         params[:collection_selection] = collection_ids
       end
       super
