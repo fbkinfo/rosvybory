@@ -40,7 +40,7 @@ class CallCenter::ReportsController < ApplicationController
     redirect_to new_call_center_report_path
   end
 
-  
+
   private
 
   def new_phone_call_from(params)
