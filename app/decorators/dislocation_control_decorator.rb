@@ -8,11 +8,8 @@ class DislocationControlDecorator < Draper::Decorator
     source = role.nomination_source
     [
       user.full_name,
-      role.current_role.name,
-      source && [
-        source.name,
-        source.human_variant
-      ].join(', ') || 'Не указан',
+      role.current_role.short_name,
+      '<span class="small">'+ (source && "#{source.human_variant} #{source.name}" || 'Не указан') + '</span>',
       show_contacts && [
         user.phone,
         h.link_to(user.email, "mailto:#{user.email}")
