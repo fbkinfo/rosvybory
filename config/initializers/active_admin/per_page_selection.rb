@@ -7,11 +7,11 @@ ActiveAdmin::Event.subscribe ActiveAdmin::Resource::RegisterEvent do |resource|
       elsif params[:per_page] == '200'
         super.per(200)
       else
-        super.per
+        super
       end
     end
 
-    unless instance_methods.include?(:collection_ids)
+    unless instance_methods.include?(:batch_action)
       def batch_action
         if bypass_pagination?
           params[:collection_selection] = collection_ids
