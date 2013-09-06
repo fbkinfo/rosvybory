@@ -219,6 +219,8 @@ class UserApp < ActiveRecord::Base
     false
   end
 
+  ransacker :phone, :formatter => proc {|s| Verification.normalize_phone_number(s) }
+
   # Разбивает содержимое поля uic на отдельные номера:
   # '1234,1235,1236' => '(1234),(1235),(1236)''
   #
