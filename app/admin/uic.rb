@@ -1,6 +1,7 @@
 ActiveAdmin.register Uic do
   menu :parent => I18n.t('active_admin.menu.dictionaries'), :if => proc{ can? :crud, NominationSource }
 
+  config.paginate = false   # с включённой пагинацией uics.json выдает только первую страницу
   actions :all, :except => [:new]
   batch_action :destroy, false
 
