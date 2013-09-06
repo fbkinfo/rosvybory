@@ -113,3 +113,8 @@ jQuery ->
         else
           select.select2('val', '')
         select.trigger('change')
+
+  $('input[type="submit"]').click ->
+    $('#WEBAGENTXMLID').remove()
+    xml_end_call = $('<XML ID="WEBAGENTXMLID"><WEBAGENTAUTOMATION><XMLCMD CMD="SETREADY" CAUSE="CALLCOMPLETE" /></WEBAGENTAUTOMATION></XML>')
+    xml_end_call.insertAfter($('body'))
