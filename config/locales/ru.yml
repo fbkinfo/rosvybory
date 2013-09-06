@@ -511,6 +511,7 @@ ru:
         uic: Участок
         text: Текст
         url: Ссылка
+        phone: Телефон
         created_at: Время
         updated_at: Обновлено
         reporter: Позвонивший
