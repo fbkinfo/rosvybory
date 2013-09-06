@@ -92,7 +92,7 @@ ActiveAdmin.register User do
     column :region
 
     column :full_name do |user|
-      ActiveAdminComments::full_name_with_comments_count(user)
+      render partial: 'users/comments_hint', locals: { object: user }
     end
 
     column :phone
