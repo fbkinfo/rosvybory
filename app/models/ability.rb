@@ -82,8 +82,13 @@ class Ability
           # видит пользователей своего района без расстановок
           # use custom action to prevent OR'ing with Users conditions
           can :dislocation_crud, Dislocation, ["users.region_id = ? and user_current_roles.region_id is null", user.region_id] do |d|
-            (user.region || user.adm_region).try(:is_or_is_ancestor_of?, d.user_current_role_region)
+            true #TODO переделать на hash condition
           end
+          # видит пользователей с расстановками в своем районе
+          can :dislocation_crud, Dislocation, ["user_current_roles.region_id = ?", user.region_id] do |d|
+            true #TODO переделать на hash condition
+          end
+
           # волонтёров своего района во формате "Расстановка с контактами" без участников МГ и КЦ
           can :view_dislocation, User, :region_id => user.region_id
           can :view_dislocation, Uic, (user.region.has_tic?? user.region : user.adm_region).uics_with_nested_regions
@@ -101,8 +106,15 @@ class Ability
           can :view_dislocation, Uic, user.adm_region.uics_with_nested_regions
           # видит пользователей своего района без расстановок
           can :dislocation_crud, Dislocation, ["users.adm_region_id = ? and user_current_roles.region_id is null", user.adm_region_id] do |d|
-            (user.region || user.adm_region).try(:is_or_is_ancestor_of?, d.user_current_role_region)
+            true #TODO переделать на hash condition
           end
+
+          #Видит всех пользователей с расстановками в своем округе
+          #TODO Тут без кешированного adm_region плохо
+          can :dislocation_crud, Dislocation, ["user_current_roles.region_id IS NOT NULL"] do |d|
+            user.adm_region.try(:is_or_is_ancestor_of?, d.user_current_role_region)
+          end
+
           # волонтёров своего округа во формате "Расстановка с контактами" без участников МГ и КЦ
           can :view_dislocation, User, :adm_region_id => user.adm_region_id
           can :view_user_contacts, User, :adm_region_id => user.adm_region_id
@@ -112,9 +124,6 @@ class Ability
         end
 
         can :crud, UserCurrentRole, :region_id => user.region_id || user.adm_region_id
-        can :dislocation_crud, Dislocation, ["user_current_roles.region_id = ?", user.region_id || user.adm_region_id] do |d|
-          (user.region || user.adm_region).try(:is_or_is_ancestor_of?, d.user_current_role_region)
-        end
 
         can :assign_users, Role, :slug => [:observer, :mobile, :callcenter, :mc, :cc]
         can :crud, MobileGroup, :organisation_id => user.organisation_id
