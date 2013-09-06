@@ -23,3 +23,5 @@ config/database.yml
 .idea
 
 .rvmrc
+
+public/api

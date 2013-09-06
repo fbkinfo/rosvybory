@@ -516,6 +516,7 @@ ru:
         reporter: Позвонивший
         current_role: Роль
         violation: Нарушение
+        violation_type: Тип нарушения
       call_center/phone_call:
         status: Статус
         uic: Участок
