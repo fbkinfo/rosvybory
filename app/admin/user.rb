@@ -23,10 +23,18 @@ ActiveAdmin.register User do
   end
 
   batch_action :new_group_email do |selection|
-    redirect_to new_group_email_path(:collection_selection => params[:collection_selection])
+    if (@users = User.where(id: selection)).blank?
+      redirect_to :back, flash: {error: "Не выбран ни один получатель!"}
+    else
+      render template: 'user_apps/new_group_email', layout: 'custom_layout'
+    end
   end
   batch_action :new_group_sms do |selection|
-    redirect_to new_group_sms_path(:collection_selection => params[:collection_selection])
+    if (@users = User.where(id: selection)).blank?
+      redirect_to :back, flash: {error: "Не выбран ни один получатель!"}
+    else
+      render template: 'user_apps/new_group_sms', layout: 'custom_layout'
+    end
   end
   batch_action :destroy, false
 
