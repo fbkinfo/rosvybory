@@ -3,7 +3,7 @@ module ActiveAdminComments
     entities = if self.is_a? Dislocation
                  [self.user_id, self.user_app_id, self.user_id]
                elsif self.is_a? User
-                 [self.id, self.user_app.try(:id), self.id]
+                 [self.id, self.user_app.id, self.id]
                elsif object.is_a? UserApp
                  user_id = self.user.try(:id)
                  [user_id, self.id, user_id]
