@@ -16,6 +16,10 @@ module ActiveAdminComments
     ActiveAdmin::Comment.where(clause, *conditions.flatten).where(namespace: namespace).order(:updated_at)
   end
 
+  def comment_id
+    self.is_a?(Dislocation) ? self.user_id : self.id
+  end
+
   def full_name_with_comments_count
     count = comments.count
     count > 0 ? "#{self.full_name} (#{count})" : self.full_name
