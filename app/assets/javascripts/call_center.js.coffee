@@ -115,13 +115,7 @@ jQuery ->
         select.trigger('change')
 
   $('input[type="submit"]').click ->
-    $('#WEBAGENTXMLID').remove()
-    xml_end_call = $('<XML ID="WEBAGENTXMLID"><WEBAGENTAUTOMATION><XMLCMD CMD="SETREADY" CAUSE="CALLCOMPLETE" /></WEBAGENTAUTOMATION></XML>')
-    xml_end_call.insertAfter($('body'))
+    window.external.WACMD("UNHOLD")
 
   $('#redirect-to-jurist, #redirect-to-mobile-group-dispatcher').click ->
-    $('#WEBAGENTXMLID').remove()
-    xml_redirect = $('<XML ID="WEBAGENTXMLID"> <WEBAGENTAUTOMATION>
-                     <XMLCMD CMD="TR"> <DNS><DN DN="+79260121530"/> </DNS>
-                     </XMLCMD> </WEBAGENTAUTOMATION></XML>')
-    xml_redirect.insertAfter($('body'))
+    window.external.WACMD("TRANSFER", '9260121530')

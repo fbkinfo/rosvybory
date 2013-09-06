@@ -20,7 +20,7 @@ class Ability
       can :read, Uic
       can :read, ActiveAdmin::Page, :name => "Dashboard"
 
-      can :read, CallCenter::Report
+      can [:read, :create], CallCenter::Report
       can :read, CallCenter::ViolationCategory
       can :read, CallCenter::ViolationType
 
@@ -148,10 +148,6 @@ class Ability
       can :contribute_to, Organisation, :id => user.organisation_id
 
       can [:create, :read], ActiveAdmin::Comment
-    end
-
-    if user.has_role?(:callcenter)
-      can :create, CallCenter::Report
     end
 
     if user.has_role?(:cc)
