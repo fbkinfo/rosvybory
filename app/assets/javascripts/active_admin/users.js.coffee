@@ -8,10 +8,10 @@ $ ->
     openDialog dialog_id_posfix_current, $(this).attr("href"), "Просмотр ошибок расстановки"
     false
 
-  $('.control_users .collection_selection').click () ->
+  $('.collection_selection').click () ->
     $('#all-pages-container').remove()
 
-  $('.control_users #collection_selection_toggle_all').click () ->
+  $('.control_dislocations #collection_selection_toggle_all, .control_users #collection_selection_toggle_all').click () ->
     if (this.checked)
       apc = $('<div>', {id: 'all-pages-container', style: 'display: inline-block; margin-right: 2em'})
       $('<input>', {name: 'filters', type: 'hidden', value: $('#new_q').serialize()}).appendTo(apc)
