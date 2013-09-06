@@ -29,10 +29,11 @@
     .submit
       = f.submit "Сохранить"
       p.notice И ждать следующий звонок
-    .redirect
-      button id="redirect-to-jurist" К юристу
-      button id="redirect-to-mobile-group-dispatcher" К дисп. МГ
-      p.notice Перенаправить
+    - if @phone_station_presented
+      .redirect
+        button id="redirect-to-jurist" К юристу
+        button id="redirect-to-mobile-group-dispatcher" К дисп. МГ
+        p.notice Перенаправить
 
 script id="notice-save-unknown-reporter-template" type="text/x-handlebars-template"
   .notice-save-unknown-reporter

@@ -7,6 +7,8 @@ class CallCenter::ReportsController < ApplicationController
     phone_call = new_phone_call_from params
     dislocation = Dislocation.find_by phone: phone_call.number
 
+    @phone_station_presented = params.has_key? :clid
+
     @report = CallCenter::Report.new\
       reporter: new_reporter_from(dislocation, phone_call),
       phone_call: phone_call,
