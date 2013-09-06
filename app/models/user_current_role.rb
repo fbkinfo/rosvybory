@@ -29,6 +29,7 @@ class UserCurrentRole < ActiveRecord::Base
 
   # it's better to move it to UserCurrentRole decorator
   def selectable_uics
+    set_region_from_user
     return [] unless region
     uics = region.uics_with_nested_regions.order(:name)
     uics = region.adm_region.uics_with_nested_regions.order(:name) if uics.blank? && region.adm_region
@@ -65,7 +66,9 @@ class UserCurrentRole < ActiveRecord::Base
     end
 
     def set_region_from_user
-      self.region ||= user.region if user
+      if user
+        self.region ||= (user.region || user.adm_region)
+      end
     end
 
 end
