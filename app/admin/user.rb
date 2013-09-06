@@ -22,9 +22,12 @@ ActiveAdmin.register User do
     items.where('EXISTS (SELECT * FROM blacklists WHERE phone=users.phone)')
   end
 
-  #при добавлении нового группового действия - обратить внимание на флажок "Применить ко всем страницам", если нужен для этого действия - реализовывать обработку
-  batch_action :new_group_email
-  batch_action :new_group_sms
+  batch_action :new_group_email do |selection|
+    redirect_to new_group_email_path(:collection_selection => params[:collection_selection])
+  end
+  batch_action :new_group_sms do |selection|
+    redirect_to new_group_sms_path(:collection_selection => params[:collection_selection])
+  end
   batch_action :destroy, false
 
   batch_action :fix_phone, :if => proc{ can? :manage, :all } do |selection|
@@ -193,20 +196,6 @@ ActiveAdmin.register User do
 
     def password_params
       params.require(:user).permit([:current_password, :password, :password_confirmation])
-    end
-
-    def batch_action
-      if ["new_group_email", "new_group_sms"].include? params[:batch_action]
-        redirect_to send(params[:batch_action] + '_path', params: params)
-      else
-        if selected_batch_action
-          selected_ids = params[:collection_selection]
-          selected_ids ||= []
-          instance_exec selected_ids, &selected_batch_action.block
-        else
-          raise "Couldn't find batch action \"#{params[:batch_action]}\""
-        end
-      end
     end
 
     def scoped_collection
