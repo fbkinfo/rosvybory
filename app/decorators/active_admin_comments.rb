@@ -10,7 +10,7 @@ module ActiveAdminComments
                else
                  [nil, nil, nil]
                end
-    namespace = 'control'
+    namespace = 'control' # Как отсюда достучаться до active_admin_namespace или active_admin_config так и осталось неизвестным
     conditions = [User, UserApp, Dislocation].zip(entities).reject { |_, id| id.nil? }.map { |k, id| [k, id.to_s] }
     clause = Array.new(conditions.length) { '(resource_type = ? AND resource_id = ?)' }.join(' OR ')
     ActiveAdmin::Comment.where(clause, *conditions.flatten).where(namespace: namespace).order(:updated_at)
