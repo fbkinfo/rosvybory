@@ -1,25 +1,29 @@
 class ExcelUserAppRow
+  extend Enumerize
   COLUMNS = {
-    uid: 0,           #нет прямого поля
-    created_at: 1,
-    adm_region: 2,
-    region: 3,
-    last_name: 4,
-    first_name: 5,
-    patronymic: 6,
-    phone: 7,
-    email: 8,
-    uic: 9,
+      uid: 0, #нет прямого поля
+      created_at: 1,
+      adm_region: 2,
+      region: 3,
+      last_name: 4,
+      first_name: 5,
+      patronymic: 6,
+      phone: 7,
+      email: 8,
+      uic: 9,
 
-    current_roles: 10, #инициализия этого поля требует уже инициализированных полей uic, region и adm_region, поэтому в этом хеше оно должно идти после них.
-    experience_count: 11,
-    previous_statuses: 12,
-    can_be_reserv: 13,   #нет прямого поля
-    can_be_coord_region: 14, #нет прямого поля
+      current_roles: 10, #инициализия этого поля требует уже инициализированных полей uic, region и adm_region, поэтому в этом хеше оно должно идти после них.
+      experience_count: 11,
+      previous_statuses: 12,
+      can_be_reserv: 13, #нет прямого поля
+      can_be_coord_region: 14, #нет прямого поля
 
-    has_car: 15,
-    social_accounts: 16,
-    extra: 17
+      has_car: 15,
+      social_accounts: 16,
+      extra: 17,
+      desired_statuses: 18,
+      legal_status: 19,
+      has_video: 20
   }.freeze
 
   TRUTH = %w{1 1.0 да есть}.freeze
@@ -38,12 +42,22 @@ class ExcelUserAppRow
     end
   end
 
+  attr_accessor :import_status
+  enumerize :import_status, in: [:created , :updated, :ignored, :failed]
+  attr_accessor :import_error
+
+  def fail_with(error)
+    self.import_status = :failed
+    self.import_error = error
+  end
+
   attr_reader :user_app, :user
   attr_accessor :uid # lost after save, but is used to detect organisation
-  attr_accessor :created_at, :adm_region, :region, :has_car, :current_roles, :experience_count, :previous_statuses, :can_be_coord_region, :can_be_reserv, :social_accounts, :uic
+  attr_accessor :created_at, :adm_region, :region, :has_car, :current_roles, :experience_count, :previous_statuses,
+                :can_be_coord_region, :can_be_reserv, :social_accounts, :uic, :has_video, :legal_status, :desired_statuses
   attr_accessor :first_name, :last_name, :patronymic, :email, :extra, :phone
 
-  delegate :organisation, :persisted?, :new_record?, :to => :user_app, :allow_nil => true
+  delegate :id, :organisation, :persisted?, :new_record?, :to => :user_app, :allow_nil => true
 
   def initialize(attrs, update_existing = false)
     phone = Verification.normalize_phone_number(attrs[:phone])
@@ -54,14 +68,14 @@ class ExcelUserAppRow
       a.sex_male = true if a.sex_male.nil?
       a.has_video = false if a.has_video.nil?
       a.has_car = false if a.has_car.nil?
-      a.legal_status ||= UserApp::LEGAL_STATUS_NO
     end
     @user_app.imported!
-    @user_app.can_be_observer = true
 
-    local_only = phone.blank?
+    if local_only = phone.blank?
+      Rails.logger.info "User import - no phone in #{attrs[:uid]}" if attrs[:uid].present?
+      fail_with "Поле с телефоном - пустое. Первый столбец - #{attrs[0]}"
+    end
 
-    Rails.logger.info "User import - no valid phone in #{attrs[:uid]}" if phone.blank? && attrs[:uid].present?
     self.class.column_names.each do |k|
       v = attrs[k]
       v = v.strip if v.respond_to?(:strip)
@@ -73,29 +87,36 @@ class ExcelUserAppRow
     end
   end
 
+  def dirty_source_val(val, mapping)
+    cleaned_val = val.to_s.mb_chars.strip.downcase
+    # чтобы можно было отдавать в mapping значения с любым case'ом
+    mapping.to_a.find { |k, _| k.mb_chars.downcase == cleaned_val }.try(:last)
+  end
+
   def uid=(v)
     orgs_by_name = {
-        "ГН" => "Гражданин Наблюдатель",
-        "ГЛС" => "Голос",
-        "СНР" => "Сонар"
+        'ГН' => 'Гражданин Наблюдатель',
+        'ГЛС' => 'Голос',
+        'СНР' => 'Сонар'
     }
-    self.organisation = Organisation.where(name: orgs_by_name[v.to_s.split('-')[0]]).first
+    name = dirty_source_val(v.to_s.strip.split('-')[0], orgs_by_name)
+    self.organisation = Organisation.where(name: name).first
   end
 
   def current_roles=(v)
     roles_by_name = {
-      "РЗ" => 'reserve',
-      "УПРГ" => 'prg',
-      "ТПСГ" => 'psg_tic',
-      "ТПРГ" => 'prg_tic'
+        'РЗ' => 'reserve',
+        'УПРГ' => 'prg',
+        'ТПСГ' => 'psg_tic',
+        'ТПРГ' => 'prg_tic'
     }
-    role = CurrentRole.where(:slug => roles_by_name[v]).first
+    role = CurrentRole.where(:slug => dirty_source_val(v, roles_by_name)).first
     if role && !@user_app.user_app_current_roles.where(:current_role_id => role.id).first
       value = nil
       if role.must_have_uic?
         value = "#{@user_app.uic}"
       elsif role.must_have_tic?
-        if region.try(:has_tic?)#для районов с ТИКами
+        if region.try(:has_tic?) #для районов с ТИКами
           value = region.name
         elsif adm_region.try(:has_tic?) #для округов с ТИКами
           value = adm_region.name
@@ -107,13 +128,13 @@ class ExcelUserAppRow
 
   def previous_statuses=(v)
     statuses_by_name = {
-      "ОК" => UserApp::STATUS_OBSERVER,
-      "ПРГ" => UserApp::STATUS_PRG,
-      "МГ" => UserApp::STATUS_MOBILE,
-      "ТИК" => UserApp::STATUS_TIC_PSG,
-      "ДК" => UserApp::STATUS_DELEGATE
+        'ОК' => UserApp::STATUS_OBSERVER,
+        'ПРГ' => UserApp::STATUS_PRG,
+        'МГ' => UserApp::STATUS_MOBILE,
+        'ТИК' => UserApp::STATUS_TIC_PSG,
+        'ДК' => UserApp::STATUS_DELEGATE
     }
-    if status_value = statuses_by_name[v.to_s.strip.mb_chars.upcase.to_s]
+    if (status_value = dirty_source_val(v, statuses_by_name))
       @user_app.previous_statuses |= status_value
     end
     self.experience_count = @experience_count if @experience_count
@@ -128,6 +149,28 @@ class ExcelUserAppRow
 
   def has_car=(v)
     @user_app.has_car = TRUTH.include?(v.to_s)
+  end
+
+  def desired_statuses=(v)
+    statuses_by_name = {
+        'Наблюдатель' => UserApp::STATUS_OBSERVER,
+        'ПСГ' => UserApp::STATUS_OBSERVER,
+        'МГ' => UserApp::STATUS_MOBILE,
+        'КЦ' => UserApp::STATUS_CALLER
+    }
+    @user_app.desired_statuses = UserApp::STATUS_OBSERVER
+    v.split(',').each do |role|
+      status = dirty_source_val(role, statuses_by_name)
+      @user_app.desired_statuses |= status
+    end
+  end
+
+  def legal_status=(v)
+    @user_app.legal_status = TRUTH.include?(v.to_s) ? UserApp::LEGAL_STATUS_YES : UserApp::LEGAL_STATUS_NO
+  end
+
+  def has_video=(v)
+    @user_app.has_video = TRUTH.include?(v.to_s)
   end
 
   def can_be_coord_region=(v)
@@ -163,7 +206,7 @@ class ExcelUserAppRow
   end
 
   def created_at=(v)
-    @user_app.created_at = v # convert to datetime
+    @user_app.created_at = v rescue nil # convert to datetime
     @created_at = @user_app.created_at
   end
 
@@ -190,67 +233,63 @@ class ExcelUserAppRow
   end
 
   def save
-    @user_app.skip_phone_verification = true
-    @user_app.skip_email_confirmation = true
-    if @update_existing || !@user_app.user
-      success =  @user_app.save
-      if success
-        if @user_app.user
-          Rails.logger.info "User import - updating user #{@user_app.user.phone}"
+    success = true
+    @user_app.transaction do
+      @user_app.skip_phone_verification = true
+      @user_app.skip_email_confirmation = true
+      @user_app.legal_status = UserApp::LEGAL_STATUS_NO unless @user_app.legal_status
+      if @update_existing || !@user_app.user
+        if success = @user_app.save
+          if @user_app.user
+            self.import_status = :updated
+            Rails.logger.info "User import - updating user #{@user_app.user.phone}"
+          else
+            self.import_status = :created
+            Rails.logger.info "User import - creating user #{@user_app.phone}"
+          end
         else
-          Rails.logger.info "User import - creating user #{@user_app.phone}"
+          Rails.logger.info "User import - could not save user_app #{@user_app.phone} #{@user_app.errors.full_messages.join('; ')}"
+          fail_with "Не удалось сохранить заявку с телефоном #{@user_app.phone}: #{@user_app.errors.full_messages.join('; ')}"
         end
       else
-        Rails.logger.info "User import - could not save user_app #{@user_app.phone} #{@user_app.errors.full_messages.join("; ")}"
+        success = false
+        self.import_status = :ignored
+        Rails.logger.info "User import - ignoring existing user #{@user_app.user.phone}"
       end
-    else
-      success = false
-      Rails.logger.info "User import - ignoring existing user #{@user_app.user.phone}"
-    end
-    if success
-      @user_app.confirm!
-      @user = @user_app.user || User.new
-      @user.update_from_user_app(@user_app, false)
-      if success = @user.save
-        @user.update_column :created_at, created_at if created_at
-      else
-        Rails.logger.info "User import error - could not save user #{@user.phone} #{@user.errors.full_messages.join("; ")}"
+      if success
+        @user_app.confirm!
+        @user = @user_app.user || User.new
+        @user.update_from_user_app(@user_app, false)
+        if success = @user.save
+          @user.update_column :created_at, created_at if created_at
+        else
+          Rails.logger.info "User import error - could not save user #{@user.phone} #{@user.errors.full_messages.join('; ')}"
+          fail_with "Не удалось сохранить пользователя с телефоном #{@user.phone}: #{@user.errors.full_messages.join('; ')}"
+          raise ActiveRecord::Rollback, @user.errors.full_messages.join('; ')
+        end
       end
     end
     success
   end
 
   private
-    def normalize_adm_region(name)
-      downcased = name.to_s.mb_chars.downcase
-      case downcased
-      when "цао"
-        "Центральный АО"
-      when "юао"
-        "Южный АО"
-      when "сао"
-        "Северный АО"
-      when "свао"
-        "Северо-Восточный АО"
-      when "вао"
-        "Восточный АО"
-      when "ювао"
-        "Юго-Восточный АО"
-      when "юзао"
-        "Юго-Западный АО"
-      when "зао"
-        "Западный АО"
-      when "сзао"
-        "Северо-Западный АО"
-      when "зелао"
-        "Зеленоградский АО"
-      when "нао"
-        "Новомосковский АО"
-      when "тао"
-        "Троицкий АО"
-      else
-        name
-      end
-    end
+
+  def normalize_adm_region(name)
+    adm_region_map = {
+        'цао' => 'Центральный АО',
+        'юао' => 'Южный АО',
+        'сао' => 'Северный АО',
+        'свао' => 'Северо-Восточный АО',
+        'вао' => 'Восточный АО',
+        'ювао' => 'Юго-Восточный АО',
+        'юзао' => 'Юго-Западный АО',
+        'зао' => 'Западный АО',
+        'сзао' => 'Северо-Западный АО',
+        'зелао' => 'Зеленоградский АО',
+        'нао' => 'Новомосковский АО',
+        'тао' => 'Троицкий АО'
+    }
+    dirty_source_val(name, adm_region_map) || name
+  end
 
 end

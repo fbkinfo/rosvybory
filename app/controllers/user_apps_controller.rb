@@ -59,27 +59,34 @@ class UserAppsController < ApplicationController
   end
 
   def new_group_email
+    if @users.blank?
+      redirect_to :back, flash: {error: "Не выбран ни один получатель!"} and return
+    end
     render layout: 'custom_layout'
   end
 
   def send_group_email
     ge = params[:group_email]
     ge[:emails].each do |single_email|
-      UserMailer.group_email(single_email, ge[:subject], ge[:body]).deliver
+      UserMailer.group_email(single_email, ge[:subject], ge[:body]).deliver if single_email.present?
     end if ge.is_a? Hash
     redirect_to '/control/users', notice: t('.messages_sent')
   end
 
   def new_group_sms
+    if @users.blank?
+      redirect_to :back, flash: {error: "Не выбран ни один получатель!"} and return
+    end
     render layout: 'custom_layout'
   end
 
   def send_group_sms
     phones = params[:group_sms][:phones].reject(&:blank?).uniq
+    options = {phones: phones, message: params[:group_sms][:message]}
     worklog = WorkLog.create  :user_id => current_user.id,
                               :name => 'Sending SMS',
-                              :params => params.without(:authenticity_token, :commit, :action, :controller, :utf8).to_json
-    Resque.enqueue(SmsMassSender, work_log_id: worklog.id, phones: phones, message: params[:group_sms][:message])
+                              :params => options.to_json
+    Resque.enqueue(SmsMassSender, options.merge(work_log_id: worklog.id))
     redirect_to '/control/users', notice: t('.messages_sent')
   end
   # PATCH/PUT /user_apps/1

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130904120404) do
+ActiveRecord::Schema.define(version: 20130905183345) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -37,20 +37,14 @@ ActiveRecord::Schema.define(version: 20130904120404) do
 
   add_index "blacklists", ["phone"], name: "index_blacklists_on_phone", unique: true, using: :btree
 
-  create_table "call_center_operators", force: true do |t|
-    t.string   "first_name"
-    t.string   "last_name"
-    t.integer  "comp_number"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "call_center_phone_calls", force: true do |t|
     t.string   "status"
     t.string   "number"
     t.integer  "report_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_id"
+    t.hstore   "all_params"
   end
 
   create_table "call_center_reporters", force: true do |t|

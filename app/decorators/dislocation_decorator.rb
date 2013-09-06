@@ -1,9 +1,8 @@
 class DislocationDecorator < UserDecorator
   include ActiveAdminComments
 
-  delegate :coalesced_region, :to => :user_current_role, :allow_nil => true
-  delegate :name, :to => :coalesced_adm_region, :prefix => true, :allow_nil => true
-  delegate :name, :to => :coalesced_region, :prefix => true, :allow_nil => true
+  delegate :name, :to => :user_current_role_adm_region, :prefix => true, :allow_nil => true
+  delegate :name, :to => :user_current_role_region, :prefix => true, :allow_nil => true
 
   # primary key - user_current_role.id for existing dislocations, user.id for new
   def pk
@@ -18,16 +17,16 @@ class DislocationDecorator < UserDecorator
     model.id
   end
 
-  def coalesced_adm_region
-    coalesced_region.try(:adm_region)
+  def user_current_role_adm_region
+    user_current_role_region.try(:adm_region)
   end
 
-  def coalesced_mun_region_name
-    coalesced_region.try(:mun_region?)? coalesced_region.name : nil
+  def user_current_role_mun_region_name
+    user_current_role_region.try(:mun_region?)? user_current_role_region.name : nil
   end
 
   def user_current_role_region
-    Region.where(id: model.user_current_role_region_id).first
+    user_current_role.try(:region)
   end
 
   def user_current_role
@@ -35,6 +34,7 @@ class DislocationDecorator < UserDecorator
       attrs = Hash[UserCurrentRole.column_names.map {|c| [c, send("user_current_role_#{c}")]}]
       ucr.init_with 'attributes' => attrs
       ucr.user = self
+      ucr.region ||= region
     end
   end
 

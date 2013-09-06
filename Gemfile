@@ -16,6 +16,7 @@ gem 'handlebars_assets'
 
 # Use postgresql as the database for Active Record
 gem 'pg'
+gem 'activerecord-postgres-hstore'
 
 gem "resque"#, "~> 2.0.0.pre.1", github: "resque/resque"
 gem 'resque_mailer'
@@ -38,6 +39,7 @@ gem 'cancan'
 gem 'draper'
 gem 'enumerize'
 gem 'state_machine'
+gem 'jbuilder'
 
 gem 'activeadmin',         github: 'gregbell/active_admin', branch: 'rails4'
 # gem 'activeadmin-axlsx'   # breaks app for no good reason
