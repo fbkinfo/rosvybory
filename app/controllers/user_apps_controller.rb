@@ -59,6 +59,9 @@ class UserAppsController < ApplicationController
   end
 
   def new_group_email
+    if @users.blank?
+      redirect_to :back, flash: {error: "Не выбран ни один получатель!"} and return
+    end
     render layout: 'custom_layout'
   end
 
@@ -71,6 +74,9 @@ class UserAppsController < ApplicationController
   end
 
   def new_group_sms
+    if @users.blank?
+      redirect_to :back, flash: {error: "Не выбран ни один получатель!"} and return
+    end
     render layout: 'custom_layout'
   end
 
