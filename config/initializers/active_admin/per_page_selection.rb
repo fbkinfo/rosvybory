@@ -11,11 +11,13 @@ ActiveAdmin::Event.subscribe ActiveAdmin::Resource::RegisterEvent do |resource|
       end
     end
 
-    def batch_action
-      if bypass_pagination?
-        params[:collection_selection] = collection_ids
+    unless instance_methods.include?(:collection_ids)
+      def batch_action
+        if bypass_pagination?
+          params[:collection_selection] = collection_ids
+        end
+        super
       end
-      super
     end
 
     private
