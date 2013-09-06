@@ -1,6 +1,4 @@
 class UserAppDecorator < Draper::Decorator
-  include ActiveAdminComments
-
   delegate_all
 
   def human_current_roles

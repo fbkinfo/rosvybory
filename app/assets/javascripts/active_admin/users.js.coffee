@@ -8,23 +8,6 @@ $ ->
     openDialog dialog_id_posfix_current, $(this).attr("href"), "Просмотр ошибок расстановки"
     false
 
-  $('.view-full-name-details-link').click () ->
-    id = $(this).attr('href')
-    openDialog $(this).closest('tr').attr('id'), id, 'Комментарии', undefined, {}, 'auto', 600
-    # Какая-то сволочь вырезает из html попапа тэг form
-    formDiv = $("#{id} .form")
-    url = formDiv.data('url')
-    formDiv.html("<form>#{formDiv.html()}</form>")
-    $(document).on 'submit', "#{id} form", () ->
-      $.ajax
-        url: url
-        type: 'post'
-        data: $(this).serialize()
-        success: () -> window.location.reload()
-        error: () -> {}
-      false
-    false
-
   $('.control_users .collection_selection').click () ->
     $('#all-pages-container').remove()
 
