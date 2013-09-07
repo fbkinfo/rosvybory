@@ -10,4 +10,9 @@ class ApplicationController < ActionController::Base
       control_root_path
     end
   end
+
+  def is_call_center?
+    request.remote_ip == '81.91.180.99'
+  end
+
 end

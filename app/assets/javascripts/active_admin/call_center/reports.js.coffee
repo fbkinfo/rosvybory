@@ -1,4 +1,14 @@
 jQuery ->
+  markRowOfElemAs = (elem, cssClass)->
+    row = elem.closest("tr")
+    $(["approved", "needs-review", "rejected"]).each (index, item)->
+      row.removeClass item
+    row.addClass cssClass
+
+  # Styling
+  $(".control_call_center_reports.index td .rejected").each ()->
+    markRowOfElemAs $(this), "rejected"
+
   $(document).on "change", ".control_call_center_reports.index td.approved select", ()->
     select = $(this)
     approvedStatus = $(this).closest("div")
@@ -12,10 +22,13 @@ jQuery ->
       success: (response)->
         if response.approved == true
           approvedStatus.attr "class", "approved"
+          markRowOfElemAs select, "approved"
         else if response.approved == false
           approvedStatus.attr "class", "rejected"
+          markRowOfElemAs select, "rejected"
         else if response.approved == null
           approvedStatus.attr "class", "needs-review"
+          markRowOfElemAs select, "needs-review"
       error: (response)->
         alert "Ошибка: " + response.substr(0,200)
 
