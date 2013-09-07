@@ -1,6 +1,6 @@
 ActiveAdmin.register CallCenter::Report do
   menu parent: I18n.t('active_admin.menu.call_center'), priority: 1, if: proc{ can? :read,  CallCenter::Report }
-  
+
   actions :index, :show, :edit, :update
 
   scope 'Сообщения' do |items|
@@ -46,6 +46,10 @@ ActiveAdmin.register CallCenter::Report do
     end
     column :created_at
     default_actions
+  end
+
+  sidebar :live, :only => :index do
+    link_to "Включить автоматическое обновление сообщений", '#', :class => 'enable-live-reports-link', :data => {reload_url: request.path, :reload_params => {q: params[:q]}}
   end
 
   controller do
