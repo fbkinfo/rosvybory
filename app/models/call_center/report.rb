@@ -25,6 +25,6 @@ class CallCenter::Report < ActiveRecord::Base
     end
 
     def send_report_json
-      Resque.enqueue(ViolationsExport, self.id) if approved?
+      Resque.enqueue PushViolationToKartanarusheniy, {report_id: self.id} if approved?
     end
 end
