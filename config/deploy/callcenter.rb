@@ -11,7 +11,7 @@ set :branch, 'callcenter'
 namespace :deploy do
   task :start do
     run "sudo /etc/init.d/unicorn_init start rosvybory_callcenter"
-    run "sudo start resque"
+    run "sudo start rosvybory"
   end
 
   task :stop do
@@ -23,6 +23,6 @@ namespace :deploy do
     run "sudo /etc/init.d/unicorn_init stop rosvybory_callcenter"
     run "sudo /etc/init.d/unicorn_init start rosvybory_callcenter"
     run "sudo kill `ps aux | grep [r]esque | grep -v grep | cut -c 10-16`"
-    run "sudo start resque"
+    run "sudo start rosvybory"
   end
 end
