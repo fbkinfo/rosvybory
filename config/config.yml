@@ -6,7 +6,7 @@ production:
   smsru_api_id: be793542-49bc-0864-adc7-1dd4c1196bc1
   smsru_from: NABLUDATELI
 
-  mobile_group_spreadsheet:
+  push_violation_to_mobile_group_spreadsheet:
     # Application will connect to shared spreadsheet, using these credentials. Spreadsheet should be shared with this email
     email: rosvyborymg@gmail.com
     password: motel51posy
@@ -18,7 +18,7 @@ production:
     sheet_index: 0
 
 development:
-  mobile_group_spreadsheet:
+  push_violation_to_mobile_group_spreadsheet:
     # Application will connect to shared spreadsheet, using these credentials. Spreadsheet should be shared with this email
     email: rosvyborymg@gmail.com
     password: motel51posy
@@ -30,7 +30,7 @@ development:
     sheet_index: 0
 
 staging:
-  mobile_group_spreadsheet:
+  push_violation_to_mobile_group_spreadsheet:
     # Application will connect to shared spreadsheet, using these credentials. Spreadsheet should be shared with this email
     email: rosvyborymg@gmail.com
     password: motel51posy
