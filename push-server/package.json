@@ -1,0 +1,14 @@
+{
+  "name": "push-server",
+  "version": "0.0.1",
+  "description": "Live updates server for reports monitoring",
+  "main": "server.js",
+  "engines": {
+    "node": "~0.6.3"
+  },
+  "dependencies": {
+    "redis": "~0.8.4"
+  },
+  "author": "fbk.info",
+  "private": true
+}
