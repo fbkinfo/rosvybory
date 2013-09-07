@@ -117,5 +117,5 @@ jQuery ->
   $('input[type="submit"]').click ->
     window.external.WACMD("UNHOLD")
 
-  $('button.redirect').click ->
+  $('#redirect').on "click", "button.redirect", ->
     window.external.WACMD("TRANSFER", $(this).data('phone'))
