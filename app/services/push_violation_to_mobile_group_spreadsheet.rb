@@ -1,9 +1,9 @@
-class MobileGroupSpreadsheet
+class PushViolationToMobileGroupSpreadsheet
   @queue = :mobile_group_spreadsheet
 
   class << self
     def perform(*args)
-      logger = Logger.new 'log/resque.log'
+      logger = Logger.new 'log/resque_push_violation_to_mobile_group_spreadsheet.log'
       
       begin
         connect_to_spreadsheet
