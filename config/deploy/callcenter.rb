@@ -8,12 +8,6 @@ role :db,  "54.213.151.246", :primary => true
 set :rails_env, 'staging'
 set :branch, 'callcenter'
 
-if ENV['LOCAL']
-  set :deploy_via, :copy
-  set :repository, '.'
-  set :scm, :none
-end
-
 namespace :deploy do
   task :start do
     run "sudo /etc/init.d/unicorn_init start rosvybory_callcenter"
