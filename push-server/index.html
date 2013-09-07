@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+
+  <script type="text/javascript">
+    var source = new EventSource('/events');
+// source.addEventListener('open', function () { connectionOpen(true); }, false);
+// source.addEventListener('error', function () { connectionOpen(false); }, false);
+// source.addEventListener('connections', updateConnections, false);
+// source.addEventListener('requests', updateRequests, false);
+// source.addEventListener('uptime', updateUptime, false);
+// source.addEventListener('time', function (e) {  }, false);
+
+  source.addEventListener('message', function(d) {
+    alert(d.data);
+  })
+
+  </script>
+
+</body>
+</html>

@@ -9,4 +9,4 @@
 #= require region_select
 #= require users
 #= require uic_select
-
+#= require active_admin/call_center/reports
