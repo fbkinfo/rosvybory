@@ -12,4 +12,6 @@ class CallCenter::Report < ActiveRecord::Base
 
   has_one :phone_call
   accepts_nested_attributes_for :reporter
+
+  belongs_to :reviewer, class_name: User, foreign_key: "reviewer_id"
 end

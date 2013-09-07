@@ -13,9 +13,6 @@
 
 ActiveRecord::Schema.define(version: 20130907121354) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
     t.text     "body"
@@ -77,6 +74,7 @@ ActiveRecord::Schema.define(version: 20130907121354) do
     t.datetime "updated_at"
     t.integer  "violation_id"
     t.boolean  "approved"
+    t.integer  "reviewer_id"
   end
 
   create_table "call_center_reports_relations", force: true do |t|
