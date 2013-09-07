@@ -508,6 +508,7 @@ ru:
         known: Зарегистрирован
         phone: Телефон
       call_center/report:
+        approved: Одобрено
         uic: Участок
         text: Текст
         url: Ссылка
