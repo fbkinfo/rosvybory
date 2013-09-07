@@ -4,6 +4,11 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   def after_sign_in_path_for(user)
+
+    if Rails.application.config.send_sms_on_login
+      SmsService.send_message(phone, "Был произведён вход в базу наблюдателей, если это не вы, срочно сообщите в штаб наблюдателей")
+    end
+
     if user.roles.include? Role.find_by(slug: "callcenter")
       new_call_center_report_path
     else

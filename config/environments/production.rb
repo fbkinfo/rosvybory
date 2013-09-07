@@ -72,6 +72,9 @@ Rosvibory::Application.configure do
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
 
+  #Отправлять смс при каждом логине в систему
+  config.send_sms_on_login = true
+
   # Disable automatic flushing of the log to improve performance.
   # config.autoflush_log = false
 
