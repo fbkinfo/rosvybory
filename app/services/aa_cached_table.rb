@@ -29,15 +29,14 @@ class AaCachedTable < ArBredElegate
       tbody do
         collection.each do |record|
           html = Rails.cache.fetch [:aa_index, record] do
-            Arbre::Context.new do
+            Arbre::Context.new({}, @base.arbre_context.helpers) do
               ctx = self
               tr :id => ActionController::Base.helpers.dom_id(record) do
                 BodyBuilder.new(ctx, record).instance_exec &page_presenter.block
               end
-            end
+            end.to_s
           end
-          # text_node html.to_s.html_safe
-          text_node '1'
+          text_node html.html_safe
         end
       end
     end
