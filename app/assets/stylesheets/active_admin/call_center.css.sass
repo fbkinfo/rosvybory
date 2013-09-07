@@ -1,6 +1,13 @@
 .active_admin
   &.control_call_center_reports
     &.index
+      tr
+        &.rejected
+          td
+            &, *
+              color: #999
+              .needs-mobile-group
+                background-color: rgba(255,0,0,0.2)
       td
         select
           border: none
@@ -15,16 +22,13 @@
             padding: 0.3em 1ex
             border-radius: 3px
             &.approved
-              background-color: #76D100
               *
-                color: white
-            &.rejected
-              background-color: red
-              *
-                color: white
+                color: green
             &.needs-review
               background-color: none
               border-bottom: #ccc dashed thin
+              *
+                color: #009
         &.violation_type
           > div
             select
@@ -32,3 +36,12 @@
               height: 18px
               background: image-url("control/edit-icon.png")
               text-indent: -9999px
+        .needs-mobile-group
+          display: inline-block
+          background-color: red
+          color: white
+          border-radius: 5px
+          padding: 0.6em 1.6ex
+      td:last-child
+        a
+          display: block
