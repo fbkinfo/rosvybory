@@ -39,7 +39,7 @@ class CallCenter::ReportsController < ApplicationController
 
     Resque.enqueue ViolationsExport
     if report.needs_mobile_group
-      Resque.enqueue MobileGroupSpreadsheet, {report_id: report.id}
+      Resque.enqueue PushViolationToMobileGroupSpreadsheet, {report_id: report.id}
     end
 
     redirect_to confirm_call_center_report_path(report)
