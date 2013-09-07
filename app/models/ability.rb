@@ -156,6 +156,11 @@ class Ability
       CallCenter.constants.each { |m| can(:crud, "CallCenter::#{m}".constantize) }
     end
 
+    if user.has_role?(:callcenter_external)
+      CallCenter.constants.each { |m| can(:read, "CallCenter::#{m}".constantize) }
+      can :crud, CallCenter::Report
+    end
+
     can :destroy, UserCurrentRole do |ucr|
       ucr.user && can?(:view_user_contacts, ucr.user)
     end

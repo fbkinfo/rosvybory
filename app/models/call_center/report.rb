@@ -16,10 +16,15 @@ class CallCenter::Report < ActiveRecord::Base
   accepts_nested_attributes_for :reporter
 
   after_commit :broadcast_report, :on => :create
+  after_commit :send_report_json, :on => :update
+
 
   private
     def broadcast_report
       LiveReportsNotifier.instance.broadcast(self)
     end
 
+    def send_report_json
+      Resque.enqueue(ViolationsExport, self.id) if approved?
+    end
 end

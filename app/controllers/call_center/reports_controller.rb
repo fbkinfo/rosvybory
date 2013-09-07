@@ -38,8 +38,15 @@ class CallCenter::ReportsController < ApplicationController
     end
 
     Resque.enqueue ViolationsExport
+    if report.needs_mobile_group
+      Resque.enqueue MobileGroupSpreadsheet, {report_id: report.id}
+    end
 
-    redirect_to new_call_center_report_path
+    redirect_to confirm_call_center_report_path(report)
+  end
+
+  def confirm
+    @report = CallCenter::Report.find(params[:id])
   end
 
 
@@ -54,7 +61,7 @@ class CallCenter::ReportsController < ApplicationController
   end
 
   def permitted_params
-    params.require(:call_center_report).permit :text, :parent_report_ids, reporter_attributes: [:phone, :uic, :user_id, :role, :uic_id, :current_role_id, :last_name, :first_name, :patronymic], violation_attributes: [:violation_type_id]
+    params.require(:call_center_report).permit :text, :needs_mobile_group, :parent_report_ids, reporter_attributes: [:phone, :uic, :user_id, :role, :uic_id, :current_role_id, :last_name, :first_name, :patronymic], violation_attributes: [:violation_type_id]
   end
 
   def new_reporter_from(dislocation, phone_call)
@@ -74,6 +81,6 @@ class CallCenter::ReportsController < ApplicationController
   end
 
   def authenticate_operator
-    redirect_to new_user_session_path if !current_user || !can?(:create, CallCenter::Report)
+    redirect_to new_user_session_path if !is_call_center? && (!current_user || !can?(:create, CallCenter::Report) )
   end
 end
