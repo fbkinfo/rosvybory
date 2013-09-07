@@ -18,6 +18,9 @@ ActiveAdmin.register CallCenter::Report do
   scope 'Проверить' do |items|
     items.where(approved: nil)
   end
+  scope I18n.t("activerecord.attributes.call_center/report.needs_mobile_group") do |items|
+    items.where needs_mobile_group: true
+  end
 
   index do
     column :approved, sortable: "approved" do |report|
@@ -29,20 +32,13 @@ ActiveAdmin.register CallCenter::Report do
     column :uic do |report|
       link_to report.reporter.uic.name, control_uic_path(report.reporter.uic) if report.reporter.uic.present?
     end
-    column :text
+    column :text do |report|
+      html  = content_tag :div, report.text
+      html += content_tag :p, I18n.t("activerecord.attributes.call_center/report.needs_mobile_group"), class: "needs-mobile-group" if report.needs_mobile_group
+      raw html
+    end
     column :reporter do |report|
-      reporter = report.reporter
-      if reporter.dislocation.present?
-        link_to reporter.dislocation.full_name, control_dislocation_path(reporter.dislocation)
-      else
-        [reporter.last_name, reporter.first_name, reporter.patronymic].join " "
-      end
-    end
-    column :phone do |report|
-      report.reporter.phone
-    end
-    column :current_role do |report|
-      report.reporter.current_role.try(:name)
+      render "control/call_center/reports/reporter", {report: report}
     end
     column :created_at
     default_actions
