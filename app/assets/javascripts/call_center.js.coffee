@@ -117,5 +117,5 @@ jQuery ->
   $('input[type="submit"]').click ->
     window.external.WACMD("UNHOLD")
 
-  $('#redirect-to-jurist, #redirect-to-mobile-group-dispatcher').click ->
-    window.external.WACMD("TRANSFER", '9260121530')
+  $('button.redirect').click ->
+    window.external.WACMD("TRANSFER", $(this).data('phone'))
