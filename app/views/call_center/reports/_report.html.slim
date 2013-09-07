@@ -17,6 +17,7 @@
   #report.panel
     h2 Сообщение
     = f.text_area :text
+    = f.input :needs_mobile_group
     = f.fields_for :violation do |ff|
       = ff.input :violation_type, label: t("activerecord.attributes.call_center/report.violation_type"),
         collection: option_groups_from_collection_for_select(CallCenter::ViolationCategory.all, :violation_types, :name, :id, :name)

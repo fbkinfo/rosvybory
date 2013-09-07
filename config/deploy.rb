@@ -18,7 +18,7 @@ require 'capistrano/ext/multistage'
 # Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
 
 task :build_symlinks, :roles => :app do
-  run "ln -s #{shared_path}/config/database.yml #{release_path}/config/database.yml"
+  run "rm -f #{release_path}/config/database.yml; ln -s #{shared_path}/config/database.yml #{release_path}/config/database.yml"
   run "ln -s #{shared_path}/api #{release_path}/public/api"
 end
 

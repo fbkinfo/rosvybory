@@ -75,6 +75,7 @@ ActiveRecord::Schema.define(version: 20130907221736) do
     t.integer  "violation_id"
     t.boolean  "approved"
     t.integer  "reviewer_id"
+    t.boolean  "needs_mobile_group"
   end
 
   create_table "call_center_reports_relations", force: true do |t|
