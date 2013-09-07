@@ -2,6 +2,7 @@ ActiveAdmin.register CallCenter::Report do
   menu parent: I18n.t('active_admin.menu.call_center'), priority: 1, if: proc{ can? :read,  CallCenter::Report }
 
   actions :index, :show, :edit, :update
+  config.batch_actions = false
 
   scope 'Сообщения' do |items|
     items.where(violation_id: nil)
