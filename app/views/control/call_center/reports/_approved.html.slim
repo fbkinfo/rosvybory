@@ -6,4 +6,4 @@
       - [true, false, nil].each do |val|
         option value=val.to_s selected=(report.approved == val) = approved_value_text(val)
   - else
-    = approved_value_text report.approved
+    p.violation_type_name = approved_value_text report.approved
