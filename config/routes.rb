@@ -31,7 +31,11 @@ Rosvibory::Application.routes.draw do
   get 'new_group_sms' => 'user_apps#new_group_sms'
 
   namespace :call_center do
-    resources :reports
+    resources :reports do
+      member do
+        get :confirm
+      end
+    end
     resources :violations, only: :index
 
     resources :uics do

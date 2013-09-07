@@ -39,7 +39,11 @@ class CallCenter::ReportsController < ApplicationController
 
     Resque.enqueue ViolationsExport
 
-    redirect_to new_call_center_report_path
+    redirect_to confirm_call_center_report_path(report)
+  end
+
+  def confirm
+    @report = CallCenter::Report.find(params[:id])
   end
 
 
