@@ -132,7 +132,9 @@ jQuery ->
   $('input[type="submit"]').click ->
     call = new Call
     call.unhold()
+    true
 
   $('#redirect').on "click", "button.redirect", ->
     call = new Call
     call.transfer($(this).data('phone'))
+    false
