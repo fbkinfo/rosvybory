@@ -1,0 +1,27 @@
+.active_admin
+  &.control_call_center_reports
+    &.index
+      td.approved
+        > div
+          padding: 0.3em 1ex
+          border-radius: 3px
+          &.approved
+            background-color: #76D100
+            select
+              color: white
+          &.rejected
+            background-color: red
+            select
+              color: white
+          &.needs-review
+            background-color: none
+            border-bottom: #ccc dashed thin
+
+          select
+            border: none
+            background: none
+            -webkit-appearance: none
+            -moz-appearance: none
+            appearance: none
+            outline: none
+            cursor: pointer
