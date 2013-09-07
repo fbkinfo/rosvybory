@@ -40,4 +40,8 @@ ActiveAdmin.register CallCenter::Report do
     column :created_at
     default_actions
   end
+
+  sidebar :live, :only => :index do
+    link_to "Выключить автоматическое обновление сообщений", '#', :class => 'enable-live-reports-link', :data => {reload_url: request.path, :reload_params => {q: params[:q]}}
+  end
 end
