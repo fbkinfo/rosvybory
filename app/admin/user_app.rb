@@ -115,7 +115,7 @@ ActiveAdmin.register UserApp do
   filter   :has_car
   filter   :has_video
   #
-  #column(:social_accounts) {|user_app| raw social_accounts_readable(user_app.social_accounts) }
+  #column(:social_accounts) {|user_app| raw social_accounts_readable(user_app) }
   filter   :extra
   #column(:legal_status) {|user_app| legal_status_human_readable user_app.legal_status}
 
