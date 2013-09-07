@@ -1,0 +1,18 @@
+- if user_app && user_app.social_accounts.present?
+  .panel
+    %h3
+      Аккаунты в соцсетях
+    .panel_contents
+      .attributes_table.user_app
+        %table
+          %tbody
+            - user_app.social_accounts.each do |key, url|
+              - if url.present?
+                %tr.row
+                  %th= UserApp::SOCIAL_ACCOUNTS[key.to_sym]
+                  %td= url
+                  %td
+                    - if user_app.valid_social_link?(url, key)
+                      = link_to "Перейти", url, target: :_blank
+                    - else
+                      Подозрительная ссылка!

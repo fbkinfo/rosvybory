@@ -24,7 +24,7 @@ module UserAppsHelper
 
     social_accounts.each do |provider, profile_link|
       if profile_link.present?
-        if profile_link[/^http:\/\//] || profile_link[/^https:\/\//]
+        if valid_social_link?(profile_link, provider)
           social_block << link_to(profile_link, profile_link) #полное отображение ссылок, чтобы оператор точно видел, куда переходит
         else
           social_block << "#{UserApp::SOCIAL_ACCOUNTS[provider.to_sym]}: #{profile_link}"

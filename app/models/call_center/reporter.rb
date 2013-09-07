@@ -6,4 +6,8 @@ class CallCenter::Reporter < ActiveRecord::Base
 
   belongs_to :adm_region, class_name: "Region"
   belongs_to :mobile_group
+
+  def full_name
+    [last_name, first_name, patronymic].compact.join " "
+  end
 end

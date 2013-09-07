@@ -53,6 +53,7 @@ gem 'gon'
 gem 'cocoon'
 
 gem 'roo' #import from excel
+gem 'google_drive'
 
 # Генерация PDF
 gem 'wkhtmltopdf-binary'
