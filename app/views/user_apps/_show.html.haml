@@ -118,20 +118,8 @@
             %th= UserApp.human_attribute_name :experience_count
             %td= user_app.experience_count
 
-- if user_app.social_accounts.present?
-  .panel
-    %h3
-      Аккаунты в соцсетях
-    .panel_contents
-      .attributes_table.user_app
-        %table
-          %tbody
-            - user_app.social_accounts.each do |key, val|
-              - if val.present?
-                %tr.row
-                  %th
-                  %td
-                    = link_to UserApp::SOCIAL_ACCOUNTS[key.to_sym], val, target: :_blank
+= render 'user_apps/social_links', :user_app => user_app
+
 .panel
   %h3
     Дополнительные сведения
