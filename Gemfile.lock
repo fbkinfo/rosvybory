@@ -18,6 +18,14 @@ GIT
       sass-rails (>= 3.2.0)
 
 GIT
+  remote: git://github.com/phatworx/devise_security_extension.git
+  revision: f72455f505cf09ce063f573b4ed1c7dd3a60f3a2
+  specs:
+    devise_security_extension (0.7.3)
+      devise (>= 3.0.0)
+      rails (>= 4.0.0)
+
+GIT
   remote: git://github.com/stiff/sms_ru.git
   revision: 889293a39d184eb8aeecb3c59d8897b5addd8f83
   specs:
@@ -376,6 +384,7 @@ DEPENDENCIES
   cocoon
   coffee-rails (~> 4.0.0)
   database_cleaner
+  devise_security_extension!
   draper
   enumerize
   factory_girl_rails

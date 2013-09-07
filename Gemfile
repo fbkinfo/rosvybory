@@ -54,6 +54,8 @@ gem 'cocoon'
 
 gem 'roo' #import from excel
 
+gem 'devise_security_extension', github: 'phatworx/devise_security_extension'
+
 # Генерация PDF
 gem 'wkhtmltopdf-binary'
 gem 'wicked_pdf'

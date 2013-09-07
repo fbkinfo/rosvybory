@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130906062649) do
+ActiveRecord::Schema.define(version: 20130907113449) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -215,8 +215,8 @@ ActiveRecord::Schema.define(version: 20130906062649) do
     t.string   "state",                          default: "pending", null: false
     t.boolean  "phone_verified",                 default: false,     null: false
     t.boolean  "has_video"
-    t.string   "forwarded_for"
     t.integer  "organisation_id"
+    t.string   "forwarded_for"
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
     t.string   "full_name",          limit: 767
@@ -282,6 +282,7 @@ ActiveRecord::Schema.define(version: 20130906062649) do
     t.string   "patronymic"
     t.text     "address"
     t.string   "full_name",              limit: 767
+    t.string   "unique_session_id",      limit: 20
   end
 
   add_index "users", ["adm_region_id"], name: "index_users_on_adm_region_id", using: :btree
