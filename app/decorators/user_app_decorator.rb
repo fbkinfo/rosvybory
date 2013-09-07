@@ -34,7 +34,7 @@ class UserAppDecorator < Draper::Decorator
   end
 
   def human_social_accounts
-    h.raw h.social_accounts_readable(object.social_accounts)
+    h.raw h.social_accounts_readable(object)
   end
 
   def human_sex_male
