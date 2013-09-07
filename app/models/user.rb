@@ -85,6 +85,7 @@ class User < ActiveRecord::Base
     end
 
     def send_reset_password_instructions(attributes={})
+      raise "Самостоятельное восстановление пароля отключено, попытка для #{attributes["phone"]}" if Rails.application.config.disable_password_recovery
       attributes["phone"] = Verification.normalize_phone_number(attributes["phone"])
       super
     end
