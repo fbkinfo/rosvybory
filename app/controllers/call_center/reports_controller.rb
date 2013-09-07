@@ -54,7 +54,7 @@ class CallCenter::ReportsController < ApplicationController
   end
 
   def permitted_params
-    params.require(:call_center_report).permit :text, :parent_report_ids, reporter_attributes: [:phone, :uic, :user_id, :role, :uic_id, :current_role_id, :last_name, :first_name, :patronymic], violation_attributes: [:violation_type_id]
+    params.require(:call_center_report).permit :text, :needs_mobile_group, :parent_report_ids, reporter_attributes: [:phone, :uic, :user_id, :role, :uic_id, :current_role_id, :last_name, :first_name, :patronymic], violation_attributes: [:violation_type_id]
   end
 
   def new_reporter_from(dislocation, phone_call)

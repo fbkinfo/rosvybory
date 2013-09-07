@@ -520,6 +520,7 @@ ru:
         updated_at: Обновлено
         reporter: Позвонивший
         current_role: Роль
+        needs_mobile_group: Требуется вызов мобильной группы
         violation: Нарушение
         violation_type: Тип нарушения
       call_center/phone_call:
