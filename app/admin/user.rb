@@ -69,7 +69,6 @@ ActiveAdmin.register User do
         row :has_car, &:human_has_car
         row :legal_status, &:human_legal_status
         row :has_video, &:human_has_video
-        row :social_accounts, &:human_social_accounts
         row :extra
         row :address
         row :passport
@@ -82,6 +81,7 @@ ActiveAdmin.register User do
         row :created_at
         row :updated_at
       end
+      render :partial => 'user_apps/social_links', :locals => {:user_app => user.user_app}
       active_admin_comments
     elsif can? :read, user
       attributes_table do
