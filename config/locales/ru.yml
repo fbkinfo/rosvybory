@@ -346,6 +346,9 @@ ru:
       call_center/violation_type:
         one:   Тип нарушения
         other: Типы нарушений
+      call_center/redirection_phone:
+        one:  Телефон для переадресации
+        other: Телефоны для переадресации
     attributes:
       dislocation:
         current_role_id: Роль
@@ -508,6 +511,7 @@ ru:
         known: Зарегистрирован
         phone: Телефон
       call_center/report:
+        approved: Одобрено
         uic: Участок
         text: Текст
         url: Ссылка
@@ -531,6 +535,9 @@ ru:
         name: Название
         reports_count: Сообщений
         violations_count: Нарушений
+      call_center/redirection_phone:
+        name:  Название
+        number: Номер телефона
   dislocation:
     errors:
       one: "%{count} ошибка"

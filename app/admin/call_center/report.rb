@@ -1,6 +1,7 @@
 ActiveAdmin.register CallCenter::Report do
   menu parent: I18n.t('active_admin.menu.call_center'), priority: 1, if: proc{ can? :read,  CallCenter::Report }
-  actions :index, :show
+
+  actions :index, :show, :edit, :update
 
   scope 'Сообщения' do |items|
     items.where(violation_id: nil)
@@ -8,21 +9,27 @@ ActiveAdmin.register CallCenter::Report do
   scope 'Нарушения' do |items|
     items.where("violation_id IS NOT ?", nil)
   end
+  scope 'Одобренные' do |items|
+    items.where(approved: true)
+  end
+  scope 'Отклонённые' do |items|
+    items.where(approved: false)
+  end
+  scope 'Проверить' do |items|
+    items.where(approved: nil)
+  end
 
   index do
-    column :id do |report|
-      link_to report.id, control_call_center_report_path(report)
+    column :approved, sortable: "approved" do |report|
+      render "control/call_center/reports/approved", {report: report}
     end
-    column :violation do |report|
-      link_to report.violation.try(:violation_type).try(:name), control_call_center_violation_type_path(report.violation) if report.violation.present?
+    column :violation_type do |report|
+      render "control/call_center/reports/violation_type", {report: report}
     end
     column :uic do |report|
       link_to report.reporter.uic.name, control_uic_path(report.reporter.uic) if report.reporter.uic.present?
     end
     column :text
-    column :url do |report|
-      report.url.blank? ? "" : link_to(report.url[0..50]+"…", report.url)
-    end
     column :reporter do |report|
       reporter = report.reporter
       if reporter.dislocation.present?
@@ -42,6 +49,21 @@ ActiveAdmin.register CallCenter::Report do
   end
 
   sidebar :live, :only => :index do
-    link_to "Выключить автоматическое обновление сообщений", '#', :class => 'enable-live-reports-link', :data => {reload_url: request.path, :reload_params => {q: params[:q]}}
+    link_to "Включить автоматическое обновление сообщений", '#', :class => 'enable-live-reports-link', :data => {reload_url: request.path, :reload_params => {q: params[:q]}}
+  end
+
+  controller do
+    def permitted_params
+      params.require(:call_center_report).permit :approved, violation_attributes: [:violation_type_id]
+    end
+
+    def update
+      @report = CallCenter::Report.includes(violation: :violation_type).find params[:id]
+      @report.reviewer = current_user
+      @report.update permitted_params
+      respond_to do |format|
+        format.json {render json: @report, location: @report, include: {violation: {include: :violation_type}}}
+      end
+    end
   end
 end

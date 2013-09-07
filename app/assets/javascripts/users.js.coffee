@@ -28,7 +28,7 @@ updateRoleFields = ->
 
 checkForObserverRole = ->
   el =$("[data-role=observer-roles]")
-  if ($.inArray(gon.observer_role_id + '', $(".formtastic.user #user_role_ids").val()) != -1)
+  if ($.inArray(gon.observer_role_id + '', $(".formtastic.user #user_role_ids").val()) != -1) or $('.user-current-role').length != 0
     el.removeClass("hidden")
   else
     el.addClass("hidden")

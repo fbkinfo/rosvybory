@@ -1,0 +1,9 @@
+- status_class = report.approved == true ? "approved" : report.approved == false ? "rejected" : "needs-review"
+
+.div class="#{status_class}"
+  - if can? :update, report
+    select name="approved" data-path=control_call_center_report_path(report)
+      - [true, false, nil].each do |val|
+        option value=val.to_s selected=(report.approved == val) = approved_value_text(val)
+  - else
+    p.violation_type_name = approved_value_text report.approved
