@@ -12,4 +12,11 @@ class CallCenter::Report < ActiveRecord::Base
 
   has_one :phone_call
   accepts_nested_attributes_for :reporter
+
+  after_commit :broadcast_report, :on => :create
+
+  private
+    def broadcast_report
+      LiveReportsNotifier.instance.broadcast(self)
+    end
 end
