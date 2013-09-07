@@ -74,6 +74,6 @@ class CallCenter::ReportsController < ApplicationController
   end
 
   def authenticate_operator
-    redirect_to new_user_session_path unless can? :create, CallCenter::Report
+    redirect_to new_user_session_path if !current_user || !can?(:create, CallCenter::Report)
   end
 end
