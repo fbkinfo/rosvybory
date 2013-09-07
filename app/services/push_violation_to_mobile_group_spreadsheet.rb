@@ -1,5 +1,5 @@
 class PushViolationToMobileGroupSpreadsheet
-  @queue = :mobile_group_spreadsheet
+  @queue = :push_violation_to_mobile_group_spreadsheet
 
   class << self
     def perform(*args)
@@ -26,7 +26,7 @@ class PushViolationToMobileGroupSpreadsheet
     end
 
     def connect_to_spreadsheet
-      config = AppConfig["mobile_group_spreadsheet"]
+      config = AppConfig["push_violation_to_mobile_group_spreadsheet"]
 
       session = GoogleDrive.login config["email"], config["password"]
       sheets = session.spreadsheet_by_key config["spreadsheet_key"]
