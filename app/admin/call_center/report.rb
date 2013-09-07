@@ -19,7 +19,7 @@ ActiveAdmin.register CallCenter::Report do
     items.where(approved: nil)
   end
 
-  index do
+  index :as => ActiveAdmin::Views::IndexAsCachedTable do
     column :approved, sortable: "approved" do |report|
       render "control/call_center/reports/approved", {report: report}
     end
@@ -44,7 +44,7 @@ ActiveAdmin.register CallCenter::Report do
     column :current_role do |report|
       report.reporter.current_role.try(:name)
     end
-    column :created_at
+    column :created_at, :sortable => true
     default_actions
   end
 
