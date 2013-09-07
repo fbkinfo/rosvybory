@@ -5,6 +5,7 @@ ActiveAdmin.register CallCenter::RedirectionPhone do
   index do
     column :name
     column :number
+    default_actions
   end
 
   controller do

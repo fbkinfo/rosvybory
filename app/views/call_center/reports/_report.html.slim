@@ -30,7 +30,7 @@
       = f.submit "Сохранить"
       p.notice И ждать следующий звонок
     - if @phone_station_presented
-      #redirect_block
+      #redirect
         - CallCenter::RedirectionPhone.all.each do |red_phone|
           button class='redirect' data-phone=red_phone.number = red_phone.name
         p.notice Перенаправить
