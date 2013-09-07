@@ -2,15 +2,11 @@ class ArBredElegate
   delegate  :active_admin_config, :params,
             :table, :thead, :tbody, :tr, :th, :td,
             :link_to, :span, :br, :text_node,
-            :render,
+            :render, :insert_tag,
             :to => :@base
 
   def initialize(base)
     @base = base
-  end
-
-  def dom_id(*args)
-    ActionController::Base.helpers.dom_id(*args)
   end
 end
 
@@ -32,9 +28,16 @@ class AaCachedTable < ArBredElegate
       end
       tbody do
         collection.each do |record|
-          tr :id => dom_id(record) do
-            BodyBuilder.new(@base, record).instance_exec &page_presenter.block
+          html = Rails.cache.fetch [:aa_index, record] do
+            Arbre::Context.new do
+              ctx = self
+              tr :id => ActionController::Base.helpers.dom_id(record) do
+                BodyBuilder.new(ctx, record).instance_exec &page_presenter.block
+              end
+            end
           end
+          # text_node html.to_s.html_safe
+          text_node '1'
         end
       end
     end
