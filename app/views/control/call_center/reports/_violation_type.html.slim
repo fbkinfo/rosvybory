@@ -1,0 +1,7 @@
+- if report.violation.present?
+  div
+    p.violation_type_name = report.violation.try(:violation_type).try(:name)
+    - if can? :update, report
+      select id="change_violation_type" data-path=control_call_center_report_path(report)
+        - CallCenter::ViolationType.all.each do |vt|
+          option value=(vt.id) = vt.name
