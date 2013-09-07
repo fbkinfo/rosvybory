@@ -16,14 +16,15 @@ namespace :deploy do
 
   task :stop do
     run "sudo /etc/init.d/unicorn_init stop rosvybory_production"
+    #run "sudo stop rosvybory"
     run "sudo kill `ps aux | grep [r]esque | grep -v grep | cut -c 10-16`"
   end
 
   task :restart do
-    run "sudo /etc/init.d/unicorn_init stop rosvybory_production"
-    run "sudo /etc/init.d/unicorn_init start rosvybory_production"
+    run "sudo /etc/init.d/unicorn_init restart rosvybory_production"
 
     run "sudo kill `ps aux | grep [r]esque | grep -v grep | cut -c 10-16`"
+    #run "sudo stop rosvybory"
     run "sudo /etc/init.d/rosvybory start"
   end
 end

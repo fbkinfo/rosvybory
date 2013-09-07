@@ -236,6 +236,10 @@ class UserApp < ActiveRecord::Base
     Blacklist.find_by_phone(phone)
   end
 
+  def valid_social_link?(profile_link, network = nil)
+    profile_link.starts_with?('http://') || profile_link.starts_with?('https://')
+  end
+
   private
 
   def set_phone_verified_status

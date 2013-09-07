@@ -10,7 +10,7 @@ set :deploy_via, :remote_cache
 default_run_options[:pty] = true
 set :rvm_ruby_string, "2.0.0-p247@rosvybory"#:local
 
-set :stages, %w(production staging new)
+set :stages, %w(production staging new callcenter)
 set :default_stage, "staging"
 require 'capistrano/ext/multistage'
 
@@ -19,7 +19,14 @@ require 'capistrano/ext/multistage'
 
 task :build_symlinks, :roles => :app do
   run "ln -s #{shared_path}/config/database.yml #{release_path}/config/database.yml"
+  run "ln -s #{shared_path}/api #{release_path}/public/api"
 end
+
+task :create_shared_dirs do
+  run "mkdir -p #{shared_path}/api"
+end
+
+after "deploy:setup", "create_shared_dirs"
 
 after "deploy:update_code", "build_symlinks"
 load 'deploy/assets'
