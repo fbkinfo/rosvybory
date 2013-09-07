@@ -1,0 +1,9 @@
+p = report.reporter.current_role.try(:name)
+
+- reporter = report.reporter
+- if reporter.dislocation.present?
+  p = link_to reporter.dislocation.full_name, control_dislocation_path(reporter.dislocation)
+- else
+  p = [reporter.last_name, reporter.first_name, reporter.patronymic].join " "
+
+p = report.reporter.phone
