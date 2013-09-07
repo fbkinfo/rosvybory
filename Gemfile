@@ -14,6 +14,8 @@ gem 'x-editable-rails'
 gem 'select2-rails'
 gem 'handlebars_assets'
 
+gem 'rvm'
+
 # Use postgresql as the database for Active Record
 gem 'pg'
 gem 'activerecord-postgres-hstore'
