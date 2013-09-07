@@ -88,12 +88,19 @@ ActiveAdmin.register Dislocation do
 
   batch_action :new_group_email do |selection|
     user_ids = UserCurrentRole.where(:id => selection).pluck('distinct(user_id)')
-    redirect_to new_group_email_path(:collection_selection => user_ids)
+    if (@users = User.where(id: user_ids)).blank?
+      redirect_to :back, flash: {error: "Не выбран ни один получатель!"}
+    else
+      render template: 'user_apps/new_group_email', layout: 'custom_layout'
+    end
   end
-
   batch_action :new_group_sms do |selection|
     user_ids = UserCurrentRole.where(:id => selection).pluck('distinct(user_id)')
-    redirect_to new_group_sms_path(:collection_selection => user_ids)
+    if (@users = User.where(id: user_ids)).blank?
+      redirect_to :back, flash: {error: "Не выбран ни один получатель!"}
+    else
+      render template: 'user_apps/new_group_sms', layout: 'custom_layout'
+    end
   end
 
   collection_action :inplace, :method => :post do

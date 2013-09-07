@@ -7,6 +7,8 @@ class CallCenter::ReportsController < ApplicationController
     phone_call = new_phone_call_from params
     dislocation = Dislocation.find_by phone: phone_call.number
 
+    @phone_station_presented = params.has_key? :clid
+
     @report = CallCenter::Report.new\
       reporter: new_reporter_from(dislocation, phone_call),
       phone_call: phone_call,
@@ -72,6 +74,6 @@ class CallCenter::ReportsController < ApplicationController
   end
 
   def authenticate_operator
-    redirect_to new_user_session_path unless can? :create, CallCenter::Report
+    redirect_to new_user_session_path if !current_user || !can?(:create, CallCenter::Report)
   end
 end
