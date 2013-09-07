@@ -1,7 +1,7 @@
 json.updated_at violations.last.try(:created_at) || DateTime.now
 json.violations violations do |violation|
   uic = violation.report.reporter.uic rescue nil
-  json.id = violation.id
+  json.id violation.id
   json.violation_type_id violation.violation_type.try(:id)
   json.uic uic.try(:name)
   json.uic_id uic.try(:id)
