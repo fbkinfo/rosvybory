@@ -1,14 +1,19 @@
+- emails = @users.pluck(:email)
+- count = emails.count
+- display_limit = 200
 .row
   .span3
     %legend
-      Письмо будет направлено следующим получателям
-    - @users.pluck(:email).each do |email|
+      Письмо будет направлено #{count} получателям
+      -if count > display_limit
+        (отображаются первые #{display_limit} из них)
+    - emails[0..display_limit-1].each do |email|
       = email
   .span9
     %legend
       Содержимое письма
     = form_for :group_email, url: :send_group_email,  html: {class: 'form-horizontal'} do |f|
-      - @users.pluck(:email).each do |email|
+      - emails.each do |email|
         = f.hidden_field :emails, :multiple => true, :value => email
       
       .control-group
