@@ -23,6 +23,10 @@ ActiveAdmin.register CallCenter::Report do
     items.where needs_mobile_group: true
   end
 
+  action_item :only => [:index] do
+    link_to('Зафиксировать обращение', new_call_center_report_path)
+  end
+
   index do
     column :approved, sortable: "approved" do |report|
       render "control/call_center/reports/approved", {report: report}
