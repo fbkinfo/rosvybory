@@ -27,6 +27,9 @@ ActiveAdmin.register CallCenter::Report do
     link_to('Зафиксировать обращение', new_call_center_report_path)
   end
 
+  filter :reporter_uic_id, collection: proc {Uic.all}, as: :select
+  filter :violation_violation_type_id, collection: proc {CallCenter::ViolationType.all}, as: :select
+
   index do
     column :approved, sortable: "approved" do |report|
       render "control/call_center/reports/approved", {report: report}
