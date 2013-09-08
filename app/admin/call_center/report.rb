@@ -49,11 +49,11 @@ ActiveAdmin.register CallCenter::Report do
   end
 
   sidebar :live, :only => :index do
-    link_to "Включить автоматическое обновление сообщений", '#', :class => 'enable-live-reports-link', :data => {reload_url: request.path, :reload_params => {q: params[:q]}}
+    link_to "Включить автоматическое обновление сообщений", '#', :class => 'enable-live-reports-link', :data => {reload_url: fast_row_control_call_center_reports_path, :reload_params => {q: params[:q]}}
   end
 
   collection_action :fast_row do
-    # TODO render single row from ActiveAdmin::Views::IndexAsCachedTable and load it in reports_monitoring.js
+    render :template => 'control/call_center/reports/fast_row', :layout => false
   end
 
   controller do

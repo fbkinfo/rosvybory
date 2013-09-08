@@ -12,7 +12,7 @@ end
 
 class AaCachedTable < ArBredElegate
 
-  def build(page_presenter, collection)
+  def build(page_presenter, collection, options = {})
     table_options = {
       :id => "index_table_#{active_admin_config.resource_name.plural}",
       :sortable => true,
@@ -21,15 +21,17 @@ class AaCachedTable < ArBredElegate
       :paginator => page_presenter[:paginator] != false
     }
     table table_options do
-      thead do
-        tr do
-          HeaderBuilder.new(@base).instance_exec &page_presenter.block
+      unless options[:skip_header]
+        thead do
+          tr do
+            HeaderBuilder.new(@base).instance_exec &page_presenter.block
+          end
         end
       end
       tbody do
         collection.each do |record|
           html = Rails.cache.fetch [:aa_index, record] do
-            Arbre::Context.new({}, @base.arbre_context.helpers) do
+            Arbre::Context.new(@base.arbre_context.assigns, @base.arbre_context.helpers) do
               ctx = self
               tr :id => ActionController::Base.helpers.dom_id(record) do
                 BodyBuilder.new(ctx, record).instance_exec &page_presenter.block
