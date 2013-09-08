@@ -14,11 +14,17 @@ set :stages, %w(production staging new callcenter)
 set :default_stage, "staging"
 require 'capistrano/ext/multistage'
 
+if ENV['LOCAL']
+  set :deploy_via, :copy
+  set :repository, '.'
+  set :scm, :none
+end
+
 # set :scm, :git # You can set :scm explicitly or Capistrano will make an intelligent guess based on known version control directory names
 # Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
 
 task :build_symlinks, :roles => :app do
-  run "ln -s #{shared_path}/config/database.yml #{release_path}/config/database.yml"
+  run "rm -f #{release_path}/config/database.yml; ln -s #{shared_path}/config/database.yml #{release_path}/config/database.yml"
   run "ln -s #{shared_path}/api #{release_path}/public/api"
 end
 

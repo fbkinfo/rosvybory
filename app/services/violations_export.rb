@@ -5,7 +5,7 @@ class ViolationsExport < ActionView::Base
 
   def self.perform(*args)
     renderer ||= Renderer.new.renderer
-    violations = CallCenter::Violation.all
+    violations = CallCenter::Report.where(approved: true).map(&:violation).compact
     dir = File.join(Rails.root, 'public/api')
     path = dir + "/violations.json"
     FileUtils.mkdir_p dir

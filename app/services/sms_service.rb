@@ -48,6 +48,17 @@ class SmsService
     ERRORS[result] || result
   end
 
+  def self.send_message_with_worklog(number, text, worklog_text = nil)
+    options = {phones: [number], message: (worklog_text ? "%% #{worklog_text} %%" : text)}
+    worklog = WorkLog.create  :user_id => nil,
+                              :name => 'Sending single SMS',
+                              :params => options.to_json
+    #Resque.enqueue(SmsMassSender, options.merge(work_log_id: worklog.id))
+    result = provider.send to: number, from: AppConfig['smsru_from'], text: text
+    worklog.try(:complete!, results.to_json)
+    ERRORS[result] || result
+  end
+
   def self.provider
     return SmsDevProvider.new if Rails.env.development?
     return SmsTestProvider.new if Rails.env.test?
