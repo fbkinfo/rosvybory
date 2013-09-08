@@ -19,6 +19,9 @@ ActiveAdmin.register CallCenter::Report do
   scope 'Проверить' do |items|
     items.where(approved: nil)
   end
+  scope 'Проверить (только нарушения)' do |items|
+    items.where(approved: nil).where("violation_id IS NOT ?", nil)
+  end
   scope I18n.t("activerecord.attributes.call_center/report.needs_mobile_group") do |items|
     items.where needs_mobile_group: true
   end
