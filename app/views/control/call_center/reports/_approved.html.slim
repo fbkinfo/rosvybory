@@ -1,6 +1,6 @@
 - status_class = report.approved == true ? "approved" : report.approved == false ? "rejected" : "needs-review"
 
--if report.reviewer.present?
+-if report.reviewer.present? && report.reviewer.has_role?(:callcenter_external)
    |(Внешний оператор)
 
 .div class="#{status_class}"
