@@ -15,7 +15,7 @@ html
       footer
         p.operator
           span.label Оператор:
-          span.value = current_user.full_name
+          span.value = current_user ? current_user.full_name : "Не зарегистрирован в системе"
           span.sign-out = link_to "(Выход)", destroy_user_session_path, method: :delete
         nav
           ul
