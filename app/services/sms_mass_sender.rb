@@ -10,7 +10,7 @@ class SmsMassSender
       worklog = WorkLog.create  :user_id => current_user.id,
                                 :name => 'Sending SMS',
                                 :params => options.to_json
-      Resque.enqueue(SmsMassSender, options)
+      Resque.enqueue(SmsMassSender, options.merge(work_log_id: worklog.id))
     end
   end
 
