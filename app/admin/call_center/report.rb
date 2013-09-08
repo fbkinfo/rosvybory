@@ -51,7 +51,7 @@ ActiveAdmin.register CallCenter::Report do
 
   controller do
     def permitted_params
-      params.require(:call_center_report).permit :approved, violation_attributes: [:violation_type_id]
+      params.require(:call_center_report).permit :approved, :text, violation_attributes: [:violation_type_id]
     end
 
     def update
@@ -60,6 +60,7 @@ ActiveAdmin.register CallCenter::Report do
       @report.update permitted_params
       respond_to do |format|
         format.json {render json: @report, location: @report, include: {violation: {include: :violation_type}}}
+        format.html { redirect_to control_call_center_reports_path}
       end
     end
   end
