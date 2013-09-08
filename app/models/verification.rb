@@ -17,7 +17,7 @@ class Verification < ActiveRecord::Base
   end
 
   def send_sms
-    SmsService.send_message(phone_number, "Код подтверждения: #{code}")
+    SmsService.send_message_with_worklog(phone_number, "Код подтверждения: #{code}", "Код подтверждения")
   end
 
   def confirm!(code)
