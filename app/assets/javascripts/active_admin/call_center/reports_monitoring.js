@@ -21,13 +21,18 @@ $(function() {
 
         $.get(path, function(html) {
           var $html = $(html),
-              $tr = $html.find('#call_center_report_'+ report.id);
+              $tr = $html.find('#call_center_report_'+ report.id),
+              perpage = $('.per-page-selector').val();
           if ($tr.length > 0) {
             $tr.insertBefore($table.find('tbody tr:first'))
             $tr.hide();
             $tr.show('fast');
             $table.find('tbody tr').each(function(i) {
-              $(this).removeClass('even odd').addClass(i % 2 ? 'even' : 'odd');
+              if (i > perpage) {
+                $(this).remove();
+              } else {
+                $(this).removeClass('even odd').addClass(i % 2 ? 'even' : 'odd');
+              }
             })
           }
         });
