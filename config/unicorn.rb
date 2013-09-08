@@ -4,7 +4,7 @@ if env == "production"
   RAILS_ROOT = "/home/dev/production/rosvybory/current"
   user 'dev', 'staff'
 else
-  RAILS_ROOT = "/home/ubuntu/staging/rosvybory/current"
+  RAILS_ROOT = "/home/ubuntu/#{env}/rosvybory/current"
   user 'ubuntu', 'ubuntu'
 end
 
