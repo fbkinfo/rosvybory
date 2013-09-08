@@ -54,9 +54,10 @@ class SmsService
                               :name => 'Sending single SMS',
                               :params => options.to_json
     #Resque.enqueue(SmsMassSender, options.merge(work_log_id: worklog.id))
-    result = provider.send to: number, from: AppConfig['smsru_from'], text: text
+    results = {}
+    results[number] = provider.send to: number, from: AppConfig['smsru_from'], text: text
     worklog.try(:complete!, results.to_json)
-    ERRORS[result] || result
+    ERRORS[results[number]] || results[number]
   end
 
   def self.provider

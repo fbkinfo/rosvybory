@@ -8,7 +8,7 @@ class LiveReportsNotifier
   end
 
   def broadcast(report)
-    hash = report.as_json
+    hash = report.as_json(:only => [:id])
     @redis.publish "reports", hash.to_json
   end
 end

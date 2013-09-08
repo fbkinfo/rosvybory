@@ -1,11 +1,16 @@
 $(function() {
   var source, undefined;
-  $('.enable-live-reports-link').click(function() {
+  $('.enable-live-reports-link, .off-live-reports-link').click(function() {
     var $cfg = $(this).data();
     if (source) {
+      $('.live-reports-status').hide();
+      $('.enable-live-reports-link').show();
       source.close();
       source = undefined;
     } else {
+      $('.live-reports-status').show();
+      $('.enable-live-reports-link').hide();
+
       source = new EventSource('/events?'+ $('#new_q').serialize());
       // source.addEventListener('error', function () { alert("Ошибка связи. Свяжитесь с тех. поддержкой.") });
 
@@ -16,13 +21,18 @@ $(function() {
 
         $.get(path, function(html) {
           var $html = $(html),
-              $tr = $html.find('#call_center_report_'+ report.id);
+              $tr = $html.find('#call_center_report_'+ report.id),
+              perpage = $('.per-page-selector').val();
           if ($tr.length > 0) {
             $tr.insertBefore($table.find('tbody tr:first'))
             $tr.hide();
             $tr.show('fast');
             $table.find('tbody tr').each(function(i) {
-              $(this).removeClass('even odd').addClass(i % 2 ? 'even' : 'odd');
+              if (i > perpage) {
+                $(this).remove();
+              } else {
+                $(this).removeClass('even odd').addClass(i % 2 ? 'even' : 'odd');
+              }
             })
           }
         });
