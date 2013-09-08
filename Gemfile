@@ -14,7 +14,10 @@ gem 'x-editable-rails'
 gem 'select2-rails'
 gem 'handlebars_assets'
 
-gem 'rvm'
+group :production do
+  gem 'dalli'
+  gem 'rvm'
+end
 
 # Use postgresql as the database for Active Record
 gem 'pg'
