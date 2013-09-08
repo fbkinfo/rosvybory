@@ -6,17 +6,19 @@
     = f.fields_for :reporter do |ff|
       = ff.input :phone, input_html: { data: { source: by_phone_call_center_dislocations_path } }
       = ff.input :user_id, as: :hidden, input_html: { class: 'select2 ajax', data: { source: call_center_dislocations_path, "init-source" => call_center_dislocation_path(@report.reporter.try(:dislocation)), 'uic_by_user' => by_user_call_center_uics_path }, value: @report.reporter.try(:dislocation).try(:id) }
-      .input
-        label Кампания
-        = text_field_tag :campaign, "Выборы мэра Москвы"
       - data_hash = { source: call_center_uics_path, "init-source" => call_center_uic_path(@uic), "single-source" => call_center_uic_path(":id") }
       = ff.input :uic_id, as: :hidden, input_html: { class: 'select2 ajax', data: data_hash }, value: @uic.try(:id)
       = ff.input :current_role
     = hidden_field_tag :phone_call_id, @report.phone_call.id
 
+  #call-from-region
+    = link_to "Звонок из региона", "https://docs.google.com/spreadsheet/viewform?formkey=dHpBUE0wYW4wMmFMU0hLV1o4Y1lEZVE6MA", target: "_blank"
+    p.notice Если  звонят из другого региона, на данной странице сообщение заполнять не надо. Нажмите на эту кнопку и заполните форму на открывшейся странице.
+
   #report.panel
     h2 Сообщение
     = f.text_area :text
+    = f.input :needs_mobile_group
     = f.fields_for :violation do |ff|
       = ff.input :violation_type, label: t("activerecord.attributes.call_center/report.violation_type"),
         collection: option_groups_from_collection_for_select(CallCenter::ViolationCategory.all, :violation_types, :name, :id, :name)

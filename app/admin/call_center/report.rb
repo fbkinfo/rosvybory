@@ -2,6 +2,7 @@ ActiveAdmin.register CallCenter::Report do
   menu parent: I18n.t('active_admin.menu.call_center'), priority: 1, if: proc{ can? :read,  CallCenter::Report }
 
   actions :index, :show, :edit, :update
+  config.batch_actions = false
 
   scope 'Сообщения' do |items|
     items.where(violation_id: nil)
@@ -18,6 +19,13 @@ ActiveAdmin.register CallCenter::Report do
   scope 'Проверить' do |items|
     items.where(approved: nil)
   end
+  scope I18n.t("activerecord.attributes.call_center/report.needs_mobile_group") do |items|
+    items.where needs_mobile_group: true
+  end
+
+  action_item :only => [:index] do
+    link_to('Зафиксировать обращение', new_call_center_report_path)
+  end
 
   index :as => ActiveAdmin::Views::IndexAsCachedTable do
     column :approved, sortable: "approved" do |report|
@@ -29,20 +37,13 @@ ActiveAdmin.register CallCenter::Report do
     column :uic do |report|
       link_to report.reporter.uic.name, control_uic_path(report.reporter.uic) if report.reporter.uic.present?
     end
-    column :text
+    column :text do |report|
+      html  = content_tag :div, report.text
+      html += content_tag :p, I18n.t("activerecord.attributes.call_center/report.needs_mobile_group"), class: "needs-mobile-group" if report.needs_mobile_group
+      raw html
+    end
     column :reporter do |report|
-      reporter = report.reporter
-      if reporter.dislocation.present?
-        link_to reporter.dislocation.full_name, control_dislocation_path(reporter.dislocation)
-      else
-        [reporter.last_name, reporter.first_name, reporter.patronymic].join " "
-      end
-    end
-    column :phone do |report|
-      report.reporter.phone
-    end
-    column :current_role do |report|
-      report.reporter.current_role.try(:name)
+      render "control/call_center/reports/reporter", {report: report}
     end
     column :created_at, :sortable => true
     default_actions
@@ -62,7 +63,7 @@ ActiveAdmin.register CallCenter::Report do
 
   controller do
     def permitted_params
-      params.require(:call_center_report).permit :approved, violation_attributes: [:violation_type_id]
+      params.require(:call_center_report).permit :approved, :text, violation_attributes: [:violation_type_id]
     end
 
     def update
@@ -71,6 +72,7 @@ ActiveAdmin.register CallCenter::Report do
       @report.update permitted_params
       respond_to do |format|
         format.json {render json: @report, location: @report, include: {violation: {include: :violation_type}}}
+        format.html { redirect_to control_call_center_reports_path}
       end
     end
   end

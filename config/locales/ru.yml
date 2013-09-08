@@ -281,6 +281,7 @@ ru:
       long: ! '%d %B %Y, %H:%M'
       short: ! '%d %b, %H:%M'
       time_only: '%H:%M'
+      time_first: ! '%H:%M %d.%m.%Y'
     pm: вечера
   # remove these aliases after 'activemodel' and 'activerecord' namespaces are removed from Rails repository
   activemodel:
@@ -520,6 +521,7 @@ ru:
         updated_at: Обновлено
         reporter: Позвонивший
         current_role: Роль
+        needs_mobile_group: Требуется вызов мобильной группы
         violation: Нарушение
         violation_type: Тип нарушения
       call_center/phone_call:
@@ -527,6 +529,8 @@ ru:
         uic: Участок
         reporter: Позвонивший
         text: Сообщение
+        all_params_loginid: Номер аппарата
+        operator: Оператор
       call_center/violation_type:
         name: Название
         reports_count: Сообщений
@@ -538,6 +542,11 @@ ru:
       call_center/redirection_phone:
         name:  Название
         number: Номер телефона
+    values:
+      call_center/phone_call:
+        status:
+          started: Начат
+          completed: Отработан
   dislocation:
     errors:
       one: "%{count} ошибка"

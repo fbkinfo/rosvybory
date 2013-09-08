@@ -1,12 +1,12 @@
 json.updated_at violations.last.try(:created_at) || DateTime.now
 json.violations violations do |violation|
   uic = violation.report.reporter.uic rescue nil
-  json.id = violation.id
+  json.id violation.id
   json.violation_type_id violation.violation_type.try(:id)
   json.uic uic.try(:name)
   json.uic_id uic.try(:id)
   json.text violation.report.try(:text)
-  json.created_at violation.created_at
+  json.created_at violation.report.created_at
 end
 
 json.violation_types CallCenter::ViolationType.select(:id, :name, :violation_category_id), :id, :name, :violation_category_id

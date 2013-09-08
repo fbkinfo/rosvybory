@@ -2,6 +2,21 @@
 //= require select2
 //= require handlebars
 
+class Call
+  unhold: ->
+    if window.external.WACMD
+      window.external.WACMD('UNHOLD')
+      true
+    else
+      false
+
+  transfer: (number) ->
+    if window.external.WACMD
+      window.external.WACMD('TRANSFER', number)
+      true
+    else
+      false
+
 jQuery ->
   setCustomField = (inputName, val)->
     form = $("#new_call_center_report")
@@ -115,7 +130,11 @@ jQuery ->
         select.trigger('change')
 
   $('input[type="submit"]').click ->
-    window.external.WACMD("UNHOLD")
+    call = new Call
+    call.unhold()
+    true
 
   $('#redirect').on "click", "button.redirect", ->
-    window.external.WACMD("TRANSFER", $(this).data('phone'))
+    call = new Call
+    call.transfer($(this).data('phone'))
+    false
