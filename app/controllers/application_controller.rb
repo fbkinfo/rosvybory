@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   end
 
   def is_call_center?
-    request.remote_ip == '81.91.180.99'
+    request.remote_ip == '81.91.180.99' || request.remote_ip == '195.16.32.34'
   end
 
 end
