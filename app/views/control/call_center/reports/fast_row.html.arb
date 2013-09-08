@@ -1,0 +1,4 @@
+
+presenter = active_admin_config.page_presenters[:index][:cached_table]
+
+insert_tag ActiveAdmin::Views::IndexAsCachedTable, presenter, collection, {:skip_header => true}
