@@ -71,11 +71,7 @@ class UserAppsController < ApplicationController
 
   def send_group_sms
     phones = params[:group_sms][:phones].reject(&:blank?).uniq
-    options = {phones: phones, message: params[:group_sms][:message]}
-    worklog = WorkLog.create  :user_id => current_user.id,
-                              :name => 'Sending SMS',
-                              :params => options.to_json
-    Resque.enqueue(SmsMassSender, options.merge(work_log_id: worklog.id))
+    SmsMassSender.spam(current_user, phones, params[:group_sms][:message])
     redirect_to '/control/users', notice: t('.messages_sent')
   end
   # PATCH/PUT /user_apps/1
