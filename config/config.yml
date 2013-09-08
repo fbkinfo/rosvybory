@@ -6,7 +6,7 @@ production:
   smsru_api_id: be793542-49bc-0864-adc7-1dd4c1196bc1
   smsru_from: NABLUDATELI
 
-  mobile_group_spreadsheet:
+  push_violation_to_mobile_group_spreadsheet:
     # Application will connect to shared spreadsheet, using these credentials. Spreadsheet should be shared with this email
     email: rosvyborymg@gmail.com
     password: motel51posy
@@ -17,9 +17,20 @@ production:
     # Index of sheet in shared spreadsheet file, where new notifications will be pushed. 0 is the first sheet of file.
     sheet_index: 0
 
-
 development:
-  mobile_group_spreadsheet:
+  push_violation_to_mobile_group_spreadsheet:
+    # Application will connect to shared spreadsheet, using these credentials. Spreadsheet should be shared with this email
+    email: rosvyborymg@gmail.com
+    password: motel51posy
+
+    # Key param from link to shared Google Docs spreadsheet, like https://docs.google.com/spreadsheet/ccc?key=0ApLWAwS4H7GcdHpXOUo5bW9yYVExbGkzT1I4QjBSOEE#gid=0
+    spreadsheet_key: 0ApLWAwS4H7GcdHpXOUo5bW9yYVExbGkzT1I4QjBSOEE
+
+    # Index of sheet in shared spreadsheet file, where new notifications will be pushed. 0 is the first sheet of file.
+    sheet_index: 0
+
+staging:
+  push_violation_to_mobile_group_spreadsheet:
     # Application will connect to shared spreadsheet, using these credentials. Spreadsheet should be shared with this email
     email: rosvyborymg@gmail.com
     password: motel51posy

@@ -1,9 +1,9 @@
-class MobileGroupSpreadsheet
-  @queue = :mobile_group_spreadsheet
+class PushViolationToMobileGroupSpreadsheet
+  @queue = :push_violation_to_mobile_group_spreadsheet
 
   class << self
     def perform(*args)
-      logger = Logger.new 'log/resque.log'
+      logger = Logger.new 'log/resque_push_violation_to_mobile_group_spreadsheet.log'
       
       begin
         connect_to_spreadsheet
@@ -26,7 +26,7 @@ class MobileGroupSpreadsheet
     end
 
     def connect_to_spreadsheet
-      config = AppConfig["mobile_group_spreadsheet"]
+      config = AppConfig["push_violation_to_mobile_group_spreadsheet"]
 
       session = GoogleDrive.login config["email"], config["password"]
       sheets = session.spreadsheet_by_key config["spreadsheet_key"]
