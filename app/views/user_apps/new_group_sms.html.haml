@@ -1,14 +1,19 @@
+- phones = @users.pluck(:phone)
+- count = phones.count
+- display_limit = 200
 .row
   .span3
     %legend
-      Письмо будет направлено следующим получателям
-    - @users.pluck(:phone).each do |phone|
+      СМС будет направлено #{count} получателям
+      -if count > display_limit
+        (отображаются первые #{display_limit} из них)
+    - phones[0..display_limit-1].each do |phone|
       = phone
   .span9
     %legend
-      Содержимое письма
+      Содержимое смс
     = form_for :group_sms, url: :send_group_sms,  html: {class: 'form-horizontal'} do |f|
-      - @users.pluck(:phone).each do |phone|
+      - phones.each do |phone|
         = f.hidden_field :phones, :multiple => true, :value => phone
       .control-group
         = f.label 'Сообщение', class: 'control-label'
