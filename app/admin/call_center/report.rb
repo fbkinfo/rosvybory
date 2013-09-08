@@ -49,7 +49,11 @@ ActiveAdmin.register CallCenter::Report do
   end
 
   sidebar :live, :only => :index do
-    link_to "Включить автоматическое обновление сообщений", '#', :class => 'enable-live-reports-link', :data => {reload_url: fast_row_control_call_center_reports_path, :reload_params => {q: params[:q]}}
+    text_node link_to("Включить автоматическое обновление сообщений", '#', :class => 'enable-live-reports-link', :data => {reload_url: fast_row_control_call_center_reports_path, :reload_params => {q: params[:q]}})
+    div(:class => 'live-reports-status', :style => 'display: none') do
+      text_node "Сообщения обновляются автоматически."
+      text_node link_to("Выключить", '#', :class => 'off-live-reports-link')
+    end
   end
 
   collection_action :fast_row do

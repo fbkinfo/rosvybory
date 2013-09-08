@@ -1,11 +1,16 @@
 $(function() {
   var source, undefined;
-  $('.enable-live-reports-link').click(function() {
+  $('.enable-live-reports-link, .off-live-reports-link').click(function() {
     var $cfg = $(this).data();
     if (source) {
+      $('.live-reports-status').hide();
+      $('.enable-live-reports-link').show();
       source.close();
       source = undefined;
     } else {
+      $('.live-reports-status').show();
+      $('.enable-live-reports-link').hide();
+
       source = new EventSource('/events?'+ $('#new_q').serialize());
       // source.addEventListener('error', function () { alert("Ошибка связи. Свяжитесь с тех. поддержкой.") });
 
