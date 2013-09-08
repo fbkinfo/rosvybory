@@ -52,6 +52,10 @@ ActiveAdmin.register CallCenter::Report do
     link_to "Включить автоматическое обновление сообщений", '#', :class => 'enable-live-reports-link', :data => {reload_url: request.path, :reload_params => {q: params[:q]}}
   end
 
+  collection_action :fast_row do
+    # TODO render single row from ActiveAdmin::Views::IndexAsCachedTable and load it in reports_monitoring.js
+  end
+
   controller do
     def permitted_params
       params.require(:call_center_report).permit :approved, violation_attributes: [:violation_type_id]
