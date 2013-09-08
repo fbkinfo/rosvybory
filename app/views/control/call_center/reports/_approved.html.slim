@@ -1,5 +1,8 @@
 - status_class = report.approved == true ? "approved" : report.approved == false ? "rejected" : "needs-review"
 
+-if report.reviewer.present?
+   |(Внешний оператор)
+
 .div class="#{status_class}"
   - if can? :update, report
     select name="approved" data-path=control_call_center_report_path(report)
