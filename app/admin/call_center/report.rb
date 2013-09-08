@@ -27,7 +27,10 @@ ActiveAdmin.register CallCenter::Report do
     link_to('Зафиксировать обращение', new_call_center_report_path)
   end
 
-  index do
+  filter :reporter_uic_id, collection: proc {Uic.all}, as: :select
+  filter :violation_violation_type_id, collection: proc {CallCenter::ViolationType.all}, as: :select
+
+  index :as => ActiveAdmin::Views::IndexAsCachedTable do
     column :approved, sortable: "approved" do |report|
       render "control/call_center/reports/approved", {report: report}
     end
@@ -45,12 +48,20 @@ ActiveAdmin.register CallCenter::Report do
     column :reporter do |report|
       render "control/call_center/reports/reporter", {report: report}
     end
-    column :created_at
+    column :created_at, :sortable => true
     default_actions
   end
 
-  sidebar :live, :only => :index do
-    link_to "Включить автоматическое обновление сообщений", '#', :class => 'enable-live-reports-link', :data => {reload_url: request.path, :reload_params => {q: params[:q]}}
+  sidebar 'Прямой эфир', :only => :index do
+    text_node link_to("Включить автоматическое обновление сообщений", '#', :class => 'enable-live-reports-link', :data => {reload_url: fast_row_control_call_center_reports_path, :reload_params => {q: params[:q]}})
+    div(:class => 'live-reports-status', :style => 'display: none') do
+      text_node "Сообщения обновляются автоматически."
+      text_node link_to("Выключить", '#', :class => 'off-live-reports-link')
+    end
+  end
+
+  collection_action :fast_row do
+    render :template => 'control/call_center/reports/fast_row', :layout => false
   end
 
   controller do
