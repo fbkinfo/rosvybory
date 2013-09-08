@@ -6,7 +6,7 @@ json.violations violations do |violation|
   json.uic uic.try(:name)
   json.uic_id uic.try(:id)
   json.text violation.report.try(:text)
-  json.created_at violation.created_at
+  json.created_at violation.report.created_at
 end
 
 json.violation_types CallCenter::ViolationType.select(:id, :name, :violation_category_id), :id, :name, :violation_category_id
