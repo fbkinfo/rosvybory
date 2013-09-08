@@ -524,6 +524,8 @@ ru:
         needs_mobile_group: Требуется вызов мобильной группы
         violation: Нарушение
         violation_type: Тип нарушения
+        reporter_uic_id: Участок
+        violation_violation_type_id: Тип нарушения
       call_center/phone_call:
         status: Статус
         uic: Участок
