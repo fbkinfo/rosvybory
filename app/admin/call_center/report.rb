@@ -48,7 +48,7 @@ ActiveAdmin.register CallCenter::Report do
     default_actions
   end
 
-  sidebar :live, :only => :index do
+  sidebar 'Прямой эфир', :only => :index do
     text_node link_to("Включить автоматическое обновление сообщений", '#', :class => 'enable-live-reports-link', :data => {reload_url: fast_row_control_call_center_reports_path, :reload_params => {q: params[:q]}})
     div(:class => 'live-reports-status', :style => 'display: none') do
       text_node "Сообщения обновляются автоматически."
