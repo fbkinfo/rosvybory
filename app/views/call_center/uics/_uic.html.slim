@@ -31,4 +31,4 @@
                 span.value = full_name_of report.reporter
               p.operator
                 span.label Оператор:
-                span.value = full_name_of report.phone_call.operator
+                span.value = full_name_of(report.phone_call.operator) if report.phone_call.operator
