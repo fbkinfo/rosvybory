@@ -12,11 +12,16 @@ ActiveAdmin.register CallCenter::PhoneCall do
 
   index do
     column :id
-    column :status
+    column :status do |phone_call|
+      I18n.t "activerecord.values.call_center/phone_call.status.#{phone_call.status}"
+    end
     column :uic do |phone_call|
       if phone_call.report.present?
         link_to phone_call.report.reporter.uic.name, control_uic_path(phone_call.report.reporter.uic) if phone_call.report.reporter.uic.present?
       end
+    end
+    column :all_params_loginid do |phone_call|
+      phone_call.all_params["loginid"]
     end
     column :reporter do |phone_call|
       if phone_call.report.present?

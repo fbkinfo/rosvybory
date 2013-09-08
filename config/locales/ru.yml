@@ -529,6 +529,8 @@ ru:
         uic: Участок
         reporter: Позвонивший
         text: Сообщение
+        all_params_loginid: Номер аппарата
+        operator: Оператор
       call_center/violation_type:
         name: Название
         reports_count: Сообщений
@@ -540,6 +542,11 @@ ru:
       call_center/redirection_phone:
         name:  Название
         number: Номер телефона
+    values:
+      call_center/phone_call:
+        status:
+          started: Начат
+          completed: Отработан
   dislocation:
     errors:
       one: "%{count} ошибка"
