@@ -3,7 +3,7 @@ class SmsMassSender
   QUEUE_MAX_COUNT = 200
   def self.spam(current_user, phones, message)
 
-    phones.in_groups_of(QUEUE_MAX_COUNT).each_with_index do |pg, index|
+    phones.in_groups_of(QUEUE_MAX_COUNT, false).each_with_index do |pg, index|
       options = {
         phones: pg,
         message: message,
