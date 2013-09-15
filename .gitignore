@@ -18,6 +18,7 @@
 
 # Ignore config
 config/database.yml
+config/unicorn.rb
 
 # Ignore IDE configs
 .idea
