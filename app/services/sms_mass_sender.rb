@@ -1,6 +1,6 @@
 class SmsMassSender
   @queue = :mailer
-  QUEUE_MAX_COUNT = 500
+  QUEUE_MAX_COUNT = 200
   def self.spam(current_user, phones, message)
 
     phones.in_groups_of(QUEUE_MAX_COUNT).each_with_index do |pg, index|
