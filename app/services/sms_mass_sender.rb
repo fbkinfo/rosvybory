@@ -1,14 +1,16 @@
 class SmsMassSender
   @queue = :mailer
-
+  QUEUE_MAX_COUNT = 500
   def self.spam(current_user, phones, message)
-    phones.in_groups_of(500).each do |pg|
-      params = {
+
+    phones.in_groups_of(QUEUE_MAX_COUNT).each_with_index do |pg, index|
+      options = {
         phones: pg,
-        message: message
+        message: message,
+        group: "#{index*QUEUE_MAX_COUNT+1} - #{(index+1)*QUEUE_MAX_COUNT} of #{phones.size}"
       }
       worklog = WorkLog.create  :user_id => current_user.id,
-                                :name => 'Sending SMS',
+                                :name => "Sending SMS, #{options[:group]}",
                                 :params => options.to_json
       Resque.enqueue(SmsMassSender, options.merge(work_log_id: worklog.id))
     end
