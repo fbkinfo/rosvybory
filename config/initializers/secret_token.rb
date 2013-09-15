@@ -9,4 +9,4 @@
 
 # Make sure your secret_key_base is kept private
 # if you're sharing your code publicly.
-Rosvibory::Application.config.secret_key_base = '340d3971f807b012796d41d7855108b49041c507fb46a1bdbe79045d2bd0cfa1ee581a4ac71f60cc7af0308a5f233d2fa7d692d53adf263b1d211daf0f748ca7'
+Rosvibory::Application.config.secret_key_base = '87ee38a23fd00d17a377cb10d95e5791579db061a4a91254e91d761f600fd1a271304fb11bca35274c52d6744c996512377aa7c558d319a8911fe06538a127e4'
