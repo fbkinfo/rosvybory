@@ -1,0 +1,42 @@
+smsru_api_id: 11111111-1111-1111-1111-111111111111
+smsru_from: "79031111111"
+captcha_enabled: false
+
+production:
+  smsru_api_id: 22222222-2222-2222-2222-222222222222
+  smsru_from: NABLUDATELI
+
+  push_violation_to_mobile_group_spreadsheet:
+    # Application will connect to shared spreadsheet, using these credentials. Spreadsheet should be shared with this email
+    email: rosvyborymg@gmail.com
+    password: pass
+
+    # Key param from link to shared Google Docs spreadsheet, like https://docs.google.com/spreadsheet/ccc?key=0ApLWfwS4H7GcGHpdOUf5bW9yYVEGbGkzT1I4GjBSOEG#gid=0
+    spreadsheet_key: 0ApLWfwS4H7GcGHpdOUf5bW9yYVEGbGkzT1I4GjBSOEG
+
+    # Index of sheet in shared spreadsheet file, where new notifications will be pushed. 0 is the first sheet of file.
+    sheet_index: 0
+
+development:
+  push_violation_to_mobile_group_spreadsheet:
+    # Application will connect to shared spreadsheet, using these credentials. Spreadsheet should be shared with this email
+    email: rosvyborymg@gmail.com
+    password: pass
+
+    # Key param from link to shared Google Docs spreadsheet, like https://docs.google.com/spreadsheet/ccc?key=0ApLWfwS4H7GcGHpdOUf5bW9yYVEGbGkzT1I4GjBSOEG#gid=0
+    spreadsheet_key: 0ApLWfwS4H7GcGHpdOUf5bW9yYVEGbGkzT1I4GjBSOEG
+
+    # Index of sheet in shared spreadsheet file, where new notifications will be pushed. 0 is the first sheet of file.
+    sheet_index: 0
+
+staging:
+  push_violation_to_mobile_group_spreadsheet:
+    # Application will connect to shared spreadsheet, using these credentials. Spreadsheet should be shared with this email
+    email: rosvyborymg@gmail.com
+    password: pass
+
+    # Key param from link to shared Google Docs spreadsheet, like https://docs.google.com/spreadsheet/ccc?key=0ApLWfwS4H7GcGHpdOUf5bW9yYVEGbGkzT1I4GjBSOEG#gid=0
+    spreadsheet_key: 0ApLWfwS4H7GcGHpdOUf5bW9yYVEGbGkzT1I4GjBSOEG
+
+    # Index of sheet in shared spreadsheet file, where new notifications will be pushed. 0 is the first sheet of file.
+    sheet_index: 0

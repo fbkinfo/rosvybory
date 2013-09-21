@@ -10,7 +10,7 @@ set :deploy_via, :remote_cache
 default_run_options[:pty] = true
 set :rvm_ruby_string, "2.0.0-p247@rosvybory"#:local
 
-set :stages, %w(production staging new callcenter)
+set :stages, %w(production staging callcenter)
 set :default_stage, "staging"
 require 'capistrano/ext/multistage'
 
@@ -26,6 +26,7 @@ end
 task :build_symlinks, :roles => :app do
   run "rm -f #{release_path}/config/database.yml; ln -s #{shared_path}/config/database.yml #{release_path}/config/database.yml"
   run "rm -f #{release_path}/config/unicorn.rb; ln -s #{shared_path}/config/unicorn.rb #{release_path}/config/unicorn.rb"
+  run "rm -f #{release_path}/config/config.yml; ln -s #{shared_path}/config/config.yml #{release_path}/config/config.yml"
   run "ln -s #{shared_path}/api #{release_path}/public/api"
 end
 
