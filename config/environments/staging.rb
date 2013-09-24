@@ -83,11 +83,10 @@ Rosvibory::Application.configure do
   }
 
   config.action_mailer.smtp_settings = {
-    :address   => "smtp.mandrillapp.com",
-    :port      => 587,
-    :user_name => 'it@fbk.info',
-    :password  => '-87LScaONMS4v4daA7eVYA'
+    :address   => AppConfig['smtp']['address'],
+    :port      => AppConfig['smtp']['port'],
+    :user_name => AppConfig['smtp']['user'],
+    :password  => AppConfig['smtp']['password']
   }
-
 end
 
