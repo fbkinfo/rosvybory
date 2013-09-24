@@ -27,6 +27,7 @@ task :build_symlinks, :roles => :app do
   run "rm -f #{release_path}/config/database.yml; ln -s #{shared_path}/config/database.yml #{release_path}/config/database.yml"
   run "rm -f #{release_path}/config/unicorn.rb; ln -s #{shared_path}/config/unicorn.rb #{release_path}/config/unicorn.rb"
   run "rm -f #{release_path}/config/config.yml; ln -s #{shared_path}/config/config.yml #{release_path}/config/config.yml"
+  run "rm -f #{release_path}/config/newrelic.yml; ln -s #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml"
   run "ln -s #{shared_path}/api #{release_path}/public/api"
 end
 

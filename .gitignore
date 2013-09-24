@@ -19,6 +19,7 @@
 # Ignore config
 config/database.yml
 config/config.yml
+config/newrelic.yml
 config/unicorn.rb
 
 # Ignore IDE configs
