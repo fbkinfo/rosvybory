@@ -6,6 +6,8 @@ captcha_private_key: 6Lc7OOYSAAAAABXxGkHG-AyiAjdzaodQijxcUTqa
 
 secret_key_base: 87ee38a23fd00d17a377cb10d95e5791579db061a4a91254e91d761f600fd1a271304fb11bca35274c52d6744c996512377aa7c558d319a8911fe06538a127e4
 
+hb_private_key: 123456ab
+
 push_violation_to_mobile_group_spreadsheet:
   # Application will connect to shared spreadsheet, using these credentials. Spreadsheet should be shared with this email
   email: rosvyborymg@gmail.com

@@ -1,3 +1,3 @@
 Honeybadger.configure do |config|
-  config.api_key = 'b2a872f5'
+  config.api_key = AppConfig['hb_private_key']
 end
