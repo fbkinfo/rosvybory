@@ -38,13 +38,6 @@ ActiveAdmin.register User do
   end
   batch_action :destroy, false
 
-  #batch_action :fix_phone, :if => proc{ can? :manage, :all } do |selection|
-  #  User.find(selection).each do |user|
-  #    user.fix_broken_phone!
-  #  end
-  #  redirect_to :back
-  #end
-
   show do |user|
     h3 'Внимание! Телефон пользователя занесён в чёрный список!' if user.blacklisted
     if can? :crud, user #вид для админа

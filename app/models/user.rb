@@ -64,21 +64,6 @@ class User < ActiveRecord::Base
     { id: id, text: full_name, phone: phone }
   end
 
-  def fix_broken_phone!
-
-    return if phone[-1] != '0'
-    if phone[0] != '9'
-      self.phone = '9'+phone[0..-2]
-    elsif phone[0..1] == '99' ||  phone[0..1] == '95'
-      self.phone = '4'+phone[0..-2]
-    end
-    save
-    if save && user_app
-      user_app.phone=phone
-      user_app.save
-    end
-  end
-
   class << self
     def new_from_app(app)
       new.update_from_user_app(app)
