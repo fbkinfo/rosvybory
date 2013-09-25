@@ -11,7 +11,7 @@ describe Verification do
   end
 
   it 'should trigger sms service' do
-    SmsService.should_receive(:send_message)
+    SmsService.should_receive(:send_message_with_worklog)
     verification = Verification.create phone_number: '1234567890'
   end
 
