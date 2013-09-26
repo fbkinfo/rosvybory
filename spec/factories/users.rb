@@ -7,5 +7,17 @@ FactoryGirl.define do
     email {generate :email}
     password 'password'
     phone { generate :phone}
+
+    factory :user_with_role do
+      ignore do
+        role_slug 'other'
+      end
+      after(:create) do |user, evaluator|
+        user.add_role evaluator.role_slug
+        user.save!
+      end
+    end
+
+
   end
 end

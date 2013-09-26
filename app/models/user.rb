@@ -38,6 +38,8 @@ class User < ActiveRecord::Base
   after_create :mark_user_app_state
   after_create :send_sms_with_password, :if => :may_login?
 
+  before_save :reset_role_cache
+
   accepts_nested_attributes_for :user_current_roles, allow_destroy: true
 
   delegate :created_at, to: :user_app, allow_nil: true, prefix: true
@@ -80,9 +82,15 @@ class User < ActiveRecord::Base
     end
   end
 
+  def has_any_of_roles?(role_names)
+    role_names.each { |role_name| return true if has_role?(role_name) }
+    false
+  end
+
   def has_role?(role_name)
     @has_role_cache ||= {}
-    @has_role_cache[role_name] ||= roles.exists?(slug: role_name)
+    @has_role_cache[role_name] = roles.exists?(slug: role_name) unless @has_role_cache.include?(role_name)
+    @has_role_cache[role_name]
   end
 
   def add_role(role_name)
@@ -197,6 +205,10 @@ class User < ActiveRecord::Base
       if bad_roles.present?
         errors.add(:role_ids, "Вам нельзя изменять роль #{bad_roles.map(&:role_name).to_sentence} у пользователей")
       end
+    end
+
+    def reset_role_cache
+      @has_role_cache = {}
     end
 
     def mark_user_app_state
