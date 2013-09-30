@@ -46,7 +46,7 @@ gem 'enumerize'
 gem 'state_machine'
 gem 'jbuilder'
 
-gem 'activeadmin',         github: 'gregbell/active_admin', branch: 'rails4'
+gem 'activeadmin',         github: 'gregbell/active_admin'
 # gem 'activeadmin-axlsx'   # breaks app for no good reason
 gem 'rubyzip', '~> 0.9.5'
 gem 'axlsx'
