@@ -270,6 +270,6 @@ AS
 	FUNCTION        4       gin_consistent_hstore(internal, int2, internal, int4, internal, internal),
 STORAGE         text;
     HSTORE_SQL
-  execute sql
+  ActiveRecord::Base.connection.execute sql
 
 end
