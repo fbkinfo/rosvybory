@@ -22,7 +22,7 @@ class CurrentRole < ActiveRecord::Base
   has_many :user_app_current_roles, dependent: :destroy
   has_many :user_apps, through: :user_app_current_roles
 
-  validates :slug, presence: true, inclusion: {in: KNOWN_VARIANTS}
+  validates :slug, presence: true, uniqueness: true, inclusion: {in: KNOWN_VARIANTS}
 
   default_scope -> { order(CurrentRole.arel_table[:position].asc) }
 
