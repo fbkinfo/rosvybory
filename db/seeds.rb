@@ -191,17 +191,17 @@ roles.each do |slug, name, short_name|
 end
 
 current_roles = [
-    ['observer', 'Наблюдатель', 0],
-    ['reserve', 'резерв составов УИК', 1],
-    ['psg', 'Член УИК с правом совещательного голоса', 2],
-    ['prg', 'Член УИК с правом решающего голоса', 3],
-    ['psg_tic', 'Член ТИК с правом совещательного голоса', 4],
-    ['prg_tic', 'Член ТИК с правом решающего голоса', 5],
-    ['journalist', 'Представитель СМИ', 6]
+    ['observer', 'Наблюдатель', 0, 'Наблюдатель'],
+    ['reserve', 'резерв составов УИК', 1, 'Резерв УИК'],
+    ['psg', 'Член УИК с правом совещательного голоса', 2, 'УПСГ'],
+    ['prg', 'Член УИК с правом решающего голоса', 3, 'УПРГ'],
+    ['psg_tic', 'Член ТИК с правом совещательного голоса', 4, 'ТПСГ'],
+    ['prg_tic', 'Член ТИК с правом решающего голоса', 5, 'ТПРГ'],
+    ['journalist', 'Представитель СМИ', 6, 'СМИ']
 ]
 
-current_roles.each do |slug, name, position|
-  CurrentRole.create slug: slug, name: name, position: position
+current_roles.each do |slug, name, position, short_name|
+  CurrentRole.create slug: slug, name: name, position: position, short_name: short_name
 end
 
 
