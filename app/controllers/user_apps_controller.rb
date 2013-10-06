@@ -25,8 +25,11 @@ class UserAppsController < ApplicationController
     user_app_current_roles = @user_app.user_app_current_roles.to_a
     @user_app.user_app_current_roles = @user_app.user_app_current_roles.select { |a| a.keep }
 
+    @user_app.skip_email_confirmation = AppConfig['simulate_email_confirmation']
+
     if UserAppCreator.save(@user_app)
       session.delete(:verification_id)
+      @user_app.confirm! if AppConfig['simulate_email_confirmation']
       render action: 'done'
       #redirect_to new_user_app_path, notice: 'User app was successfully created.'
     else

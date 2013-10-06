@@ -71,6 +71,8 @@ class PhoneVerification
 
   on_success: (data)=>
     if data.success
+      if data.simulation
+        alert "Включён режим симуляции, для подтверждения подойдёт любой код"
       $('#verification_start_button').hide()
       $('#verification_controls').css('display', 'inline-block')
       @hide_error()

@@ -8,7 +8,7 @@ class Verification < ActiveRecord::Base
   end
 
   before_validation :normalize_phone_number
-  after_create :send_sms
+  after_create :send_sms, if: Proc.new { !AppConfig["simulate_phone_confirmation"] }
 
   def self.normalize_phone_number(phone_number)
      if phone_number.present?
@@ -21,7 +21,7 @@ class Verification < ActiveRecord::Base
   end
 
   def confirm!(code)
-    if self.code == code
+    if self.code == code || AppConfig["simulate_phone_confirmation"]
       self.update_attribute :confirmed, true
       true
     else

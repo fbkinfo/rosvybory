@@ -7,7 +7,7 @@ class VerificationsController < ApplicationController
       begin
         verification.save!
         session[:verification_id] = verification.id
-        render json: { success: true }
+        render json: { success: true, simulation: AppConfig["simulate_phone_confirmation"] }
       rescue
         render json: { error: $!.to_s }
       end
