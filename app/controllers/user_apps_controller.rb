@@ -1,20 +1,14 @@
 class UserAppsController < ApplicationController
   before_action :set_user_app, only: [:show] #, :edit, :update, :destroy]
 
-  ## GET /user_apps
-  #def index
-  #  @user_apps = UserApp.all
-  #end
-
-  ## GET /user_apps/1
-  #def show
-  #end
-
-  def closed
-
+  def home
+    if AppConfig['registration_closed']
+      render :closed
+    else
+      new and render :new
+    end
   end
 
-  # GET /user_apps/new
   def new
     @user_app = UserApp.new
     gon.recaptcha_key = Recaptcha.configuration.public_key
@@ -23,12 +17,9 @@ class UserAppsController < ApplicationController
     end
   end
 
-  ## GET /user_apps/1/edit
-  #def edit
-  #end
-
   # POST /user_apps
   def create
+    redirect_to root_path and return if AppConfig['registration_closed']
     @user_app = UserApp.new(user_app_params.merge(user_app_extra_params))
 
     user_app_current_roles = @user_app.user_app_current_roles.to_a
@@ -74,20 +65,6 @@ class UserAppsController < ApplicationController
     SmsMassSender.spam(current_user, phones, params[:group_sms][:message])
     redirect_to '/control/users', notice: t('.messages_sent')
   end
-  # PATCH/PUT /user_apps/1
-  #def update
-  #  if @user_app.update(user_app_params)
-  #    redirect_to @user_app, notice: 'User app was successfully updated.'
-  #  else
-  #    render action: 'edit'
-  #  end
-  #end
-
-  # DELETE /user_apps/1
-  #def destroy
-  #  @user_app.destroy
-  #  redirect_to user_apps_url, notice: 'User app was successfully destroyed.'
-  #end
 
   private
 
