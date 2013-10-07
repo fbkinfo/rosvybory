@@ -6,9 +6,9 @@ captcha_enabled: false
 
 # Включить симуляцию подтверждения номера телефона - отключается отсылка смс и подходит любой код.
 # Для локальной разработки удобнее отключить, т.к. в development вместо отсылки смс будет открываться окно Launchy
-simulate_phone_confirmation: true
+simulate_phone_confirmation: false
 # Включить симуляцию подтверждения почты из заявки - отключается отсылка почты и подтверждается любая
-simulate_email_confirmation: true
+simulate_email_confirmation: false
 
 # Если указан, то в заявке этот ip будет сохраняться вместо ip заявителя, полезно для демо-сервера
 #forced_userapps_ip: '0.0.0.0'
