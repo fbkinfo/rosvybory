@@ -78,7 +78,7 @@ class UserAppsController < ApplicationController
 
   def user_app_extra_params
     {
-      :ip             => request.env['HTTP_X_REAL_IP'] || request.ip,
+      :ip             => AppConfig['forced_userapps_ip'] || request.env['HTTP_X_REAL_IP'] || request.ip,
       :useragent      => request.env['HTTP_USER_AGENT'],
       :forwarded_for  => request.env['HTTP_X_FORWARDED_FOR'],
       :verification   => Verification.find_by_id(session[:verification_id]),
