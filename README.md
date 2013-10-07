@@ -30,3 +30,15 @@
 
 
 
+## CONTRIBUTING:
+
+* Fork
+* Create a topic branch - `git checkout -b feature-cool-stuff`
+* Rebase your branch so that all your changes are reflected in one
+  commit
+* Push to your branch - `git push origin my_branch`
+* Create a Pull Request from your branch, include as much documentation
+  as you can in the commit message/pull request, following these
+[guidelines on writing a good commit message](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
+* That's it!
+ 
