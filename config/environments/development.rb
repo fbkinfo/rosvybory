@@ -31,12 +31,6 @@ Rosvibory::Application.configure do
     :host => "localhost:3000"
   }
   
-#   config.action_mailer.smtp_settings = {
-#     :address   => "smtp.mandrillapp.com",
-#     :port      => 587,
-#     :user_name => 'antiqe@gmail.com',
-#     :password  => 'o9y3gGhg5Nd6CWqsnX_ONw'
-#   }
   config.action_mailer.delivery_method = :letter_opener
 
 end
