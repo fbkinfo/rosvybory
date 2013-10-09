@@ -26,5 +26,8 @@ module Rosvibory
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     config.i18n.default_locale = :ru
     config.i18n.locale = :ru
+
+    #Отключить восстановление пароля и показать вместо формы восстановления информацию о том, как можно восстановить пароль
+    config.disable_password_recovery = true
   end
 end

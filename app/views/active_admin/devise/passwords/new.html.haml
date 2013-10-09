@@ -1,0 +1,17 @@
+#login
+  = content_tag :h2, t('active_admin.devise.reset_password.title')
+  - if Rails.application.config.disable_password_recovery
+    В целях безопасности самостоятельное восстановлени пароля отключено.
+    %br/
+    Если вы забыли пароль, свяжитесь с вышестоящим координатором или администратором, они смогут выслать новый пароль, открыв диалог редактирования вашего пользователя (галка возле кнопки "Утвердить").
+    %br/
+    %br/
+    %br/
+    %br/
+  - else
+    = active_admin_form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post }) do |f|
+      =f.inputs do
+        =f.input :phone
+      =f.actions do
+        =f.action :submit, :label => t('active_admin.devise.reset_password.submit'), :button_html => { :value => t('active_admin.devise.reset_password.submit')}
+  = render :partial => "active_admin/devise/shared/links"
