@@ -10,9 +10,20 @@ describe Verification do
     verification.code.should match /\d{6}/
   end
 
-  it 'should trigger sms service' do
-    SmsService.should_receive(:send_message_with_worklog)
-    verification = Verification.create phone_number: '1234567890'
+  context 'with simulate_phone_confirmation option on' do
+    before {AppConfig['simulate_phone_confirmation'] = true}
+    it 'does NOT trigger sms service' do
+      SmsService.should_not_receive(:send_message_with_worklog)
+      verification = Verification.create phone_number: '1234567890'
+    end
+  end
+
+  context 'with simulate_phone_confirmation option off' do
+    before {AppConfig['simulate_phone_confirmation'] = false}
+    it 'triggers sms service' do
+      SmsService.should_receive(:send_message_with_worklog)
+      verification = Verification.create phone_number: '1234567890'
+    end
   end
 
   describe 'проверка' do
@@ -49,9 +60,21 @@ describe Verification do
     end
 
     context 'with invalid code' do
-      specify 'should NOT be successful' do
-        verification = Verification.new code: '999999', phone_number: '1234512345'
-        expect(verification.confirm!('444444')).to be_false
+
+      context 'with simulate_phone_confirmation option on' do
+        before {AppConfig['simulate_phone_confirmation'] = true}
+        it 'is successful' do
+          verification = Verification.new code: '999999', phone_number: '1234512345'
+          expect(verification.confirm!('444444')).to be_true
+        end
+      end
+
+      context 'with simulate_phone_confirmation option off' do
+        before {AppConfig['simulate_phone_confirmation'] = false}
+        it 'is NOT successful' do
+          verification = Verification.new code: '999999', phone_number: '1234512345'
+          expect(verification.confirm!('444444')).to be_false
+        end
       end
     end
   end
