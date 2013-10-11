@@ -59,8 +59,8 @@ GEM
       activesupport (>= 3.0.0)
     arel (4.0.0)
     atomic (1.1.13)
-    awesome_nested_set (2.1.6)
-      activerecord (>= 3.0.0)
+    awesome_nested_set (3.0.0.rc.2)
+      activerecord (~> 4.0.0)
     axlsx (1.3.6)
       htmlentities (~> 4.3.1)
       nokogiri (>= 1.4.1)
@@ -388,7 +388,7 @@ PLATFORMS
 DEPENDENCIES
   activeadmin!
   activerecord-postgres-hstore
-  awesome_nested_set
+  awesome_nested_set (>= 3.0.0rc2)
   axlsx
   cancan
   capistrano
