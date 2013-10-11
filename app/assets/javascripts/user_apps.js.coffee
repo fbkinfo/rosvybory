@@ -23,7 +23,7 @@ jQuery ->
 
   updateUicState = ->
     uic_enabled = $('#user_app_can_be_observer').prop('checked')
-    $('#user_app_uic').prop('disabled', !uic_enabled)
+    $('#user_app_uic').select2("enable", uic_enabled)
 
   updateCurrentRoles = ->
     $(".js-current-role-checked").trigger("change")
