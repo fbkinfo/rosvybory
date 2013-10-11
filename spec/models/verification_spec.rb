@@ -6,7 +6,7 @@ describe Verification do
 
   let(:verification) { Verification.new }
 
-  it 'should generate the code' do
+  it 'generates the code' do
     verification.code.should match /\d{6}/
   end
 
