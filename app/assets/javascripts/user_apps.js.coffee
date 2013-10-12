@@ -87,10 +87,7 @@ jQuery ->
   $(".js-current-role-checked").change (e) ->
     $el = $(this)
     textFieldId = $el.attr("id").replace(/keep$/, "value")
-    if ($el.is(":checked"))
-      $("##{textFieldId}").attr("disabled", false)
-    else
-      $("##{textFieldId}").attr("disabled", true)
+    $("##{textFieldId}").select2("enable", $el.is(":checked"))
 
   updateUicState()
   updateExpCounterState()
