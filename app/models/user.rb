@@ -39,7 +39,7 @@ class User < ActiveRecord::Base
   after_create :send_sms_with_password, :if => :may_login?
 
   before_save :reset_role_cache
-  before_save :reset_wrong_phone, if: lambda{|user| user.changes['phone'].present? }
+  before_save :reset_wrong_phone, if: :phone_changed?
 
   accepts_nested_attributes_for :user_current_roles, allow_destroy: true
 
