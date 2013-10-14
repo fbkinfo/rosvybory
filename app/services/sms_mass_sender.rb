@@ -28,6 +28,6 @@ class SmsMassSender
     log = WorkLog.find_by id: params['work_log_id']
     log.try :complete!, results.to_json
     failed = results.count{|k,v| v == SmsService::ERRORS['207'] || v == '207'}
-    UserMailer.sms_results(log.user.email, failed).deliver if log
+    UserMailer.sms_results(log.user.email, failed).deliver if log && failed > 0
   end
 end
