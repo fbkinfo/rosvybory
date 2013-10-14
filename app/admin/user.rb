@@ -103,7 +103,9 @@ ActiveAdmin.register User do
     column :adm_region, :sortable => :adm_region_id
     column :region, :sortable => :region_id
     column :full_name
-    column :phone
+    column :phone do |user|
+      %Q(<span #{user.wrong_phone ? 'style="color: red;"' : ''}>#{user.phone}</span>).html_safe
+    end
     column :email
     column :uic, :sortable => 'user_apps.uic'
 
@@ -131,6 +133,7 @@ ActiveAdmin.register User do
   filter :user_app_uic_matcher, as: :string, label: '№ УИК'
   filter :full_name
   filter :phone
+  filter :wrong_phone
   filter :email
   filter :user_app_created_at, as: :date_range, label: 'Дата подачи заявки'
   filter :created_at, label: 'Дата создания'

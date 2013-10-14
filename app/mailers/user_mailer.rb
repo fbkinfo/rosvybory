@@ -7,4 +7,8 @@ class UserMailer < ActionMailer::Base
     mail(to: emails, subject: subject, body: body)
   end
 
+  def sms_results email, failed
+    @failed = failed
+    mail(to: email, subject: 'Failed sms messages')
+  end
 end
