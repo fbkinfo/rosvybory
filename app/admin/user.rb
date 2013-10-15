@@ -104,7 +104,7 @@ ActiveAdmin.register User do
     column :region, :sortable => :region_id
     column :full_name
     column :phone do |user|
-      %Q(<span #{user.wrong_phone ? 'style="color: red;"' : ''}>#{user.phone}</span>).html_safe
+      %Q(<span #{user.wrong_phone ? 'style="color: red;" title="Некорректный номер, смс не доходят"' : ''}>#{user.phone}</span>).html_safe
     end
     column :email
     column :uic, :sortable => 'user_apps.uic'
