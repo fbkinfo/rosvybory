@@ -116,5 +116,13 @@ describe User do
 
   end
 
+  it 'resets wrong_phone on phone change' do
+    user = create :user
+    user.update_attribute :wrong_phone, true
+    user.phone = user.phone.succ
+    user.save
+    user.wrong_phone.should == false
+  end
+
 end
 
