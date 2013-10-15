@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130907221736) do
+ActiveRecord::Schema.define(version: 20131014160456) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -263,7 +263,7 @@ ActiveRecord::Schema.define(version: 20130907221736) do
 
   create_table "users", force: true do |t|
     t.string   "email"
-    t.string   "encrypted_password",                 default: "", null: false
+    t.string   "encrypted_password",                 default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -291,6 +291,7 @@ ActiveRecord::Schema.define(version: 20130907221736) do
     t.text     "address"
     t.string   "full_name",              limit: 767
     t.string   "unique_session_id",      limit: 20
+    t.boolean  "wrong_phone",                        default: false, null: false
   end
 
   add_index "users", ["adm_region_id"], name: "index_users_on_adm_region_id", using: :btree

@@ -39,6 +39,7 @@ class User < ActiveRecord::Base
   after_create :send_sms_with_password, :if => :may_login?
 
   before_save :reset_role_cache
+  before_save :reset_wrong_phone, if: :phone_changed?
 
   accepts_nested_attributes_for :user_current_roles, allow_destroy: true
 
@@ -209,6 +210,11 @@ class User < ActiveRecord::Base
 
     def reset_role_cache
       @has_role_cache = {}
+    end
+
+    def reset_wrong_phone
+      self.wrong_phone = false
+      true
     end
 
     def mark_user_app_state

@@ -7,6 +7,7 @@ FactoryGirl.define do
     email {generate :email}
     password 'password'
     phone { generate :phone}
+    wrong_phone false
 
     factory :user_with_role do
       ignore do

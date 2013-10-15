@@ -397,6 +397,7 @@ ru:
         password: Пароль
         password_confirmation: Подтверждение пароля
         phone: Телефон
+        wrong_phone: Неверный телефон
         region: "Район"
         adm_region: "Адм. округ"
         created_at: Создано
