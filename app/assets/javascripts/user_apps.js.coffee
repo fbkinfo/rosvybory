@@ -23,7 +23,7 @@ jQuery ->
 
   updateUicState = ->
     uic_enabled = $('#user_app_can_be_observer').prop('checked')
-    $('#user_app_uic').prop('disabled', !uic_enabled)
+    $('#user_app_uic').select2("enable", uic_enabled)
 
   updateCurrentRoles = ->
     $(".js-current-role-checked").trigger("change")
@@ -87,10 +87,7 @@ jQuery ->
   $(".js-current-role-checked").change (e) ->
     $el = $(this)
     textFieldId = $el.attr("id").replace(/keep$/, "value")
-    if ($el.is(":checked"))
-      $("##{textFieldId}").attr("disabled", false)
-    else
-      $("##{textFieldId}").attr("disabled", true)
+    $("##{textFieldId}").select2("enable", $el.is(":checked"))
 
   updateUicState()
   updateExpCounterState()

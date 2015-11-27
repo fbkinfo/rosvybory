@@ -1,20 +1,14 @@
 class UserAppsController < ApplicationController
   before_action :set_user_app, only: [:show] #, :edit, :update, :destroy]
 
-  ## GET /user_apps
-  #def index
-  #  @user_apps = UserApp.all
-  #end
-
-  ## GET /user_apps/1
-  #def show
-  #end
-
-  def closed
-
+  def home
+    if AppConfig['registration_closed']
+      render :closed
+    else
+      new and render :new
+    end
   end
 
-  # GET /user_apps/new
   def new
     @user_app = UserApp.new
     gon.recaptcha_key = Recaptcha.configuration.public_key
@@ -23,19 +17,19 @@ class UserAppsController < ApplicationController
     end
   end
 
-  ## GET /user_apps/1/edit
-  #def edit
-  #end
-
   # POST /user_apps
   def create
+    redirect_to root_path and return if AppConfig['registration_closed']
     @user_app = UserApp.new(user_app_params.merge(user_app_extra_params))
 
     user_app_current_roles = @user_app.user_app_current_roles.to_a
     @user_app.user_app_current_roles = @user_app.user_app_current_roles.select { |a| a.keep }
 
+    @user_app.skip_email_confirmation = AppConfig['simulate_email_confirmation']
+
     if UserAppCreator.save(@user_app)
       session.delete(:verification_id)
+      @user_app.confirm! if AppConfig['simulate_email_confirmation']
       render action: 'done'
       #redirect_to new_user_app_path, notice: 'User app was successfully created.'
     else
@@ -74,20 +68,6 @@ class UserAppsController < ApplicationController
     SmsMassSender.spam(current_user, phones, params[:group_sms][:message])
     redirect_to '/control/users', notice: t('.messages_sent')
   end
-  # PATCH/PUT /user_apps/1
-  #def update
-  #  if @user_app.update(user_app_params)
-  #    redirect_to @user_app, notice: 'User app was successfully updated.'
-  #  else
-  #    render action: 'edit'
-  #  end
-  #end
-
-  # DELETE /user_apps/1
-  #def destroy
-  #  @user_app.destroy
-  #  redirect_to user_apps_url, notice: 'User app was successfully destroyed.'
-  #end
 
   private
 
@@ -98,7 +78,7 @@ class UserAppsController < ApplicationController
 
   def user_app_extra_params
     {
-      :ip             => request.env['HTTP_X_REAL_IP'] || request.ip,
+      :ip             => AppConfig['forced_userapps_ip'] || request.env['HTTP_X_REAL_IP'] || request.ip,
       :useragent      => request.env['HTTP_USER_AGENT'],
       :forwarded_for  => request.env['HTTP_X_FORWARDED_FOR'],
       :verification   => Verification.find_by_id(session[:verification_id]),

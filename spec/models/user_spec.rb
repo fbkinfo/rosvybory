@@ -6,12 +6,12 @@ describe User do
     let(:user) {create :user}
     let(:role) {create :role}
 
-    it "должно возвращать true если роль есть у пользователя" do
+    it "возвращает true, если роль есть у пользователя" do
       user.roles << role
       user.has_role?(role.slug).should be_true
     end
 
-    it "должно возвращать false если роли у пользователя нет" do
+    it "возвращает false, если роли у пользователя нет" do
       user.has_role?(role.slug).should be_false
     end
   end
@@ -20,14 +20,14 @@ describe User do
     let(:user) {create :user}
     let(:role) {create :role}
 
-    it "роль должна появляться у пользователя" do
+    it "роль появляется у пользователя" do
       user.roles.should be_empty
       user.add_role role.slug
       user.save!
       user.roles(true).should include(role)
     end
 
-    it "не должно быть ошибки при повторном добавлении роли" do
+    it "не вызвает ошибки при повторном добавлении роли" do
       user.add_role role.slug
       user.save!
       expect {user.add_role role.slug}.not_to raise_error
@@ -38,14 +38,14 @@ describe User do
     let(:user) {create :user}
     let(:role) {create :role}
 
-    it "должна исчезнуть у пользователя" do
+    it "роль исчезает у пользователя" do
       user.roles << role
       user.remove_role role.slug
       user.save
       user.roles(true).should be_empty
     end
 
-    it "не должно вызвать ошибки удаление отсутствующей роли" do
+    it "удаление отсутствующей роли не вызвает ошибки" do
       expect {user.remove_role role.slug}.not_to raise_error
     end
   end
@@ -61,14 +61,14 @@ describe User do
       Role.create(:slug => :observer, :name => 'Big brother', :short_name => 'bro')
     end
 
-    it "should create user_current_role for observer" do
+    it "creates user_current_role for observer" do
       # setup
       user_app = UserApp.new(:uic => uic1.number)
       user_app.can_be_observer = true
       uar = user_app.user_app_current_roles.build(:current_role => current_role)
       uar.keep = '1'
       # excercise
-      logger.debug "Rspec User@#{__LINE__}#should create user_current_role for observer"
+      logger.debug "Rspec User@#{__LINE__}#creates user_current_role for observer"
       user.update_from_user_app(user_app).save
       # verify
       user.user_current_roles.should_not be_empty
@@ -76,7 +76,7 @@ describe User do
       user.user_current_roles.first.uic.should == uic1
     end
 
-    it "should give priority to user_app_current_role data over user_app data while creating user_current_role" do
+    it "gives priority to user_app_current_role data over user_app data while creating user_current_role" do
       # setup
       user_app = UserApp.new(:uic => uic1.number)
       user_app.can_be_observer = true
@@ -90,7 +90,7 @@ describe User do
       user.user_current_roles.first.uic.should == uic2
     end
 
-    it 'should accept an array as a parameter' do
+    it 'accepts an array as a parameter' do
       # setup
       user_app1 = create :user_app, skip_phone_verification: true
       user_app2 = create :user_app, skip_phone_verification: true
@@ -114,6 +114,14 @@ describe User do
       user.region_id.should be_nil
     end
 
+  end
+
+  it 'resets wrong_phone on phone change' do
+    user = create :user
+    user.update_attribute :wrong_phone, true
+    user.phone = user.phone.succ
+    user.save
+    user.wrong_phone.should == false
   end
 
 end

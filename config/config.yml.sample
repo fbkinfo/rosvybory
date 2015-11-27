@@ -1,14 +1,33 @@
+# Отключить регистрацию заявок
+registration_closed: false
+
+# Включить капчу при регистрации заявки
+captcha_enabled: false
+
+# Включить симуляцию подтверждения номера телефона - отключается отсылка смс и подходит любой код.
+# Для локальной разработки удобнее отключить, т.к. в development вместо отсылки смс будет открываться окно Launchy
+simulate_phone_confirmation: false
+# Включить симуляцию подтверждения почты из заявки - отключается отсылка почты и подтверждается любая
+simulate_email_confirmation: false
+
+# Если указан, то в заявке этот ip будет сохраняться вместо ip заявителя, полезно для демо-сервера
+#forced_userapps_ip: '0.0.0.0'
+
+# sms.ru
 smsru_api_id: 11111111-1111-1111-1111-111111111111
 smsru_from: "79031111111"
-captcha_enabled: false
+
+# Recaptcha
 captcha_public_key: 6Lc7OOYSAAAAAMYrtJUBBrMHBMVF507AhW1xwdO9
 captcha_private_key: 6Lc7OOYSAAAAABXxGkHG-AyiAjdzaodQijxcUTqa
 
+# HoneyBadger
+hb_private_key: 123456ab
+
+# Secret rails keys (use `rake secret` to generate)
 secret_key_base: 2222222222222a22222222222222222b222222222222222222c2222222222222222d2222222222222222222e222222222222222222222222f222222222222222
 devise_secret_key: abcdef11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
 
-
-hb_private_key: 123456ab
 
 smtp:
   address: 'smtp.mandrillapp.com'
@@ -28,9 +47,14 @@ push_violation_to_mobile_group_spreadsheet:
   # Index of sheet in shared spreadsheet file, where new notifications will be pushed. 0 is the first sheet of file.
   sheet_index: 0
 
+# Overrides in specific environments
+
 production:
   smsru_api_id: 22222222-2222-2222-2222-222222222222
   smsru_from: NABLUDATELI
+
+  simulate_phone_confirmation: false
+  simulate_email_confirmation: false
 
 #development:
 
